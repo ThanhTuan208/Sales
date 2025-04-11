@@ -1,0 +1,72 @@
+﻿@using CRUD_asp.netMVC.Models.Product
+@model Products
+
+@{
+    ViewData["Title"] = "Create";
+    var viewManu = ViewBag.Manufactures as SelectList;
+    var viewTypes = ViewBag.Prototypes as SelectList;
+}
+
+<h1>Create</h1>
+
+<h4>Products</h4>
+<hr />
+
+<div class="container">
+    <form asp-action="Create" enctype="multipart/form-data">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        @*   <div class="form-floating mb-3">
+            <input asp-for="ID" name="ID" class="form-control" placeholder="Enter ID" required />
+            <label asp-for="ID" class="form-label">Enter ID</label>
+            <span class="text-danger" asp-validation-for="ID"></span>
+        </div> *@
+
+        <div class="form-floating mb-3">
+            <input name="Name" class="form-control" placeholder="Enter Name" required />
+            <label class="form-label">Enter Name</label>
+            <span class="text-danger" asp-validation-for="Name"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input name="picture" type="file" class="form-control" placeholder="Enter picture" required />
+            <label class="form-label">Enter picture</label>
+            <span class="text-danger" asp-validation-for="picture"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input name="Description" class="form-control" placeholder="Enter Description" required />
+            <label class="form-label">Enter Description</label>
+            <span class="text-danger" asp-validation-for="Description"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input name="Price" class="form-control" placeholder="Enter Price" required />
+            <label class="form-label">Enter Price</label>
+            <span class="text-danger" asp-validation-for="Price"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <select asp-for="manuID" asp-items="@viewManu" class="form-select" >
+                <option value="" disabled>Option Manu</option>
+            </select>
+        <label asp-for="manuID" class="form-label">Enter Manufactures</label>
+            <span asp-validation-for="manuID"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <select asp-for="typeID" asp-items="@viewTypes" class="form-select" >
+                <option value="" disabled>Option Types</option>
+            </select>
+        <label asp-for="typeID" class="form-label">Enter Prototypes</label>
+            <span asp-validation-for="typeID"></span>
+        </div>
+
+        <button type="submit" value="Create" class="btn btn-outline-secondary">Submit</button>
+    </form>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
