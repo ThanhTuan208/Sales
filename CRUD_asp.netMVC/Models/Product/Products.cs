@@ -37,7 +37,7 @@ namespace CRUD_asp.netMVC.Models.Product
         public double Price { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime Created { get; set; } = DateTime.Today;
+        public DateTime Created { get; set; }
 
         [Required]
         [DisplayName("Manufactures")]

@@ -5,11 +5,11 @@ namespace CRUD_asp.netMVC.Models.Product
 {
     public class OrderDetail
     {
-        [Key]
-        public int ID { get; set; }
+        [Key, Column(TypeName = "nvarchar(10)")]
+        public string? ID { get; set; }
 
         [Required]
-        public int? orderID { get; set; }
+        public string? orderID { get; set; }
         public Orders? Orders { get; set; }
 
         [Required]

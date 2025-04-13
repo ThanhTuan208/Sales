@@ -1,4 +1,6 @@
-using CRUD_asp.netMVC.Data;
+﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.Models.Account;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 namespace CRUD_asp.netMVC
@@ -15,6 +17,26 @@ namespace CRUD_asp.netMVC
             builder.Services.AddDbContext<AppDBContext>(option =>
                 option.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext")) // appsettings.json
             );
+
+            builder.Services.AddIdentity<Users, IdentityRole>(options =>
+            {
+                // Cấu hình mật khẩu
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+
+                // Cấu hình người dùng
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores <AppDBContext>().AddDefaultTokenProviders(); // Để dùng chức năng reset password, confirm email, v.v.
+
+
+            // Cấu hình Cookie
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
 
 
             var app = builder.Build();

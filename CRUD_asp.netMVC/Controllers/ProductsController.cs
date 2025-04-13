@@ -11,7 +11,10 @@ using AspNetCoreGeneratedDocument;
 using NuGet.Versioning;
 using System.Numerics;
 using CRUD_asp.netMVC.Models.Product;
-using CRUD_asp.netMVC.Models.Pagination;
+using EFCoreSecondLevelCacheInterceptor;
+using Microsoft.EntityFrameworkCore.Query;
+using System.Security.Cryptography.Pkcs;
+using Humanizer.Localisation.DateToOrdinalWords;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -31,7 +34,7 @@ namespace CRUD_asp.netMVC.Controllers
         {
             var product = _context.Products
                        .Include(p => p.Manufactures)
-                       .Include(p => p.Types).OrderByDescending(p=> p.ID);
+                       .Include(p => p.Types).OrderByDescending(p => p.ID);
 
             var paginationProduct = await PaginatedList<Products>.CreatePag(product, page, 5);
             return View(paginationProduct);
@@ -42,9 +45,9 @@ namespace CRUD_asp.netMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(int page = 1, string keyword = "")
         {
-            var product = _context.Products
-                       .Include(p => p.Manufactures)
-                       .Include(p => p.Types).Where(p => p.Description.Contains(keyword) || p.Name.Contains(keyword));
+
+            var product = _context.Products.Include(p => p.Manufactures).Include(p => p.Types).Where(p => p.Description.Contains(keyword) || p.Name.Contains(keyword));
+
 
             var paginationProduct = await PaginatedList<Products>.CreatePag(product, page, 5);
             return View(paginationProduct);

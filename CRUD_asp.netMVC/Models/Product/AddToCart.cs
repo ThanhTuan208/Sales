@@ -1,16 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CRUD_asp.netMVC.Models.Account;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CRUD_asp.netMVC.Models.Product
 {
     public class AddToCart
     {
-        [Key]
-        public int ID { get; set; }
+        [Key, Column(TypeName = "nvarchar(10)")]
+        public int? ID { get; set; }
 
-        [ForeignKey("Users")]
+        [ForeignKey("UsersProduct")]
         [Required]
-        public int? UserID { get; set; }
+        public string? UserID { get; set; }
         public Users? Users { get; set; }
 
         [Required]
@@ -20,7 +21,7 @@ namespace CRUD_asp.netMVC.Models.Product
         [Required]
         public int? Quantity { get; set; }
 
-        public DateTime created_at { get; set; } = DateTime.Now;
+        public DateTime created_at { get; set; }
 
     }
 }

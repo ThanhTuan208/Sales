@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace CRUD_asp.netMVC.Models.Pagination
+namespace CRUD_asp.netMVC.Models.Product
 {
     public class PaginatedList<T> : List<T>
     {
