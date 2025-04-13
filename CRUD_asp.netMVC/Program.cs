@@ -1,7 +1,6 @@
 using CRUD_asp.netMVC.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
-
 namespace CRUD_asp.netMVC
 {
     public class Program
