@@ -11,7 +11,7 @@ namespace CRUD_asp.netMVC.Models.Product
 
         [ForeignKey("UsersProduct")]
         [Required]
-        public string? UserID { get; set; }
+        public int? UserID { get; set; }
         public Users? Users { get; set; }
 
         [Required]

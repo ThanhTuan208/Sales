@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CRUD_asp.netMVC.Models.Account
 {
-    public class Users : IdentityUser
+    public class Users : IdentityUser<int>
     {
         public string? ProfileImage { get; set; }
 
-        public string? RoleID { get; set; }
+        public int? RoleID { get; set; }
         public Roles? Roles { get; set; }
 
         public Manager? Manager { get; set; }

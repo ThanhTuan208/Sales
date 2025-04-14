@@ -11,14 +11,14 @@ namespace CRUD_asp.netMVC
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllersWithViews();  
+            builder.Services.AddControllersWithViews();
 
-            // Dky AppDBContext 
+            // Dky context 
             builder.Services.AddDbContext<AppDBContext>(option =>
                 option.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext")) // appsettings.json
             );
 
-            builder.Services.AddIdentity<Users, IdentityRole>(options =>
+            builder.Services.AddIdentity<Users, Roles>(options =>
             {
                 // Cấu hình mật khẩu
                 options.Password.RequireDigit = true;
@@ -27,7 +27,7 @@ namespace CRUD_asp.netMVC
 
                 // Cấu hình người dùng
                 options.User.RequireUniqueEmail = true;
-            }).AddEntityFrameworkStores <AppDBContext>().AddDefaultTokenProviders(); // Để dùng chức năng reset password, confirm email, v.v.
+            }).AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders(); // Để dùng chức năng reset password, confirm email, v.v.
 
 
             // Cấu hình Cookie
@@ -37,7 +37,6 @@ namespace CRUD_asp.netMVC
                 options.LogoutPath = "/Account/Logout";
                 options.AccessDeniedPath = "/Account/AccessDenied";
             });
-
 
             var app = builder.Build();
 

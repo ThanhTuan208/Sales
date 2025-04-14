@@ -4,7 +4,7 @@ namespace CRUD_asp.netMVC.Models.Account
 {
     public abstract class FieldGeneral
     {
-        [Key] public string? ID { get; set; }
+        [Key] public int ID { get; set; }
 
         [Required, StringLength(50, ErrorMessage = "Loi {0}")]
         public string? FullName { get; set; }
@@ -16,7 +16,10 @@ namespace CRUD_asp.netMVC.Models.Account
         public string? Password { get; set; }
 
         [Required, Phone]
-        public string? PhoneNumber { get; set; }    
+        public string? PhoneNumber { get; set; }
+
+        [Required, EmailAddress]
+        public string? Email { get; set; }
 
         [Required, StringLength(50, ErrorMessage = "Loi {0}")]
         public string? Address { get; set; }
@@ -24,7 +27,7 @@ namespace CRUD_asp.netMVC.Models.Account
         [Required, StringLength(50, ErrorMessage = "Loi {0}")]
         public string? Position { get; set; } = "Customer";
 
-        public string? UserID { get; set; }
+        public int? UserID { get; set; }
         public Users? Users { get; set; }
     }
 }

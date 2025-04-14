@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRUD_asp.netMVC.Data
 {
-    public class AppDBContext : DbContext
+    public class AppDBContext : IdentityDbContext<Users, Roles, int>
     {
         public AppDBContext(DbContextOptions<AppDBContext> DBContext) : base(DBContext)
         {
 
         }
-            
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -50,22 +50,22 @@ namespace CRUD_asp.netMVC.Data
             Console.WriteLine(hashPass2);
 
             modelBuilder.Entity<Roles>().HasData(
-                 
-                new Roles { ID = "1", Name = "Manager", UserID = "0" },
-                new Roles { ID = "2", Name = "Customer", UserID = "1" }
+
+                new Roles { Id = 1, Name = "Manager", UserID = 1},
+                new Roles { Id = 2, Name = "Customer", UserID = 2 }
                 );
 
             modelBuilder.Entity<Users>().HasData(
                 new Users
                 {
-                    Id = "0",
+                    Id = 1,
                     UserName = "admin",
                     PasswordHash = "AQAAAAIAAYagAAAAEGhZBXBsy/SAWop7np1SB500eP6vRfUwZNb8eitfnV26cygqJSe+Ks/v2da7SxC+uQ==",
                     Email = "nguyenthanhtuankrp1@gmail.com",
                     EmailConfirmed = true,
                     PhoneNumber = "0358986823",
                     ProfileImage = "",
-                    RoleID = "1",
+                    RoleID = 1,
                     ConcurrencyStamp = "22222222-2222-2222-2222-222222222222",
                     //SecurityStamp = Guid.NewGuid().ToString("D"),
                     SecurityStamp = "5f8a17cb-bb0d-4ae4-99cb-abcde1234567"
@@ -73,14 +73,14 @@ namespace CRUD_asp.netMVC.Data
 
                 new Users
                 {
-                    Id = "1",
+                    Id = 2,
                     UserName = "LongTinh",
                     PasswordHash = "AQAAAAIAAYagAAAAEAGa4VXA3HYnofgsMNO/bcZ8e+1MBrDEjtBTeCfYi0k1HUn9ForK2SKEUvKj+idFfw",
                     Email = "nguyenthanhtuankrp1@gmail.com",
                     EmailConfirmed = true,
                     PhoneNumber = "034342434",
                     ProfileImage = "",
-                    RoleID = "2",
+                    RoleID = 2,
                     ConcurrencyStamp = "22222222-2222-2222-2222-222222222222",
                     //SecurityStamp = Guid.NewGuid().ToString("D"),
                     SecurityStamp = "5f8a17cb-bb0d-4ae4-99cb-abcde1234567"
@@ -88,11 +88,35 @@ namespace CRUD_asp.netMVC.Data
                 );
 
             modelBuilder.Entity<Manager>().HasData(
-                new Manager { ID = "1", UserID = "0", FullName = "Nguyen Thanh Tuan", UserName = "admin", Password = "admmin", Position = "Manager", PhoneNumber = "0358986823", Address = "TP HCM", StartDate = DateTime.Parse("2025-04-13") }
+                new Manager
+                {
+                    ID = 1,
+                    UserID = 1,
+                    FullName = "Nguyen Thanh Tuan",
+                    UserName = "admin",
+                    Password = "admmin",
+                    Position = "Manager",
+                    PhoneNumber = "0358986823",
+                    Email = "nguyenthanhtuankrp1@gmail.com",
+                    Address = "TP HCM",
+                    StartDate = DateTime.Parse("2025-04-13")
+                }
                 );
 
             modelBuilder.Entity<Customer>().HasData(
-                new Customer { ID = "1", UserID = "1", FullName = "Nguyen Thanh Long", UserName = "LongTinh", Password = "123456", Position = "Customer", PhoneNumber = "0343424334", Address = "TP HCM", Date = DateTime.Parse("2025-04-13") }
+                new Customer
+                {
+                    ID = 1,
+                    UserID = 2,
+                    FullName = "Nguyen Thanh Long",
+                    UserName = "LongTinh",
+                    Password = "123456",
+                    Position = "Customer",
+                    PhoneNumber = "0343424334",
+                    Email = "longtinh@gmail.com",
+                    Address = "TP HCM",
+                    Date = DateTime.Parse("2025-04-13")
+                }
                 );
 
             modelBuilder.Entity<Manufacturer>().HasData(
@@ -111,7 +135,7 @@ namespace CRUD_asp.netMVC.Data
                 new Prototype { ID = 5, Name = "Smartwatch" }
             );
 
-        
+
 
             modelBuilder.Entity<Products>().HasData(
                new Products
@@ -122,8 +146,8 @@ namespace CRUD_asp.netMVC.Data
                    Description = "Điện thoại Apple với camera 48MP, chip A16 Bionic.",
                    Price = 999,
                    Created = new DateTime(2025, 4, 8),
-                   manuID = 1, 
-                   typeID = 1  
+                   manuID = 1,
+                   typeID = 1
                },
                new Products
                {
@@ -133,8 +157,8 @@ namespace CRUD_asp.netMVC.Data
                    Description = "Flagship mạnh mẽ nhất của Samsung, màn hình 120Hz.",
                    Price = 1199,
                    Created = new DateTime(2025, 4, 8),
-                   manuID = 2, 
-                   typeID = 1  
+                   manuID = 2,
+                   typeID = 1
                },
                new Products
                {
@@ -144,8 +168,8 @@ namespace CRUD_asp.netMVC.Data
                    Description = "Tai nghe chống ồn tốt nhất, chất âm cao cấp.",
                    Price = 349,
                    Created = new DateTime(2025, 4, 8),
-                   manuID = 3, 
-                   typeID = 4  
+                   manuID = 3,
+                   typeID = 4
                },
                new Products
                {
@@ -155,8 +179,8 @@ namespace CRUD_asp.netMVC.Data
                    Description = "Laptop Apple chạy chip M2, hiệu năng mạnh mẽ.",
                    Price = 1299,
                    Created = new DateTime(2025, 4, 8),
-                   manuID = 1, 
-                   typeID = 2  
+                   manuID = 1,
+                   typeID = 2
                },
                new Products
                {
@@ -166,8 +190,8 @@ namespace CRUD_asp.netMVC.Data
                    Description = "Laptop gaming mỏng nhẹ, card RTX 4060.",
                    Price = 1599,
                    Created = new DateTime(2025, 4, 8),
-                   manuID = 5, 
-                   typeID = 2  
+                   manuID = 5,
+                   typeID = 2
                },
                new Products
                {
@@ -177,8 +201,8 @@ namespace CRUD_asp.netMVC.Data
                    Description = "Tablet Apple với chip M1, thiết kế mỏng nhẹ.",
                    Price = 599,
                    Created = new DateTime(2025, 4, 8),
-                   manuID = 1, 
-                   typeID = 3  
+                   manuID = 1,
+                   typeID = 3
                },
                new Products
                {
@@ -188,8 +212,8 @@ namespace CRUD_asp.netMVC.Data
                    Description = "Tablet cao cấp với màn hình AMOLED 120Hz.",
                    Price = 699,
                    Created = new DateTime(2025, 4, 8),
-                   manuID = 2, 
-                   typeID = 3  
+                   manuID = 2,
+                   typeID = 3
                },
                new Products
                {
@@ -199,8 +223,8 @@ namespace CRUD_asp.netMVC.Data
                    Description = "Đồng hồ thông minh của Apple, theo dõi sức khỏe.",
                    Price = 399,
                    Created = new DateTime(2025, 4, 8),
-                   manuID = 1, 
-                   typeID = 5  
+                   manuID = 1,
+                   typeID = 5
                },
                new Products
                {
@@ -210,8 +234,8 @@ namespace CRUD_asp.netMVC.Data
                    Description = "Đồng hồ thông minh của Apple, theo dõi sức khỏe.",
                    Price = 999,
                    Created = new DateTime(2025, 4, 8),
-                   manuID = 1, 
-                   typeID = 5  
+                   manuID = 1,
+                   typeID = 5
                }
             );
 
@@ -222,7 +246,7 @@ namespace CRUD_asp.netMVC.Data
             base.OnConfiguring(optionsBuilder);
         }
 
-         public DbSet<Users>? Users { get; set; }
+        //public DbSet<Users>? Users { get; set; }
         public DbSet<Products>? Products { get; set; }
         public DbSet<Manufacturer>? Manufactures { get; set; }
         public DbSet<Prototype>? Prototypes { get; set; }
@@ -230,7 +254,7 @@ namespace CRUD_asp.netMVC.Data
         public DbSet<Orders>? Orders { get; set; }
         public DbSet<OrderDetail>? OrderDetail { get; set; }
         public DbSet<Payment>? Payment { get; set; }
-        public DbSet<Roles>? Roles { get; set; }
+        //public DbSet<Roles>? Roles { get; set; }
         public DbSet<Reviews>? Reviews { get; set; }
         public DbSet<Manager> Manager { get; set; }
         public DbSet<Staff> Staff { get; set; }

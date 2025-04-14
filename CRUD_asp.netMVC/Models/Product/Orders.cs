@@ -13,7 +13,7 @@ namespace CRUD_asp.netMVC.Models.Product
         public string? ID { get; set; }
 
         [Required]
-        public string? UserID { get; set; }
+        public int? UserID { get; set; }
         public Users? Users { get; set; }
 
         public DateTime OrderDate { get; set; }
