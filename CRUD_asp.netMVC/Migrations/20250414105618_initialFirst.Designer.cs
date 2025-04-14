@@ -4,6 +4,7 @@ using CRUD_asp.netMVC.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUD_asp.netMVC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250414105618_initialFirst")]
+    partial class initialFirst
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,6 +233,9 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int?>("UserID")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
@@ -243,12 +249,14 @@ namespace CRUD_asp.netMVC.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Manager"
+                            Name = "Manager",
+                            UserID = 1
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Customer"
+                            Name = "Customer",
+                            UserID = 2
                         });
                 });
 
@@ -362,9 +370,6 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<int?>("RoleID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RolesId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -388,7 +393,7 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("RolesId");
+                    b.HasIndex("RoleID");
 
                     b.ToTable("AspNetUsers", (string)null);
 
@@ -942,8 +947,9 @@ namespace CRUD_asp.netMVC.Migrations
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Users", b =>
                 {
                     b.HasOne("CRUD_asp.netMVC.Models.Account.Roles", "Roles")
-                        .WithMany()
-                        .HasForeignKey("RolesId");
+                        .WithMany("Users")
+                        .HasForeignKey("RoleID")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Roles");
                 });
@@ -1095,6 +1101,11 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Roles", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Users", b =>

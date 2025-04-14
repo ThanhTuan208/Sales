@@ -2,9 +2,9 @@
 
 namespace CRUD_asp.netMVC.Models.Account
 {
-    public class Customer : FieldGeneral
+    public class Customer : FieldGeneralRoles
     {      
         [Required, DataType(DataType.Date)]
-        public DateTime Date { get; set; }
+        public DateTime JoinDate { get; set; }
     }
 }

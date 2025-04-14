@@ -8,18 +8,29 @@ namespace CRUD_asp.netMVC.Models.Account.ActionViewModel
         public string? UserName { get; set; }
 
         [Required, StringLength(50, ErrorMessage = "Loi {0}")]
-        public string? FullName { get; set; }
+        public string? FirstName { get; set; }
 
         [Required, StringLength(50, ErrorMessage = "Loi {0}")]
-        public string? RoleID { get; set; }
+        public string? LastName { get; set; }
 
         [Required, EmailAddress]
         public string? Email { get; set; }
 
-        [Required, DataType(DataType.Password)]
-        public string? Password { get; set; } 
+        [Required, Phone]
+        public string? Phone { get; set; }
 
-        [Compare("Password",ErrorMessage = "Password doesn't match")]
-        public string? RePassword { get; set; } 
+        [Required, DataType(DataType.Date)]
+        public DateTime StartDate { get; set; } = DateTime.Now;
+
+        [Required, DataType(DataType.Password, ErrorMessage = "Loi {0}")]
+        public string? Password { get; set; }
+
+        [Compare("Password", ErrorMessage = "Password doesn't match")]
+        public string? ConfirmPassword { get; set; }
+
+        public int RoleID { get; set; }
+        public Roles? Roles { get; set; }
+
+       
     }
 }

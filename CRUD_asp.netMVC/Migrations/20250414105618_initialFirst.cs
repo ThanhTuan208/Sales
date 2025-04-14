@@ -67,21 +67,6 @@ namespace CRUD_asp.netMVC.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Register",
-                columns: table => new
-                {
-                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    RoleID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RePassword = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -109,6 +94,7 @@ namespace CRUD_asp.netMVC.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProfileImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RoleID = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -134,6 +120,30 @@ namespace CRUD_asp.netMVC.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Register",
+                columns: table => new
+                {
+                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConfirmPassword = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RoleID = table.Column<int>(type: "int", nullable: false),
+                    RolesId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.ForeignKey(
+                        name: "FK_Register_AspNetRoles_RolesId",
+                        column: x => x.RolesId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -258,14 +268,13 @@ namespace CRUD_asp.netMVC.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Position = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     UserID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -286,13 +295,12 @@ namespace CRUD_asp.netMVC.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Position = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     UserID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -333,17 +341,16 @@ namespace CRUD_asp.netMVC.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DayOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Position = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     UserID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -495,11 +502,11 @@ namespace CRUD_asp.netMVC.Migrations
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ProfileImage", "RoleID", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ProfileImage", "RoleID", "SecurityStamp", "StartDate", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "22222222-2222-2222-2222-222222222222", "nguyenthanhtuankrp1@gmail.com", true, false, null, null, null, "AQAAAAIAAYagAAAAEGhZBXBsy/SAWop7np1SB500eP6vRfUwZNb8eitfnV26cygqJSe+Ks/v2da7SxC+uQ==", "0358986823", false, "", 1, "5f8a17cb-bb0d-4ae4-99cb-abcde1234567", false, "admin" },
-                    { 2, 0, "22222222-2222-2222-2222-222222222222", "nguyenthanhtuankrp1@gmail.com", true, false, null, null, null, "AQAAAAIAAYagAAAAEAGa4VXA3HYnofgsMNO/bcZ8e+1MBrDEjtBTeCfYi0k1HUn9ForK2SKEUvKj+idFfw", "034342434", false, "", 2, "5f8a17cb-bb0d-4ae4-99cb-abcde1234567", false, "LongTinh" }
+                    { 1, 0, "22222222-2222-2222-2222-222222222222", "nguyenthanhtuankrp1@gmail.com", true, false, null, null, null, "AQAAAAIAAYagAAAAEGhZBXBsy/SAWop7np1SB500eP6vRfUwZNb8eitfnV26cygqJSe+Ks/v2da7SxC+uQ==", "0358986823", false, "", 1, "5f8a17cb-bb0d-4ae4-99cb-abcde1234567", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "admin" },
+                    { 2, 0, "22222222-2222-2222-2222-222222222222", "nguyenthanhtuankrp1@gmail.com", true, false, null, null, null, "AQAAAAIAAYagAAAAEAGa4VXA3HYnofgsMNO/bcZ8e+1MBrDEjtBTeCfYi0k1HUn9ForK2SKEUvKj+idFfw", "034342434", false, "", 2, "5f8a17cb-bb0d-4ae4-99cb-abcde1234567", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "LongTinh" }
                 });
 
             migrationBuilder.InsertData(
@@ -520,13 +527,13 @@ namespace CRUD_asp.netMVC.Migrations
 
             migrationBuilder.InsertData(
                 table: "Customer",
-                columns: new[] { "ID", "Address", "Date", "Email", "FullName", "Password", "PhoneNumber", "Position", "UserID", "UserName" },
-                values: new object[] { 1, "TP HCM", new DateTime(2025, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "longtinh@gmail.com", "Nguyen Thanh Long", "123456", "0343424334", "Customer", 2, "LongTinh" });
+                columns: new[] { "ID", "Address", "Email", "FirstName", "JoinDate", "LastName", "PhoneNumber", "UserID", "UserName" },
+                values: new object[] { 1, "TP HCM", "longtinh@gmail.com", "Nguyen", new DateTime(2025, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thanh ", "0343424334", 2, "LongTinh" });
 
             migrationBuilder.InsertData(
                 table: "Manager",
-                columns: new[] { "ID", "Address", "Email", "FullName", "Password", "PhoneNumber", "Position", "StartDate", "UserID", "UserName" },
-                values: new object[] { 1, "TP HCM", "nguyenthanhtuankrp1@gmail.com", "Nguyen Thanh Tuan", "admmin", "0358986823", "Manager", new DateTime(2025, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "admin" });
+                columns: new[] { "ID", "Address", "Email", "FirstName", "LastName", "PhoneNumber", "StartDate", "UserID", "UserName" },
+                values: new object[] { 1, "TP HCM", "nguyenthanhtuankrp1@gmail.com", "Nguyen", "Thanh Tuan", "0358986823", new DateTime(2025, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -626,6 +633,11 @@ namespace CRUD_asp.netMVC.Migrations
                 name: "IX_Products_typeID",
                 table: "Products",
                 column: "typeID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Register_RolesId",
+                table: "Register",
+                column: "RolesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_ProductID",

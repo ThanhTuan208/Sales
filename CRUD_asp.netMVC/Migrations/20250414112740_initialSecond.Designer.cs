@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUD_asp.netMVC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20250414020354_initialFirst")]
-    partial class initialFirst
+    [Migration("20250414112740_initialSecond")]
+    partial class initialSecond
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,11 +41,19 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.ActionViewModel.Register", b =>
                 {
+                    b.Property<string>("ConfirmPassword")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -54,18 +62,25 @@ namespace CRUD_asp.netMVC.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RePassword")
+                    b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleID")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("RoleID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RolesId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.HasIndex("RolesId");
 
                     b.ToTable("Register");
                 });
@@ -79,23 +94,22 @@ namespace CRUD_asp.netMVC.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Password")
+                    b.Property<DateTime>("JoinDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -103,11 +117,6 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("UserID")
                         .HasColumnType("int");
@@ -130,12 +139,11 @@ namespace CRUD_asp.netMVC.Migrations
                         {
                             ID = 1,
                             Address = "TP HCM",
-                            Date = new DateTime(2025, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "longtinh@gmail.com",
-                            FullName = "Nguyen Thanh Long",
-                            Password = "123456",
+                            FirstName = "Nguyen",
+                            JoinDate = new DateTime(2025, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LastName = "Thanh ",
                             PhoneNumber = "0343424334",
-                            Position = "Customer",
                             UserID = 2,
                             UserName = "LongTinh"
                         });
@@ -150,7 +158,6 @@ namespace CRUD_asp.netMVC.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -158,12 +165,12 @@ namespace CRUD_asp.netMVC.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -171,11 +178,6 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -202,10 +204,9 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 1,
                             Address = "TP HCM",
                             Email = "nguyenthanhtuankrp1@gmail.com",
-                            FullName = "Nguyen Thanh Tuan",
-                            Password = "admmin",
+                            FirstName = "Nguyen",
+                            LastName = "Thanh Tuan",
                             PhoneNumber = "0358986823",
-                            Position = "Manager",
                             StartDate = new DateTime(2025, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserID = 1,
                             UserName = "admin"
@@ -232,9 +233,6 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int?>("UserID")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
@@ -248,14 +246,12 @@ namespace CRUD_asp.netMVC.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Manager",
-                            UserID = 1
+                            Name = "Manager"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Customer",
-                            UserID = 2
+                            Name = "Customer"
                         });
                 });
 
@@ -268,18 +264,17 @@ namespace CRUD_asp.netMVC.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("DayOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -287,7 +282,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -295,11 +290,6 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -375,8 +365,14 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<int?>("RoleID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RolesId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -395,7 +391,7 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("RoleID");
+                    b.HasIndex("RolesId");
 
                     b.ToTable("AspNetUsers", (string)null);
 
@@ -414,6 +410,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ProfileImage = "",
                             RoleID = 1,
                             SecurityStamp = "5f8a17cb-bb0d-4ae4-99cb-abcde1234567",
+                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
@@ -431,6 +428,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ProfileImage = "",
                             RoleID = 2,
                             SecurityStamp = "5f8a17cb-bb0d-4ae4-99cb-abcde1234567",
+                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TwoFactorEnabled = false,
                             UserName = "LongTinh"
                         });
@@ -905,6 +903,15 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.ActionViewModel.Register", b =>
+                {
+                    b.HasOne("CRUD_asp.netMVC.Models.Account.Roles", "Roles")
+                        .WithMany()
+                        .HasForeignKey("RolesId");
+
+                    b.Navigation("Roles");
+                });
+
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Customer", b =>
                 {
                     b.HasOne("CRUD_asp.netMVC.Models.Account.Users", "Users")
@@ -938,9 +945,8 @@ namespace CRUD_asp.netMVC.Migrations
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Users", b =>
                 {
                     b.HasOne("CRUD_asp.netMVC.Models.Account.Roles", "Roles")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("RolesId");
 
                     b.Navigation("Roles");
                 });
@@ -1092,11 +1098,6 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Roles", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Users", b =>

@@ -1,0 +1,89 @@
+﻿@using CRUD_asp.netMVC.Models.Account.ActionViewModel
+@model Register
+@{
+    Layout = "_AccountLayout";
+}
+
+<style>
+    h1 {
+        text-shadow: 1px 2px 10px rgba(236, 210, 10, 0.6);
+    }
+</style>
+
+<form method="post" asp-controller="Account" asp-action="Register">
+    <div class="container my-5">
+        <div class="row justify-content-center align-items-center shadow-lg rounded-3"
+             style="height: 80vh;">
+            <div class="col-lg-6">
+                <h1 class="text-center" style="margin-bottom: 40px">REGISTER</h1>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating my-3">
+                            <input asp-for="FirstName"
+                                   class="form-control"
+                                   placeholder="Enter First Name" />
+                            <label for="" class="form-label ms-1">First Name</label>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating my-3">
+                            <div class="form-floating my-3">
+                                <input asp-for="LastName"
+                                       class="form-control"
+                                       placeholder="Enter Last Name" />
+                                <label for="" class="form-label ms-1">Last Name</label>
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-floating my-3">
+                    <input asp-for="UserName"
+                           class="form-control"
+                           placeholder="Enter User Name" />
+                    <label for="" class="form-label ms-1">User Name</label>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating my-3">
+                    <input asp-for="Email"
+                           class="form-control"
+                           placeholder="Enter Email" />
+                    <label for="" class="form-label ms-1">Email</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating my-3">
+                    <input asp-for="Phone"
+                           class="form-control"
+                           placeholder="Enter Phone" />
+                    <label for="" class="form-label ms-1">Phone</label>
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating my-3">
+                    <input asp-for="Password"
+                           class="form-control"
+                           placeholder="Enter Password" />
+                    <label for="" class="form-label ms-1">Password</label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                  <div class="form-floating my-3">
+                    <input asp-for="ConfirmPassword"
+                           class="form-control"
+                           placeholder="Enter ConfirmPassword" />
+                    <label for="" class="form-label ms-1">ConfirmPassword</label>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-outline-success">
+                        Sign up
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

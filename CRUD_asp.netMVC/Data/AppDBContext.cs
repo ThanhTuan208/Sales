@@ -36,7 +36,7 @@ namespace CRUD_asp.netMVC.Data
             modelBuilder.Entity<Reviews>().HasOne(r => r.Product).WithMany(r => r.Reviews).HasForeignKey(u => u.ProductID).OnDelete(DeleteBehavior.Cascade);
 
             // Quan li du lieu khach hang -> AccountModel
-            modelBuilder.Entity<Users>().HasOne(r => r.Roles).WithMany(u => u.Users).HasForeignKey(mi => mi.RoleID).OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Users>().HasOne(r => r.Manager).WithOne(u => u.Users).HasForeignKey<Manager>(mi => mi.UserID).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Users>().HasOne(r => r.Staff).WithOne(u => u.Users).HasForeignKey<Staff>(mi => mi.UserID).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Users>().HasOne(r => r.Customer).WithOne(u => u.Users).HasForeignKey<Customer>(mi => mi.UserID).OnDelete(DeleteBehavior.Restrict);
@@ -51,73 +51,28 @@ namespace CRUD_asp.netMVC.Data
 
             modelBuilder.Entity<Roles>().HasData(
 
-                new Roles { Id = 1, Name = "Manager", UserID = 1},
-                new Roles { Id = 2, Name = "Customer", UserID = 2 }
+                new Roles { Id = 1, Name = "Manager"},
+                new Roles { Id = 2, Name = "Customer"}
                 );
 
-            modelBuilder.Entity<Users>().HasData(
-                new Users
-                {
-                    Id = 1,
-                    UserName = "admin",
-                    PasswordHash = "AQAAAAIAAYagAAAAEGhZBXBsy/SAWop7np1SB500eP6vRfUwZNb8eitfnV26cygqJSe+Ks/v2da7SxC+uQ==",
-                    Email = "nguyenthanhtuankrp1@gmail.com",
-                    EmailConfirmed = true,
-                    PhoneNumber = "0358986823",
-                    ProfileImage = "",
-                    RoleID = 1,
-                    ConcurrencyStamp = "22222222-2222-2222-2222-222222222222",
-                    //SecurityStamp = Guid.NewGuid().ToString("D"),
-                    SecurityStamp = "5f8a17cb-bb0d-4ae4-99cb-abcde1234567"
-                },
+            //modelBuilder.Entity<Users>().HasData(
+            //    new Users
+            //    {
+            //        Id = 1,
+            //        UserName = "admin",
+            //        PasswordHash = "AQAAAAIAAYagAAAAEGhZBXBsy/SAWop7np1SB500eP6vRfUwZNb8eitfnV26cygqJSe+Ks/v2da7SxC+uQ==",
+            //        Email = "nguyenthanhtuankrp1@gmail.com",
+            //        EmailConfirmed = true,
+            //        PhoneNumber = "0358986823",
+            //        ProfileImage = "",
+            //        RoleID = 1,
+            //        ConcurrencyStamp = "22222222-2222-2222-2222-222222222222",
+            //        //SecurityStamp = Guid.NewGuid().ToString("D"),
+            //        SecurityStamp = "5f8a17cb-bb0d-4ae4-99cb-abcde1234567"
+            //    },
 
-                new Users
-                {
-                    Id = 2,
-                    UserName = "LongTinh",
-                    PasswordHash = "AQAAAAIAAYagAAAAEAGa4VXA3HYnofgsMNO/bcZ8e+1MBrDEjtBTeCfYi0k1HUn9ForK2SKEUvKj+idFfw",
-                    Email = "nguyenthanhtuankrp1@gmail.com",
-                    EmailConfirmed = true,
-                    PhoneNumber = "034342434",
-                    ProfileImage = "",
-                    RoleID = 2,
-                    ConcurrencyStamp = "22222222-2222-2222-2222-222222222222",
-                    //SecurityStamp = Guid.NewGuid().ToString("D"),
-                    SecurityStamp = "5f8a17cb-bb0d-4ae4-99cb-abcde1234567"
-                }
-                );
+                //);
 
-            modelBuilder.Entity<Manager>().HasData(
-                new Manager
-                {
-                    ID = 1,
-                    UserID = 1,
-                    FullName = "Nguyen Thanh Tuan",
-                    UserName = "admin",
-                    Password = "admmin",
-                    Position = "Manager",
-                    PhoneNumber = "0358986823",
-                    Email = "nguyenthanhtuankrp1@gmail.com",
-                    Address = "TP HCM",
-                    StartDate = DateTime.Parse("2025-04-13")
-                }
-                );
-
-            modelBuilder.Entity<Customer>().HasData(
-                new Customer
-                {
-                    ID = 1,
-                    UserID = 2,
-                    FullName = "Nguyen Thanh Long",
-                    UserName = "LongTinh",
-                    Password = "123456",
-                    Position = "Customer",
-                    PhoneNumber = "0343424334",
-                    Email = "longtinh@gmail.com",
-                    Address = "TP HCM",
-                    Date = DateTime.Parse("2025-04-13")
-                }
-                );
 
             modelBuilder.Entity<Manufacturer>().HasData(
                 new Manufacturer { ID = 1, Name = "Apple" },
@@ -247,6 +202,7 @@ namespace CRUD_asp.netMVC.Data
         }
 
         //public DbSet<Users>? Users { get; set; }
+        //public DbSet<Roles>? Roles { get; set; }
         public DbSet<Products>? Products { get; set; }
         public DbSet<Manufacturer>? Manufactures { get; set; }
         public DbSet<Prototype>? Prototypes { get; set; }
@@ -254,7 +210,6 @@ namespace CRUD_asp.netMVC.Data
         public DbSet<Orders>? Orders { get; set; }
         public DbSet<OrderDetail>? OrderDetail { get; set; }
         public DbSet<Payment>? Payment { get; set; }
-        //public DbSet<Roles>? Roles { get; set; }
         public DbSet<Reviews>? Reviews { get; set; }
         public DbSet<Manager> Manager { get; set; }
         public DbSet<Staff> Staff { get; set; }

@@ -1,11 +1,13 @@
 ﻿using CRUD_asp.netMVC.Models.Product;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.VisualBasic;
 
 namespace CRUD_asp.netMVC.Models.Account
 {
     public class Users : IdentityUser<int>
     {
         public string? ProfileImage { get; set; }
+        public DateTime StartDate { get; set;  }
 
         public int? RoleID { get; set; }
         public Roles? Roles { get; set; }

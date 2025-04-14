@@ -7,7 +7,6 @@ namespace CRUD_asp.netMVC.Models.Account
 {
     public class Roles : IdentityRole<int>
     {
-        public int? UserID { get; set; }
-        public List<Users>? Users { get; set; }
+     
     }
 }

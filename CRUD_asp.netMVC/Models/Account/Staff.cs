@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CRUD_asp.netMVC.Models.Account
 {
-    public class Staff : FieldGeneral
+    public class Staff : FieldGeneralRoles
     {
         [Required, DataType(DataType.Date)]
-        public DateTime Date { get; set; }
+        public DateTime DayOfBirth { get; set; }
 
         [Required, DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
@@ -22,7 +22,6 @@ namespace CRUD_asp.netMVC.Models.Account
         }
 
         public WorkStatus Status { get; set; } = WorkStatus.Working;
-
     }
 }
     
