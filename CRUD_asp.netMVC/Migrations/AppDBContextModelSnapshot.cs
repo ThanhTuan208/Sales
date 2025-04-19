@@ -24,14 +24,16 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.ActionViewModel.Login", b =>
                 {
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<bool>("RememberMe")
+                        .HasColumnType("bit");
 
                     b.ToTable("Login");
                 });
@@ -130,20 +132,6 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasFilter("[UserID] IS NOT NULL");
 
                     b.ToTable("Customer");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            Address = "TP HCM",
-                            Email = "longtinh@gmail.com",
-                            FirstName = "Nguyen",
-                            JoinDate = new DateTime(2025, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Thanh ",
-                            PhoneNumber = "0343424334",
-                            UserID = 2,
-                            UserName = "LongTinh"
-                        });
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Manager", b =>
@@ -194,20 +182,6 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasFilter("[UserID] IS NOT NULL");
 
                     b.ToTable("Manager");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            Address = "TP HCM",
-                            Email = "nguyenthanhtuankrp1@gmail.com",
-                            FirstName = "Nguyen",
-                            LastName = "Thanh Tuan",
-                            PhoneNumber = "0358986823",
-                            StartDate = new DateTime(2025, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserID = 1,
-                            UserName = "admin"
-                        });
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Roles", b =>
@@ -391,44 +365,6 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasIndex("RolesId");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "22222222-2222-2222-2222-222222222222",
-                            Email = "nguyenthanhtuankrp1@gmail.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEGhZBXBsy/SAWop7np1SB500eP6vRfUwZNb8eitfnV26cygqJSe+Ks/v2da7SxC+uQ==",
-                            PhoneNumber = "0358986823",
-                            PhoneNumberConfirmed = false,
-                            ProfileImage = "",
-                            RoleID = 1,
-                            SecurityStamp = "5f8a17cb-bb0d-4ae4-99cb-abcde1234567",
-                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TwoFactorEnabled = false,
-                            UserName = "admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "22222222-2222-2222-2222-222222222222",
-                            Email = "nguyenthanhtuankrp1@gmail.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEAGa4VXA3HYnofgsMNO/bcZ8e+1MBrDEjtBTeCfYi0k1HUn9ForK2SKEUvKj+idFfw",
-                            PhoneNumber = "034342434",
-                            PhoneNumberConfirmed = false,
-                            ProfileImage = "",
-                            RoleID = 2,
-                            SecurityStamp = "5f8a17cb-bb0d-4ae4-99cb-abcde1234567",
-                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TwoFactorEnabled = false,
-                            UserName = "LongTinh"
-                        });
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.AddToCart", b =>
@@ -458,7 +394,91 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("Carts");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Manufacturer", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Brand", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Brand");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Description = "Thương hiệu giày thể thao và trang phục thể thao nổi tiếng",
+                            Name = "Nike"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Description = "Chuyên cung cấp giày dép và trang phục thể thao",
+                            Name = "Adidas"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Description = "Thương hiệu thời trang cao cấp với thiết kế hiện đại",
+                            Name = "Zara"
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Description = "H&M cung cấp thời trang giá cả phải chăng và phong cách hiện đại",
+                            Name = "H&M"
+                        },
+                        new
+                        {
+                            ID = 5,
+                            Description = "Thương hiệu Nhật Bản nổi tiếng với phong cách tối giản và chất liệu tốt",
+                            Name = "Uniqlo"
+                        },
+                        new
+                        {
+                            ID = 6,
+                            Description = "Thương hiệu cao cấp đến từ Ý với các sản phẩm thời trang xa xỉ",
+                            Name = "Gucci"
+                        },
+                        new
+                        {
+                            ID = 7,
+                            Description = "Hãng thời trang nổi tiếng với quần jeans và phong cách cổ điển Mỹ",
+                            Name = "Levi's"
+                        },
+                        new
+                        {
+                            ID = 8,
+                            Description = "Phong cách thể thao thanh lịch đến từ Pháp",
+                            Name = "Lacoste"
+                        },
+                        new
+                        {
+                            ID = 9,
+                            Description = "Cung cấp thời trang thể thao, giày dép và phụ kiện chất lượng",
+                            Name = "Puma"
+                        },
+                        new
+                        {
+                            ID = 10,
+                            Description = "Biểu tượng thời trang xa xỉ với những thiết kế đẳng cấp, cổ điển",
+                            Name = "Chanel"
+                        });
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Category", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -472,33 +492,38 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Manufactures");
+                    b.ToTable("Category");
 
                     b.HasData(
                         new
                         {
                             ID = 1,
-                            Name = "Apple"
+                            Name = "Áo khoác"
                         },
                         new
                         {
                             ID = 2,
-                            Name = "Samsung"
+                            Name = "Quần"
                         },
                         new
                         {
                             ID = 3,
-                            Name = "Sony"
+                            Name = "Giày"
                         },
                         new
                         {
                             ID = 4,
-                            Name = "Dell"
+                            Name = "Váy"
                         },
                         new
                         {
                             ID = 5,
-                            Name = "Asus"
+                            Name = "Áo thun"
+                        },
+                        new
+                        {
+                            ID = 6,
+                            Name = "Đồng hồ"
                         });
                 });
 
@@ -580,6 +605,73 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("Payment");
                 });
 
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductSeason", b =>
+                {
+                    b.Property<int>("SeasonID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.HasKey("SeasonID", "ProductID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("ProductSeason");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductStyle", b =>
+                {
+                    b.Property<int>("StyleID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.HasKey("StyleID", "ProductID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("ProductStyle");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductTag", b =>
+                {
+                    b.Property<int>("TagID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.HasKey("TagID", "ProductID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("ProductTag");
+
+                    b.HasData(
+                        new
+                        {
+                            TagID = 1,
+                            ProductID = 1
+                        },
+                        new
+                        {
+                            TagID = 2,
+                            ProductID = 2
+                        },
+                        new
+                        {
+                            TagID = 3,
+                            ProductID = 3
+                        },
+                        new
+                        {
+                            TagID = 4,
+                            ProductID = 4
+                        });
+                });
+
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Products", b =>
                 {
                     b.Property<int>("ID")
@@ -588,12 +680,30 @@ namespace CRUD_asp.netMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<int>("BrandID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CateID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Material")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -607,17 +717,18 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("manuID")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("typeID")
-                        .HasColumnType("int");
+                    b.Property<string>("Size")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("manuID");
+                    b.HasIndex("BrandID");
 
-                    b.HasIndex("typeID");
+                    b.HasIndex("CateID");
 
                     b.ToTable("Products");
 
@@ -625,145 +736,962 @@ namespace CRUD_asp.netMVC.Migrations
                         new
                         {
                             ID = 1,
-                            Created = new DateTime(2025, 4, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Điện thoại Apple với camera 48MP, chip A16 Bionic.",
-                            Name = "iPhone 14 Pro",
-                            PicturePath = "iphone14pro.jpg",
-                            Price = 999.0,
-                            manuID = 1,
-                            typeID = 1
+                            BrandID = 1,
+                            CateID = 1,
+                            Color = "Đen",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Áo khoác nam chính hãng Nike, màu đen, phong cách thể thao",
+                            Gender = "Nam",
+                            Material = "Vải co giãn",
+                            Name = "Áo khoác nam Nike",
+                            PicturePath = "jacket1.jpg",
+                            Price = 1500000.0,
+                            Quantity = 100,
+                            Size = "L"
                         },
                         new
                         {
                             ID = 2,
-                            Created = new DateTime(2025, 4, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Flagship mạnh mẽ nhất của Samsung, màn hình 120Hz.",
-                            Name = "Samsung Galaxy S23 Ultra",
-                            PicturePath = "s23ultra.jpg",
-                            Price = 1199.0,
-                            manuID = 2,
-                            typeID = 1
+                            BrandID = 1,
+                            CateID = 2,
+                            Color = "Xám",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Quần thể thao Nike chất liệu thoáng mát, phù hợp tập luyện",
+                            Gender = "Nam",
+                            Material = "Polyester",
+                            Name = "Quần thể thao Nike",
+                            PicturePath = "pants1.webp",
+                            Price = 900000.0,
+                            Quantity = 80,
+                            Size = "M"
                         },
                         new
                         {
                             ID = 3,
-                            Created = new DateTime(2025, 4, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Tai nghe chống ồn tốt nhất, chất âm cao cấp.",
-                            Name = "Sony WH-1000XM5",
-                            PicturePath = "sonyxm5.jpg",
-                            Price = 349.0,
-                            manuID = 3,
-                            typeID = 4
+                            BrandID = 1,
+                            CateID = 3,
+                            Color = "Trắng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Giày thể thao Nike Air Max thoải mái và bền bỉ",
+                            Gender = "Nam",
+                            Material = "Vải lưới",
+                            Name = "Giày Nike Air Max",
+                            PicturePath = "shoes1.avif",
+                            Price = 2800000.0,
+                            Quantity = 60,
+                            Size = "42"
                         },
                         new
                         {
                             ID = 4,
-                            Created = new DateTime(2025, 4, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Laptop Apple chạy chip M2, hiệu năng mạnh mẽ.",
-                            Name = "MacBook Pro M2 13 inch",
-                            PicturePath = "macbookpro13.jpg",
-                            Price = 1299.0,
-                            manuID = 1,
-                            typeID = 2
+                            BrandID = 1,
+                            CateID = 4,
+                            Color = "Hồng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Váy thể thao nữ năng động, thiết kế hiện đại",
+                            Gender = "Nữ",
+                            Material = "Thun lạnh",
+                            Name = "Váy thể thao Nike nữ",
+                            PicturePath = "dress1.jpg",
+                            Price = 1100000.0,
+                            Quantity = 40,
+                            Size = "S"
                         },
                         new
                         {
                             ID = 5,
-                            Created = new DateTime(2025, 4, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Laptop gaming mỏng nhẹ, card RTX 4060.",
-                            Name = "Asus ROG Zephyrus G14",
-                            PicturePath = "zephyrusg14.jpg",
-                            Price = 1599.0,
-                            manuID = 5,
-                            typeID = 2
+                            BrandID = 1,
+                            CateID = 5,
+                            Color = "Trắng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Áo thun nam Nike cổ tròn, chất liệu cotton thoải mái",
+                            Gender = "Nam",
+                            Material = "Cotton",
+                            Name = "Áo thun Nike basic",
+                            PicturePath = "tshirt1.jpg",
+                            Price = 590000.0,
+                            Quantity = 200,
+                            Size = "L"
                         },
                         new
                         {
                             ID = 6,
-                            Created = new DateTime(2025, 4, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Tablet Apple với chip M1, thiết kế mỏng nhẹ.",
-                            Name = "iPad Air 5th Gen",
-                            PicturePath = "ipadair5.jpg",
-                            Price = 599.0,
-                            manuID = 1,
-                            typeID = 3
+                            BrandID = 1,
+                            CateID = 6,
+                            Color = "Đen",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Đồng hồ thể thao phong cách Nike, chống nước, dây silicon",
+                            Gender = "Unisex",
+                            Material = "Nhựa cao cấp",
+                            Name = "Đồng hồ thể thao Nike",
+                            PicturePath = "watch1.jpg",
+                            Price = 1900000.0,
+                            Quantity = 25,
+                            Size = "Free"
                         },
                         new
                         {
                             ID = 7,
-                            Created = new DateTime(2025, 4, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Tablet cao cấp với màn hình AMOLED 120Hz.",
-                            Name = "Samsung Galaxy Tab S8",
-                            PicturePath = "tabs8.jpg",
-                            Price = 699.0,
-                            manuID = 2,
-                            typeID = 3
+                            BrandID = 2,
+                            CateID = 1,
+                            Color = "Xanh navy",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế cổ điển, chống gió và giữ ấm tốt",
+                            Gender = "Nam",
+                            Material = "Polyester",
+                            Name = "Áo khoác Adidas Originals",
+                            PicturePath = "adidas_jacket.jpg",
+                            Price = 1450000.0,
+                            Quantity = 70,
+                            Size = "L"
                         },
                         new
                         {
                             ID = 8,
-                            Created = new DateTime(2025, 4, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Đồng hồ thông minh của Apple, theo dõi sức khỏe.",
-                            Name = "Apple Watch Series 9",
-                            PicturePath = "applewatch9.jpg",
-                            Price = 399.0,
-                            manuID = 1,
-                            typeID = 5
+                            BrandID = 2,
+                            CateID = 2,
+                            Color = "Xám",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Quần thể thao thoải mái, phù hợp vận động",
+                            Gender = "Nam",
+                            Material = "Cotton pha",
+                            Name = "Quần jogger Adidas",
+                            PicturePath = "adidas_pants.jpg",
+                            Price = 850000.0,
+                            Quantity = 90,
+                            Size = "M"
                         },
                         new
                         {
                             ID = 9,
-                            Created = new DateTime(2025, 4, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Đồng hồ thông minh của Apple, theo dõi sức khỏe.",
-                            Name = "Apple Watch Series 10",
-                            PicturePath = "applewatch10.jpg",
-                            Price = 999.0,
-                            manuID = 1,
-                            typeID = 5
-                        });
-                });
-
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Prototype", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Prototypes");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            Name = "Smartphone"
+                            BrandID = 2,
+                            CateID = 3,
+                            Color = "Trắng/Xanh",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Đệm Boost êm ái, hỗ trợ chạy bộ hiệu quả",
+                            Gender = "Unisex",
+                            Material = "Vải Primeknit",
+                            Name = "Giày Adidas Ultraboost",
+                            PicturePath = "adidas_shoes.webp",
+                            Price = 3200000.0,
+                            Quantity = 50,
+                            Size = "41"
                         },
                         new
                         {
-                            ID = 2,
-                            Name = "Laptop"
+                            ID = 10,
+                            BrandID = 2,
+                            CateID = 4,
+                            Color = "Hồng pastel",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Váy thể thao nhẹ, thấm hút mồ hôi tốt",
+                            Gender = "Nữ",
+                            Material = "Polyester",
+                            Name = "Váy tennis Adidas nữ",
+                            PicturePath = "adidas_dress.jpg",
+                            Price = 990000.0,
+                            Quantity = 45,
+                            Size = "S"
                         },
                         new
                         {
-                            ID = 3,
-                            Name = "Tablet"
+                            ID = 11,
+                            BrandID = 2,
+                            CateID = 5,
+                            Color = "Đen",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Áo thun cổ điển, logo 3 sọc đặc trưng",
+                            Gender = "Nam",
+                            Material = "Cotton",
+                            Name = "Áo thun Adidas cổ tròn",
+                            PicturePath = "adidas_tshirt.jpg",
+                            Price = 650000.0,
+                            Quantity = 150,
+                            Size = "XL"
                         },
                         new
                         {
-                            ID = 4,
-                            Name = "Headphones"
+                            ID = 12,
+                            BrandID = 2,
+                            CateID = 6,
+                            Color = "Đỏ đậm",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế năng động, chống nước tốt",
+                            Gender = "Unisex",
+                            Material = "Silicon",
+                            Name = "Đồng hồ thể thao Adidas",
+                            PicturePath = "adidas_watch.jpg",
+                            Price = 1750000.0,
+                            Quantity = 30,
+                            Size = "Free"
                         },
                         new
                         {
-                            ID = 5,
-                            Name = "Smartwatch"
+                            ID = 13,
+                            BrandID = 3,
+                            CateID = 1,
+                            Color = "Be",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Áo khoác nữ dáng dài thanh lịch",
+                            Gender = "Nữ",
+                            Material = "Len pha",
+                            Name = "Áo khoác Zara Dáng Dài",
+                            PicturePath = "zara_jacket.jpg",
+                            Price = 1900000.0,
+                            Quantity = 60,
+                            Size = "M"
+                        },
+                        new
+                        {
+                            ID = 14,
+                            BrandID = 3,
+                            CateID = 2,
+                            Color = "Đen",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phong cách hiện đại, thời trang",
+                            Gender = "Nữ",
+                            Material = "Vải tuyết mưa",
+                            Name = "Quần Ống Rộng Zara",
+                            PicturePath = "zara_pants.jpg",
+                            Price = 980000.0,
+                            Quantity = 40,
+                            Size = "S"
+                        },
+                        new
+                        {
+                            ID = 15,
+                            BrandID = 3,
+                            CateID = 3,
+                            Color = "Kem",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế sang trọng, phù hợp tiệc tùng",
+                            Gender = "Nữ",
+                            Material = "Da tổng hợp",
+                            Name = "Giày Cao Gót Zara",
+                            PicturePath = "zara_heels.jpg",
+                            Price = 1200000.0,
+                            Quantity = 55,
+                            Size = "38"
+                        },
+                        new
+                        {
+                            ID = 16,
+                            BrandID = 3,
+                            CateID = 4,
+                            Color = "Trắng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Váy dài thướt tha, thanh lịch",
+                            Gender = "Nữ",
+                            Material = "Voan",
+                            Name = "Váy Xếp Ly Zara",
+                            PicturePath = "zara_dress.jpg",
+                            Price = 1250000.0,
+                            Quantity = 35,
+                            Size = "M"
+                        },
+                        new
+                        {
+                            ID = 17,
+                            BrandID = 3,
+                            CateID = 5,
+                            Color = "Xám",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Áo thun đơn giản, dễ phối đồ",
+                            Gender = "Unisex",
+                            Material = "Cotton",
+                            Name = "Áo Thun Zara Basic",
+                            PicturePath = "zara_tshirt.jpg",
+                            Price = 450000.0,
+                            Quantity = 90,
+                            Size = "M"
+                        },
+                        new
+                        {
+                            ID = 18,
+                            BrandID = 3,
+                            CateID = 6,
+                            Color = "Nâu",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế mặt tròn, dây da tinh tế",
+                            Gender = "Nữ",
+                            Material = "Thép không gỉ & da",
+                            Name = "Đồng Hồ Kim Zara",
+                            PicturePath = "zara_watch.jpg",
+                            Price = 1350000.0,
+                            Quantity = 25,
+                            Size = "Free"
+                        },
+                        new
+                        {
+                            ID = 19,
+                            BrandID = 4,
+                            CateID = 1,
+                            Color = "Xanh rêu",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Chống gió, nhẹ và gọn",
+                            Gender = "Nam",
+                            Material = "Nylon",
+                            Name = "Áo Khoác Dù H&M",
+                            PicturePath = "hm_jacket.jpg",
+                            Price = 950000.0,
+                            Quantity = 80,
+                            Size = "L"
+                        },
+                        new
+                        {
+                            ID = 20,
+                            BrandID = 4,
+                            CateID = 2,
+                            Color = "Xám đậm",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phong cách công sở lịch sự",
+                            Gender = "Nam",
+                            Material = "Polyester",
+                            Name = "Quần Tây H&M",
+                            PicturePath = "hm_pants.jpg",
+                            Price = 700000.0,
+                            Quantity = 65,
+                            Size = "M"
+                        },
+                        new
+                        {
+                            ID = 21,
+                            BrandID = 4,
+                            CateID = 3,
+                            Color = "Trắng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Giày đơn giản, năng động",
+                            Gender = "Unisex",
+                            Material = "Canvas",
+                            Name = "Giày Thể Thao H&M",
+                            PicturePath = "hm_shoes.jpg",
+                            Price = 820000.0,
+                            Quantity = 100,
+                            Size = "42"
+                        },
+                        new
+                        {
+                            ID = 22,
+                            BrandID = 4,
+                            CateID = 4,
+                            Color = "Hồng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Váy xinh xắn cho mùa hè",
+                            Gender = "Nữ",
+                            Material = "Cotton",
+                            Name = "Váy Ngắn Hoa Nhí H&M",
+                            PicturePath = "hm_dress.jpg",
+                            Price = 600000.0,
+                            Quantity = 45,
+                            Size = "S"
+                        },
+                        new
+                        {
+                            ID = 23,
+                            BrandID = 4,
+                            CateID = 5,
+                            Color = "Xanh dương",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Áo thun trơn giá rẻ",
+                            Gender = "Nam",
+                            Material = "Cotton",
+                            Name = "Áo Thun Nam Basic H&M",
+                            PicturePath = "hm_tshirt.jpg",
+                            Price = 200000.0,
+                            Quantity = 150,
+                            Size = "L"
+                        },
+                        new
+                        {
+                            ID = 24,
+                            BrandID = 4,
+                            CateID = 6,
+                            Color = "Đen",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế đơn giản, hiện đại",
+                            Gender = "Unisex",
+                            Material = "Silicon",
+                            Name = "Đồng Hồ Dây Silicon H&M",
+                            PicturePath = "hm_watch.jpg",
+                            Price = 550000.0,
+                            Quantity = 40,
+                            Size = "Free"
+                        },
+                        new
+                        {
+                            ID = 25,
+                            BrandID = 5,
+                            CateID = 1,
+                            Color = "Xanh navy",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Giữ ấm nhẹ nhàng, tiện lợi",
+                            Gender = "Nam",
+                            Material = "Lông vũ",
+                            Name = "Áo khoác lông vũ Uniqlo",
+                            PicturePath = "uniqlo_jacket.jpg",
+                            Price = 1750000.0,
+                            Quantity = 70,
+                            Size = "M"
+                        },
+                        new
+                        {
+                            ID = 26,
+                            BrandID = 5,
+                            CateID = 2,
+                            Color = "Xanh đậm",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Jean co giãn, phong cách tối giản",
+                            Gender = "Nam",
+                            Material = "Denim",
+                            Name = "Quần Jean Uniqlo",
+                            PicturePath = "uniqlo_jeans.jpg",
+                            Price = 950000.0,
+                            Quantity = 50,
+                            Size = "L"
+                        },
+                        new
+                        {
+                            ID = 27,
+                            BrandID = 5,
+                            CateID = 3,
+                            Color = "Trắng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế tối giản, thoải mái",
+                            Gender = "Nam",
+                            Material = "Vải dệt",
+                            Name = "Giày Sneaker Uniqlo",
+                            PicturePath = "uniqlo_shoes.jpg",
+                            Price = 1050000.0,
+                            Quantity = 60,
+                            Size = "41"
+                        },
+                        new
+                        {
+                            ID = 28,
+                            BrandID = 5,
+                            CateID = 4,
+                            Color = "Be",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế tối giản, thoải mái cho mùa hè",
+                            Gender = "Nữ",
+                            Material = "Cotton",
+                            Name = "Váy Cotton Uniqlo",
+                            PicturePath = "uniqlo_dress.jpg",
+                            Price = 850000.0,
+                            Quantity = 40,
+                            Size = "S"
+                        },
+                        new
+                        {
+                            ID = 29,
+                            BrandID = 5,
+                            CateID = 5,
+                            Color = "Xám",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thoáng mát, nhanh khô, thích hợp mùa hè",
+                            Gender = "Unisex",
+                            Material = "Vải Airism",
+                            Name = "Áo thun Airism Uniqlo",
+                            PicturePath = "uniqlo_tshirt.jpg",
+                            Price = 400000.0,
+                            Quantity = 120,
+                            Size = "L"
+                        },
+                        new
+                        {
+                            ID = 30,
+                            BrandID = 5,
+                            CateID = 6,
+                            Color = "Đen",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phong cách tối giản, dây da đen",
+                            Gender = "Nam",
+                            Material = "Kim loại",
+                            Name = "Đồng hồ tối giản Uniqlo",
+                            PicturePath = "uniqlo_watch.jpg",
+                            Price = 980000.0,
+                            Quantity = 30,
+                            Size = "Free"
+                        },
+                        new
+                        {
+                            ID = 31,
+                            BrandID = 6,
+                            CateID = 1,
+                            Color = "Đỏ đô",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế sang trọng, dành cho thời trang cao cấp",
+                            Gender = "Nữ",
+                            Material = "Lông cừu",
+                            Name = "Áo khoác cao cấp Gucci",
+                            PicturePath = "gucci_jacket.jpg",
+                            Price = 25000000.0,
+                            Quantity = 10,
+                            Size = "M"
+                        },
+                        new
+                        {
+                            ID = 32,
+                            BrandID = 6,
+                            CateID = 2,
+                            Color = "Đen",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phong cách lịch lãm, chất liệu cao cấp",
+                            Gender = "Nam",
+                            Material = "Lụa pha",
+                            Name = "Quần tây Gucci nam",
+                            PicturePath = "gucci_pants.jpg",
+                            Price = 15500000.0,
+                            Quantity = 15,
+                            Size = "L"
+                        },
+                        new
+                        {
+                            ID = 33,
+                            BrandID = 6,
+                            CateID = 3,
+                            Color = "Nâu",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế logo đặc trưng, đẳng cấp",
+                            Gender = "Nam",
+                            Material = "Da thật",
+                            Name = "Giày lười Gucci",
+                            PicturePath = "gucci_shoes.jpg",
+                            Price = 22000000.0,
+                            Quantity = 12,
+                            Size = "42"
+                        },
+                        new
+                        {
+                            ID = 34,
+                            BrandID = 6,
+                            CateID = 4,
+                            Color = "Vàng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Chất liệu mềm mại, sang trọng",
+                            Gender = "Nữ",
+                            Material = "Lụa",
+                            Name = "Váy lụa cao cấp Gucci",
+                            PicturePath = "gucci_dress.jpg",
+                            Price = 30000000.0,
+                            Quantity = 8,
+                            Size = "S"
+                        },
+                        new
+                        {
+                            ID = 35,
+                            BrandID = 6,
+                            CateID = 5,
+                            Color = "Trắng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phong cách trẻ trung, thời thượng",
+                            Gender = "Unisex",
+                            Material = "Cotton Ý",
+                            Name = "Áo thun Gucci logo lớn",
+                            PicturePath = "gucci_tshirt.jpg",
+                            Price = 9000000.0,
+                            Quantity = 20,
+                            Size = "L"
+                        },
+                        new
+                        {
+                            ID = 36,
+                            BrandID = 6,
+                            CateID = 6,
+                            Color = "Vàng hồng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Đồng hồ xa xỉ với thiết kế tinh xảo",
+                            Gender = "Nữ",
+                            Material = "Kim cương nhân tạo",
+                            Name = "Đồng hồ đính đá Gucci",
+                            PicturePath = "gucci_watch.jpg",
+                            Price = 45000000.0,
+                            Quantity = 5,
+                            Size = "Free"
+                        },
+                        new
+                        {
+                            ID = 37,
+                            BrandID = 7,
+                            CateID = 1,
+                            Color = "Xanh jean",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Chất liệu jean bền, phong cách cổ điển",
+                            Gender = "Nam",
+                            Material = "Denim",
+                            Name = "Áo khoác jean Levi's",
+                            PicturePath = "levis_jacket.jpg",
+                            Price = 1450000.0,
+                            Quantity = 40,
+                            Size = "M"
+                        },
+                        new
+                        {
+                            ID = 38,
+                            BrandID = 7,
+                            CateID = 2,
+                            Color = "Xanh",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Form dáng chuẩn Mỹ, chất lượng cao",
+                            Gender = "Nam",
+                            Material = "Denim",
+                            Name = "Quần jeans Levi's 501",
+                            PicturePath = "levis_jeans.jpg",
+                            Price = 1250000.0,
+                            Quantity = 60,
+                            Size = "L"
+                        },
+                        new
+                        {
+                            ID = 39,
+                            BrandID = 7,
+                            CateID = 3,
+                            Color = "Trắng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thoải mái và thời trang hàng ngày",
+                            Gender = "Nam",
+                            Material = "Vải canvas",
+                            Name = "Giày thể thao Levi's",
+                            PicturePath = "levis_shoes.jpg",
+                            Price = 1150000.0,
+                            Quantity = 35,
+                            Size = "42"
+                        },
+                        new
+                        {
+                            ID = 40,
+                            BrandID = 7,
+                            CateID = 4,
+                            Color = "Xanh jean",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế trẻ trung, năng động",
+                            Gender = "Nữ",
+                            Material = "Denim",
+                            Name = "Váy bò Levi's nữ",
+                            PicturePath = "levis_dress.jpg",
+                            Price = 980000.0,
+                            Quantity = 20,
+                            Size = "S"
+                        },
+                        new
+                        {
+                            ID = 41,
+                            BrandID = 7,
+                            CateID = 5,
+                            Color = "Trắng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Logo cổ điển, phong cách Mỹ",
+                            Gender = "Unisex",
+                            Material = "Cotton",
+                            Name = "Áo thun cổ tròn Levi's",
+                            PicturePath = "levis_tshirt.jpg",
+                            Price = 500000.0,
+                            Quantity = 100,
+                            Size = "M"
+                        },
+                        new
+                        {
+                            ID = 42,
+                            BrandID = 7,
+                            CateID = 6,
+                            Color = "Nâu",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Đơn giản, mạnh mẽ, cá tính",
+                            Gender = "Nam",
+                            Material = "Thép + da",
+                            Name = "Đồng hồ dây da Levi's",
+                            PicturePath = "levis_watch.jpg",
+                            Price = 850000.0,
+                            Quantity = 15,
+                            Size = "Free"
+                        },
+                        new
+                        {
+                            ID = 43,
+                            BrandID = 8,
+                            CateID = 1,
+                            Color = "Trắng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế năng động, thời trang",
+                            Gender = "Nam",
+                            Material = "Polyester",
+                            Name = "Áo khoác thể thao Lacoste",
+                            PicturePath = "lacoste_jacket.jpg",
+                            Price = 2700000.0,
+                            Quantity = 30,
+                            Size = "L"
+                        },
+                        new
+                        {
+                            ID = 44,
+                            BrandID = 8,
+                            CateID = 2,
+                            Color = "Xanh dương",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phong cách thể thao, thoáng mát",
+                            Gender = "Nam",
+                            Material = "Cotton",
+                            Name = "Quần short Lacoste",
+                            PicturePath = "lacoste_shorts.jpg",
+                            Price = 1450000.0,
+                            Quantity = 40,
+                            Size = "M"
+                        },
+                        new
+                        {
+                            ID = 45,
+                            BrandID = 8,
+                            CateID = 3,
+                            Color = "Trắng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Chất liệu cao cấp, thiết kế tinh tế",
+                            Gender = "Nam",
+                            Material = "Da",
+                            Name = "Giày sneaker Lacoste",
+                            PicturePath = "lacoste_shoes.jpg",
+                            Price = 2200000.0,
+                            Quantity = 25,
+                            Size = "41"
+                        },
+                        new
+                        {
+                            ID = 46,
+                            BrandID = 8,
+                            CateID = 4,
+                            Color = "Hồng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Lịch sự, sang trọng cho nữ",
+                            Gender = "Nữ",
+                            Material = "Cotton pha",
+                            Name = "Váy polo Lacoste",
+                            PicturePath = "lacoste_dress.jpg",
+                            Price = 1900000.0,
+                            Quantity = 18,
+                            Size = "S"
+                        },
+                        new
+                        {
+                            ID = 47,
+                            BrandID = 8,
+                            CateID = 5,
+                            Color = "Xanh lá",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Biểu tượng nổi bật với logo cá sấu",
+                            Gender = "Nam",
+                            Material = "Cotton",
+                            Name = "Áo thun cá sấu Lacoste",
+                            PicturePath = "lacoste_tshirt.jpg",
+                            Price = 1100000.0,
+                            Quantity = 55,
+                            Size = "L"
+                        },
+                        new
+                        {
+                            ID = 48,
+                            BrandID = 8,
+                            CateID = 6,
+                            Color = "Xanh navy",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Năng động, trẻ trung, phù hợp với người chơi thể thao",
+                            Gender = "Unisex",
+                            Material = "Nhựa + kim loại",
+                            Name = "Đồng hồ thể thao Lacoste",
+                            PicturePath = "lacoste_watch.jpg",
+                            Price = 2600000.0,
+                            Quantity = 20,
+                            Size = "Free"
+                        },
+                        new
+                        {
+                            ID = 49,
+                            BrandID = 9,
+                            CateID = 1,
+                            Color = "Xám",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế hiện đại, năng động",
+                            Gender = "Nam",
+                            Material = "Polyester",
+                            Name = "Áo khoác thể thao Puma",
+                            PicturePath = "puma_jacket.jpg",
+                            Price = 1550000.0,
+                            Quantity = 50,
+                            Size = "L"
+                        },
+                        new
+                        {
+                            ID = 50,
+                            BrandID = 9,
+                            CateID = 2,
+                            Color = "Đen",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thoải mái, phù hợp vận động",
+                            Gender = "Nam",
+                            Material = "Thun co giãn",
+                            Name = "Quần jogger Puma",
+                            PicturePath = "puma_pants.jpg",
+                            Price = 1100000.0,
+                            Quantity = 70,
+                            Size = "M"
+                        },
+                        new
+                        {
+                            ID = 51,
+                            BrandID = 9,
+                            CateID = 3,
+                            Color = "Xanh",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế thể thao, hỗ trợ di chuyển",
+                            Gender = "Nam",
+                            Material = "Vải + Cao su",
+                            Name = "Giày chạy bộ Puma",
+                            PicturePath = "puma_shoes.jpg",
+                            Price = 1800000.0,
+                            Quantity = 40,
+                            Size = "42"
+                        },
+                        new
+                        {
+                            ID = 52,
+                            BrandID = 9,
+                            CateID = 4,
+                            Color = "Hồng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phù hợp tập luyện hoặc mặc thường ngày",
+                            Gender = "Nữ",
+                            Material = "Cotton",
+                            Name = "Váy thể thao Puma nữ",
+                            PicturePath = "puma_dress.jpg",
+                            Price = 950000.0,
+                            Quantity = 25,
+                            Size = "S"
+                        },
+                        new
+                        {
+                            ID = 53,
+                            BrandID = 9,
+                            CateID = 5,
+                            Color = "Trắng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Chất vải thấm hút, thoáng mát",
+                            Gender = "Unisex",
+                            Material = "Polyester",
+                            Name = "Áo thun thể thao Puma",
+                            PicturePath = "puma_tshirt.jpg",
+                            Price = 600000.0,
+                            Quantity = 90,
+                            Size = "M"
+                        },
+                        new
+                        {
+                            ID = 54,
+                            BrandID = 9,
+                            CateID = 6,
+                            Color = "Đen",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thiết kế mạnh mẽ, phong cách",
+                            Gender = "Nam",
+                            Material = "Nhựa cao cấp",
+                            Name = "Đồng hồ thể thao Puma",
+                            PicturePath = "puma_watch.jpg",
+                            Price = 1200000.0,
+                            Quantity = 18,
+                            Size = "Free"
+                        },
+                        new
+                        {
+                            ID = 55,
+                            BrandID = 10,
+                            CateID = 1,
+                            Color = "Đen",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Đẳng cấp, thời thượng, thiết kế quý phái",
+                            Gender = "Nữ",
+                            Material = "Dạ cao cấp",
+                            Name = "Áo khoác dạ Chanel",
+                            PicturePath = "chanel_jacket.jpg",
+                            Price = 9500000.0,
+                            Quantity = 15,
+                            Size = "S"
+                        },
+                        new
+                        {
+                            ID = 56,
+                            BrandID = 10,
+                            CateID = 2,
+                            Color = "Be",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Đường may tinh xảo, chất liệu mềm mịn",
+                            Gender = "Nữ",
+                            Material = "Vải lụa",
+                            Name = "Quần vải cao cấp Chanel",
+                            PicturePath = "chanel_pants.jpg",
+                            Price = 7200000.0,
+                            Quantity = 12,
+                            Size = "M"
+                        },
+                        new
+                        {
+                            ID = 57,
+                            BrandID = 10,
+                            CateID = 3,
+                            Color = "Đỏ đô",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Thanh lịch, sang trọng",
+                            Gender = "Nữ",
+                            Material = "Da thật",
+                            Name = "Giày cao gót Chanel",
+                            PicturePath = "chanel_heels.jpg",
+                            Price = 8300000.0,
+                            Quantity = 10,
+                            Size = "37"
+                        },
+                        new
+                        {
+                            ID = 58,
+                            BrandID = 10,
+                            CateID = 4,
+                            Color = "Trắng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Lộng lẫy, thiết kế quyến rũ",
+                            Gender = "Nữ",
+                            Material = "Lụa",
+                            Name = "Váy dạ hội Chanel",
+                            PicturePath = "chanel_dress.jpg",
+                            Price = 13000000.0,
+                            Quantity = 8,
+                            Size = "S"
+                        },
+                        new
+                        {
+                            ID = 59,
+                            BrandID = 10,
+                            CateID = 5,
+                            Color = "Xám",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Đơn giản nhưng đầy tinh tế",
+                            Gender = "Nữ",
+                            Material = "Cotton",
+                            Name = "Áo thun cao cấp Chanel",
+                            PicturePath = "chanel_tshirt.jpg",
+                            Price = 3200000.0,
+                            Quantity = 20,
+                            Size = "M"
+                        },
+                        new
+                        {
+                            ID = 60,
+                            BrandID = 10,
+                            CateID = 6,
+                            Color = "Vàng",
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Tinh xảo, sang trọng và nữ tính",
+                            Gender = "Nữ",
+                            Material = "Thép mạ vàng",
+                            Name = "Đồng hồ Chanel sang trọng",
+                            PicturePath = "chanel_watch.jpg",
+                            Price = 18000000.0,
+                            Quantity = 6,
+                            Size = "Free"
                         });
                 });
 
@@ -795,6 +1723,114 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Season", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Season");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Style", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Style");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Tag", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Tag");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Description = "Các sản phẩm liên quan đến xu hướng thời trang",
+                            Name = "Thời trang"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Description = "Trang phục và phụ kiện dùng trong thể thao",
+                            Name = "Thể thao"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Description = "Các loại giày dành cho vận động, thể thao",
+                            Name = "Giày thể thao"
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Description = "Sản phẩm dành riêng cho nữ giới",
+                            Name = "Nữ"
+                        },
+                        new
+                        {
+                            ID = 5,
+                            Description = "Sản phẩm dành riêng cho nam giới",
+                            Name = "Nam"
+                        },
+                        new
+                        {
+                            ID = 6,
+                            Description = "Thời trang cho môi trường làm việc, công sở",
+                            Name = "Công sở"
+                        },
+                        new
+                        {
+                            ID = 7,
+                            Description = "Thời trang năng động, thoải mái khi đi chơi",
+                            Name = "Dạo phố"
+                        },
+                        new
+                        {
+                            ID = 8,
+                            Description = "Phù hợp cho cả nam và nữ",
+                            Name = "Unisex"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -1008,23 +2044,80 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductSeason", b =>
+                {
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Products", "Product")
+                        .WithMany("ProductSeason")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Season", "Season")
+                        .WithMany("ProductSeason")
+                        .HasForeignKey("SeasonID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Season");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductStyle", b =>
+                {
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Products", "Product")
+                        .WithMany("ProductStyles")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Style", "Style")
+                        .WithMany("ProductStyles")
+                        .HasForeignKey("StyleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Style");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductTag", b =>
+                {
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Products", "Product")
+                        .WithMany("ProductTag")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Tag", "Tag")
+                        .WithMany("ProductTag")
+                        .HasForeignKey("TagID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Products", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Product.Manufacturer", "Manufactures")
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Brand", "Brand")
                         .WithMany("products")
-                        .HasForeignKey("manuID")
+                        .HasForeignKey("BrandID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CRUD_asp.netMVC.Models.Product.Prototype", "Types")
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Category", "Cate")
                         .WithMany("products")
-                        .HasForeignKey("typeID")
+                        .HasForeignKey("CateID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Manufactures");
+                    b.Navigation("Brand");
 
-                    b.Navigation("Types");
+                    b.Navigation("Cate");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Reviews", b =>
@@ -1112,7 +2205,12 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Navigation("Staff");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Manufacturer", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Brand", b =>
+                {
+                    b.Navigation("products");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Category", b =>
                 {
                     b.Navigation("products");
                 });
@@ -1130,12 +2228,28 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.Navigation("OrderDetails");
 
+                    b.Navigation("ProductSeason");
+
+                    b.Navigation("ProductStyles");
+
+                    b.Navigation("ProductTag");
+
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Prototype", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Season", b =>
                 {
-                    b.Navigation("products");
+                    b.Navigation("ProductSeason");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Style", b =>
+                {
+                    b.Navigation("ProductStyles");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Tag", b =>
+                {
+                    b.Navigation("ProductTag");
                 });
 #pragma warning restore 612, 618
         }

@@ -16,19 +16,15 @@ namespace CRUD_asp.netMVC.Models.Product
         [Key]
         public int ID { get; set; }
 
-        [StringLength(50, MinimumLength = 5, ErrorMessage = "Do dai ten tu {2} den {1} ky tu")]
-        [Required(ErrorMessage = "Ban can phai nhap Ten !!!")]
+        [Required(ErrorMessage = "Ban can phai nhap Ten !!!"), StringLength(50, MinimumLength = 5, ErrorMessage = "Do dai ten tu {2} den {1} ky tu")]
         public string? Name { get; set; }
 
         [NotMapped]
         [DataType(DataType.Upload)]
         public IFormFile? picture { get; set; }
-
         public string? PicturePath { get; set; }
 
-        [StringLength(300, MinimumLength = 3, ErrorMessage = "Do dai mo ta tu {2} den {1} ky tu")]
-        [Required(ErrorMessage = "Ban can phai nhap Mo ta !!!")]
-        [Column(TypeName = "nvarchar(max)")]
+        [Required, StringLength(300, MinimumLength = 3, ErrorMessage = "Do dai mo ta tu {2} den {1} ky tu")]
         public string? Description { get; set; }
 
         [Range(5, 1000, ErrorMessage = "Gia cua san pham nam trong {1} - {2}")]
@@ -36,23 +32,38 @@ namespace CRUD_asp.netMVC.Models.Product
         [DataType(DataType.Currency)]
         public double Price { get; set; }
 
+        [Required(ErrorMessage = "Ban can phai nhap {0} !!!")]
+        public string? Size { get; set; }
+
+        [Required(ErrorMessage = "Ban can phai nhap {0} !!!")]
+        public string? Color { get; set; }
+
+        [Required(ErrorMessage = "Ban can phai nhap {0} !!!")]
+        public string? Gender { get; set; }
+
+        [Required(ErrorMessage = "Ban can phai nhap {0} !!!")]
+        public string? Material { get; set; }
+
+        [Required(ErrorMessage = "Ban can phai nhap {0} !!!")]
+        public int? Quantity { get; set; }
+
         [DataType(DataType.Date)]
-        public DateTime Created { get; set; }
+        public DateTime Created { get; set; } = DateTime.Now;
 
         [Required]
-        [DisplayName("Manufactures")]
-        public int? manuID { get; set; }
-        public Manufacturer? Manufactures { get; set; }
+        public int? BrandID { get; set; }
+        public Brand? Brand { get; set; }
 
         [Required]
-        [DisplayName("Types")]
-        public int? typeID { get; set; }
-        public Prototype? Types { get; set; }
+        public int? CateID { get; set; }
+        public Category? Cate { get; set; }
 
         public List<AddToCart>? Carts { get; set; }
         public List<OrderDetail>? OrderDetails { get; set; }
         public List<Reviews>? Reviews { get; set; }
 
+        public List<ProductStyle>? ProductStyles { get; set; }
+        public List<ProductTag>? ProductTag { get; set; }
+        public List<ProductSeason>? ProductSeason { get; set; }
     }
-
 }

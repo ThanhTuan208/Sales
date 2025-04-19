@@ -13,6 +13,8 @@ namespace CRUD_asp.netMVC
 
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddRazorPages();
+
             // Dky context 
             builder.Services.AddDbContext<AppDBContext>(option =>
                 option.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext")) // appsettings.json
@@ -39,7 +41,7 @@ namespace CRUD_asp.netMVC
             });
 
             var app = builder.Build();
-
+            
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -50,13 +52,14 @@ namespace CRUD_asp.netMVC
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.MapRazorPages();
 
             app.UseAuthorization();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Account}/{action=Register}/{id?}");
+                pattern: "{controller=Product}/{action=Index}/{id?}");
 
             app.Run();
         }

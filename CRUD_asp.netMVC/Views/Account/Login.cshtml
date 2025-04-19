@@ -1,0 +1,50 @@
+﻿@using CRUD_asp.netMVC.Models.Account.ActionViewModel
+@model Login
+@{
+    Layout = "_AccountLayout";
+}
+
+<form method="post" asp-controller="Account" asp-action="Login">
+    <div class="container my-5">
+        <div class="row justify-content-center align-items-center shadow-lg rounded-3"
+             style="height: 80vh;">
+            <div class="col-lg-4    ">
+                <h1 class="text-center" style="margin-bottom: 40px">LOGIN</h1>
+              
+           
+                <div class="form-floating my-3">
+                    <input asp-for="Email"
+                           class="form-control"
+                           placeholder="Enter Email" />
+                    <label for="" class="form-label ms-1">Email</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+              
+                <div class="form-floating my-3">
+                    <input asp-for="Password"
+                           class="form-control"
+                           placeholder="Enter Password" />
+                    <label for="" class="form-label ms-1">Password</label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="my-3 form-check ">
+                    <input asp-for="RememberMe" class="form-check-input"/>
+                    <label asp-for="RememberMe" for="" class="form-check-label"></label>
+                    <span asp-validation-for="RememberMe" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="bn5">
+                        Sign In
+                    </button>
+                </div>
+                .<div class="d-flex justify-content-between">
+                    <a asp-action="register" class="text-decoration text-dark">Register</a>
+                    <a asp-action="register" class="text-decoration text-dark">Forget Password</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+

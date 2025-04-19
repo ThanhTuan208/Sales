@@ -1,13 +1,16 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Account;
 using CRUD_asp.netMVC.Models.Account.ActionViewModel;
+using EFCoreSecondLevelCacheInterceptor;
 using Humanizer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
 using Microsoft.EntityFrameworkCore.Storage.Json;
 using NuGet.Protocol.Plugins;
 using System.Collections.Immutable;
+using System.Diagnostics.Eventing.Reader;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -31,13 +34,10 @@ namespace CRUD_asp.netMVC.Controllers
             return View();
         }
 
-        public IActionResult Register()
-        {
-            return View();
-        }
+        public IActionResult Register() => View();
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(Register register)
         {
             if (!ModelState.IsValid) return View(register);
@@ -137,6 +137,30 @@ namespace CRUD_asp.netMVC.Controllers
             }
 
             return View(register);
+        }
+
+        public IActionResult Login() => View();
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(Login login)
+        {
+            if (!ModelState.IsValid) return View(login);
+
+            var user = await _userManager.FindByEmailAsync(login.Email.Trim());
+            if (user == null || !await _userManager.CheckPasswordAsync(user, login.Password))
+            {
+                ModelState.AddModelError(string.Empty, "Email or Password is incorrect");
+                return View(login);
+            }
+
+            var account = await _signInManager.PasswordSignInAsync(user, login.Password, login.RememberMe, lockoutOnFailure: false);
+            if (account.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError(string.Empty, "Error occurred while logging in");
+            return View(login);
         }
     }
 }
