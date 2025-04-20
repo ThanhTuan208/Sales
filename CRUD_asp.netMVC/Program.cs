@@ -41,7 +41,7 @@ namespace CRUD_asp.netMVC
             });
 
             var app = builder.Build();
-            
+
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -59,7 +59,7 @@ namespace CRUD_asp.netMVC
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Product}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }

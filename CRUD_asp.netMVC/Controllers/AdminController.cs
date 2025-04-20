@@ -15,6 +15,7 @@ using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Security.Cryptography.Pkcs;
 using Humanizer.Localisation.DateToOrdinalWords;
+using static Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -81,6 +82,7 @@ namespace CRUD_asp.netMVC.Controllers
 
             ViewBag.Brand = new SelectList(_context.Brand, "ID", "Name", products.BrandID);
             ViewBag.Category = new SelectList(_context.Category, "ID", "Name", products.CateID);
+            ViewBag.Gender = new SelectList(_context.Gender, "ID", "Name", products.GenderID);
 
             return View(products);
         }
@@ -88,7 +90,7 @@ namespace CRUD_asp.netMVC.Controllers
         // POST: Products/Create 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,picture,Description,Price,BrandID,CateID")] Products products)
+        public async Task<IActionResult> Create([Bind("Name,picture,Description,Price,Quantity,GenderID,BrandID,CateID")] Products products)
         {
             if (ModelState.IsValid)
             {
@@ -97,14 +99,14 @@ namespace CRUD_asp.netMVC.Controllers
                     var pathName = Path.GetFileName(products.picture.FileName);
                     if (pathName != null)
                     {
-                        var fileUpLoad = Path.Combine(environment.WebRootPath, "image", pathName);
+                        var fileUpLoad = Path.Combine(environment.WebRootPath, "images/Products/", pathName);
                         using (var fileStream = new FileStream(fileUpLoad, FileMode.Create, FileAccess.Write, FileShare.None))
                         {
                             await products.picture.CopyToAsync(fileStream);
                         }
                     }
 
-                    products.PicturePath = "/image/" + pathName;
+                    products.PicturePath = "images/Products/" + pathName;
                 }
 
                 _context.Add(products);
@@ -165,13 +167,13 @@ namespace CRUD_asp.netMVC.Controllers
                     if (file != null && !string.IsNullOrWhiteSpace(file.FileName))
                     {
                         var fileName = Path.GetFileName(file.FileName);
-                        var fileUpLoad = Path.Combine(environment.WebRootPath, "image", fileName);
+                        var fileUpLoad = Path.Combine(environment.WebRootPath, "images/Products/", fileName);
                         using (var FileStream = new FileStream(fileUpLoad, FileMode.Create, FileAccess.Write, FileShare.None))
                         {
                             await file.CopyToAsync(FileStream);
                         }
 
-                        products.PicturePath = "/image/" + fileName;
+                        products.PicturePath = "~/images/Products/" + fileName;
                     }
                     else
                     {

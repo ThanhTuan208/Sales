@@ -1,4 +1,5 @@
 ﻿@using CRUD_asp.netMVC.Models.Product;
+@using System.Globalization
 @model PaginatedList<Products>
 
 @{
@@ -83,7 +84,7 @@
                 </td>
 
                 <td>
-                    @Html.DisplayFor(modelItem => item.Price)
+                    <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
                 </td>
 
                 <td>

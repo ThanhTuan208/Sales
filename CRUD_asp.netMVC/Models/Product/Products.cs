@@ -24,46 +24,40 @@ namespace CRUD_asp.netMVC.Models.Product
         public IFormFile? picture { get; set; }
         public string? PicturePath { get; set; }
 
-        [Required, StringLength(300, MinimumLength = 3, ErrorMessage = "Do dai mo ta tu {2} den {1} ky tu")]
+        [Required, Column(TypeName = "nvarchar(max)")]
         public string? Description { get; set; }
 
-        [Range(5, 1000, ErrorMessage = "Gia cua san pham nam trong {1} - {2}")]
-        [Required(ErrorMessage = "Ban can phai nhap Gia sp !!!")]
+        [Required(ErrorMessage = "Ban can phai nhap {0} sp !!!")]
         [DataType(DataType.Currency)]
         public double Price { get; set; }
 
         [Required(ErrorMessage = "Ban can phai nhap {0} !!!")]
-        public string? Size { get; set; }
-
-        [Required(ErrorMessage = "Ban can phai nhap {0} !!!")]
-        public string? Color { get; set; }
-
-        [Required(ErrorMessage = "Ban can phai nhap {0} !!!")]
-        public string? Gender { get; set; }
-
-        [Required(ErrorMessage = "Ban can phai nhap {0} !!!")]
-        public string? Material { get; set; }
-
-        [Required(ErrorMessage = "Ban can phai nhap {0} !!!")]
-        public int? Quantity { get; set; }
+        public int Quantity { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime Created { get; set; } = DateTime.Now;
 
         [Required]
-        public int? BrandID { get; set; }
+        public int GenderID { get; set; }
+        public Gender? Gender { get; set; }
+
+        [Required]
+        public int BrandID { get; set; }
         public Brand? Brand { get; set; }
 
         [Required]
-        public int? CateID { get; set; }
+        public int CateID { get; set; }
         public Category? Cate { get; set; }
 
         public List<AddToCart>? Carts { get; set; }
         public List<OrderDetail>? OrderDetails { get; set; }
         public List<Reviews>? Reviews { get; set; }
 
+        public List<ProductColor>? ProductColor { get; set; }
+        public List<ProductSize>? ProductSize { get; set; }
         public List<ProductStyle>? ProductStyles { get; set; }
         public List<ProductTag>? ProductTag { get; set; }
         public List<ProductSeason>? ProductSeason { get; set; }
+        public List<ProductMaterial>? ProductMaterial { get; set; }
     }
 }

@@ -3,13 +3,12 @@
 
 @{
     ViewData["Title"] = "Create";
-    var viewManu = ViewBag.Manufactures as SelectList;
-    var viewTypes = ViewBag.Prototypes as SelectList;
+    var viewBrand = ViewBag.Brand as SelectList;
+    var viewCate = ViewBag.Category as SelectList;
+    var viewGender = ViewBag.Gender as SelectList;
 }
 
 <h1>Create</h1>
-
-<h4>Products</h4>
 <hr />
 
 <div class="container">
@@ -23,7 +22,7 @@
         </div> *@
 
         <div class="form-floating mb-3">
-            <input name="Name" class="form-control" placeholder="Enter Name" required />
+            <input type="text" name="Name" class="form-control" placeholder="Enter Name" required />
             <label class="form-label">Enter Name</label>
             <span class="text-danger" asp-validation-for="Name"></span>
         </div>
@@ -35,38 +34,51 @@
         </div>
 
         <div class="form-floating mb-3">
-            <input name="Description" class="form-control" placeholder="Enter Description" required />
+            <input type="text" name="Description" class="form-control" placeholder="Enter Description" required />
             <label class="form-label">Enter Description</label>
             <span class="text-danger" asp-validation-for="Description"></span>
         </div>
 
         <div class="form-floating mb-3">
-            <input name="Price" class="form-control" placeholder="Enter Price" required />
+            <input type="number" name="Price" class="form-control" placeholder="Enter Price" required />
             <label class="form-label">Enter Price</label>
             <span class="text-danger" asp-validation-for="Price"></span>
         </div>
 
         <div class="form-floating mb-3">
-            <select asp-for="BrandID" asp-items="@viewManu" class="form-select" >
+            <input type="number" name="Quantity" class="form-control" placeholder="Enter Quantity" required />
+            <label class="form-label">Enter Quantity</label>
+            <span class="text-danger" asp-validation-for="Quantity"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <select asp-for="GenderID" asp-items="@viewGender" class="form-select">
                 <option value="" disabled>Option Manu</option>
             </select>
-        <label asp-for="BrandID" class="form-label">Enter Manufactures</label>
+            <label asp-for="GenderID" class="form-label">Enter Gender</label>
+            <span asp-validation-for="GenderID"></span>
+        </div>
+
+          <div class="form-floating mb-3">
+            <select asp-for="BrandID" asp-items="@viewBrand" class="form-select">
+                <option value="" disabled>Option Manu</option>
+            </select>
+            <label asp-for="BrandID" class="form-label">Enter Brand</label>
             <span asp-validation-for="BrandID"></span>
         </div>
 
         <div class="form-floating mb-3">
-            <select asp-for="CateID" asp-items="@viewTypes" class="form-select" >
+            <select asp-for="CateID" asp-items="@viewCate" class="form-select">
                 <option value="" disabled>Option Types</option>
             </select>
-        <label asp-for="CateID" class="form-label">Enter Prototypes</label>
+            <label asp-for="CateID" class="form-label">Enter Category</label>
             <span asp-validation-for="CateID"></span>
         </div>
 
-        <button type="submit" value="Create" class="btn btn-outline-secondary">Submit</button>
+        <div class="d-flex justify-content-center align-items-center">
+            <button type="submit" value="Create" class="btn btn-outline-secondary my-3" style="width: 15%">Submit</button>
+        </div>
     </form>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 

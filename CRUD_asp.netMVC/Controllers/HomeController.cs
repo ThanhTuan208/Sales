@@ -4,7 +4,6 @@ using CRUD_asp.netMVC.Models;
 using CRUD_asp.netMVC.Data;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace CRUD_asp.netMVC.Controllers;
 
 public class HomeController : Controller
@@ -21,16 +20,17 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var product = context.Products
+        var product = await context.Products
             .Include(p => p.Brand)
-            .Include(p => p.Cate).Take(6);
+            .Include(p => p.Cate)
+            .Include(p => p.Gender)
+            .Take(6).ToListAsync();
 
         return View(product);
     }
 
-    public IActionResult Product() => View();
-
-    public IActionResult ProductDetail() => View();
-
     public IActionResult About() => View();
+
+    public IActionResult Contact() => View();
+
 }

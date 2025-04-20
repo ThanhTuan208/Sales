@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>@ViewData["Title"] - CRUD_asp.netMVC</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/styleMe.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CRUD_asp.netMVC.styles.css" asp-append-version="true" />
-    <link href="~/assets/owl.css" rel="stylesheet" />
 
     <meta property="og:title" content="" />
     <meta property="og:image" content="" />
@@ -24,77 +23,76 @@
     <!-- <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet"> -->
     <!-- <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i" rel="stylesheet"> -->
     <!-- Animate.css -->
-    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="~/css/animate.css" asp-append-version="true">
     <!-- Icomoon Icon Fonts-->
-    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="~/css/icomoon.css" asp-append-version="true">
     <!-- Bootstrap  -->
-    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="~/css/bootstrap.css" asp-append-version="true">
 
     <!-- Flexslider  -->
-    <link rel="stylesheet" href="css/flexslider.css">
+    <link rel="stylesheet" href="~/css/flexslider.css" asp-append-version="true">
 
     <!-- Owl Carousel  -->
-    <link rel="stylesheet" href="css/owl.carousel.min.css">
-    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/owl.theme.default.min.css" asp-append-version="true">
 
     <!-- Theme style  -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
 
     <!-- Modernizr JS -->
-    <script src="js/modernizr-2.6.2.min.js"></script>
+    <script src="~/js/modernizr-2.6.2.min.js" asp-append-version="true"></script>
 
 </head>
-
 <body>
-
-    <header>
-        <div id="page">
-            <nav class="fh5co-nav fixed-top" role="navigation">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-3 col-xs-2">
-                            <div id="fh5co-logo"><a asp-action="Index">Shop.</a></div>
-                        </div>
-                        <div class="col-md-6 col-xs-6 text-center menu-1">
-                            <ul>
-                                <li class="has-dropdown">
-                                    <a href="">Product</a>
-                                    <ul class="dropdown">
-                                        <li><a asp-action="Product">Single Shop</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="about.html">About</a></li>
-                                <li class="has-dropdown">
-                                    <a href="services.html">Services</a>
-                                    <ul class="dropdown">
-                                        <li><a href="#">Web Design</a></li>
-                                        <li><a href="#">eCommerce</a></li>
-                                        <li><a href="#">Branding</a></li>
-                                        <li><a href="#">API</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="contact.html">Contact</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-md-3 col-xs-4 text-right hidden-xs menu-2">
-                            <ul>
-                                <li class="search">
-                                    <div class="input-group">
-                                        <input type="text" placeholder="Search..">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-primary" type="button"><i class="icon-search"></i></button>
-                                        </span>
-                                    </div>
-                                </li>
-                                <li class="shopping-cart"><a href="#" class="cart"><span><small>0</small><i class="icon-shopping-cart"></i></span></a></li>
-                            </ul>
-                        </div>
+    <div id="page">
+        <nav class="fh5co-nav fixed-top" role="navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 col-xs-2">
+                        <div id="fh5co-logo"><a asp-action="Index" asp-controller="Home">Thanh Tuan.</a></div>
                     </div>
+                    <div class="col-md-6 col-xs-6 text-center menu-1">
+                        <ul>
 
+                            @* <li class="has-dropdown">
+                                <a href="">Product</a>
+                                <ul class="dropdown">
+                                </ul>
+                            </li> *@
+                                
+                            <li><a asp-action="Index" asp-controller="Product">Product</a></li>
+                            <li><a asp-action="About" asp-controller="Home">About</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Services</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Web Design</a></li>
+                                    <li><a href="#">eCommerce</a></li>
+                                    <li><a href="#">Branding</a></li>
+                                    <li><a href="#">API</a></li>
+                                </ul>
+                            </li>
+                            <li><a asp-action="Contact" asp-controller="Home">Contact</a></li>
+                            
+                        </ul>
+                    </div>
+                    <div class="col-md-3 col-xs-4 text-right hidden-xs menu-2">
+                        <ul>
+                            <li class="search">
+                                <div class="input-group">
+                                    <input type="text" placeholder="Search..">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="button"><i class="icon-search"></i></button>
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="shopping-cart"><a href="#" class="cart"><span><small>0</small><i class="icon-shopping-cart"></i></span></a></li>
+                        </ul>
+                    </div>
                 </div>
-            </nav>
-        </div>
-    </header>
+
+            </div>
+        </nav>
+    </div>
 
 
     <main role="main" class="">
@@ -165,24 +163,24 @@
     </div>
 
     <!-- jQuery -->
-    <script src="js/jquery.min.js"></script>
+    <script src="~/js/jquery.min.js" asp-append-version="true"></script>
     <!-- jQuery Easing -->
-    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="~/js/jquery.easing.1.3.js" asp-append-version="true"></script>
     <!-- Bootstrap -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap.min.js" asp-append-version="true"></script>
     <!-- Waypoints -->
-    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="~/js/jquery.waypoints.min.js" asp-append-version="true"></script>
     <!-- Carousel -->
-    <script src="js/owl.carousel.min.js"></script>
+    <script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
     <!-- countTo -->
-    <script src="js/jquery.countTo.js"></script>
+    <script src="~/js/jquery.countTo.js" asp-append-version="true"></script>
     <!-- Flexslider -->
-    <script src="js/jquery.flexslider-min.js"></script>
+    <script src="~/js/jquery.flexslider-min.js" asp-append-version="true"></script>
     <!-- Main -->
-    <script src="js/main.js"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
 
-    <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.js" asp-append-version="true"></script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
