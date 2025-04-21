@@ -19,7 +19,7 @@ namespace CRUD_asp.netMVC.Controllers
         public async Task<IActionResult> ProductDetail(int id)
         {
             var product = id > 0 && !string.IsNullOrWhiteSpace(id.ToString()) ?
-                 await context.Products
+                 await context.Products.AsNoTracking()
                 .Include(p => p.Brand)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)

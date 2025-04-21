@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CRUD_asp.netMVC.Data;
-using System.Configuration;
-using AspNetCoreGeneratedDocument;
-using NuGet.Versioning;
-using System.Numerics;
 using CRUD_asp.netMVC.Models.Product;
+using CRUD_asp.netMVC.Models.ViewModels;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using EFCoreSecondLevelCacheInterceptor;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Security.Cryptography.Pkcs;
-using Humanizer.Localisation.DateToOrdinalWords;
-using static Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
+using System.Diagnostics;
+using System.Data;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
+using Microsoft.CodeAnalysis.CSharp;
+
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -33,7 +30,7 @@ namespace CRUD_asp.netMVC.Controllers
         // GET: Products
         public async Task<IActionResult> Index(int page = 1)
         {
-            var product = _context.Products
+            var product = _context.Products.AsNoTracking()
                        .Include(p => p.Brand)
                        .Include(p => p.Cate).OrderByDescending(p => p.ID);
 
@@ -47,7 +44,10 @@ namespace CRUD_asp.netMVC.Controllers
         public async Task<IActionResult> Index(int page = 1, string keyword = "")
         {
 
-            var product = _context.Products.Include(p => p.Brand).Include(p => p.Cate).Where(p => p.Description.Contains(keyword) || p.Name.Contains(keyword));
+            var product = _context.Products.AsNoTracking()
+                .Include(p => p.Brand)
+                .Include(p => p.Cate)
+                .Where(p => p.Description.Contains(keyword) || p.Name.Contains(keyword));
 
 
             var paginationProduct = await PaginatedList<Products>.CreatePag(product, page, 5);
@@ -62,51 +62,155 @@ namespace CRUD_asp.netMVC.Controllers
                 return NotFound();
             }
 
-            var product = _context.Products
-                        .Include(p => p.Brand)
-                        .Include(p => p.Cate)
-                        .FirstOrDefault(p => p.ID == id);
+            var Product = await _context.Products.AsNoTracking()
+                .Include(p => p.Brand)
+                .Include(p => p.Cate)
+                .Include(p => p.Gender)
+                .Include(p => p.ProductMaterial)
+                .Include(p => p.ProductTag)
+                .Include(p => p.ProductStyles)
+                .Include(p => p.ProductColor)
+                .Include(p => p.ProductSeason)
+                .Include(p => p.ProductSize)
+                .FirstOrDefaultAsync(p => p.ID == id);
 
-            if (product == null)
+            if (Product == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(Product);
         }
 
         // GET: Products/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var products = _context.Products.Include(m => m.Brand).Include(t => t.Cate).FirstOrDefault();
+            var viewModel = new ProductCreateViewModel
+            {
+                BrandList = new SelectList(await _context.Brand.AsNoTracking().ToListAsync(), "ID", "Name"),
+                CategoryList = new SelectList(await _context.Category.AsNoTracking().ToListAsync(), "ID", "Name"),
+                GenderList = new SelectList(await _context.Gender.AsNoTracking().ToListAsync(), "ID", "Name"),
+                MaterialList = new SelectList(await _context.Material.AsNoTracking().ToListAsync(), "ID", "Name"),
+                ColorList = new SelectList(await _context.Color.AsNoTracking().ToListAsync(), "ID", "Name"),
+                SizeList = new SelectList(await _context.Size.AsNoTracking().ToListAsync(), "ID", "Name"),
+                TagList = new SelectList(await _context.Tag.AsNoTracking().ToListAsync(), "ID", "Name"),
+                SeasonList = new SelectList(await _context.Season.AsNoTracking().ToListAsync(), "ID", "Name"),
+                StyleList = new SelectList(await _context.Style.AsNoTracking().ToListAsync(), "ID", "Name")
+            };
 
-            ViewBag.Brand = new SelectList(_context.Brand, "ID", "Name", products.BrandID);
-            ViewBag.Category = new SelectList(_context.Category, "ID", "Name", products.CateID);
-            ViewBag.Gender = new SelectList(_context.Gender, "ID", "Name", products.GenderID);
-
-            return View(products);
+            return await ReloadViewModel(viewModel);
         }
 
         // POST: Products/Create 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,picture,Description,Price,Quantity,GenderID,BrandID,CateID")] Products products)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ProductCreateViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                if (products.picture != null && products.picture.Length > 0)
+                Products products = new Products()
                 {
-                    var pathName = Path.GetFileName(products.picture.FileName);
-                    if (pathName != null)
+                    Name = viewModel.Name,
+                    Description = viewModel.Description,
+                    Price = viewModel.Price,
+                    Quantity = viewModel.Quantity,
+                    GenderID = viewModel.GenderID,
+                    BrandID = viewModel.BrandID,
+                    CateID = viewModel.CateID
+                };
+
+                if (viewModel.Picture != null && !string.IsNullOrWhiteSpace(viewModel.Picture.ToString()))
+                {
+                    var fileExtentions = new[] { ".jpg", ".png", ".jpeg", ".webp" };
+                    var getPathExtentions = Path.GetExtension(viewModel.Picture.FileName).ToLower();
+
+                    if (!fileExtentions.Contains(getPathExtentions))
                     {
-                        var fileUpLoad = Path.Combine(environment.WebRootPath, "images/Products/", pathName);
-                        using (var fileStream = new FileStream(fileUpLoad, FileMode.Create, FileAccess.Write, FileShare.None))
-                        {
-                            await products.picture.CopyToAsync(fileStream);
-                        }
+                        ModelState.AddModelError("Picture", "Không thể tải lên file này, vui lòng chọn file có đuôi jpg, png, jpeg, webp");
+                        return View(viewModel);
                     }
 
-                    products.PicturePath = "images/Products/" + pathName;
+                    var nameFile = Guid.NewGuid().ToString() + getPathExtentions;
+                    var fileUpLoadPath = Path.Combine(environment.WebRootPath, "images", "Products", nameFile).Replace("\\", "/");
+
+                    using (var fileStream = new FileStream(fileUpLoadPath, FileMode.Create))
+                    {
+                        await viewModel.Picture.CopyToAsync(fileStream);
+                    }
+
+                    products.PicturePath = Path.Combine("images", "Products", nameFile).Replace("\\", "/");
+                }
+
+                if (viewModel.SelectedColorID != null && viewModel.SelectedColorID.Any())
+                {
+                    foreach (var MateID in viewModel.SelectedColorID)
+                    {
+                        _context.ProductColor.Add(new ProductColor()
+                        {
+                            ProductID = products.ID,
+                            ColorID = MateID
+                        });
+                    }
+                }
+
+                if (viewModel.SelectedSizeID != null && viewModel.SelectedSizeID.Any())
+                {
+                    foreach (var SizeID in viewModel.SelectedSizeID)
+                    {
+                        _context.ProductSize.Add(new ProductSize()
+                        {
+                            ProductID = products.ID,
+                            SizeID = SizeID
+                        });
+                    }
+                }
+
+                if (viewModel.SelectedMaterialID != null && viewModel.SelectedMaterialID.Any())
+                {
+                    foreach (var MateID in viewModel.SelectedMaterialID)
+                    {
+                        _context.ProductMaterial.Add(new ProductMaterial()
+                        {
+                            ProductID = products.ID,
+                            MaterialID = MateID
+                        });
+                    }
+                }
+
+                if (viewModel.SelectedSeasonID != null && viewModel.SelectedSeasonID.Any())
+                {
+                    foreach (var SeasonID in viewModel.SelectedSeasonID)
+                    {
+                        _context.ProductSeason.Add(new ProductSeason()
+                        {
+                            ProductID = products.ID,
+                            SeasonID = SeasonID
+                        });
+                    }
+                }
+
+                if (viewModel.SelectedStyleID != null && viewModel.SelectedStyleID.Any())
+                {
+                    foreach (var StyleID in viewModel.SelectedStyleID)
+                    {
+                        _context.ProductStyle.Add(new ProductStyle()
+                        {
+                            ProductID = products.ID,
+                            StyleID = StyleID
+                        });
+                    }
+                }
+
+
+                if (viewModel.SelectedTagID != null && viewModel.SelectedTagID.Any())
+                {
+                    foreach (var TagID in viewModel.SelectedTagID)
+                    {
+                        _context.ProductTag.Add(new ProductTag()
+                        {
+                            ProductID = products.ID,
+                            TagID = TagID
+                        });
+                    }
                 }
 
                 _context.Add(products);
@@ -114,47 +218,69 @@ namespace CRUD_asp.netMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.Brand = new SelectList(_context.Brand, "ID", "Name", products.BrandID);
-            ViewBag.Category = new SelectList(_context.Category, "ID", "Name", products.CateID);
-
-            return View(products);
+            return await ReloadViewModel(viewModel);
         }
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (id == null) return NotFound();
+
+            var Product = await _context.Products.AsNoTracking()
+                .Include(p => p.ProductMaterial)
+                .Include(p => p.ProductTag)
+                .Include(p => p.ProductStyles)
+                .Include(p => p.ProductColor)
+                .Include(p => p.ProductSeason)
+                .Include(p => p.ProductSize)
+                .FirstOrDefaultAsync(p => p.ID == id);
+
+            if (Product == null)
             {
                 return NotFound();
             }
 
-            if (_context.Products != null)
+            var viewModel = new ProductEditViewModel()
             {
-                var product = _context.Products
-                    .Include(p => p.Brand)
-                    .Include(p => p.Cate)
-                    .FirstOrDefault(p => p.ID == id);
+                ID = Product.ID,
+                Name = Product.Name,
+                Description = Product.Description,
+                PicturePath = Product.PicturePath,
+                Price = Product.Price,
+                Quantity = Product.Quantity,
+                GenderID = Product.GenderID,
+                BrandID = Product.BrandID,
+                CateID = Product.CateID,
 
-                if (product != null)
-                {
-                    ViewBag.Brand = new SelectList(_context.Brand, "ID", "Name", product.BrandID);
-                    ViewBag.ProtoType = new SelectList(_context.Category, "ID", "Name", product.CateID);
-                    return View(product);
-                }
-                else return NotFound();
+                SelectedMaterialID = _context.Material?.Select(p => p.ID).ToArray() ?? Array.Empty<int>(),
+                SelectedColorID = _context.Color?.Select(p => p.ID).ToArray() ?? Array.Empty<int>(),
+                SelectedStyleID = _context.Style?.Select(p => p.ID).ToArray() ?? Array.Empty<int>(),
+                SelectedSeasonID = _context.Season?.Select(p => p.ID).ToArray() ?? Array.Empty<int>(),
+                SelectedTagID = _context.Tag?.Select(p => p.ID).ToArray() ?? Array.Empty<int>(),
+                SelectedSizeID = _context.Size?.Select(p => p.ID).ToArray() ?? Array.Empty<int>(),
 
-            }
-            else return NotFound();
+                BrandList = new SelectList(await _context.Brand.AsNoTracking().ToListAsync(), "ID", "Name", Product.BrandID),
+                CategoryList = new SelectList(await _context.Category.AsNoTracking().ToListAsync(), "ID", "Name", Product.CateID),
+                GenderList = new SelectList(await _context.Gender.AsNoTracking().ToListAsync(), "ID", "Name", Product.GenderID),
 
+                MaterialList = new SelectList(await _context.Material.AsNoTracking().ToListAsync(), "ID", "Name"),
+                ColorList = new SelectList(await _context.Brand.AsNoTracking().ToListAsync(), "ID", "Name"),
+                SizeList = new SelectList(await _context.Size.AsNoTracking().ToListAsync(), "ID", "Name"),
+                StyleList = new SelectList(await _context.Style.AsNoTracking().ToListAsync(), "ID", "Name"),
+                TagList = new SelectList(await _context.Tag.AsNoTracking().ToListAsync(), "ID", "Name"),
+                SeasonList = new SelectList(await _context.Season.AsNoTracking().ToListAsync(), "ID", "Name"),
+            };
+
+            return await ReloadViewModel(viewModel);
         }
 
         // Tuan note: get all properties Products class
         // POST: Products/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,picture,PicturePath,Description,Created,Price,BrandID,CateID")] Products products)
+        public async Task<IActionResult> Edit(int id, ProductEditViewModel viewModel)
         {
-            if (id != products.ID)
+            if (id != viewModel.ID)
             {
                 return NotFound();
             }
@@ -163,34 +289,163 @@ namespace CRUD_asp.netMVC.Controllers
             {
                 try
                 {
-                    var file = products.picture;
+                    var Product = await _context.Products
+                        .Include(p => p.ProductMaterial)
+                        .Include(p => p.ProductTag)
+                        .Include(p => p.ProductStyles)
+                        .Include(p => p.ProductColor)
+                        .Include(p => p.ProductSeason)
+                        .Include(p => p.ProductSize)
+                        .FirstOrDefaultAsync(p => p.ID == id);
+
+                    if (Product == null) return NotFound();
+                    else
+                    {
+                        Product.Name = viewModel.Name;
+                        Product.Description = viewModel.Description;
+                        Product.Price = viewModel.Price;
+                        Product.Quantity = viewModel.Quantity;
+                        Product.GenderID = viewModel.GenderID;
+                        Product.BrandID = viewModel.BrandID;
+                        Product.CateID = viewModel.CateID;
+                    }
+
+                    var file = viewModel.Picture;
                     if (file != null && !string.IsNullOrWhiteSpace(file.FileName))
                     {
-                        var fileName = Path.GetFileName(file.FileName);
-                        var fileUpLoad = Path.Combine(environment.WebRootPath, "images/Products/", fileName);
-                        using (var FileStream = new FileStream(fileUpLoad, FileMode.Create, FileAccess.Write, FileShare.None))
+                        // kiem tra duoi anh
+                        var fileExtention = Path.GetExtension(file.FileName).ToLower();
+                        var ValidExtentions = new[] { ".jpg", ".png", ".jpeg", ".webp" };
+                        if (!ValidExtentions.Contains(fileExtention))
                         {
-                            await file.CopyToAsync(FileStream);
+                            ModelState.AddModelError("picture", "File không hợp lệ, vui lòng chọn file có đuôi jpg, png, jpeg, webp");
+                            return await ReloadViewModel(viewModel);
                         }
 
-                        products.PicturePath = "~/images/Products/" + fileName;
+                        #region Picture
+                        // tao ten anh
+                        var nameFile = Guid.NewGuid().ToString() + fileExtention;
+                        var fileUploadPath = Path.Combine(environment.WebRootPath, "images", "Products", nameFile).Replace("\\", "/");
+
+                        // kiem tra anh ton tai chua
+                        var oldPicture = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ID == id);
+                        if (oldPicture != null && !string.IsNullOrWhiteSpace(oldPicture.PicturePath))
+                        {
+                            var oldFilePicture = Path.Combine(environment.WebRootPath, oldPicture.PicturePath);
+                            if (System.IO.File.Exists(oldFilePicture))
+                            {
+                                System.IO.File.Delete(oldFilePicture);
+                            }
+                        }
+
+                        // ghi tep moi
+                        using (var fileStream = new FileStream(fileUploadPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                        {
+                            await file.CopyToAsync(fileStream);
+                        }
+
+                        viewModel.PicturePath = Path.Combine("images", "Products", nameFile).Replace("\\", "/");
+                        #endregion
                     }
                     else
                     {
                         var oldPicture = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ID == id);
+
                         if (oldPicture != null)
                         {
-                            products.PicturePath = oldPicture.PicturePath;
+                            viewModel.PicturePath = oldPicture.PicturePath;
                         }
                     }
 
-                    _context.Update(products);
+                    Product.PicturePath = viewModel.PicturePath;
+
+                    _context.ProductMaterial.RemoveRange(_context.ProductMaterial);
+                    _context.ProductColor.RemoveRange(_context.ProductColor);
+                    _context.ProductSeason.RemoveRange(_context.ProductSeason);
+                    _context.ProductSize.RemoveRange(_context.ProductSize);
+                    _context.ProductStyle.RemoveRange(_context.ProductStyle);
+                    _context.ProductTag.RemoveRange(_context.ProductTag);
+
+                    if (viewModel.SelectedColorID != null && viewModel.SelectedColorID.Any())
+                    {
+                        foreach (var MateID in viewModel.SelectedColorID)
+                        {
+                            _context.ProductColor.Add(new ProductColor()
+                            {
+                                ProductID = Product.ID,
+                                ColorID = MateID
+                            });
+                        }
+                    }
+
+                    if (viewModel.SelectedSizeID != null && viewModel.SelectedSizeID.Any())
+                    {
+                        foreach (var SizeID in viewModel.SelectedSizeID)
+                        {
+                            _context.ProductSize.Add(new ProductSize()
+                            {
+                                ProductID = Product.ID,
+                                SizeID = SizeID
+                            });
+                        }
+                    }
+
+                    if (viewModel.SelectedMaterialID != null && viewModel.SelectedMaterialID.Any())
+                    {
+                        foreach (var MateID in viewModel.SelectedMaterialID)
+                        {
+                            _context.ProductMaterial.Add(new ProductMaterial()
+                            {
+                                ProductID = Product.ID,
+                                MaterialID = MateID
+                            });
+                        }
+                    }
+
+                    if (viewModel.SelectedSeasonID != null && viewModel.SelectedSeasonID.Any())
+                    {
+                        foreach (var SeasonID in viewModel.SelectedSeasonID)
+                        {
+                            _context.ProductSeason.Add(new ProductSeason()
+                            {
+                                ProductID = Product.ID,
+                                SeasonID = SeasonID
+                            });
+                        }
+                    }
+
+                    if (viewModel.SelectedStyleID != null && viewModel.SelectedStyleID.Any())
+                    {
+                        foreach (var StyleID in viewModel.SelectedStyleID)
+                        {
+                            _context.ProductStyle.Add(new ProductStyle()
+                            {
+                                ProductID = Product.ID,
+                                StyleID = StyleID
+                            });
+                        }
+                    }
+
+
+                    if (viewModel.SelectedTagID != null && viewModel.SelectedTagID.Any())
+                    {
+                        foreach (var TagID in viewModel.SelectedTagID)
+                        {
+                            _context.ProductTag.Add(new ProductTag()
+                            {
+                                ProductID = Product.ID,
+                                TagID = TagID
+                            });
+                        }
+                    }
+
+                    _context.Update(Product);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductsExists(products.ID))
+                    if (!ProductsExists(viewModel.ID))
                     {
                         return NotFound();
                     }
@@ -201,10 +456,24 @@ namespace CRUD_asp.netMVC.Controllers
                 }
 
             }
-            return View(products);
 
+            return await ReloadViewModel(viewModel);
+        }
 
-            //return 
+        public async Task<IActionResult> ReloadViewModel(IProductGeneralViewModel IviewModel)
+        {
+            IviewModel.BrandList = new SelectList(await _context.Brand.AsNoTracking().ToListAsync(), "ID", "Name", IviewModel.BrandID);
+            IviewModel.CategoryList = new SelectList(await _context.Category.AsNoTracking().ToListAsync(), "ID", "Name", IviewModel.CateID);
+            IviewModel.GenderList = new SelectList(await _context.Gender.AsNoTracking().ToListAsync(), "ID", "Name", IviewModel.GenderID);
+
+            IviewModel.MaterialList = new SelectList(await _context.Material.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.SeasonList = new SelectList(await _context.Season.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.TagList = new SelectList(await _context.Tag.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.StyleList = new SelectList(await _context.Style.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.SizeList = new SelectList(await _context.Size.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.ColorList = new SelectList(await _context.Color.AsNoTracking().ToListAsync(), "ID", "Name");
+
+            return View(IviewModel);
         }
 
 

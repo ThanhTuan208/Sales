@@ -1,5 +1,6 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Account;
+using CRUD_asp.netMVC.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,6 +13,8 @@ namespace CRUD_asp.netMVC
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSingleton<ProductCreateViewModel>();
+            builder.Services.AddSingleton<ProductEditViewModel>();
 
             builder.Services.AddRazorPages();
 

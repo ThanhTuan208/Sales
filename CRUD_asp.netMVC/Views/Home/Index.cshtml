@@ -11,7 +11,8 @@
         <ul class="slides" style="height: 100%;">
             @foreach (var item in Model.Take(4))
             {
-                <li style="background: url(images/Products/@item.PicturePath) no-repeat 80% center; background-size: contain; height: 80vh; ">
+                <li style="background: url(@item.PicturePath.Replace('\\', '/')) no-repeat 80% center; background-size: contain; height: 80vh; ">
+
                     <div class="container h-100">
                         <div class="col-md-6 col-md-offset-3 col-md-pull-3 js-fullheight slider-text">
                             <div class="slider-text-inner d-flex align-items-center h-100">
@@ -81,7 +82,7 @@
             {
                 <div class="col-md-4 text-center animate-box">
                     <div class="product">
-                        <div class="product-grid shadow-lg" style="background: url(images/Products/@item.PicturePath) no-repeat center center/ cover;">
+                        <div class="product-grid shadow-lg" style="background: url(@Url.Content("~/" + @item.PicturePath)) no-repeat center center/ cover;">
                             <div class="inner">
                                 <p>
                                     <a asp-action="Cart" class="icon"><i class="icon-shopping-cart"></i></a>
@@ -91,7 +92,7 @@
                         </div>
                         <div class="desc">
                             <h3><a asp-action="ProductDetail" asp-controller="Product" asp-route-id="@item.ID">@item.Name</a></h3>
-                            <span class="price">@item.Price VNĐ</span>
+                            <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", @item.Price)</span>
                         </div>
                     </div>
                 </div>
@@ -115,33 +116,21 @@
                         <div class="item">
                             <div class="testimony-slide active text-center">
                                 <figure>
-                                    <img src="images/person1.jpg" alt="user">
+                                    <img src="images/Products/d2a56c55-07ed-4cd7-94c9-d32a4299239d.jpg" alt="user" class="img-fluid" style="border-radius: 50%; width: 150px; background-position: center; background-size: cover">
                                 </figure>
                                 <span>Jean Doe, via <a href="#" class="twitter">Twitter</a></span>
                                 <blockquote>
                                     <p>&ldquo;Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.&rdquo;</p>
                                 </blockquote>
                             </div>
-                        </div>
-                        <div class="item">
+                        </div>  <div class="item">
                             <div class="testimony-slide active text-center">
                                 <figure>
-                                    <img src="images/person2.jpg" alt="user">
+                                    <img src="images/Products/d2a56c55-07ed-4cd7-94c9-d32a4299239d.jpg" alt="user" class="img-fluid" style="border-radius: 50%; width: 150px; background-position: center; background-size: cover">
                                 </figure>
-                                <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
+                                <span>Jean Doe, via <a href="#" class="twitter">Twitter</a></span>
                                 <blockquote>
-                                    <p>&ldquo;Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.&rdquo;</p>
-                                </blockquote>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="testimony-slide active text-center">
-                                <figure>
-                                    <img src="images/person3.jpg" alt="user">
-                                </figure>
-                                <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
-                                <blockquote>
-                                    <p>&ldquo;Far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.&rdquo;</p>
+                                    <p>&ldquo;Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.&rdquo;</p>
                                 </blockquote>
                             </div>
                         </div>
@@ -232,3 +221,35 @@
 </div>
 
 
+<div class="container" style="margin-top: 60px; margin-bottom: 50px">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="section-heading">
+                <h2>Authors</h2>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="owl-clients owl-carousel text-center">
+                @foreach (var item in Model.Take(5))
+                {
+                    <div class="service-item" style="width: 290px; margin:auto 0 ;">
+                        <a href="#" class="services-item-image" style="display: block;">
+                           
+                            <img href="#" src="@item.PicturePath" class="img-fluid"
+                                 style="width: 100%; max-width: 260px; height: 180px; object-fit: cover; display: block; margin: auto;
+                                filter: contrast(110%) brightness(105%);
+                                border-radius: 15px;
+                                box-shadow: 0 4px 12px rgba(0,0,0,0.2);"
+                                 alt="Author">
+
+                        </a>
+                        <div class="down-content">
+                            
+                            <p class="my-3"><em>@item.Name</em></p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

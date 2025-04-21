@@ -94,5 +94,11 @@ namespace CRUD_asp.netMVC.Data
         public DbSet<Size> Size { get; set; }
         public DbSet<Gender> Gender { get; set; }
         public DbSet<Material> Material { get; set; }
+        public DbSet<ProductMaterial> ProductMaterial { get; set; }
+        public DbSet<ProductColor> ProductColor { get; set; }
+        public DbSet<ProductSize> ProductSize { get; set; }
+        public DbSet<ProductTag> ProductTag { get; set; }
+        public DbSet<ProductSeason> ProductSeason { get; set; }
+        public DbSet<ProductStyle> ProductStyle { get; set; }
     }
 }

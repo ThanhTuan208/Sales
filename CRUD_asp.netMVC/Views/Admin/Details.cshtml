@@ -6,47 +6,88 @@
 }
 
 <h1>Details</h1>
+<hr />
 
-<div>
-    <h4>Products</h4>
-    <hr />
+<style>
+    .col-sm-4 {
+        margin-top: 20px;
+        margin: auto;
+        margin-bottom: 20px;
+      
+    }
+
+    .col-sm-5 {
+        margin-top: 20px;
+        margin: auto;
+        margin-bottom: 20px;
+    }
+
+    dt dd {
+        
+        display: flex;
+        justify-content: center;
+        align-items:center;
+    }
+</style>
+
+<div class="container">
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.picture)
         </dt>
-        <dd class="col-sm-10">
-            <img src="@Model.PicturePath" alt="hinh anh" style="width: 200px" />
+        <dd class="col-sm-5">
+            <img src="@Url.Content("~/" + Model.PicturePath)" alt="hinh anh" style="width: 150px; height: 200px"/>
         </dd>
-        <dt class="col-sm-2">
+       
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-5">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-5">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Price)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-5">
             @Html.DisplayFor(model => model.Price)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Created)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-5">
             @Html.DisplayFor(model => model.Created)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.GenderID)
+        </dt>
+        <dd class="col-sm-5">
+            @Html.DisplayFor(model => model.Gender.Name)
+        </dd>
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.BrandID)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-5">
             @Html.DisplayFor(model => model.Brand.Name)
         </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.CateID)
+        </dt>
+        <dd class="col-sm-5">
+            @Html.DisplayFor(model => model.Cate.Name)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.ProductMaterial)
+        </dt>
+        <dd class="col-sm-5">
+            @Html.DisplayFor(model => model.ProductMaterial)
+        </dd>
+
     </dl>
 </div>
 <div>

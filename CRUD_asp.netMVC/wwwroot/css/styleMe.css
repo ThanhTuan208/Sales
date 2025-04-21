@@ -140,7 +140,6 @@ hr {
 
         .owl-carousel img:hover {
             transition: 0.3s ease;
-            transform: translateY(8px) scale(1.1);
+            transform: translateY(4px) scale(1.05);
             box-shadow: 2px 3px 10px 7px rgba(0,0,0,0.4);
         }
-

@@ -4,7 +4,7 @@ namespace CRUD_asp.netMVC.Models.Product
 {
     public class PaginatedList<T> : List<T>
     {
-        public int PageCurrent { get; set; } 
+        public int PageCurrent { get; set; }
         public int TotalPage { get; set; }
 
         public PaginatedList(List<T> items, int count, int pageCurrent, int pageSize)

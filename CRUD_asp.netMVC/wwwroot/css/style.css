@@ -19,6 +19,71 @@ body {
     background: #fff;
 }
 
+.owl-clients button.owl-dot {
+    background: #f1f1f1 !important;
+    width: 10px !important;
+    height: 10px !important;
+    margin: 0 10px !important;
+    border-radius: 50%;
+}
+
+    .owl-clients button.owl-dot.active {
+        background: #f33f3f !important;
+    }
+
+
+.nav-item {
+    transition: background-color 0.3s, color 0.3s;
+    padding: 10px 15px;
+    border-radius: 5px;
+    display: block;
+    transition: 0.3s;
+}
+
+    .nav-item:hover {
+        color: #ffc107;
+        text-decoration: none;
+        transform: translateY(5px);
+    }
+
+.fh5co_mediya_right {
+    text-align: right;
+}
+
+.fh5co_display_table {
+    height: 40px;
+    width: 40px;
+    display: table;
+    color: #777;
+    font-size: 18px;
+    border: 1px solid #fff !important;
+    cursor: pointer;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    border-radius: 50%;
+    transition: 1s;
+    margin: 0 10px;
+    color: #777 !important;
+}
+
+    .fh5co_display_table:hover,
+    .fh5co_display_table:focus {
+        display: table;
+        color: #777;
+        border: 1px solid #f5bc04 !important;
+        cursor: pointer;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        -ms-border-radius: 50%;
+        border-radius: 50%;
+    }
+
+.fh5co_verticle_middle {
+    vertical-align: middle;
+    display: table-cell;
+}
+
 #page {
     position: relative;
     overflow-x: hidden;
@@ -590,8 +655,6 @@ h1, h2, h3, h4, h5, h6, figure {
     }
 
 .fh5co-social-icons {
-    margin: 0;
-    padding: 0;
 }
 
     .fh5co-social-icons li {

@@ -20,11 +20,11 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var product = await context.Products
+        var product = await context.Products.AsNoTracking()
             .Include(p => p.Brand)
             .Include(p => p.Cate)
             .Include(p => p.Gender)
-            .Take(6).ToListAsync();
+            .Take(6).OrderByDescending(p => p.ID).ToListAsync();
 
         return View(product);
     }
