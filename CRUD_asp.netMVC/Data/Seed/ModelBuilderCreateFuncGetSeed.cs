@@ -16,6 +16,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             modelBuilder.Entity<Products>().HasOne(m => m.Brand).WithMany(p => p.products).HasForeignKey(mi => mi.BrandID).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Products>().HasOne(t => t.Cate).WithMany(p => p.products).HasForeignKey(ti => ti.CateID).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Products>().HasOne(p => p.Gender).WithMany(p => p.Products).HasForeignKey(p => p.GenderID).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Products>().HasOne(p => p.Featured).WithMany(p => p.products).HasForeignKey(p => p.FeaturedID).OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<AddToCart>().HasOne(p => p.Product).WithMany(c => c.Carts).HasForeignKey(pi => pi.ProductID).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<AddToCart>().HasOne(u => u.Users).WithMany(c => c.Carts).HasForeignKey(ui => ui.UserID).OnDelete(DeleteBehavior.Cascade);
@@ -28,7 +29,6 @@ namespace CRUD_asp.netMVC.Data.Seed
             modelBuilder.Entity<Reviews>().HasOne(r => r.Users).WithMany(r => r.Reviews).HasForeignKey(u => u.UserID).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Reviews>().HasOne(r => r.Product).WithMany(r => r.Reviews).HasForeignKey(u => u.ProductID).OnDelete(DeleteBehavior.Cascade);
 
-
             // Mockup du lieu mqh 1 - 1
             modelBuilder.Entity<Payment>().HasOne(o => o.Order).WithOne(p => p.Payment).HasForeignKey<Payment>(o => o.OrderID).OnDelete(DeleteBehavior.Cascade);
 
@@ -38,11 +38,11 @@ namespace CRUD_asp.netMVC.Data.Seed
 
             // Mockup du lieu mqh n - n
             modelBuilder.Entity<ProductSeason>().HasKey(p => new { p.SeasonID, p.ProductID });
-            modelBuilder.Entity<ProductSeason>().HasOne(p => p.Product).WithMany(p => p.ProductSeason).HasForeignKey(p => p.ProductID);
+            modelBuilder.Entity<ProductSeason>().HasOne(p => p.Product).WithMany(p => p.ProductSeasons).HasForeignKey(p => p.ProductID);
             modelBuilder.Entity<ProductSeason>().HasOne(p => p.Season).WithMany(p => p.ProductSeason).HasForeignKey(p => p.SeasonID);
 
             modelBuilder.Entity<ProductTag>().HasKey(p => new { p.TagID, p.ProductID });
-            modelBuilder.Entity<ProductTag>().HasOne(p => p.Product).WithMany(p => p.ProductTag).HasForeignKey(p => p.ProductID);
+            modelBuilder.Entity<ProductTag>().HasOne(p => p.Product).WithMany(p => p.ProductTags).HasForeignKey(p => p.ProductID);
             modelBuilder.Entity<ProductTag>().HasOne(p => p.Tag).WithMany(p => p.ProductTag).HasForeignKey(p => p.TagID);
 
             modelBuilder.Entity<ProductStyle>().HasKey(p => new { p.StyleID, p.ProductID });
@@ -53,18 +53,19 @@ namespace CRUD_asp.netMVC.Data.Seed
             modelBuilder.Entity<ProductSize>().HasOne(p => p.products).WithMany(p => p.ProductSize).HasForeignKey(p => p.ProductID);
             modelBuilder.Entity<ProductSize>().HasOne(p => p.size).WithMany(p => p.ProductSize).HasForeignKey(p => p.SizeID);
 
-            modelBuilder.Entity<ProductColor>().HasKey(p => new { p.ProductID, p.ColorID });
-            modelBuilder.Entity<ProductColor>().HasOne(p => p.Product).WithMany(p => p.ProductColor).HasForeignKey(p => p.ProductID);
-            modelBuilder.Entity<ProductColor>().HasOne(p => p.Color).WithMany(p => p.ProductColor).HasForeignKey(p => p.ColorID);
+            modelBuilder.Entity<ProductColors>().HasKey(p => new { p.ProductID, p.ColorID });
+            modelBuilder.Entity<ProductColors>().HasOne(p => p.Product).WithMany(p => p.ProductColor).HasForeignKey(p => p.ProductID);
+            modelBuilder.Entity<ProductColors>().HasOne(p => p.Color).WithMany(p => p.ProductColor).HasForeignKey(p => p.ColorID);
 
             modelBuilder.Entity<ProductMaterial>().HasKey(p => new { p.ProductID, p.MaterialID });
             modelBuilder.Entity<ProductMaterial>().HasOne(p => p.Product).WithMany(p => p.ProductMaterial).HasForeignKey(p => p.ProductID);
             modelBuilder.Entity<ProductMaterial>().HasOne(p => p.Material).WithMany(p => p.ProductMaterial).HasForeignKey(p => p.MaterialID);
 
-            modelBuilder.Entity<ProductColor>().HasKey(p => new { p.ProductID, p.ColorID });
-            modelBuilder.Entity<ProductColor>().HasOne(p => p.Product).WithMany(p => p.ProductColor).HasForeignKey(p => p.ProductID);
-            modelBuilder.Entity<ProductColor>().HasOne(p => p.Color).WithMany(p => p.ProductColor).HasForeignKey(p => p.ColorID);
+            modelBuilder.Entity<ProductColors>().HasKey(p => new { p.ProductID, p.ColorID });
+            modelBuilder.Entity<ProductColors>().HasOne(p => p.Product).WithMany(p => p.ProductColor).HasForeignKey(p => p.ProductID);
+            modelBuilder.Entity<ProductColors>().HasOne(p => p.Color).WithMany(p => p.ProductColor).HasForeignKey(p => p.ColorID);
 
+            modelBuilder.Entity<ProductImages>().HasOne(p => p.Products).WithMany(p => p.ProductImages).HasForeignKey(p => p.ProductID);
             //-------------------------------------------------------------------------
             modelBuilder.Entity<Login>().HasNoKey();
             modelBuilder.Entity<Register>().HasNoKey();
@@ -73,6 +74,17 @@ namespace CRUD_asp.netMVC.Data.Seed
             var hashPass2 = new PasswordHasher<Users>().HashPassword(null, "123456");
         }
 
+
+
+        public static void SeedFeatured(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Featured>().HasData(
+
+                 new Featured { ID = 1, Name = "Nổi bật" },
+                 new Featured { ID = 2, Name = "Không nổi bật" }
+                 );
+
+        }
         public static void SeedRoels(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Roles>().HasData(
@@ -146,25 +158,32 @@ namespace CRUD_asp.netMVC.Data.Seed
                 new Size { ID = 2, Name = "M" },
                 new Size { ID = 3, Name = "L" },
                 new Size { ID = 4, Name = "XL" },
-                new Size { ID = 5, Name = "42" },
-                new Size { ID = 6, Name = "41" },
-                new Size { ID = 7, Name = "Free" }
+                new Size { ID = 5, Name = "36" },
+                new Size { ID = 6, Name = "37" },
+                new Size { ID = 7, Name = "38" },
+                new Size { ID = 8, Name = "39" },
+                new Size { ID = 9, Name = "40" },
+                new Size { ID = 10, Name = "41" },
+                new Size { ID = 11, Name = "42" },
+                new Size { ID = 12, Name = "43" },
+                new Size { ID = 13, Name = "44" },
+                new Size { ID = 14, Name = "Free Size" }
             );
         }
 
         public static void SeedBrand(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Brand>().HasData(
-             new Brand { ID = 1, Name = "Nike", Description = "Thương hiệu giày thể thao và trang phục thể thao nổi tiếng" },
-             new Brand { ID = 2, Name = "Adidas", Description = "Chuyên cung cấp giày dép và trang phục thể thao" },
-             new Brand { ID = 3, Name = "Zara", Description = "Thương hiệu thời trang cao cấp với thiết kế hiện đại" },
-             new Brand { ID = 4, Name = "H&M", Description = "H&M cung cấp thời trang giá cả phải chăng và phong cách hiện đại" },
-              new Brand { ID = 5, Name = "Uniqlo", Description = "Thương hiệu Nhật Bản nổi tiếng với phong cách tối giản và chất liệu tốt" },
-              new Brand { ID = 6, Name = "Gucci", Description = "Thương hiệu cao cấp đến từ Ý với các sản phẩm thời trang xa xỉ" },
-              new Brand { ID = 7, Name = "Levi's", Description = "Hãng thời trang nổi tiếng với quần jeans và phong cách cổ điển Mỹ" },
-              new Brand { ID = 8, Name = "Lacoste", Description = "Phong cách thể thao thanh lịch đến từ Pháp" },
-              new Brand { ID = 9, Name = "Puma", Description = "Cung cấp thời trang thể thao, giày dép và phụ kiện chất lượng" },
-              new Brand { ID = 10, Name = "Chanel", Description = "Biểu tượng thời trang xa xỉ với những thiết kế đẳng cấp, cổ điển" }
+             new Products { ID = 1, Name = "Nike", PicturePath = "images/logo/logo_nike.gif", Description = "Thương hiệu giày thể thao và trang phục thể thao nổi tiếng" },
+             new Products { ID = 2, Name = "Adidas", PicturePath = "images/logo/logo_adidas.png", Description = "Chuyên cung cấp giày dép và trang phục thể thao" },
+             new Products { ID = 3, Name = "Zara", PicturePath = "images/logo/logo_zara.png", Description = "Thương hiệu thời trang cao cấp với thiết kế hiện đại" },
+             new Products { ID = 4, Name = "H&M", PicturePath = "images/logo/logo_HM.webp", Description = "H&M cung cấp thời trang giá cả phải chăng và phong cách hiện đại" },
+              new Products { ID = 5, Name = "Uniqlo", PicturePath = "images/logo/logo_uniqlo.png", Description = "Thương hiệu Nhật Bản nổi tiếng với phong cách tối giản và chất liệu tốt" },
+              new Products { ID = 6, Name = "Gucci", PicturePath = "images/logo/logo_gucci.jpg", Description = "Thương hiệu cao cấp đến từ Ý với các sản phẩm thời trang xa xỉ" },
+              new Products { ID = 7, Name = "Levi's", PicturePath = "images/logo/logo_levis.png", Description = "Hãng thời trang nổi tiếng với quần jeans và phong cách cổ điển Mỹ" },
+              new Products { ID = 8, Name = "Lacoste", PicturePath = "images/logo/logo_lacoste.png", Description = "Phong cách thể thao thanh lịch đến từ Pháp" },
+              new Products { ID = 9, Name = "Puma", PicturePath = "images/logo/logo_puma.jpg", Description = "Cung cấp thời trang thể thao, giày dép và phụ kiện chất lượng" },
+              new Products { ID = 10, Name = "Chanel", PicturePath = "images/logo/logo_chanel.jpg", Description = "Biểu tượng thời trang xa xỉ với những thiết kế đẳng cấp, cổ điển" }
          );
         }
 
@@ -291,19 +310,19 @@ namespace CRUD_asp.netMVC.Data.Seed
 
         public static void SeedProductColor(this ModelBuilder modelBuilder)
         {
-            var ListProductColor = new List<ProductColor>();
+            var ListProductColor = new List<ProductColors>();
             for (int productID = 1; productID <= 60; productID++)
             {
-                ListProductColor.AddRange(new List<ProductColor>()
+                ListProductColor.AddRange(new List<ProductColors>()
                 {
-                    new ProductColor { ProductID = productID, ColorID = 1 },
-                    new ProductColor { ProductID = productID, ColorID = 2 },
-                    new ProductColor { ProductID = productID, ColorID = 3 },
-                    new ProductColor { ProductID = productID, ColorID = 5 },
+                    new ProductColors { ProductID = productID, ColorID = 1 },
+                    new ProductColors { ProductID = productID, ColorID = 2 },
+                    new ProductColors { ProductID = productID, ColorID = 3 },
+                    new ProductColors { ProductID = productID, ColorID = 5 },
                 });
             }
 
-            modelBuilder.Entity<ProductColor>().HasData(ListProductColor);
+            modelBuilder.Entity<ProductColors>().HasData(ListProductColor);
         }
 
         public static void SeedProductMaterial(this ModelBuilder modelBuilder)
@@ -379,7 +398,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                 p => new { p.CateID, p.BrandID }
             );
 
-            // Tạo danh sách ProductMaterial
+            // Tạo danh sách ProductMaterials
             var productMaterials = new List<ProductMaterial>();
 
             for (int productId = 1; productId <= 60; productId++)
@@ -477,7 +496,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                 }
             }
 
-            // Seed ProductMaterial
+            // Seed ProductMaterials
             modelBuilder.Entity<ProductMaterial>().HasData(productMaterials);
         }
 
@@ -498,6 +517,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 1,  // Nike
                         CateID = 1,   // Áo khoác
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
                     },
                     new Products
                     {
@@ -511,6 +531,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 1,
                         CateID = 2,   // Quần
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
                     },
                     new Products
                     {
@@ -523,7 +544,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         Created = new DateTime(2025, 4, 18),
                         BrandID = 1,
                         CateID = 3,   // Giày
-                        GenderID = 1  // Nam
+                        GenderID = 1  // Nam 
+                        ,FeaturedID = 2
                     },
                     new Products
                     {
@@ -537,6 +559,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 1,
                         CateID = 4,   // Váy
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
                     },
                     new Products
                     {
@@ -550,6 +573,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 1,
                         CateID = 5,   // Áo thun
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
                     },
                     new Products
                     {
@@ -563,6 +587,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 1,
                         CateID = 6,   // Đồng hồ
                         GenderID = 3  // Unisex
+                        ,FeaturedID = 2
                     },
                     new Products
                     {
@@ -576,6 +601,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 2,
                         CateID = 1,   // Áo khoác
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
                     },
                     new Products
                     {
@@ -589,6 +615,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 2,
                         CateID = 2,   // Quần
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -602,6 +630,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 2,
                         CateID = 3,   // Giày
                         GenderID = 3  // Unisex
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -615,6 +645,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 2,
                         CateID = 4,   // Váy
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -628,6 +660,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 2,
                         CateID = 5,   // Áo thun
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -641,6 +675,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 2,
                         CateID = 6,   // Đồng hồ
                         GenderID = 3  // Unisex
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -654,6 +690,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 3,
                         CateID = 1,   // Áo khoác
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -667,6 +705,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 3,
                         CateID = 2,   // Quần
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -680,6 +720,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 3,
                         CateID = 3,   // Giày
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -693,6 +735,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 3,
                         CateID = 4,   // Váy
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -706,6 +750,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 3,
                         CateID = 5,   // Áo thun
                         GenderID = 3  // Unisex
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -719,6 +765,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 3,
                         CateID = 6,   // Đồng hồ
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -732,6 +780,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 4,
                         CateID = 1,   // Áo khoác
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -745,6 +795,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 4,
                         CateID = 2,   // Quần
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -758,6 +810,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 4,
                         CateID = 3,   // Giày
                         GenderID = 3  // Unisex
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -771,6 +825,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 4,
                         CateID = 4,   // Váy
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -784,6 +840,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 4,
                         CateID = 5,   // Áo thun
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -797,6 +855,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 4,
                         CateID = 6,   // Đồng hồ
                         GenderID = 3  // Unisex
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -810,6 +870,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 5,
                         CateID = 1,   // Áo khoác
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -823,6 +885,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 5,
                         CateID = 2,   // Quần
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -836,6 +900,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 5,
                         CateID = 3,   // Giày
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -849,6 +915,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 5,
                         CateID = 4,   // Váy
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -862,6 +930,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 5,
                         CateID = 5,   // Áo thun
                         GenderID = 3  // Unisex
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -875,6 +945,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 5,
                         CateID = 6,   // Đồng hồ
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -888,6 +960,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 6,
                         CateID = 1,   // Áo khoác
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -901,6 +975,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 6,
                         CateID = 2,   // Quần
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -914,6 +990,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 6,
                         CateID = 3,   // Giày
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -927,6 +1005,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 6,
                         CateID = 4,   // Váy
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -940,6 +1020,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 6,
                         CateID = 5,   // Áo thun
                         GenderID = 3  // Unisex
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -953,6 +1035,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 6,
                         CateID = 6,   // Đồng hồ
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -966,6 +1050,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 7,
                         CateID = 1,   // Áo khoác
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -979,6 +1065,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 7,
                         CateID = 2,   // Quần
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -992,6 +1080,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 7,
                         CateID = 3,   // Giày
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1005,6 +1095,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 7,
                         CateID = 4,   // Váy
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1018,6 +1110,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 7,
                         CateID = 5,   // Áo thun
                         GenderID = 3  // Unisex
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1031,6 +1125,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 7,
                         CateID = 6,   // Đồng hồ
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1044,6 +1140,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 8,
                         CateID = 1,   // Áivisex
                         GenderID = 3  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1057,6 +1155,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 8,
                         CateID = 2,   // Quần
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1070,6 +1170,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 8,
                         CateID = 3,   // Giày
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1083,6 +1185,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 8,
                         CateID = 4,   // Váy
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1096,6 +1200,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 8,
                         CateID = 5,   // Áo thun
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1109,6 +1215,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 8,
                         CateID = 6,   // Đồng hồ
                         GenderID = 3  // Unisex
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1122,6 +1230,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 9,
                         CateID = 1,   // Áo khoác
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1135,6 +1245,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 9,
                         CateID = 2,   // Quần
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1148,6 +1260,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 9,
                         CateID = 3,   // Giày
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1161,6 +1275,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 9,
                         CateID = 4,   // Váy
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1174,6 +1290,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 9,
                         CateID = 5,   // Áo thun
                         GenderID = 3  // Unisex
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1187,6 +1305,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 9,
                         CateID = 6,   // Đồng hồ
                         GenderID = 1  // Nam
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1200,6 +1320,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 10,
                         CateID = 1,   // Áo khoác
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1213,6 +1335,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 10,
                         CateID = 2,   // Quần
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
+
                     },
                     new Products
                     {
@@ -1226,6 +1350,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 10,
                         CateID = 3,   // Giày
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
                     },
                     new Products
                     {
@@ -1239,6 +1364,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 10,
                         CateID = 4,   // Váy
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
                     },
                     new Products
                     {
@@ -1252,6 +1378,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 10,
                         CateID = 5,   // Áo thun
                         GenderID = 2  // Nữ
+                        ,FeaturedID = 2
                     },
                     new Products
                     {
@@ -1265,7 +1392,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                         BrandID = 10,
                         CateID = 6,   // Đồng hồ
                         GenderID = 2  // Nữ
-              
+                        ,FeaturedID = 2
+
                     }
                 };
 
@@ -1274,7 +1402,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             // Tạo Dictionary để ánh xạ ProductID sang CateID
             var productCateMap = products.ToDictionary(p => p.ID, p => p.CateID);
 
-            // Tạo danh sách để seed ProductSeason
+            // Tạo danh sách để seed ProductSeasons
             var productSeasons = new List<ProductSeason>();
 
             for (int productId = 1; productId <= 60; productId++)

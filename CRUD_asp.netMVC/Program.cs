@@ -1,6 +1,6 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Account;
-using CRUD_asp.netMVC.Models.ViewModels;
+using CRUD_asp.netMVC.Models.ViewModels.Product;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;

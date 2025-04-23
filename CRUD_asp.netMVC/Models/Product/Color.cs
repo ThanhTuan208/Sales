@@ -10,6 +10,6 @@ namespace CRUD_asp.netMVC.Models.Product
         [Required]
         public string? Name { get; set; }
 
-        public List<ProductColor>? ProductColor { get; set; }
+        public List<ProductColors>? ProductColor { get; set; }
     }
 }

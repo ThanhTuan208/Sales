@@ -1,4 +1,5 @@
-﻿@model CRUD_asp.netMVC.Models.ViewModels.ProductCreateViewModel
+﻿@using CRUD_asp.netMVC.Models.ViewModels.Product
+@model ProductCreateViewModel
 
 @{
     ViewData["Title"] = "Tạo sản phẩm mới";
@@ -12,7 +13,7 @@
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="row">
 
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <div class="form-floating mb-3">
                     <input asp-for="Name" class="form-control" placeholder="Nhập tên sản phẩm" />
                     <label asp-for="Name" class="form-label">Tên sản phẩm</label>
@@ -20,7 +21,7 @@
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input asp-for="Picture" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp" />
+                    <input asp-for="Picture" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp" multiple />
                     <label asp-for="Picture" class="form-label">Hình ảnh</label>
                     <span asp-validation-for="Picture" class="text-danger"></span>
                 </div>
@@ -30,6 +31,7 @@
                     <label asp-for="Description" class="form-label">Mô tả</label>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
+
 
                 <div class="row">
                     <div class="col-lg-6">
@@ -48,13 +50,26 @@
 
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-floating mb-3">
+                            <select asp-for="FeaturedID" class="form-select" asp-items="Model.FeaturedList ?? new SelectList(Enumerable.Empty<object>())">
+                                <option value="" disabled selected>Chọn nổi bật</option>
+                            </select>
+                            <label asp-for="FeaturedID" class="form-label">Nổi bật</label>
+                            <span asp-validation-for="FeaturedID" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
 
-                <div class="form-floating mb-3">
-                    <select asp-for="BrandID" class="form-select" asp-items="Model.BrandList ?? new SelectList(Enumerable.Empty<object>())">
-                        <option value="" disabled selected>Chọn thương hiệu</option>
-                    </select>
-                    <label asp-for="BrandID" class="form-label">Thương hiệu</label>
-                    <span asp-validation-for="BrandID" class="text-danger"></span>
+                        <div class="form-floating mb-3">
+                            <select asp-for="BrandID" class="form-select" asp-items="Model.BrandList ?? new SelectList(Enumerable.Empty<object>())">
+                                <option value="" disabled selected>Chọn thương hiệu</option>
+                            </select>
+                            <label asp-for="BrandID" class="form-label">Thương hiệu</label>
+                            <span asp-validation-for="BrandID" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row">
@@ -78,7 +93,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
 
                 <div class="form-floating mb-3">
                     <select asp-for="SelectedMaterialID" style="height: 150px" class="form-select" multiple asp-items="Model.MaterialList ?? new SelectList(Enumerable.Empty<object>())">
@@ -104,7 +119,7 @@
                     <span asp-validation-for="SelectedSizeID" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="form-floating mb-3">
                     <select asp-for="SelectedSeasonID" style="height: 150px" class="form-select" multiple asp-items="Model.SeasonList ?? new SelectList(Enumerable.Empty<object>())" style="height: 150px">
                         <option value="" class="text-center" disabled>Chọn mùa</option>

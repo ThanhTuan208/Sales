@@ -1,10 +1,11 @@
 ﻿@using CRUD_asp.netMVC.Models.Product;
-@using System.Globalization
-@model PaginatedList<Products>
+@model PaginatedList<Brand>
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "_AccountLayout";
 }
+
 <style>
 
     table th, table td {
@@ -52,16 +53,7 @@
                 @Html.DisplayNameFor(model => model[0].Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].picture)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].BrandID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].CateID)
+                @Html.DisplayNameFor(model => model[0].PicturePath)
             </th>
             <th>Action</th>
         </tr>
@@ -89,17 +81,6 @@
  *@
                 </td>
 
-                <td>
-                    <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Brand.Name)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Cate.Name)
-                </td>
 
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-outline-secondary">Edit</a> |

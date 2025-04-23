@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using CRUD_asp.netMVC.Models;
 using CRUD_asp.netMVC.Data;
 using Microsoft.EntityFrameworkCore;
+using CRUD_asp.netMVC.Models.ViewModels.Home;
+using CRUD_asp.netMVC.Models.Product;
 
 namespace CRUD_asp.netMVC.Controllers;
 
@@ -26,7 +28,14 @@ public class HomeController : Controller
             .Include(p => p.Gender)
             .Take(6).OrderByDescending(p => p.ID).ToListAsync();
 
-        return View(product);
+        var brand = await context.Brand.AsNoTracking().ToListAsync();
+
+        HomeViewModel ViewModel = new HomeViewModel()
+        {
+            Products = product,
+            Brands = brand,
+        };
+        return View(ViewModel);
     }
 
     public IActionResult About() => View();

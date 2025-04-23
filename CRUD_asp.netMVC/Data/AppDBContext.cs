@@ -5,6 +5,7 @@ using CRUD_asp.netMVC.Models.Product;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Abstractions;
 
 namespace CRUD_asp.netMVC.Data
 {
@@ -21,6 +22,9 @@ namespace CRUD_asp.netMVC.Data
 
             // Thiết lập quan hệ giữa các thực thể
             modelBuilder.RelationshipEntitys();
+
+            // Them du lieu Featured
+            modelBuilder.SeedFeatured();
 
             // Them du lieu Roles
             modelBuilder.SeedRoels();
@@ -43,7 +47,7 @@ namespace CRUD_asp.netMVC.Data
             // Them du lieu Size
             modelBuilder.SeedSize();
 
-            // Them du lieu Brand
+            // Them du lieu Products
             modelBuilder.SeedBrand();
 
             // Them du lieu Cate
@@ -52,13 +56,13 @@ namespace CRUD_asp.netMVC.Data
             // Them du lieu Tag
             modelBuilder.SeedTag();
 
-            // Them du lieu ProductTag
+            // Them du lieu ProductTags
             modelBuilder.SeedPoductTag();
 
             // Them du lieu ProductSize
             modelBuilder.SeedProductSize();
 
-            // Them du lieu ProductColor
+            // Them du lieu ProductColors
             modelBuilder.SeedProductColor();
 
             // Them du lieu ProductMaterial
@@ -74,8 +78,11 @@ namespace CRUD_asp.netMVC.Data
             base.OnConfiguring(optionsBuilder);
         }
 
+        // Relationship entity DBSet
+
         //public DbSet<Users>? Users { get; set; }
         //public DbSet<Roles>? Roles { get; set; }
+        public DbSet<Featured>? Featured { get; set; }
         public DbSet<Products>? Products { get; set; }
         public DbSet<Brand>? Brand { get; set; }
         public DbSet<Category>? Category { get; set; }
@@ -95,10 +102,11 @@ namespace CRUD_asp.netMVC.Data
         public DbSet<Gender> Gender { get; set; }
         public DbSet<Material> Material { get; set; }
         public DbSet<ProductMaterial> ProductMaterial { get; set; }
-        public DbSet<ProductColor> ProductColor { get; set; }
+        public DbSet<ProductColors> ProductColor { get; set; }
         public DbSet<ProductSize> ProductSize { get; set; }
         public DbSet<ProductTag> ProductTag { get; set; }
         public DbSet<ProductSeason> ProductSeason { get; set; }
         public DbSet<ProductStyle> ProductStyle { get; set; }
+        public DbSet<ProductImages> ProductImages { get; set; }
     }
 }

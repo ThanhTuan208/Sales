@@ -5,7 +5,6 @@ $(document).ready(function () {
         items: 4,
         autoplay: true,
         loop: true,
-        nav: true,
         dots: true,
 
     });

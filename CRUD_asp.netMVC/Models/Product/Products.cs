@@ -1,4 +1,5 @@
 ﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.Models.Account;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,8 @@ namespace CRUD_asp.netMVC.Models.Product
 
         [NotMapped]
         [DataType(DataType.Upload)]
-        public IFormFile? picture { get; set; }
+        public IFormFile[]? picture { get; set; }
+
         public string? PicturePath { get; set; }
 
         [Required, Column(TypeName = "nvarchar(max)")]
@@ -36,6 +38,10 @@ namespace CRUD_asp.netMVC.Models.Product
 
         [DataType(DataType.Date)]
         public DateTime Created { get; set; } = DateTime.Now;
+
+        [Required]
+        public int FeaturedID { get; set; }
+        public Featured? Featured { get; set; }
 
         [Required]
         public int GenderID { get; set; }
@@ -53,11 +59,12 @@ namespace CRUD_asp.netMVC.Models.Product
         public List<OrderDetail>? OrderDetails { get; set; }
         public List<Reviews>? Reviews { get; set; }
 
-        public List<ProductColor>? ProductColor { get; set; }
+        public List<ProductColors>? ProductColor { get; set; }
         public List<ProductSize>? ProductSize { get; set; }
         public List<ProductStyle>? ProductStyles { get; set; }
-        public List<ProductTag>? ProductTag { get; set; }
-        public List<ProductSeason>? ProductSeason { get; set; }
+        public List<ProductTag>? ProductTags { get; set; }
+        public List<ProductSeason>? ProductSeasons { get; set; }
         public List<ProductMaterial>? ProductMaterial { get; set; }
+        public List<ProductImages>? ProductImages { get; set; } = new List<ProductImages>();
     }
 }

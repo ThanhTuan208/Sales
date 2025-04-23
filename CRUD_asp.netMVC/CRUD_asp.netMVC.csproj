@@ -21,6 +21,7 @@
 
 	<ItemGroup>
 		<Folder Include="Migrations\" />
+		<Folder Include="Models\ViewModels\BrandVModel\" />
 		<Folder Include="wwwroot\assets\" />
 	</ItemGroup>
 

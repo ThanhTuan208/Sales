@@ -4,6 +4,7 @@ using CRUD_asp.netMVC.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUD_asp.netMVC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250423123207_initialFirst")]
+    partial class initialFirst
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -411,10 +414,6 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("PicturePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("ID");
 
                     b.ToTable("Products");
@@ -424,71 +423,61 @@ namespace CRUD_asp.netMVC.Migrations
                         {
                             ID = 1,
                             Description = "Thương hiệu giày thể thao và trang phục thể thao nổi tiếng",
-                            Name = "Nike",
-                            PicturePath = "images/logo/logo_nike.gif"
+                            Name = "Nike"
                         },
                         new
                         {
                             ID = 2,
                             Description = "Chuyên cung cấp giày dép và trang phục thể thao",
-                            Name = "Adidas",
-                            PicturePath = "images/logo/logo_adidas.png"
+                            Name = "Adidas"
                         },
                         new
                         {
                             ID = 3,
                             Description = "Thương hiệu thời trang cao cấp với thiết kế hiện đại",
-                            Name = "Zara",
-                            PicturePath = "images/logo/logo_zara.png"
+                            Name = "Zara"
                         },
                         new
                         {
                             ID = 4,
                             Description = "H&M cung cấp thời trang giá cả phải chăng và phong cách hiện đại",
-                            Name = "H&M",
-                            PicturePath = "images/logo/logo_HM.webp"
+                            Name = "H&M"
                         },
                         new
                         {
                             ID = 5,
                             Description = "Thương hiệu Nhật Bản nổi tiếng với phong cách tối giản và chất liệu tốt",
-                            Name = "Uniqlo",
-                            PicturePath = "images/logo/logo_uniqlo.png"
+                            Name = "Uniqlo"
                         },
                         new
                         {
                             ID = 6,
                             Description = "Thương hiệu cao cấp đến từ Ý với các sản phẩm thời trang xa xỉ",
-                            Name = "Gucci",
-                            PicturePath = "images/logo/logo_gucci.jpg"
+                            Name = "Gucci"
                         },
                         new
                         {
                             ID = 7,
                             Description = "Hãng thời trang nổi tiếng với quần jeans và phong cách cổ điển Mỹ",
-                            Name = "Levi's",
-                            PicturePath = "images/logo/logo_levis.png"
+                            Name = "Levi's"
                         },
                         new
                         {
                             ID = 8,
                             Description = "Phong cách thể thao thanh lịch đến từ Pháp",
-                            Name = "Lacoste",
-                            PicturePath = "images/logo/logo_lacoste.png"
+                            Name = "Lacoste"
                         },
                         new
                         {
                             ID = 9,
                             Description = "Cung cấp thời trang thể thao, giày dép và phụ kiện chất lượng",
-                            Name = "Puma",
-                            PicturePath = "images/logo/logo_puma.jpg"
+                            Name = "Puma"
                         },
                         new
                         {
                             ID = 10,
                             Description = "Biểu tượng thời trang xa xỉ với những thiết kế đẳng cấp, cổ điển",
-                            Name = "Chanel",
-                            PicturePath = "images/logo/logo_chanel.jpg"
+                            Name = "Chanel"
                         });
                 });
 
