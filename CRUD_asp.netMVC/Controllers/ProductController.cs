@@ -21,7 +21,7 @@ namespace CRUD_asp.netMVC.Controllers
         public async Task<IActionResult> Index(int productPage = 1)
         {
             IQueryable<Products> products = context.Products.AsNoTracking()
-                .Include(p => p.Brand)
+                .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)
                 .Include(p => p.ProductImages).OrderByDescending(p => p.ID);
@@ -40,7 +40,7 @@ namespace CRUD_asp.netMVC.Controllers
                 Products = pagProduct,
                 Brands = await PaginatedList<Brand>.CreatePagAsync(brands, 1, brandList.Count),
                 Categories = await PaginatedList<Category>.CreatePagAsync(cates, 1, cateList.Count),
-                RelatedProductByBrands = null // relatedPagProductByBrand
+                //RelatedProductByBrands = null // relatedPagProductByBrand
             };
 
             return View(ViewModel);
@@ -56,7 +56,7 @@ namespace CRUD_asp.netMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var getPagProductByBrand = await context.Products.AsNoTracking().Where(p => p.Brand == brands).Include(p => p.Brand).ToListAsync();
+            var getPagProductByBrand = await context.Products.AsNoTracking().Where(p => p.Brands == brands).Include(p => p.Brands).ToListAsync();
 
             return View(getPagProductByBrand);
         }
@@ -66,7 +66,7 @@ namespace CRUD_asp.netMVC.Controllers
         {
             var product = id > 0 && !string.IsNullOrWhiteSpace(id.ToString()) ?
                  await context.Products.AsNoTracking()
-                .Include(p => p.Brand)
+                .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)
                 .Include(p => p.ProductSize).ThenInclude(p => p.size)
@@ -78,12 +78,23 @@ namespace CRUD_asp.netMVC.Controllers
                 .Include(p => p.ProductImages)
                 .FirstOrDefaultAsync(p => p.ID == id) : null;
 
-            if (product == null)
+            var brandList = await context.Brand.AsNoTracking().ToListAsync();
+
+            var cateList = await context.Category.AsNoTracking().ToListAsync();
+
+            GeneralProduct_ListCateBrand ViewModel = new()
             {
-                return NotFound();
+                Product = product,
+                Brands = brandList,
+                Categories = cateList
+            };
+
+            if (ViewModel != null)
+            {
+                return View(ViewModel);
             }
 
-            return View(product);
+            return NotFound();
         }
     }
 }

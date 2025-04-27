@@ -23,7 +23,7 @@ public class HomeController : Controller
     public async Task<IActionResult> Index()
     {
         var product = await context.Products.AsNoTracking()
-            .Include(p => p.Brand)
+            .Include(p => p.Brands)
             .Include(p => p.Cate)
             .Include(p => p.Gender)
             .Take(6).OrderByDescending(p => p.ID).ToListAsync();
@@ -38,11 +38,44 @@ public class HomeController : Controller
             Categories = categories
         };
 
+        if (ViewModel == null)
+        {
+            return NotFound();
+        }
+
         return View(ViewModel);
     }
 
-    public IActionResult About() => View();
+    public async Task<IActionResult> About()
+    {
+        var brandList = await context.Brand.AsNoTracking().ToListAsync();
 
-    public IActionResult Contact() => View();
+        var cateList = await context.Category.AsNoTracking().ToListAsync();
+
+        GeneralProduct_ListCateBrand ViewModel = new()
+        {
+            Product = await context.Products.FirstOrDefaultAsync(),
+            Brands = brandList,
+            Categories = cateList
+        };
+
+        return View(ViewModel);
+    }
+
+    public async Task<IActionResult> Contact()
+    {
+        var brandList = await context.Brand.AsNoTracking().ToListAsync();
+
+        var cateList = await context.Category.AsNoTracking().ToListAsync();
+
+        GeneralProduct_ListCateBrand ViewModel = new()
+        {
+            Product = await context.Products.FirstOrDefaultAsync(),
+            Brands = brandList,
+            Categories = cateList
+        };
+
+        return View(ViewModel);
+    }
 
 }

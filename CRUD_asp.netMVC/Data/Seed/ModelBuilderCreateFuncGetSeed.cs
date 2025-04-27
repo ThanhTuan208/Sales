@@ -13,7 +13,7 @@ namespace CRUD_asp.netMVC.Data.Seed
         public static void RelationshipEntitys(this ModelBuilder modelBuilder)
         {
             // Mockup du lieu mqh 1 - n
-            modelBuilder.Entity<Products>().HasOne(m => m.Brand).WithMany(p => p.products).HasForeignKey(mi => mi.BrandID).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Products>().HasOne(m => m.Brands).WithMany(p => p.products).HasForeignKey(mi => mi.BrandID).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Products>().HasOne(t => t.Cate).WithMany(p => p.products).HasForeignKey(ti => ti.CateID).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Products>().HasOne(p => p.Gender).WithMany(p => p.Products).HasForeignKey(p => p.GenderID).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Products>().HasOne(p => p.Featured).WithMany(p => p.products).HasForeignKey(p => p.FeaturedID).OnDelete(DeleteBehavior.Cascade);
@@ -174,16 +174,15 @@ namespace CRUD_asp.netMVC.Data.Seed
         public static void SeedBrand(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Brand>().HasData(
-             new Products { ID = 1, Name = "Nike", PicturePath = "images/logo/logo_nike.gif", Description = "Thương hiệu giày thể thao và trang phục thể thao nổi tiếng" },
-             new Products { ID = 2, Name = "Adidas", PicturePath = "images/logo/logo_adidas.png", Description = "Chuyên cung cấp giày dép và trang phục thể thao" },
-             new Products { ID = 3, Name = "Zara", PicturePath = "images/logo/logo_zara.png", Description = "Thương hiệu thời trang cao cấp với thiết kế hiện đại" },
-             new Products { ID = 4, Name = "H&M", PicturePath = "images/logo/logo_HM.webp", Description = "H&M cung cấp thời trang giá cả phải chăng và phong cách hiện đại" },
-              new Products { ID = 5, Name = "Uniqlo", PicturePath = "images/logo/logo_uniqlo.png", Description = "Thương hiệu Nhật Bản nổi tiếng với phong cách tối giản và chất liệu tốt" },
-              new Products { ID = 6, Name = "Gucci", PicturePath = "images/logo/logo_gucci.jpg", Description = "Thương hiệu cao cấp đến từ Ý với các sản phẩm thời trang xa xỉ" },
-              new Products { ID = 7, Name = "Levi's", PicturePath = "images/logo/logo_levis.png", Description = "Hãng thời trang nổi tiếng với quần jeans và phong cách cổ điển Mỹ" },
-              new Products { ID = 8, Name = "Lacoste", PicturePath = "images/logo/logo_lacoste.png", Description = "Phong cách thể thao thanh lịch đến từ Pháp" },
-              new Products { ID = 9, Name = "Puma", PicturePath = "images/logo/logo_puma.jpg", Description = "Cung cấp thời trang thể thao, giày dép và phụ kiện chất lượng" },
-              new Products { ID = 10, Name = "Chanel", PicturePath = "images/logo/logo_chanel.jpg", Description = "Biểu tượng thời trang xa xỉ với những thiết kế đẳng cấp, cổ điển" }
+             new Brand { ID = 1, Name = "Nike", PicturePath = "images/logo/logo_nike.gif", Description = "Thương hiệu giày thể thao và trang phục thể thao nổi tiếng" },
+             new Brand { ID = 2, Name = "Adidas", PicturePath = "images/logo/logo_adidas.png", Description = "Chuyên cung cấp giày dép và trang phục thể thao" },
+             new Brand { ID = 3, Name = "Zara", PicturePath = "images/logo/logo_zara.png", Description = "Thương hiệu thời trang cao cấp với thiết kế hiện đại" },
+             new Brand { ID = 4, Name = "H&M", PicturePath = "images/logo/logo_HM.webp", Description = "H&M cung cấp thời trang giá cả phải chăng và phong cách hiện đại" },
+              new Brand { ID = 5, Name = "Uniqlo", PicturePath = "images/logo/logo_uniqlo.png", Description = "Thương hiệu Nhật Bản nổi tiếng với phong cách tối giản và chất liệu tốt" },
+              new Brand { ID = 6, Name = "Gucci", PicturePath = "images/logo/logo_gucci.jpg", Description = "Thương hiệu cao cấp đến từ Ý với các sản phẩm thời trang xa xỉ" },
+              new Brand { ID = 7, Name = "Levi's", PicturePath = "images/logo/logo_levis.png", Description = "Hãng thời trang nổi tiếng với quần jeans và phong cách cổ điển Mỹ" },
+              new Brand { ID = 8, Name = "Lacoste", PicturePath = "images/logo/logo_lacoste.png", Description = "Phong cách thể thao thanh lịch đến từ Pháp" },
+              new Brand { ID = 10, Name = "Chanel", PicturePath = "images/logo/logo_chanel.jpg", Description = "Biểu tượng thời trang xa xỉ với những thiết kế đẳng cấp, cổ điển" }
          );
         }
 
@@ -198,6 +197,18 @@ namespace CRUD_asp.netMVC.Data.Seed
                 new Category { ID = 6, Name = "Đồng hồ" }
             );
         }
+
+        //public static void SeedCategory(this ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Category>().HasData(
+        //        new Category { ID = 1, Name = "Áo khoác", PicturePath = "images/Category/jacket.png" },
+        //        new Category { ID = 2, Name = "Quần", PicturePath = "images/Category/trousers.png" },
+        //        new Category { ID = 3, Name = "Giày", PicturePath = "images/Category/shoes.png" },
+        //        new Category { ID = 4, Name = "Váy", PicturePath = "images/Category/skirt.png" },
+        //        new Category { ID = 5, Name = "Áo thun", PicturePath = "images/Category/tshirt.png" },
+        //        new Category { ID = 6, Name = "Đồng hồ", PicturePath = "images/Category/wristwatch.png" }
+        //    );
+        //}
 
         public static void SeedTag(this ModelBuilder modelBuilder)
         {
@@ -328,69 +339,7 @@ namespace CRUD_asp.netMVC.Data.Seed
         public static void SeedProductMaterial(this ModelBuilder modelBuilder)
         {
             // Tái sử dụng dữ liệu Products để tạo Dictionary
-            var products = new List<Products>
-            {
-                new Products { ID = 1, CateID = 1, BrandID = 1 }, // Áo khoác nam Nike
-                new Products { ID = 2, CateID = 2, BrandID = 1 }, // Quần thể thao Nike
-                new Products { ID = 3, CateID = 3, BrandID = 1 }, // Giày Nike Air Max
-                new Products { ID = 4, CateID = 4, BrandID = 1 }, // Váy thể thao Nike nữ
-                new Products { ID = 5, CateID = 5, BrandID = 1 }, // Áo thun Nike basic
-                new Products { ID = 6, CateID = 6, BrandID = 1 }, // Đồng hồ thể thao Nike
-                new Products { ID = 7, CateID = 1, BrandID = 2 }, // Áo khoác Adidas Originals
-                new Products { ID = 8, CateID = 2, BrandID = 2 }, // Quần jogger Adidas
-                new Products { ID = 9, CateID = 3, BrandID = 2 }, // Giày Adidas Ultraboost
-                new Products { ID = 10, CateID = 4, BrandID = 2 }, // Váy tennis Adidas nữ
-                new Products { ID = 11, CateID = 5, BrandID = 2 }, // Áo thun Adidas cổ tròn
-                new Products { ID = 12, CateID = 6, BrandID = 2 }, // Đồng hồ thể thao Adidas
-                new Products { ID = 13, CateID = 1, BrandID = 3 }, // Áo khoác Zara Dáng Dài
-                new Products { ID = 14, CateID = 2, BrandID = 3 }, // Quần Ống Rộng Zara
-                new Products { ID = 15, CateID = 3, BrandID = 3 }, // Giày Cao Gót Zara
-                new Products { ID = 16, CateID = 4, BrandID = 3 }, // Váy Xếp Ly Zara
-                new Products { ID = 17, CateID = 5, BrandID = 3 }, // Áo Thun Zara Basic
-                new Products { ID = 18, CateID = 6, BrandID = 3 }, // Đồng Hồ Kim Zara
-                new Products { ID = 19, CateID = 1, BrandID = 4 }, // Áo Khoác Dù H&M
-                new Products { ID = 20, CateID = 2, BrandID = 4 }, // Quần Tây H&M
-                new Products { ID = 21, CateID = 3, BrandID = 4 }, // Giày Thể Thao H&M
-                new Products { ID = 22, CateID = 4, BrandID = 4 }, // Váy Ngắn Hoa Nhí H&M
-                new Products { ID = 23, CateID = 5, BrandID = 4 }, // Áo Thun Nam Basic H&M
-                new Products { ID = 24, CateID = 6, BrandID = 4 }, // Đồng Hồ Dây Silicon H&M
-                new Products { ID = 25, CateID = 1, BrandID = 5 }, // Áo khoác lông vũ Uniqlo
-                new Products { ID = 26, CateID = 2, BrandID = 5 }, // Quần Jean Uniqlo
-                new Products { ID = 27, CateID = 3, BrandID = 5 }, // Giày Sneaker Uniqlo
-                new Products { ID = 28, CateID = 4, BrandID = 5 }, // Váy Cotton Uniqlo
-                new Products { ID = 29, CateID = 5, BrandID = 5 }, // Áo thun Airism Uniqlo
-                new Products { ID = 30, CateID = 6, BrandID = 5 }, // Đồng hồ tối giản Uniqlo
-                new Products { ID = 31, CateID = 1, BrandID = 6 }, // Áo khoác cao cấp Gucci
-                new Products { ID = 32, CateID = 2, BrandID = 6 }, // Quần tây Gucci nam
-                new Products { ID = 33, CateID = 3, BrandID = 6 }, // Giày lười Gucci
-                new Products { ID = 34, CateID = 4, BrandID = 6 }, // Váy lụa cao cấp Gucci
-                new Products { ID = 35, CateID = 5, BrandID = 6 }, // Áo thun Gucci logo lớn
-                new Products { ID = 36, CateID = 6, BrandID = 6 }, // Đồng hồ đính đá Gucci
-                new Products { ID = 37, CateID = 1, BrandID = 7 }, // Áo khoác jean Levi's
-                new Products { ID = 38, CateID = 2, BrandID = 7 }, // Quần jeans Levi's 501
-                new Products { ID = 39, CateID = 3, BrandID = 7 }, // Giày thể thao Levi's
-                new Products { ID = 40, CateID = 4, BrandID = 7 }, // Váy bò Levi's nữ
-                new Products { ID = 41, CateID = 5, BrandID = 7 }, // Áo thun cổ tròn Levi's
-                new Products { ID = 42, CateID = 6, BrandID = 7 }, // Đồng hồ dây da Levi's
-                new Products { ID = 43, CateID = 1, BrandID = 8 }, // Áo khoác thể thao Lacoste
-                new Products { ID = 44, CateID = 2, BrandID = 8 }, // Quần short Lacoste
-                new Products { ID = 45, CateID = 3, BrandID = 8 }, // Giày sneaker Lacoste
-                new Products { ID = 46, CateID = 4, BrandID = 8 }, // Váy polo Lacoste
-                new Products { ID = 47, CateID = 5, BrandID = 8 }, // Áo thun cá sấu Lacoste
-                new Products { ID = 48, CateID = 6, BrandID = 8 }, // Đồng hồ thể thao Lacoste
-                new Products { ID = 49, CateID = 1, BrandID = 9 }, // Áo khoác thể thao Puma
-                new Products { ID = 50, CateID = 2, BrandID = 9 }, // Quần jogger Puma
-                new Products { ID = 51, CateID = 3, BrandID = 9 }, // Giày chạy bộ Puma
-                new Products { ID = 52, CateID = 4, BrandID = 9 }, // Váy thể thao Puma nữ
-                new Products { ID = 53, CateID = 5, BrandID = 9 }, // Áo thun thể thao Puma
-                new Products { ID = 54, CateID = 6, BrandID = 9 }, // Đồng hồ thể thao Puma
-                new Products { ID = 55, CateID = 1, BrandID = 10 }, // Áo khoác dạ Chanel
-                new Products { ID = 56, CateID = 2, BrandID = 10 }, // Quần vải cao cấp Chanel
-                new Products { ID = 57, CateID = 3, BrandID = 10 }, // Giày cao gót Chanel
-                new Products { ID = 58, CateID = 4, BrandID = 10 }, // Váy dạ hội Chanel
-                new Products { ID = 59, CateID = 5, BrandID = 10 }, // Áo thun cao cấp Chanel
-                new Products { ID = 60, CateID = 6, BrandID = 10 }  // Đồng hồ Chanel sang trọng
-            };
+            var products = Products();
 
             // Tạo Dictionary ánh xạ ProductID sang CateID, BrandID
             var productMap = products.ToDictionary(
@@ -1635,6 +1584,75 @@ namespace CRUD_asp.netMVC.Data.Seed
             modelBuilder.Entity<Products>().HasData(products);
             modelBuilder.Entity<ProductStyle>().HasData(productStyles);
             modelBuilder.Entity<ProductSeason>().HasData(productSeasons);
+        }
+
+        public static List<Products> Products()
+        {
+            var products = new List<Products>
+            {
+                new Products { ID = 1, CateID = 1, BrandID = 1 }, // Áo khoác nam Nike
+                new Products { ID = 2, CateID = 2, BrandID = 1 }, // Quần thể thao Nike
+                new Products { ID = 3, CateID = 3, BrandID = 1 }, // Giày Nike Air Max
+                new Products { ID = 4, CateID = 4, BrandID = 1 }, // Váy thể thao Nike nữ
+                new Products { ID = 5, CateID = 5, BrandID = 1 }, // Áo thun Nike basic
+                new Products { ID = 6, CateID = 6, BrandID = 1 }, // Đồng hồ thể thao Nike
+                new Products { ID = 7, CateID = 1, BrandID = 2 }, // Áo khoác Adidas Originals
+                new Products { ID = 8, CateID = 2, BrandID = 2 }, // Quần jogger Adidas
+                new Products { ID = 9, CateID = 3, BrandID = 2 }, // Giày Adidas Ultraboost
+                new Products { ID = 10, CateID = 4, BrandID = 2 }, // Váy tennis Adidas nữ
+                new Products { ID = 11, CateID = 5, BrandID = 2 }, // Áo thun Adidas cổ tròn
+                new Products { ID = 12, CateID = 6, BrandID = 2 }, // Đồng hồ thể thao Adidas
+                new Products { ID = 13, CateID = 1, BrandID = 3 }, // Áo khoác Zara Dáng Dài
+                new Products { ID = 14, CateID = 2, BrandID = 3 }, // Quần Ống Rộng Zara
+                new Products { ID = 15, CateID = 3, BrandID = 3 }, // Giày Cao Gót Zara
+                new Products { ID = 16, CateID = 4, BrandID = 3 }, // Váy Xếp Ly Zara
+                new Products { ID = 17, CateID = 5, BrandID = 3 }, // Áo Thun Zara Basic
+                new Products { ID = 18, CateID = 6, BrandID = 3 }, // Đồng Hồ Kim Zara
+                new Products { ID = 19, CateID = 1, BrandID = 4 }, // Áo Khoác Dù H&M
+                new Products { ID = 20, CateID = 2, BrandID = 4 }, // Quần Tây H&M
+                new Products { ID = 21, CateID = 3, BrandID = 4 }, // Giày Thể Thao H&M
+                new Products { ID = 22, CateID = 4, BrandID = 4 }, // Váy Ngắn Hoa Nhí H&M
+                new Products { ID = 23, CateID = 5, BrandID = 4 }, // Áo Thun Nam Basic H&M
+                new Products { ID = 24, CateID = 6, BrandID = 4 }, // Đồng Hồ Dây Silicon H&M
+                new Products { ID = 25, CateID = 1, BrandID = 5 }, // Áo khoác lông vũ Uniqlo
+                new Products { ID = 26, CateID = 2, BrandID = 5 }, // Quần Jean Uniqlo
+                new Products { ID = 27, CateID = 3, BrandID = 5 }, // Giày Sneaker Uniqlo
+                new Products { ID = 28, CateID = 4, BrandID = 5 }, // Váy Cotton Uniqlo
+                new Products { ID = 29, CateID = 5, BrandID = 5 }, // Áo thun Airism Uniqlo
+                new Products { ID = 30, CateID = 6, BrandID = 5 }, // Đồng hồ tối giản Uniqlo
+                new Products { ID = 31, CateID = 1, BrandID = 6 }, // Áo khoác cao cấp Gucci
+                new Products { ID = 32, CateID = 2, BrandID = 6 }, // Quần tây Gucci nam
+                new Products { ID = 33, CateID = 3, BrandID = 6 }, // Giày lười Gucci
+                new Products { ID = 34, CateID = 4, BrandID = 6 }, // Váy lụa cao cấp Gucci
+                new Products { ID = 35, CateID = 5, BrandID = 6 }, // Áo thun Gucci logo lớn
+                new Products { ID = 36, CateID = 6, BrandID = 6 }, // Đồng hồ đính đá Gucci
+                new Products { ID = 37, CateID = 1, BrandID = 7 }, // Áo khoác jean Levi's
+                new Products { ID = 38, CateID = 2, BrandID = 7 }, // Quần jeans Levi's 501
+                new Products { ID = 39, CateID = 3, BrandID = 7 }, // Giày thể thao Levi's
+                new Products { ID = 40, CateID = 4, BrandID = 7 }, // Váy bò Levi's nữ
+                new Products { ID = 41, CateID = 5, BrandID = 7 }, // Áo thun cổ tròn Levi's
+                new Products { ID = 42, CateID = 6, BrandID = 7 }, // Đồng hồ dây da Levi's
+                new Products { ID = 43, CateID = 1, BrandID = 8 }, // Áo khoác thể thao Lacoste
+                new Products { ID = 44, CateID = 2, BrandID = 8 }, // Quần short Lacoste
+                new Products { ID = 45, CateID = 3, BrandID = 8 }, // Giày sneaker Lacoste
+                new Products { ID = 46, CateID = 4, BrandID = 8 }, // Váy polo Lacoste
+                new Products { ID = 47, CateID = 5, BrandID = 8 }, // Áo thun cá sấu Lacoste
+                new Products { ID = 48, CateID = 6, BrandID = 8 }, // Đồng hồ thể thao Lacoste
+                new Products { ID = 49, CateID = 1, BrandID = 9 }, // Áo khoác thể thao Puma
+                new Products { ID = 50, CateID = 2, BrandID = 9 }, // Quần jogger Puma
+                new Products { ID = 51, CateID = 3, BrandID = 9 }, // Giày chạy bộ Puma
+                new Products { ID = 52, CateID = 4, BrandID = 9 }, // Váy thể thao Puma nữ
+                new Products { ID = 53, CateID = 5, BrandID = 9 }, // Áo thun thể thao Puma
+                new Products { ID = 54, CateID = 6, BrandID = 9 }, // Đồng hồ thể thao Puma
+                new Products { ID = 55, CateID = 1, BrandID = 10 }, // Áo khoác dạ Chanel
+                new Products { ID = 56, CateID = 2, BrandID = 10 }, // Quần vải cao cấp Chanel
+                new Products { ID = 57, CateID = 3, BrandID = 10 }, // Giày cao gót Chanel
+                new Products { ID = 58, CateID = 4, BrandID = 10 }, // Váy dạ hội Chanel
+                new Products { ID = 59, CateID = 5, BrandID = 10 }, // Áo thun cao cấp Chanel
+                new Products { ID = 60, CateID = 6, BrandID = 10 }  // Đồng hồ Chanel sang trọng
+            };
+
+            return products;
         }
     }
 

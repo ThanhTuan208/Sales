@@ -59,7 +59,7 @@
                                     <li class="has-dropdown">
                                         <a href="#">Brand</a>
                                         <ul class="dropdown sub-dropdown">
-                                            @foreach (var item in Model.Brand)
+                                            @foreach (var item in Model.Brands)
                                             {
                                                 <li><a asp-controller="Product" asp-route-brandID="@item.ID">@item.Name</a></li>
                                             }

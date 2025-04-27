@@ -49,7 +49,7 @@ namespace CRUD_asp.netMVC.Models.Product
 
         [Required]
         public int BrandID { get; set; }
-        public Brand? Brand { get; set; }
+        public Brand? Brands { get; set; }
 
         [Required]
         public int CateID { get; set; }

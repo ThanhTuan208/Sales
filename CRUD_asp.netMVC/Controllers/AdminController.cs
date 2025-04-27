@@ -33,7 +33,7 @@ namespace CRUD_asp.netMVC.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             var product = _context.Products.AsNoTracking()
-                       .Include(p => p.Brand)
+                       .Include(p => p.Brands)
                        .Include(p => p.Cate).OrderByDescending(p => p.ID);
 
             var paginationProduct = await PaginatedList<Products>.CreatePagAsync(product, page, 5);
@@ -47,7 +47,7 @@ namespace CRUD_asp.netMVC.Controllers
         {
 
             var product = _context.Products.AsNoTracking()
-                .Include(p => p.Brand)
+                .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Where(p => p.Description.Contains(keyword) || p.Name.Contains(keyword));
 
@@ -65,7 +65,7 @@ namespace CRUD_asp.netMVC.Controllers
             }
 
             var Product = await _context.Products.AsNoTracking()
-                .Include(p => p.Brand)
+                .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)
                 .Include(p => p.Featured)
