@@ -6,5 +6,6 @@ namespace CRUD_asp.netMVC.Models.ViewModels.Home
     {
         public List<Products>? Products { get; set; }
         public List<Brand>? Brands { get; set; }
+        public List<Category>? Categories { get; set; }
     }
 }

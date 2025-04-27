@@ -313,7 +313,7 @@ h1, h2, h3, h4, h5, h6, figure {
         }
 
             .fh5co-nav ul li.has-dropdown .dropdown {
-                width: 150px;
+                width: 130px;
                 -webkit-box-shadow: 0px 14px 33px -9px rgba(0, 0, 0, 0.75);
                 -moz-box-shadow: 0px 14px 33px -9px rgba(0, 0, 0, 0.75);
                 box-shadow: 0px 14px 33px -9px rgba(0, 0, 0, 0.75);
@@ -324,15 +324,15 @@ h1, h2, h3, h4, h5, h6, figure {
                 top: 40px;
                 left: 0;
                 text-align: left;
-                background: #000;
-                padding: 20px;
+                background: #d1c286;
+                padding: 10px; /* Giảm padding để phù hợp với từng mục */
                 -webkit-border-radius: 4px;
                 -moz-border-radius: 4px;
                 -ms-border-radius: 4px;
                 border-radius: 4px;
-                -webkit-transition: 0s;
-                -o-transition: 0s;
-                transition: 0s;
+                -webkit-transition: opacity 0.3s ease, visibility 0.3s ease;
+                -o-transition: opacity 0.3s ease, visibility 0.3s ease;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
             }
 
                 .fh5co-nav ul li.has-dropdown .dropdown:before {
@@ -351,15 +351,18 @@ h1, h2, h3, h4, h5, h6, figure {
 
                 .fh5co-nav ul li.has-dropdown .dropdown li {
                     display: block;
-                    margin-bottom: 7px;
+                    margin-bottom: 0; /* Loại bỏ margin-bottom mặc định */
+                    border-bottom: 1px solid #fff; /* Thêm đường viền phân cách giữa các mục */
+                    padding: 5px 0; /* Thêm padding để tạo khoảng cách */
                 }
 
                     .fh5co-nav ul li.has-dropdown .dropdown li:last-child {
                         margin-bottom: 0;
+                        border-bottom: none; /* Loại bỏ đường viền ở mục cuối cùng */
                     }
 
                     .fh5co-nav ul li.has-dropdown .dropdown li a {
-                        padding: 2px 0;
+                        padding: 5px 10px; /* Điều chỉnh padding cho gọn gàng */
                         display: block;
                         color: #999999;
                         line-height: 1.2;
@@ -370,6 +373,43 @@ h1, h2, h3, h4, h5, h6, figure {
                         .fh5co-nav ul li.has-dropdown .dropdown li a:hover {
                             color: #fff;
                         }
+
+            .fh5co-nav ul li.has-dropdown:hover > .dropdown {
+                visibility: visible;
+                opacity: 1;
+            }
+
+            .fh5co-nav ul li.has-dropdown .sub-dropdown {
+                visibility: hidden;
+                opacity: 0;
+                position: absolute;
+                top: 0;
+                left: 105%;
+                width: 130px;
+                background: #d1c286;
+                padding: 10px;
+                -webkit-border-radius: 4px;
+                -moz-border-radius: 4px;
+                -ms-border-radius: 4px;
+                border-radius: 4px;
+                -webkit-transition: opacity 0.3s ease, visibility 0.3s ease;
+                -o-transition: opacity 0.3s ease, visibility 0.3s ease;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+            }
+
+                .fh5co-nav ul li.has-dropdown .sub-dropdown:before {
+                    top: 20px; /* Đặt mũi tên ở phía trái của sub-dropdown */
+                    left: -10px; /* Đặt ngoài lề trái của sub-dropdown */
+                    border: solid transparent;
+                    content: " ";
+                    height: 0;
+                    width: 0;
+                    position: absolute;
+                    pointer-events: none;
+                    border-right-color: #000; /* Mũi tên hướng sang trái, chỉ vào dropdown cha */
+                    border-width: 8px;
+                    margin-top: -8px; /* Căn giữa theo chiều dọc */
+                }
 
             .fh5co-nav ul li.has-dropdown:hover a, .fh5co-nav ul li.has-dropdown:focus a {
                 color: #000;

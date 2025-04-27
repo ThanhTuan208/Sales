@@ -29,12 +29,15 @@ public class HomeController : Controller
             .Take(6).OrderByDescending(p => p.ID).ToListAsync();
 
         var brand = await context.Brand.AsNoTracking().ToListAsync();
+        var categories = await context.Category.AsNoTracking().ToListAsync();
 
         HomeViewModel ViewModel = new HomeViewModel()
         {
             Products = product,
             Brands = brand,
+            Categories = categories
         };
+
         return View(ViewModel);
     }
 

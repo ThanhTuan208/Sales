@@ -18,7 +18,7 @@ namespace CRUD_asp.netMVC.Models.Product
         public bool PreviousPage => PageCurrent > 1;
         public bool NextPage => PageCurrent < TotalPage;
 
-        public static async Task<PaginatedList<T>> CreatePag(IQueryable<T> source, int pageCurrent, int pageSize)
+        public static async Task<PaginatedList<T>> CreatePagAsync(IQueryable<T> source, int pageCurrent, int pageSize)
         {
             var count = await source.CountAsync();
             var items = await source.Skip((pageCurrent - 1) * pageSize).Take(pageSize).ToListAsync();

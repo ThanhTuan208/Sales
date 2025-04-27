@@ -36,7 +36,7 @@ namespace CRUD_asp.netMVC.Controllers
                        .Include(p => p.Brand)
                        .Include(p => p.Cate).OrderByDescending(p => p.ID);
 
-            var paginationProduct = await PaginatedList<Products>.CreatePag(product, page, 5);
+            var paginationProduct = await PaginatedList<Products>.CreatePagAsync(product, page, 5);
             return View(paginationProduct);
         }
 
@@ -52,7 +52,7 @@ namespace CRUD_asp.netMVC.Controllers
                 .Where(p => p.Description.Contains(keyword) || p.Name.Contains(keyword));
 
 
-            var paginationProduct = await PaginatedList<Products>.CreatePag(product, page, 5);
+            var paginationProduct = await PaginatedList<Products>.CreatePagAsync(product, page, 5);
             return View(paginationProduct);
         }
 
@@ -85,7 +85,7 @@ namespace CRUD_asp.netMVC.Controllers
             return View(Product);
         }
 
-        // GET: Products/Create
+        // GET: Products/Create  -> lay d/s co trong cac mqh 1-n n-n
         public async Task<IActionResult> Create()
         {
             var viewModel = new ProductCreateViewModel
@@ -288,6 +288,7 @@ namespace CRUD_asp.netMVC.Controllers
 
                 ImagePaths = await _context.ProductImages?.Select(p => p.PathNameImage).ToListAsync() ?? new List<string>(),
 
+                // Lay cac gia tri phan tu co trong mang hien thi vao the <select>
                 SelectedMaterialID = _context.Material?.Select(p => p.ID).ToArray() ?? Array.Empty<int>(),
                 SelectedColorID = _context.Color?.Select(p => p.ID).ToArray() ?? Array.Empty<int>(),
                 SelectedStyleID = _context.Style?.Select(p => p.ID).ToArray() ?? Array.Empty<int>(),
@@ -295,10 +296,12 @@ namespace CRUD_asp.netMVC.Controllers
                 SelectedTagID = _context.Tag?.Select(p => p.ID).ToArray() ?? Array.Empty<int>(),
                 SelectedSizeID = _context.Size?.Select(p => p.ID).ToArray() ?? Array.Empty<int>(),
 
+                // mqh 1-n
                 BrandList = new SelectList(await _context.Brand.AsNoTracking().ToListAsync(), "ID", "Name", Product.BrandID),
                 CategoryList = new SelectList(await _context.Category.AsNoTracking().ToListAsync(), "ID", "Name", Product.CateID),
                 GenderList = new SelectList(await _context.Gender.AsNoTracking().ToListAsync(), "ID", "Name", Product.GenderID),
 
+                // mqh n-n
                 MaterialList = new SelectList(await _context.Material.AsNoTracking().ToListAsync(), "ID", "Name"),
                 ColorList = new SelectList(await _context.Brand.AsNoTracking().ToListAsync(), "ID", "Name"),
                 SizeList = new SelectList(await _context.Size.AsNoTracking().ToListAsync(), "ID", "Name"),
@@ -536,11 +539,13 @@ namespace CRUD_asp.netMVC.Controllers
 
         public async Task<IActionResult> ReloadViewModel(IProductGeneralViewModel IviewModel)
         {
+            // mqh 1-n
             IviewModel.BrandList = new SelectList(await _context.Brand.AsNoTracking().ToListAsync(), "ID", "Name", IviewModel.BrandID);
             IviewModel.CategoryList = new SelectList(await _context.Category.AsNoTracking().ToListAsync(), "ID", "Name", IviewModel.CateID);
             IviewModel.GenderList = new SelectList(await _context.Gender.AsNoTracking().ToListAsync(), "ID", "Name", IviewModel.GenderID);
             IviewModel.FeaturedList = new SelectList(await _context.Featured.AsNoTracking().ToListAsync(), "ID", "Name", IviewModel.FeaturedID);
 
+            // mqh n-n
             IviewModel.MaterialList = new SelectList(await _context.Material.AsNoTracking().ToListAsync(), "ID", "Name");
             IviewModel.SeasonList = new SelectList(await _context.Season.AsNoTracking().ToListAsync(), "ID", "Name");
             IviewModel.TagList = new SelectList(await _context.Tag.AsNoTracking().ToListAsync(), "ID", "Name");

@@ -1,7 +1,10 @@
 ﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.Models.Product;
+using CRUD_asp.netMVC.Models.ViewModels.Home;
 using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -14,21 +17,51 @@ namespace CRUD_asp.netMVC.Controllers
             context = _context;
         }
 
-        public async Task<IActionResult> Index()
+        // Hien thi danh sach phan trang san pham va phan trang thuong hieu
+        public async Task<IActionResult> Index(int productPage = 1)
         {
-            var products = await context.Products.AsNoTracking()
+            IQueryable<Products> products = context.Products.AsNoTracking()
                 .Include(p => p.Brand)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)
-                .Include(p => p.ProductImages).OrderByDescending(p => p.ID).ToListAsync();
+                .Include(p => p.ProductImages).OrderByDescending(p => p.ID);
 
-            if (products == null)
+            var pagProduct = await PaginatedList<Products>.CreatePagAsync(products, productPage, 16);
+
+            var brands = context.Brand.AsNoTracking();
+            var brandList = await context.Brand.AsNoTracking().ToListAsync();
+
+            var cates = context.Category.AsNoTracking();
+            var cateList = await context.Category.AsNoTracking().ToListAsync();
+
+            //var relatedPagProductByBrand = relatedPagProduct.GroupBy(p => p.BrandID).ToDictionary(p => p.Key, p => p.Take(3).ToList());
+            BrandShowProductViewModel ViewModel = new()
             {
-                return NotFound();
+                Products = pagProduct,
+                Brands = await PaginatedList<Brand>.CreatePagAsync(brands, 1, brandList.Count),
+                Categories = await PaginatedList<Category>.CreatePagAsync(cates, 1, cateList.Count),
+                RelatedProductByBrands = null // relatedPagProductByBrand
+            };
+
+            return View(ViewModel);
+        }
+
+        // Hien thi san pham cua brand qua id brand
+        public async Task<IActionResult> getProductByBrand(int brandID)
+        {
+            var brands = await context.Brand.AsNoTracking().FirstOrDefaultAsync(p => p.ID == brandID);
+
+            if (brands == null)
+            {
+                return RedirectToAction(nameof(Index));
             }
 
-            return View(products);
+            var getPagProductByBrand = await context.Products.AsNoTracking().Where(p => p.Brand == brands).Include(p => p.Brand).ToListAsync();
+
+            return View(getPagProductByBrand);
         }
+
+        // Hien thi d/s chi tiet cua san pham
         public async Task<IActionResult> ProductDetail(int id)
         {
             var product = id > 0 && !string.IsNullOrWhiteSpace(id.ToString()) ?

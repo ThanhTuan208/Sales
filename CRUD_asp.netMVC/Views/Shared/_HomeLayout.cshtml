@@ -53,7 +53,30 @@
                     </div>
                     <div class="col-md-6 col-xs-6 text-center menu-1">
                         <ul>
-                            <li class="nav-item"><a asp-action="Index" asp-controller="Product">Product</a></li>
+                            <li class="has-dropdown nav-item">
+                                <a asp-action="Index" asp-controller="Product">Product</a>
+                                <ul class="dropdown">
+                                    <li class="has-dropdown">
+                                        <a href="#">Brand</a>
+                                        <ul class="dropdown sub-dropdown">
+                                            @foreach (var item in Model.Brand)
+                                            {
+                                                <li><a asp-controller="Product" asp-route-brandID="@item.ID">@item.Name</a></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                    <li class="has-dropdown">
+                                        <a href="#">Category</a>
+                                        <ul class="dropdown sub-dropdown">
+                                            @foreach (var item in Model.Categories)
+                                            {
+                                                <li><a asp-controller="Product" asp-route-cateID="@item.ID">@item.Name</a></li>
+                                            }
+                                        </ul>
+                                    </li>
+
+                                </ul>
+                            </li>
                             <li class="nav-item"><a asp-action="About" asp-controller="Home">About</a></li>
                             <li class="has-dropdown nav-item">
                                 <a href="#">Services</a>
@@ -65,7 +88,6 @@
                                 </ul>
                             </li>
                             <li class="nav-item"><a asp-action="Contact" asp-controller="Home">Contact</a></li>
-                            
                         </ul>
                     </div>
                     <div class="col-md-3 col-xs-4 text-right hidden-xs menu-2">
@@ -82,7 +104,6 @@
                         </ul>
                     </div>
                 </div>
-
             </div>
         </nav>
     </div>
@@ -93,7 +114,7 @@
     </main>
 
 
-    <footer id="fh5co-footer" role="contentinfo">
+    <footer id="fh5co-footer" role="contentinfo" class="animate-box">
         <div class="container">
             <div class="row row-pb-md">
                 <div class="col-md-4 fh5co-widget">
@@ -136,7 +157,7 @@
             </div>
 
             <div class="row copyright">
-               
+
                 <div class="col-md-12 text-center">
                     <p>
                         <small class="block">&copy; 2018 Free HTML5. All Rights Reserved.</small>
@@ -188,7 +209,7 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-   
+
     <script src="~/js/js.js" asp-append-version="true"></script>
     <!-- jQuery -->
     <script src="~/js/jquery.min.js" asp-append-version="true"></script>

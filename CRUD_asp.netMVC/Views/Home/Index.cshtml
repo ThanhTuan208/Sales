@@ -219,36 +219,3 @@
     </div>
 </div>
 
-
-<div class="container" style="margin-top: 60px; margin-bottom: 50px">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="section-heading">
-                <h2 class="text-center my-2 mb-5"><strong>BRANDS</strong></h2>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="owl-clients owl-carousel text-center">
-                @foreach (var item in Model.Brands)
-                {
-                    <div class="service-item" style="width: 290px; margin:auto 0 ;">
-                        <a href="#" class="services-item-image" style="display: block;">
-                           
-                            <img href="#" src="@item.PicturePath" class="img-fluid"
-                                 style="width: 100%; max-width: 260px; height: 180px; object-fit: cover; display: block; margin: auto;
-                                filter: contrast(110%) brightness(105%);
-                                border-radius: 15px;
-                                box-shadow: 0 4px 12px rgba(0,0,0,0.2);"
-                                 alt="Author">
-
-                        </a>
-                        <div class="down-content">
-                            
-                            <p class="my-3"><em>@item.Name</em></p>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</div>

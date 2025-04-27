@@ -122,25 +122,41 @@
     };
 
 
+    // thay find thanh children de hien thi dropdown theo cap bac
+    //var dropdown = function () {
+
+    //    $('.has-dropdown').mouseenter(function () {
+
+    //        var $this = $(this);
+    //        $this
+    //            .children('.dropdown')
+    //            .css('display', 'block')
+    //            .addClass('animated-fast fadeInUpMenu');
+
+    //    }).mouseleave(function () {
+    //        var $this = $(this);
+
+    //        $this
+    //            .children('.dropdown')
+    //            .css('display', 'none')
+    //            .removeClass('animated-fast fadeInUpMenu');
+    //    });
+
+    //};
     var dropdown = function () {
-
         $('.has-dropdown').mouseenter(function () {
-
             var $this = $(this);
             $this
-                .find('.dropdown')
-                .css('display', 'block')
+                .children('.dropdown')
+                .css({ 'visibility': 'visible', 'opacity': '1' })
                 .addClass('animated-fast fadeInUpMenu');
-
         }).mouseleave(function () {
             var $this = $(this);
-
             $this
-                .find('.dropdown')
-                .css('display', 'none')
+                .children('.dropdown')
+                .css({ 'visibility': 'hidden', 'opacity': '0' })
                 .removeClass('animated-fast fadeInUpMenu');
         });
-
     };
 
 

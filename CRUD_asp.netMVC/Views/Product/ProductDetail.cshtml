@@ -7,7 +7,7 @@
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
 
-<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(images/img_bg_2.jpg);">
+<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(images/banner/banner2.jpg    );">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
@@ -26,7 +26,7 @@
 <div id="fh5co-product">
     <div class="container">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 animate-box"> 
+            <div class="col-md-10 col-md-offset-1 animate-box">
                 <div class="owl-carousel owl-carousel-fullwidth product-carousel">
 
                     @foreach (var item in Model.ProductImages)
@@ -40,17 +40,17 @@
                             </div>
                         </div>
                     }
-                   
+
                 </div>
-                    <div class="row animate-box">
-                        <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-                            <h2>@Model.Name</h2>
-                            <p>
-                                <a href="#" class="btn btn-primary btn-outline btn-lg">Add to Cart</a>
-                                <a href="#" class="btn btn-primary btn-outline btn-lg">Compare</a>
-                            </p>
-                        </div>
+                <div class="row animate-box">
+                    <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+                        <h2>@Model.Name</h2>
+                        <p>
+                            <a href="#" class="btn btn-primary btn-outline btn-lg">Add to Cart</a>
+                            <a href="#" class="btn btn-primary btn-outline btn-lg">Compare</a>
+                        </p>
                     </div>
+                </div>
             </div>
 
             <div class="row">
