@@ -47,7 +47,7 @@ namespace CRUD_asp.netMVC.Data
             // Them du lieu Size
             modelBuilder.SeedSize();
 
-            // Them du lieu Products
+            // Them du lieu Brand
             modelBuilder.SeedBrand();
 
             // Them du lieu Cate

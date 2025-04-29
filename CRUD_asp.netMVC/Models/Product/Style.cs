@@ -11,7 +11,7 @@ namespace CRUD_asp.netMVC.Models.Product
         [Required(ErrorMessage = "Bạn cần nhập tên Style!")]
         public string? Name { get; set; }
 
-        // Nếu có quan hệ nhiều-nhiều với Products:
+        // Nếu có quan hệ nhiều-nhiều với GetProducts:
         public List<ProductStyle>? ProductStyles { get; set; }
     }
 

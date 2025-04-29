@@ -29,13 +29,14 @@ namespace CRUD_asp.netMVC.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "Brand",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PicturePath = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,7 +49,8 @@ namespace CRUD_asp.netMVC.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PicturePath = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -275,7 +277,7 @@ namespace CRUD_asp.netMVC.Migrations
                     table.ForeignKey(
                         name: "FK_Products_Brand_BrandID",
                         column: x => x.BrandID,
-                        principalTable: "Products",
+                        principalTable: "Brand",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -762,33 +764,33 @@ namespace CRUD_asp.netMVC.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Products",
-                columns: new[] { "ID", "Description", "Name" },
+                table: "Brand",
+                columns: new[] { "ID", "Description", "Name", "PicturePath" },
                 values: new object[,]
                 {
-                    { 1, "Thương hiệu giày thể thao và trang phục thể thao nổi tiếng", "Nike" },
-                    { 2, "Chuyên cung cấp giày dép và trang phục thể thao", "Adidas" },
-                    { 3, "Thương hiệu thời trang cao cấp với thiết kế hiện đại", "Zara" },
-                    { 4, "H&M cung cấp thời trang giá cả phải chăng và phong cách hiện đại", "H&M" },
-                    { 5, "Thương hiệu Nhật Bản nổi tiếng với phong cách tối giản và chất liệu tốt", "Uniqlo" },
-                    { 6, "Thương hiệu cao cấp đến từ Ý với các sản phẩm thời trang xa xỉ", "Gucci" },
-                    { 7, "Hãng thời trang nổi tiếng với quần jeans và phong cách cổ điển Mỹ", "Levi's" },
-                    { 8, "Phong cách thể thao thanh lịch đến từ Pháp", "Lacoste" },
-                    { 9, "Cung cấp thời trang thể thao, giày dép và phụ kiện chất lượng", "Puma" },
-                    { 10, "Biểu tượng thời trang xa xỉ với những thiết kế đẳng cấp, cổ điển", "Chanel" }
+                    { 1, "Thương hiệu giày thể thao và trang phục thể thao nổi tiếng", "Nike", "images/logo/logo_nike.gif" },
+                    { 2, "Chuyên cung cấp giày dép và trang phục thể thao", "Adidas", "images/logo/logo_adidas.png" },
+                    { 3, "Thương hiệu thời trang cao cấp với thiết kế hiện đại", "Zara", "images/logo/logo_zara.png" },
+                    { 4, "H&M cung cấp thời trang giá cả phải chăng và phong cách hiện đại", "H&M", "images/logo/logo_HM.webp" },
+                    { 5, "Thương hiệu Nhật Bản nổi tiếng với phong cách tối giản và chất liệu tốt", "Uniqlo", "images/logo/logo_uniqlo.png" },
+                    { 6, "Thương hiệu cao cấp đến từ Ý với các sản phẩm thời trang xa xỉ", "Gucci", "images/logo/logo_gucci.jpg" },
+                    { 7, "Hãng thời trang nổi tiếng với quần jeans và phong cách cổ điển Mỹ", "Levi's", "images/logo/logo_levis.png" },
+                    { 8, "Phong cách thể thao thanh lịch đến từ Pháp", "Lacoste", "images/logo/logo_lacoste.png" },
+                    { 9, "Cung cấp thời trang thể thao, giày dép và phụ kiện chất lượng", "Puma", "images/logo/logo_puma.jpg" },
+                    { 10, "Biểu tượng thời trang xa xỉ với những thiết kế đẳng cấp, cổ điển", "Chanel", "images/logo/logo_chanel.jpg" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Category",
-                columns: new[] { "ID", "Name" },
+                columns: new[] { "ID", "Name", "PicturePath" },
                 values: new object[,]
                 {
-                    { 1, "Áo khoác" },
-                    { 2, "Quần" },
-                    { 3, "Giày" },
-                    { 4, "Váy" },
-                    { 5, "Áo thun" },
-                    { 6, "Đồng hồ" }
+                    { 1, "Áo khoác", "images/Category/jacket.png" },
+                    { 2, "Quần", "images/Category/trousers.png" },
+                    { 3, "Giày", "images/Category/shoes.png" },
+                    { 4, "Váy", "images/Category/skirt.png" },
+                    { 5, "Áo thun", "images/Category/tshirt.png" },
+                    { 6, "Đồng hồ", "images/Category/wristwatch.png" }
                 });
 
             migrationBuilder.InsertData(
@@ -2196,7 +2198,7 @@ namespace CRUD_asp.netMVC.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Brand");
 
             migrationBuilder.DropTable(
                 name: "Category");

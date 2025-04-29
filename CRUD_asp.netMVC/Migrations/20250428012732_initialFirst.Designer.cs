@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUD_asp.netMVC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20250423170729_initialSecond")]
-    partial class initialSecond
+    [Migration("20250428012732_initialFirst")]
+    partial class initialFirst
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -397,7 +397,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("Carts");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Products", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Brand", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -420,7 +420,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Products");
+                    b.ToTable("Brand");
 
                     b.HasData(
                         new
@@ -507,6 +507,10 @@ namespace CRUD_asp.netMVC.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PicturePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ID");
 
                     b.ToTable("Category");
@@ -515,32 +519,38 @@ namespace CRUD_asp.netMVC.Migrations
                         new
                         {
                             ID = 1,
-                            Name = "Áo khoác"
+                            Name = "Áo khoác",
+                            PicturePath = "images/Category/jacket.png"
                         },
                         new
                         {
                             ID = 2,
-                            Name = "Quần"
+                            Name = "Quần",
+                            PicturePath = "images/Category/trousers.png"
                         },
                         new
                         {
                             ID = 3,
-                            Name = "Giày"
+                            Name = "Giày",
+                            PicturePath = "images/Category/shoes.png"
                         },
                         new
                         {
                             ID = 4,
-                            Name = "Váy"
+                            Name = "Váy",
+                            PicturePath = "images/Category/skirt.png"
                         },
                         new
                         {
                             ID = 5,
-                            Name = "Áo thun"
+                            Name = "Áo thun",
+                            PicturePath = "images/Category/tshirt.png"
                         },
                         new
                         {
                             ID = 6,
-                            Name = "Đồng hồ"
+                            Name = "Đồng hồ",
+                            PicturePath = "images/Category/wristwatch.png"
                         });
                 });
 
@@ -7072,7 +7082,7 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Products", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Product.Products", "Products")
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Brand", "Brands")
                         .WithMany("products")
                         .HasForeignKey("BrandID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -7096,7 +7106,7 @@ namespace CRUD_asp.netMVC.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Products");
+                    b.Navigation("Brands");
 
                     b.Navigation("Cate");
 
@@ -7190,7 +7200,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Navigation("Staff");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Products", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Brand", b =>
                 {
                     b.Navigation("products");
                 });

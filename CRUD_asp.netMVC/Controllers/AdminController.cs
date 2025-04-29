@@ -29,7 +29,7 @@ namespace CRUD_asp.netMVC.Controllers
             environment = _environment;
         }
 
-        // GET: Products
+        // GET: GetProducts
         public async Task<IActionResult> Index(int page = 1)
         {
             var product = _context.Products.AsNoTracking()
@@ -45,7 +45,6 @@ namespace CRUD_asp.netMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(int page = 1, string keyword = "")
         {
-
             var product = _context.Products.AsNoTracking()
                 .Include(p => p.Brands)
                 .Include(p => p.Cate)
@@ -56,7 +55,7 @@ namespace CRUD_asp.netMVC.Controllers
             return View(paginationProduct);
         }
 
-        // GET: Products/Details/5
+        // GET: GetProducts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -85,7 +84,7 @@ namespace CRUD_asp.netMVC.Controllers
             return View(Product);
         }
 
-        // GET: Products/Create  -> lay d/s co trong cac mqh 1-n n-n
+        // GET: GetProducts/Create  -> lay d/s co trong cac mqh 1-n n-n
         public async Task<IActionResult> Create()
         {
             var viewModel = new ProductCreateViewModel
@@ -104,7 +103,7 @@ namespace CRUD_asp.netMVC.Controllers
             return await ReloadViewModel(viewModel);
         }
 
-        // POST: Products/Create 
+        // POST: GetProducts/Create 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductCreateViewModel viewModel)
         {
@@ -142,14 +141,14 @@ namespace CRUD_asp.netMVC.Controllers
                             }
 
                             var nameFile = Guid.NewGuid().ToString() + getPathExtentions;
-                            var fileUpLoadPath = Path.Combine(environment.WebRootPath, "images", "Products", nameFile).Replace("\\", "/");
+                            var fileUpLoadPath = Path.Combine(environment.WebRootPath, "images", "GetProducts", nameFile).Replace("\\", "/");
 
                             using (var fileStream = new FileStream(fileUpLoadPath, FileMode.Create))
                             {
                                 await file.CopyToAsync(fileStream);
                             }
 
-                            var imagePath = Path.Combine("images", "Products", nameFile).ToLower().Replace("\\", "/");
+                            var imagePath = Path.Combine("images", "GetProducts", nameFile).ToLower().Replace("\\", "/");
 
                             _context.ProductImages.Add(new ProductImages()
                             {
@@ -253,7 +252,7 @@ namespace CRUD_asp.netMVC.Controllers
             return await ReloadViewModel(viewModel);
         }
 
-        // GET: Products/Edit/5
+        // GET: GetProducts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -313,8 +312,8 @@ namespace CRUD_asp.netMVC.Controllers
             return await ReloadViewModel(viewModel);
         }
 
-        // Tuan note: get all properties Products class
-        // POST: Products/Edit/5
+        // Tuan note: get all properties GetProducts class
+        // POST: GetProducts/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ProductEditViewModel viewModel)
@@ -556,7 +555,7 @@ namespace CRUD_asp.netMVC.Controllers
             return View(IviewModel);
         }
 
-        // GET: Products/Delete/5
+        // GET: GetProducts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -565,7 +564,7 @@ namespace CRUD_asp.netMVC.Controllers
             }
 
             var products = await _context.Products
-                .FirstOrDefaultAsync((System.Linq.Expressions.Expression<Func<Products, bool>>)(m => m.ID == id));
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (products == null)
             {
                 return NotFound();
@@ -574,7 +573,7 @@ namespace CRUD_asp.netMVC.Controllers
             return View(products);
         }
 
-        // POST: Products/Delete/5
+        // POST: GetProducts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -591,7 +590,7 @@ namespace CRUD_asp.netMVC.Controllers
 
         private bool ProductsExists(int id)
         {
-            return _context.Products.Any((System.Linq.Expressions.Expression<Func<Products, bool>>)(e => e.ID == id));
+            return _context.Products.Any(e => e.ID == id);
         }
     }
 }

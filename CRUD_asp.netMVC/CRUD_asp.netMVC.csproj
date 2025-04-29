@@ -8,6 +8,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="wwwroot\images\logo\logo_adidas1.png\**" />
+	  <Content Remove="wwwroot\images\logo\logo_adidas1.png\**" />
+	  <EmbeddedResource Remove="wwwroot\images\logo\logo_adidas1.png\**" />
+	  <None Remove="wwwroot\images\logo\logo_adidas1.png\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="5.2.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />

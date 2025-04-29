@@ -19,7 +19,19 @@ body {
     background: #fff;
 }
 
-.owl-clients button.owl-dot {
+.cate-image {
+    width: 100%;
+    height: 130px;
+    max-width: 130px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+    filter: contrast(110%) brightness(105%);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    border-radius: 50%;
+    transition: 0.3s;
+}
+/*.owl-clients button.owl-dot {
     background: #f1f1f1 !important;
     width: 10px !important;
     height: 10px !important;
@@ -30,7 +42,32 @@ body {
     .owl-clients button.owl-dot.active {
         background: #f33f3f !important;
     }
+*/
+/* Đảm bảo carousel không bị đè */
+.owl-carousel .owl-item {
+    display: flex;
+    justify-content: center;
+}
 
+/* Điều chỉnh kích thước service-item và hình ảnh */
+.service-item {
+    text-align: center;
+}
+
+/* Responsive cho hình ảnh */
+@media (max-width: 767px) { /* Màn hình nhỏ (điện thoại) */
+    .service-item img {
+        max-width: 180px !important; /* Giảm kích thước hình ảnh */
+        height: 80px !important;
+    }
+}
+
+@media (max-width: 576px) { /* Màn hình rất nhỏ */
+    .service-item img {
+        max-width: 150px !important; /* Giảm kích thước hình ảnh hơn nữa */
+        height: 70px !important;
+    }
+}
 
 .nav-item {
     transition: background-color 0.3s, color 0.3s;
@@ -626,10 +663,25 @@ h1, h2, h3, h4, h5, h6, figure {
         height: 600px;
     }
 }
-
+/*
 .fh5co-cover.fh5co-cover-sm {
     height: 600px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
 }
+*/
+
+#fh5co-header {
+    height: 600px;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+    padding: 100px;
+}
+
 
 @media screen and (max-width: 768px) {
     .fh5co-cover.fh5co-cover-sm {
@@ -921,7 +973,7 @@ h1, h2, h3, h4, h5, h6, figure {
 #fh5co-about,
 #fh5co-contact,
 #fh5co-footer {
-    padding: 5em 0;
+    padding: 3em 0;
     clear: both;
 }
 
@@ -1428,7 +1480,7 @@ h1, h2, h3, h4, h5, h6, figure {
                 }
 
     #fh5co-footer .fh5co-widget {
-        margin-bottom: 30px;
+        margin-bottom: 20px;
     }
 
 @media screen and (max-width: 768px) {

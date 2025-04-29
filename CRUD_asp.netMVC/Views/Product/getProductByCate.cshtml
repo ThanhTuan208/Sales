@@ -2,6 +2,10 @@
 @using System.Globalization
 @model BrandShowProductViewModel
 @{
+    var cateID = ViewData["cateID"];
+    var index = (int)cateID;
+    var cateName = Model.Categories[index - 1].Name;
+
     ViewData["Title"] = "Product Page";
     Layout = "_HomeLayout";
 }
@@ -41,13 +45,21 @@
             }
         </div>
 
+        <div class="row animate-box my-5">
+            <div class="col-md-12 text-center">
+                <div class="desc">
+                    <h1 style="font-weight: 700; text-shadow: 2px 3px 6px; font-size: 6rem">@cateName.ToUpper()</h1>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             @foreach (var item in Model.Products)
             {
-                <div class="col-md-3 text-center animate-box">
+                <div class="col-md-4 text-center animate-box">
                     <div class="product">
 
-                        <div class="product-grid" style="background-image:url(@Url.Content($"~/{@item.PicturePath}");">
+                        <div class="product-grid" style="background-image:url(@item.PicturePath);">
                             <div class="inner">
                                 <p>
                                     <a href="single.html" class="icon"><i class="icon-shopping-cart"></i></a>
@@ -66,17 +78,17 @@
                 <div class="pagination d-flex justify-content-center animate-box">
                     @if (Model.Products.PreviousPage)
                     {
-                        <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-productPage="@(Model.Products.PageCurrent - 1)" asp-route-brandID="@(ViewContext.RouteData.Values["brandID"] != null ? ViewContext.RouteData.Values["brandID"] : "")">Previous</a>
+                        <a class="btn btn-outline-warning m-1" asp-action="getProductByCate" asp-route-cateID="@cateID" asp-route-productPage="@(Model.Products.PageCurrent - 1)">Previous</a>
                     }
 
                     @for (int i = 1; i <= Model.Products.TotalPage; i++)
                     {
-                        <a asp-action="Index" asp-route-productPage="@i" asp-route-brandID="@(ViewContext.RouteData.Values["brandID"] != null ? ViewContext.RouteData.Values["brandID"] : "")" class="btn btn-outline-warning m-1 @(i == Model.Products.PageCurrent ? "active" : "")">@i</a>
+                        <a asp-action="getProductByCate" asp-route-cateID="@cateID" asp-route-productPage="@i" class="btn btn-outline-warning m-1 @(i == Model.Products.PageCurrent ? " active" : "")">@i</a>
                     }
 
                     @if (Model.Products.NextPage)
                     {
-                        <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-productPage="@(Model.Products.PageCurrent + 1)" asp-route-brandID="@(ViewContext.RouteData.Values["brandID"] != null ? ViewContext.RouteData.Values["brandID"] : "")">Next</a>
+                        <a class="btn btn-outline-warning m-1" asp-action="getProductByCate" asp-route-cateID="@cateID" asp-route-productPage="@(Model.Products.PageCurrent + 1)">Next</a>
                     }
                 </div>
             </div>
@@ -86,26 +98,24 @@
         <div class="row animate-box mt-5">
             <div class="col-md-12">
                 <div class="section-heading">
-                    <h2 class="text-center my-2 mb-5"><strong style="font-weight: 700;">THƯƠNG HIỆU NỔI TIẾNG</strong></h2>
+                    <h2 class="text-center my-2 mb-5"><strong>Danh mục</strong></h2>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="owl-clients owl-carousel text-center">
                     @foreach (var item in Model.Brands)
                     {
-                        <div class="service-item" style="margin:auto;"> @* width: 200px;  *@
+                        <div class="service-item">
                             <a asp-action="getProductByBrand" asp-route-brandID="@item.ID" asp-route-productPage="1" class="services-item-image" style="display: block;">
-
                                 <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow"
                                      style="width: 100%; max-width: 230px; height: 100px; object-fit: cover; display: block; margin: auto;
-                                filter: contrast(110%) brightness(105%);
-                                border-radius: 15px;
-                                box-shadow: 0 4px 12px rgba(0,0,0,0.2);"
-                                     alt="Brand">
-
+                                    filter: contrast(110%) brightness(105%);
+                                    border-radius: 15px;
+                                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);"
+                                     loading="lazy"
+                                     alt="@item.Name">
                             </a>
                             <div class="down-content">
-
                                 <p class="my-3"><em>@item.Name</em></p>
                             </div>
                         </div>

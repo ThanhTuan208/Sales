@@ -17,7 +17,10 @@ namespace CRUD_asp.netMVC.Controllers
             context = _context;
         }
 
+
         // Hien thi danh sach phan trang san pham va phan trang thuong hieu
+        //[Route("Product/{productPage:int?}")]
+        [HttpGet]
         public async Task<IActionResult> Index(int productPage = 1)
         {
             IQueryable<Products> products = context.Products.AsNoTracking()
@@ -47,21 +50,60 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // Hien thi san pham cua brand qua id brand
-        public async Task<IActionResult> getProductByBrand(int brandID)
+        [HttpGet]
+        public async Task<IActionResult> getProductByBrand(int brandID = 1, int productPage = 1)
         {
+            ViewData["brandID"] = brandID;
+
             var brands = await context.Brand.AsNoTracking().FirstOrDefaultAsync(p => p.ID == brandID);
+
+            ViewData["image"] = brands.PicturePath;
 
             if (brands == null)
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            var getPagProductByBrand = await context.Products.AsNoTracking().Where(p => p.Brands == brands).Include(p => p.Brands).ToListAsync();
+            var getPagProductByBrand = context.Products.AsNoTracking().Where(p => p.Brands == brands).Include(p => p.Brands);
+            var getPagProductListByBrand = await getPagProductByBrand.ToListAsync();
 
-            return View(getPagProductByBrand);
+            BrandShowProductViewModel ViewModel = new()
+            {
+                Products = await PaginatedList<Products>.CreatePagAsync(getPagProductByBrand, productPage, 6),
+                Brands = await PaginatedList<Brand>.CreatePagAsync(context.Brand.AsNoTracking(), 1, context.Brand.Count()),
+                Categories = await PaginatedList<Category>.CreatePagAsync(context.Category.AsNoTracking(), 1, context.Category.Count())
+            };
+
+            return View(ViewModel);
         }
 
-        // Hien thi d/s chi tiet cua san pham
+        // Hien thi san pham cua Category qua id danh muc CateID
+        [HttpGet]
+        public async Task<IActionResult> getProductByCate(int CateID = 1, int productPage = 1)
+        {
+            ViewData["cateID"] = CateID;
+
+            var brands = await context.Category.AsNoTracking().FirstOrDefaultAsync(p => p.ID == CateID);
+
+            if (brands == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var getPagProductByCate = context.Products.AsNoTracking().Where(p => p.CateID == CateID).Include(p => p.Cate);
+            var getPagProductListByCate = await getPagProductByCate.ToListAsync();
+
+            BrandShowProductViewModel ViewModel = new()
+            {
+                Products = await PaginatedList<Products>.CreatePagAsync(getPagProductByCate, productPage, 6),
+                Brands = await PaginatedList<Brand>.CreatePagAsync(context.Brand.AsNoTracking(), 1, context.Brand.Count()),
+                Categories = await PaginatedList<Category>.CreatePagAsync(context.Category.AsNoTracking(), 1, context.Category.Count())
+            };
+
+            return View(ViewModel);
+        }
+
+        // Hien thi chi tiet cua san pham theo id
         public async Task<IActionResult> ProductDetail(int id)
         {
             var product = id > 0 && !string.IsNullOrWhiteSpace(id.ToString()) ?
