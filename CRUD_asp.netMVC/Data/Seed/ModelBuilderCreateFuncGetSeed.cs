@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Contracts;
+using System.Globalization;
+using System.Text;
 
 namespace CRUD_asp.netMVC.Data.Seed
 {
@@ -692,908 +694,1005 @@ namespace CRUD_asp.netMVC.Data.Seed
             modelBuilder.Entity<ProductSeason>().HasData(productSeasons);
         }
 
+
+
         public static List<Products> GetProducts()
         {
-            #region Product
+            #region Products Seed Data
             var products = new List<Products>
-    {
-    new Products
         {
-            ID = 1,
-            Name = "Áo khoác nam Nike",
-            Description = "Áo khoác nam chính hãng Nike, phong cách thể thao",
-            Price = 1500000,
-            Quantity = 100,
-            PicturePath = "jacket1.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 1,  // Nike
-            CateID = 1,   // Áo khoác
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-        },
-        new Products
-        {
-            ID = 2,
-            Name = "Quần thể thao Nike",
-            Description = "Quần thể thao Nike chất liệu thoáng mát, phù hợp tập luyện",
-            Price = 900000,
-            Quantity = 80,
-            PicturePath = "pants1.webp",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 1,
-            CateID = 2,   // Quần
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-        },
-        new Products
-        {
-            ID = 3,
-            Name = "Giày Nike Air Max",
-            Description = "Giày thể thao Nike Air Max thoải mái và bền bỉ",
-            Price = 2800000,
-            Quantity = 60,
-            PicturePath = "shoes1.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 1,
-            CateID = 3,   // Giày
-            GenderID = 1  // Nam 
-            ,FeaturedID = 2
-        },
-        new Products
-        {
-            ID = 4,
-            Name = "Váy thể thao Nike nữ",
-            Description = "Váy thể thao nữ năng động, thiết kế hiện đại",
-            Price = 1100000,
-            Quantity = 40,
-            PicturePath = "dress1.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 1,
-            CateID = 4,   // Váy
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-        },
-        new Products
-        {
-            ID = 5,
-            Name = "Áo thun Nike basic",
-            Description = "Áo thun nam Nike cổ tròn, chất liệu cotton thoải mái",
-            Price = 590000,
-            Quantity = 200,
-            PicturePath = "tshirt1.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 1,
-            CateID = 5,   // Áo thun
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-        },
-        new Products
-        {
-            ID = 6,
-            Name = "Đồng hồ thể thao Nike",
-            Description = "Đồng hồ thể thao phong cách Nike, chống nước, dây silicon",
-            Price = 1900000,
-            Quantity = 25,
-            PicturePath = "watch1.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 1,
-            CateID = 6,   // Đồng hồ
-            GenderID = 3  // Unisex
-            ,FeaturedID = 2
-        },
-        new Products
-        {
-            ID = 7,
-            Name = "Áo khoác Adidas Originals",
-            Description = "Thiết kế cổ điển, chống gió và giữ ấm tốt",
-            Price = 1450000,
-            Quantity = 70,
-            PicturePath = "adidas_jacket.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 2,
-            CateID = 1,   // Áo khoác
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-        },
-        new Products
-        {
-            ID = 8,
-            Name = "Quần jogger Adidas",
-            Description = "Quần thể thao thoải mái, phù hợp vận động",
-            Price = 850000,
-            Quantity = 90,
-            PicturePath = "adidas_pants.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 2,
-            CateID = 2,   // Quần
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 9,
-            Name = "Giày Adidas Ultraboost",
-            Description = "Đệm Boost êm ái, hỗ trợ chạy bộ hiệu quả",
-            Price = 3200000,
-            Quantity = 50,
-            PicturePath = "adidas_shoes.webp",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 2,
-            CateID = 3,   // Giày
-            GenderID = 3  // Unisex
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 10,
-            Name = "Váy tennis Adidas nữ",
-            Description = "Váy thể thao nhẹ, thấm hút mồ hôi tốt",
-            Price = 990000,
-            Quantity = 45,
-            PicturePath = "adidas_dress.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 2,
-            CateID = 4,   // Váy
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 11,
-            Name = "Áo thun Adidas cổ tròn",
-            Description = "Áo thun cổ điển, logo 3 sọc đặc trưng",
-            Price = 650000,
-            Quantity = 150,
-            PicturePath = "adidas_tshirt.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 2,
-            CateID = 5,   // Áo thun
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 12,
-            Name = "Đồng hồ thể thao Adidas",
-            Description = "Thiết kế năng động, chống nước tốt",
-            Price = 1750000,
-            Quantity = 30,
-            PicturePath = "adidas_watch.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 2,
-            CateID = 6,   // Đồng hồ
-            GenderID = 3  // Unisex
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 13,
-            Name = "Áo khoác Zara Dáng Dài",
-            Description = "Áo khoác nữ dáng dài thanh lịch",
-            Price = 1900000,
-            Quantity = 60,
-            PicturePath = "zara_jacket.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 3,
-            CateID = 1,   // Áo khoác
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 14,
-            Name = "Quần Ống Rộng Zara",
-            Description = "Phong cách hiện đại, thời trang",
-            Price = 980000,
-            Quantity = 40,
-            PicturePath = "zara_pants.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 3,
-            CateID = 2,   // Quần
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 15,
-            Name = "Giày Cao Gót Zara",
-            Description = "Thiết kế sang trọng, phù hợp tiệc tùng",
-            Price = 1200000,
-            Quantity = 55,
-            PicturePath = "zara_heels.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 3,
-            CateID = 3,   // Giày
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 16,
-            Name = "Váy Xếp Ly Zara",
-            Description = "Váy dài thướt tha, thanh lịch",
-            Price = 1250000,
-            Quantity = 35,
-            PicturePath = "zara_dress.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 3,
-            CateID = 4,   // Váy
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 17,
-            Name = "Áo Thun Zara Basic",
-            Description = "Áo thun đơn giản, dễ phối đồ",
-            Price = 450000,
-            Quantity = 90,
-            PicturePath = "zara_tshirt.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 3,
-            CateID = 5,   // Áo thun
-            GenderID = 3  // Unisex
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 18,
-            Name = "Đồng Hồ Kim Zara",
-            Description = "Thiết kế mặt tròn, dây da tinh tế",
-            Price = 1350000,
-            Quantity = 25,
-            PicturePath = "zara_watch.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 3,
-            CateID = 6,   // Đồng hồ
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 19,
-            Name = "Áo Khoác Dù H&M",
-            Description = "Chống gió, nhẹ và gọn",
-            Price = 950000,
-            Quantity = 80,
-            PicturePath = "hm_jacket.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 4,
-            CateID = 1,   // Áo khoác
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 20,
-            Name = "Quần Tây H&M",
-            Description = "Phong cách công sở lịch sự",
-            Price = 700000,
-            Quantity = 65,
-            PicturePath = "hm_pants.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 4,
-            CateID = 2,   // Quần
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 21,
-            Name = "Giày Thể Thao H&M",
-            Description = "Giày đơn giản, năng động",
-            Price = 820000,
-            Quantity = 100,
-            PicturePath = "hm_shoes.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 4,
-            CateID = 3,   // Giày
-            GenderID = 3  // Unisex
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 22,
-            Name = "Váy Ngắn Hoa Nhí H&M",
-            Description = "Váy xinh xắn cho mùa hè",
-            Price = 600000,
-            Quantity = 45,
-            PicturePath = "hm_dress.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 4,
-            CateID = 4,   // Váy
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 23,
-            Name = "Áo Thun Nam Basic H&M",
-            Description = "Áo thun trơn giá rẻ",
-            Price = 200000,
-            Quantity = 150,
-            PicturePath = "hm_tshirt.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 4,
-            CateID = 5,   // Áo thun
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 24,
-            Name = "Đồng Hồ Dây Silicon H&M",
-            Description = "Thiết kế đơn giản, hiện đại",
-            Price = 550000,
-            Quantity = 40,
-            PicturePath = "hm_watch.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 4,
-            CateID = 6,   // Đồng hồ
-            GenderID = 3  // Unisex
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 25,
-            Name = "Áo khoác lông vũ Uniqlo",
-            Description = "Giữ ấm nhẹ nhàng, tiện lợi",
-            Price = 1750000,
-            Quantity = 70,
-            PicturePath = "uniqlo_jacket.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 5,
-            CateID = 1,   // Áo khoác
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 26,
-            Name = "Quần Jean Uniqlo",
-            Description = "Jean co giãn, phong cách tối giản",
-            Price = 950000,
-            Quantity = 50,
-            PicturePath = "uniqlo_jeans.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 5,
-            CateID = 2,   // Quần
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 27,
-            Name = "Giày Sneaker Uniqlo",
-            Description = "Thiết kế tối giản, thoải mái",
-            Price = 1050000,
-            Quantity = 60,
-            PicturePath = "uniqlo_shoes.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 5,
-            CateID = 3,   // Giày
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 28,
-            Name = "Váy Cotton Uniqlo",
-            Description = "Thiết kế tối giản, thoải mái cho mùa hè",
-            Price = 850000,
-            Quantity = 40,
-            PicturePath = "uniqlo_dress.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 5,
-            CateID = 4,   // Váy
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 29,
-            Name = "Áo thun Airism Uniqlo",
-            Description = "Thoáng mát, nhanh khô, thích hợp mùa hè",
-            Price = 400000,
-            Quantity = 120,
-            PicturePath = "uniqlo_tshirt.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 5,
-            CateID = 5,   // Áo thun
-            GenderID = 3  // Unisex
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 30,
-            Name = "Đồng hồ tối giản Uniqlo",
-            Description = "Phong cách tối giản, dây da đen",
-            Price = 980000,
-            Quantity = 30,
-            PicturePath = "uniqlo_watch.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 5,
-            CateID = 6,   // Đồng hồ
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 31,
-            Name = "Áo khoác cao cấp Gucci",
-            Description = "Thiết kế sang trọng, dành cho thời trang cao cấp",
-            Price = 25000000,
-            Quantity = 10,
-            PicturePath = "gucci_jacket.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 6,
-            CateID = 1,   // Áo khoác
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 32,
-            Name = "Quần tây Gucci nam",
-            Description = "Phong cách lịch lãm, chất liệu cao cấp",
-            Price = 15500000,
-            Quantity = 15,
-            PicturePath = "gucci_pants.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 6,
-            CateID = 2,   // Quần
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 33,
-            Name = "Giày lười Gucci",
-            Description = "Thiết kế logo đặc trưng, đẳng cấp",
-            Price = 22000000,
-            Quantity = 12,
-            PicturePath = "gucci_shoes.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 6,
-            CateID = 3,   // Giày
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 34,
-            Name = "Váy lụa cao cấp Gucci",
-            Description = "Chất liệu mềm mại, sang trọng",
-            Price = 30000000,
-            Quantity = 8,
-            PicturePath = "gucci_dress.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 6,
-            CateID = 4,   // Váy
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 35,
-            Name = "Áo thun Gucci logo lớn",
-            Description = "Phong cách trẻ trung, thời thượng",
-            Price = 9000000,
-            Quantity = 20,
-            PicturePath = "gucci_tshirt.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 6,
-            CateID = 5,   // Áo thun
-            GenderID = 3  // Unisex
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 36,
-            Name = "Đồng hồ đính đá Gucci",
-            Description = "Đồng hồ xa xỉ với thiết kế tinh xảo",
-            Price = 45000000,
-            Quantity = 5,
-            PicturePath = "gucci_watch.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 6,
-            CateID = 6,   // Đồng hồ
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 37,
-            Name = "Áo khoác jean Levi's",
-            Description = "Chất liệu jean bền, phong cách cổ điển",
-            Price = 1450000,
-            Quantity = 40,
-            PicturePath = "levis_jacket.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 7,
-            CateID = 1,   // Áo khoác
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 38,
-            Name = "Quần jeans Levi's 501",
-            Description = "Form dáng chuẩn Mỹ, chất lượng cao",
-            Price = 1250000,
-            Quantity = 60,
-            PicturePath = "levis_jeans.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 7,
-            CateID = 2,   // Quần
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 39,
-            Name = "Giày thể thao Levi's",
-            Description = "Thoải mái và thời trang hàng ngày",
-            Price = 1150000,
-            Quantity = 35,
-            PicturePath = "levis_shoes.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 7,
-            CateID = 3,   // Giày
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 40,
-            Name = "Váy bò Levi's nữ",
-            Description = "Thiết kế trẻ trung, năng động",
-            Price = 980000,
-            Quantity = 20,
-            PicturePath = "levis_dress.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 7,
-            CateID = 4,   // Váy
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 41,
-            Name = "Áo thun cổ tròn Levi's",
-            Description = "Logo cổ điển, phong cách Mỹ",
-            Price = 500000,
-            Quantity = 100,
-            PicturePath = "levis_tshirt.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 7,
-            CateID = 5,   // Áo thun
-            GenderID = 3  // Unisex
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 42,
-            Name = "Đồng hồ dây da Levi's",
-            Description = "Đơn giản, mạnh mẽ, cá tính",
-            Price = 850000,
-            Quantity = 15,
-            PicturePath = "levis_watch.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 7,
-            CateID = 6,   // Đồng hồ
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 43,
-            Name = "Áo khoác thể thao Lacoste",
-            Description = "Thiết kế năng động, thời trang",
-            Price = 2700000,
-            Quantity = 30,
-            PicturePath = "lacoste_jacket.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 8,
-            CateID = 1,   // Áivisex
-            GenderID = 3  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 44,
-            Name = "Quần short Lacoste",
-            Description = "Phong cách thể thao, thoáng mát",
-            Price = 1450000,
-            Quantity = 40,
-            PicturePath = "lacoste_shorts.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 8,
-            CateID = 2,   // Quần
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 45,
-            Name = "Giày sneaker Lacoste",
-            Description = "Chất liệu cao cấp, thiết kế tinh tế",
-            Price = 2200000,
-            Quantity = 25,
-            PicturePath = "lacoste_shoes.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 8,
-            CateID = 3,   // Giày
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 46,
-            Name = "Váy polo Lacoste",
-            Description = "Lịch sự, sang trọng cho nữ",
-            Price = 1900000,
-            Quantity = 18,
-            PicturePath = "lacoste_dress.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 8,
-            CateID = 4,   // Váy
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 47,
-            Name = "Áo thun cá sấu Lacoste",
-            Description = "Biểu tượng nổi bật với logo cá sấu",
-            Price = 1100000,
-            Quantity = 55,
-            PicturePath = "lacoste_tshirt.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 8,
-            CateID = 5,   // Áo thun
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 48,
-            Name = "Đồng hồ thể thao Lacoste",
-            Description = "Năng động, trẻ trung, phù hợp với người chơi thể thao",
-            Price = 2600000,
-            Quantity = 20,
-            PicturePath = "lacoste_watch.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 8,
-            CateID = 6,   // Đồng hồ
-            GenderID = 3  // Unisex
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 49,
-            Name = "Áo khoác thể thao Puma",
-            Description = "Thiết kế hiện đại, năng động",
-            Price = 1550000,
-            Quantity = 50,
-            PicturePath = "puma_jacket.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 9,
-            CateID = 1,   // Áo khoác
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 50,
-            Name = "Quần jogger Puma",
-            Description = "Thoải mái, phù hợp vận động",
-            Price = 1100000,
-            Quantity = 70,
-            PicturePath = "puma_pants.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 9,
-            CateID = 2,   // Quần
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 51,
-            Name = "Giày chạy bộ Puma",
-            Description = "Thiết kế thể thao, hỗ trợ di chuyển",
-            Price = 1800000,
-            Quantity = 40,
-            PicturePath = "puma_shoes.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 9,
-            CateID = 3,   // Giày
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 52,
-            Name = "Váy thể thao Puma nữ",
-            Description = "Phù hợp tập luyện hoặc mặc thường ngày",
-            Price = 950000,
-            Quantity = 25,
-            PicturePath = "puma_dress.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 9,
-            CateID = 4,   // Váy
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 53,
-            Name = "Áo thun thể thao Puma",
-            Description = "Chất vải thấm hút, thoáng mát",
-            Price = 600000,
-            Quantity = 90,
-            PicturePath = "puma_tshirt.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 9,
-            CateID = 5,   // Áo thun
-            GenderID = 3  // Unisex
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 54,
-            Name = "Đồng hồ thể thao Puma",
-            Description = "Thiết kế mạnh mẽ, phong cách",
-            Price = 1200000,
-            Quantity = 18,
-            PicturePath = "puma_watch.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 9,
-            CateID = 6,   // Đồng hồ
-            GenderID = 1  // Nam
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 55,
-            Name = "Áo khoác dạ Chanel",
-            Description = "Đẳng cấp, thời thượng, thiết kế quý phái",
-            Price = 9500000,
-            Quantity = 15,
-            PicturePath = "chanel_jacket.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 10,
-            CateID = 1,   // Áo khoác
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 56,
-            Name = "Quần vải cao cấp Chanel",
-            Description = "Đường may tinh xảo, chất liệu mềm mịn",
-            Price = 7200000,
-            Quantity = 12,
-            PicturePath = "chanel_pants.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 10,
-            CateID = 2,   // Quần
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        },
-        new Products
-        {
-            ID = 57,
-            Name = "Giày cao gót Chanel",
-            Description = "Thanh lịch, sang trọng",
-            Price = 8300000,
-            Quantity = 10,
-            PicturePath = "chanel_heels.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 10,
-            CateID = 3,   // Giày
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-        },
-        new Products
-        {
-            ID = 58,
-            Name = "Váy dạ hội Chanel",
-            Description = "Lộng lẫy, thiết kế quyến rũ",
-            Price = 13000000,
-            Quantity = 8,
-            PicturePath = "chanel_dress.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 10,
-            CateID = 4,   // Váy
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-        },
-        new Products
-        {
-            ID = 59,
-            Name = "Áo thun cao cấp Chanel",
-            Description = "Đơn giản nhưng đầy tinh tế",
-            Price = 3200000,
-            Quantity = 20,
-            PicturePath = "chanel_tshirt.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 10,
-            CateID = 5,   // Áo thun
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-        },
-        new Products
-        {
-            ID = 60,
-            Name = "Đồng hồ Chanel sang trọng",
-            Description = "Tinh xảo, sang trọng và nữ tính",
-            Price = 18000000,
-            Quantity = 6,
-            PicturePath = "chanel_watch.jpg",
-            Created = new DateTime(2025, 4, 18),
-            BrandID = 10,
-            CateID = 6,   // Đồng hồ
-            GenderID = 2  // Nữ
-            ,FeaturedID = 2
-
-        }
-    };
+            new Products
+            {
+                ID = 1,
+                Name = "Áo khoác nam Nike",
+                NormalizedName = RemoveDiacritics("Áo khoác nam Nike").ToLower(),
+                Description = "Áo khoác nam chính hãng Nike, phong cách thể thao",
+                NormalizedDescription = RemoveDiacritics("Áo khoác nam chính hãng Nike, phong cách thể thao").ToLower(),
+                Price = 1500000,
+                Quantity = 100,
+                PicturePath = "jacket1.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 1,  // Nike
+                CateID = 1,   // Áo khoác
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 2,
+                Name = "Quần thể thao Nike",
+                NormalizedName = RemoveDiacritics("Quần thể thao Nike").ToLower(),
+                Description = "Quần thể thao Nike chất liệu thoáng mát, phù hợp tập luyện",
+                NormalizedDescription = RemoveDiacritics("Quần thể thao Nike chất liệu thoáng mát, phù hợp tập luyện").ToLower(),
+                Price = 900000,
+                Quantity = 80,
+                PicturePath = "pants1.webp",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 1,
+                CateID = 2,   // Quần
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 3,
+                Name = "Giày Nike Air Max",
+                NormalizedName = RemoveDiacritics("Giày Nike Air Max").ToLower(),
+                Description = "Giày thể thao Nike Air Max thoải mái và bền bỉ",
+                NormalizedDescription = RemoveDiacritics("Giày thể thao Nike Air Max thoải mái và bền bỉ").ToLower(),
+                Price = 2800000,
+                Quantity = 60,
+                PicturePath = "shoes1.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 1,
+                CateID = 3,   // Giày
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 4,
+                Name = "Váy thể thao Nike nữ",
+                NormalizedName = RemoveDiacritics("Váy thể thao Nike nữ").ToLower(),
+                Description = "Váy thể thao nữ năng động, thiết kế hiện đại",
+                NormalizedDescription = RemoveDiacritics("Váy thể thao nữ năng động, thiết kế hiện đại").ToLower(),
+                Price = 1100000,
+                Quantity = 40,
+                PicturePath = "dress1.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 1,
+                CateID = 4,   // Váy
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 5,
+                Name = "Áo thun Nike basic",
+                NormalizedName = RemoveDiacritics("Áo thun Nike basic").ToLower(),
+                Description = "Áo thun nam Nike cổ tròn, chất liệu cotton thoải mái",
+                NormalizedDescription = RemoveDiacritics("Áo thun nam Nike cổ tròn, chất liệu cotton thoải mái").ToLower(),
+                Price = 590000,
+                Quantity = 200,
+                PicturePath = "tshirt1.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 1,
+                CateID = 5,   // Áo thun
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 6,
+                Name = "Đồng hồ thể thao Nike",
+                NormalizedName = RemoveDiacritics("Đồng hồ thể thao Nike").ToLower(),
+                Description = "Đồng hồ thể thao phong cách Nike, chống nước, dây silicon",
+                NormalizedDescription = RemoveDiacritics("Đồng hồ thể thao phong cách Nike, chống nước, dây silicon").ToLower(),
+                Price = 1900000,
+                Quantity = 25,
+                PicturePath = "watch1.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 1,
+                CateID = 6,   // Đồng hồ
+                GenderID = 3, // Unisex
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 7,
+                Name = "Áo khoác Adidas Originals",
+                NormalizedName = RemoveDiacritics("Áo khoác Adidas Originals").ToLower(),
+                Description = "Thiết kế cổ điển, chống gió và giữ ấm tốt",
+                NormalizedDescription = RemoveDiacritics("Thiết kế cổ điển, chống gió và giữ ấm tốt").ToLower(),
+                Price = 1450000,
+                Quantity = 70,
+                PicturePath = "adidas_jacket.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 2,
+                CateID = 1,   // Áo khoác
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 8,
+                Name = "Quần jogger Adidas",
+                NormalizedName = RemoveDiacritics("Quần jogger Adidas").ToLower(),
+                Description = "Quần thể thao thoải mái, phù hợp vận động",
+                NormalizedDescription = RemoveDiacritics("Quần thể thao thoải mái, phù hợp vận động").ToLower(),
+                Price = 850000,
+                Quantity = 90,
+                PicturePath = "adidas_pants.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 2,
+                CateID = 2,   // Quần
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 9,
+                Name = "Giày Adidas Ultraboost",
+                NormalizedName = RemoveDiacritics("Giày Adidas Ultraboost").ToLower(),
+                Description = "Đệm Boost êm ái, hỗ trợ chạy bộ hiệu quả",
+                NormalizedDescription = RemoveDiacritics("Đệm Boost êm ái, hỗ trợ chạy bộ hiệu quả").ToLower(),
+                Price = 3200000,
+                Quantity = 50,
+                PicturePath = "adidas_shoes.webp",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 2,
+                CateID = 3,   // Giày
+                GenderID = 3, // Unisex
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 10,
+                Name = "Váy tennis Adidas nữ",
+                NormalizedName = RemoveDiacritics("Váy tennis Adidas nữ").ToLower(),
+                Description = "Váy thể thao nhẹ, thấm hút mồ hôi tốt",
+                NormalizedDescription = RemoveDiacritics("Váy thể thao nhẹ, thấm hút mồ hôi tốt").ToLower(),
+                Price = 990000,
+                Quantity = 45,
+                PicturePath = "adidas_dress.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 2,
+                CateID = 4,   // Váy
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 11,
+                Name = "Áo thun Adidas cổ tròn",
+                NormalizedName = RemoveDiacritics("Áo thun Adidas cổ tròn").ToLower(),
+                Description = "Áo thun cổ điển, logo 3 sọc đặc trưng",
+                NormalizedDescription = RemoveDiacritics("Áo thun cổ điển, logo 3 sọc đặc trưng").ToLower(),
+                Price = 650000,
+                Quantity = 150,
+                PicturePath = "adidas_tshirt.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 2,
+                CateID = 5,   // Áo thun
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 12,
+                Name = "Đồng hồ thể thao Adidas",
+                NormalizedName = RemoveDiacritics("Đồng hồ thể thao Adidas").ToLower(),
+                Description = "Thiết kế năng động, chống nước tốt",
+                NormalizedDescription = RemoveDiacritics("Thiết kế năng động, chống nước tốt").ToLower(),
+                Price = 1750000,
+                Quantity = 30,
+                PicturePath = "adidas_watch.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 2,
+                CateID = 6,   // Đồng hồ
+                GenderID = 3, // Unisex
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 13,
+                Name = "Áo khoác Zara Dáng Dài",
+                NormalizedName = RemoveDiacritics("Áo khoác Zara Dáng Dài").ToLower(),
+                Description = "Áo khoác nữ dáng dài thanh lịch",
+                NormalizedDescription = RemoveDiacritics("Áo khoác nữ dáng dài thanh lịch").ToLower(),
+                Price = 1900000,
+                Quantity = 60,
+                PicturePath = "zara_jacket.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 3,
+                CateID = 1,   // Áo khoác
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 14,
+                Name = "Quần Ống Rộng Zara",
+                NormalizedName = RemoveDiacritics("Quần Ống Rộng Zara").ToLower(),
+                Description = "Phong cách hiện đại, thời trang",
+                NormalizedDescription = RemoveDiacritics("Phong cách hiện đại, thời trang").ToLower(),
+                Price = 980000,
+                Quantity = 40,
+                PicturePath = "zara_pants.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 3,
+                CateID = 2,   // Quần
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 15,
+                Name = "Giày Cao Gót Zara",
+                NormalizedName = RemoveDiacritics("Giày Cao Gót Zara").ToLower(),
+                Description = "Thiết kế sang trọng, phù hợp tiệc tùng",
+                NormalizedDescription = RemoveDiacritics("Thiết kế sang trọng, phù hợp tiệc tùng").ToLower(),
+                Price = 1200000,
+                Quantity = 55,
+                PicturePath = "zara_heels.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 3,
+                CateID = 3,   // Giày
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 16,
+                Name = "Váy Xếp Ly Zara",
+                NormalizedName = RemoveDiacritics("Váy Xếp Ly Zara").ToLower(),
+                Description = "Váy dài thướt tha, thanh lịch",
+                NormalizedDescription = RemoveDiacritics("Váy dài thướt tha, thanh lịch").ToLower(),
+                Price = 1250000,
+                Quantity = 35,
+                PicturePath = "zara_dress.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 3,
+                CateID = 4,   // Váy
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 17,
+                Name = "Áo Thun Zara Basic",
+                NormalizedName = RemoveDiacritics("Áo Thun Zara Basic").ToLower(),
+                Description = "Áo thun đơn giản, dễ phối đồ",
+                NormalizedDescription = RemoveDiacritics("Áo thun đơn giản, dễ phối đồ").ToLower(),
+                Price = 450000,
+                Quantity = 90,
+                PicturePath = "zara_tshirt.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 3,
+                CateID = 5,   // Áo thun
+                GenderID = 3, // Unisex
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 18,
+                Name = "Đồng Hồ Kim Zara",
+                NormalizedName = RemoveDiacritics("Đồng Hồ Kim Zara").ToLower(),
+                Description = "Thiết kế mặt tròn, dây da tinh tế",
+                NormalizedDescription = RemoveDiacritics("Thiết kế mặt tròn, dây da tinh tế").ToLower(),
+                Price = 1350000,
+                Quantity = 25,
+                PicturePath = "zara_watch.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 3,
+                CateID = 6,   // Đồng hồ
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 19,
+                Name = "Áo Khoác Dù H&M",
+                NormalizedName = RemoveDiacritics("Áo Khoác Dù H&M").ToLower(),
+                Description = "Chống gió, nhẹ và gọn",
+                NormalizedDescription = RemoveDiacritics("Chống gió, nhẹ và gọn").ToLower(),
+                Price = 950000,
+                Quantity = 80,
+                PicturePath = "hm_jacket.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 4,
+                CateID = 1,   // Áo khoác
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 20,
+                Name = "Quần Tây H&M",
+                NormalizedName = RemoveDiacritics("Quần Tây H&M").ToLower(),
+                Description = "Phong cách công sở lịch sự",
+                NormalizedDescription = RemoveDiacritics("Phong cách công sở lịch sự").ToLower(),
+                Price = 700000,
+                Quantity = 65,
+                PicturePath = "hm_pants.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 4,
+                CateID = 2,   // Quần
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 21,
+                Name = "Giày Thể Thao H&M",
+                NormalizedName = RemoveDiacritics("Giày Thể Thao H&M").ToLower(),
+                Description = "Giày đơn giản, năng động",
+                NormalizedDescription = RemoveDiacritics("Giày đơn giản, năng động").ToLower(),
+                Price = 820000,
+                Quantity = 100,
+                PicturePath = "hm_shoes.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 4,
+                CateID = 3,   // Giày
+                GenderID = 3, // Unisex
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 22,
+                Name = "Váy Ngắn Hoa Nhí H&M",
+                NormalizedName = RemoveDiacritics("Váy Ngắn Hoa Nhí H&M").ToLower(),
+                Description = "Váy xinh xắn cho mùa hè",
+                NormalizedDescription = RemoveDiacritics("Váy xinh xắn cho mùa hè").ToLower(),
+                Price = 600000,
+                Quantity = 45,
+                PicturePath = "hm_dress.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 4,
+                CateID = 4,   // Váy
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 23,
+                Name = "Áo Thun Nam Basic H&M",
+                NormalizedName = RemoveDiacritics("Áo Thun Nam Basic H&M").ToLower(),
+                Description = "Áo thun trơn giá rẻ",
+                NormalizedDescription = RemoveDiacritics("Áo thun trơn giá rẻ").ToLower(),
+                Price = 200000,
+                Quantity = 150,
+                PicturePath = "hm_tshirt.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 4,
+                CateID = 5,   // Áo thun
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 24,
+                Name = "Đồng Hồ Dây Silicon H&M",
+                NormalizedName = RemoveDiacritics("Đồng Hồ Dây Silicon H&M").ToLower(),
+                Description = "Thiết kế đơn giản, hiện đại",
+                NormalizedDescription = RemoveDiacritics("Thiết kế đơn giản, hiện đại").ToLower(),
+                Price = 550000,
+                Quantity = 40,
+                PicturePath = "hm_watch.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 4,
+                CateID = 6,   // Đồng hồ
+                GenderID = 3, // Unisex
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 25,
+                Name = "Áo khoác lông vũ Uniqlo",
+                NormalizedName = RemoveDiacritics("Áo khoác lông vũ Uniqlo").ToLower(),
+                Description = "Giữ ấm nhẹ nhàng, tiện lợi",
+                NormalizedDescription = RemoveDiacritics("Giữ ấm nhẹ nhàng, tiện lợi").ToLower(),
+                Price = 1750000,
+                Quantity = 70,
+                PicturePath = "uniqlo_jacket.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 5,
+                CateID = 1,   // Áo khoác
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 26,
+                Name = "Quần Jean Uniqlo",
+                NormalizedName = RemoveDiacritics("Quần Jean Uniqlo").ToLower(),
+                Description = "Jean co giãn, phong cách tối giản",
+                NormalizedDescription = RemoveDiacritics("Jean co giãn, phong cách tối giản").ToLower(),
+                Price = 950000,
+                Quantity = 50,
+                PicturePath = "uniqlo_jeans.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 5,
+                CateID = 2,   // Quần
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 27,
+                Name = "Giày Sneaker Uniqlo",
+                NormalizedName = RemoveDiacritics("Giày Sneaker Uniqlo").ToLower(),
+                Description = "Thiết kế tối giản, thoải mái",
+                NormalizedDescription = RemoveDiacritics("Thiết kế tối giản, thoải mái").ToLower(),
+                Price = 1050000,
+                Quantity = 60,
+                PicturePath = "uniqlo_shoes.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 5,
+                CateID = 3,   // Giày
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 28,
+                Name = "Váy Cotton Uniqlo",
+                NormalizedName = RemoveDiacritics("Váy Cotton Uniqlo").ToLower(),
+                Description = "Thiết kế tối giản, thoải mái cho mùa hè",
+                NormalizedDescription = RemoveDiacritics("Thiết kế tối giản, thoải mái cho mùa hè").ToLower(),
+                Price = 850000,
+                Quantity = 40,
+                PicturePath = "uniqlo_dress.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 5,
+                CateID = 4,   // Váy
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 29,
+                Name = "Áo thun Airism Uniqlo",
+                NormalizedName = RemoveDiacritics("Áo thun Airism Uniqlo").ToLower(),
+                Description = "Thoáng mát, nhanh khô, thích hợp mùa hè",
+                NormalizedDescription = RemoveDiacritics("Thoáng mát, nhanh khô, thích hợp mùa hè").ToLower(),
+                Price = 400000,
+                Quantity = 120,
+                PicturePath = "uniqlo_tshirt.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 5,
+                CateID = 5,   // Áo thun
+                GenderID = 3, // Unisex
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 30,
+                Name = "Đồng hồ tối giản Uniqlo",
+                NormalizedName = RemoveDiacritics("Đồng hồ tối giản Uniqlo").ToLower(),
+                Description = "Phong cách tối giản, dây da đen",
+                NormalizedDescription = RemoveDiacritics("Phong cách tối giản, dây da đen").ToLower(),
+                Price = 980000,
+                Quantity = 30,
+                PicturePath = "uniqlo_watch.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 5,
+                CateID = 6,   // Đồng hồ
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 31,
+                Name = "Áo khoác cao cấp Gucci",
+                NormalizedName = RemoveDiacritics("Áo khoác cao cấp Gucci").ToLower(),
+                Description = "Thiết kế sang trọng, dành cho thời trang cao cấp",
+                NormalizedDescription = RemoveDiacritics("Thiết kế sang trọng, dành cho thời trang cao cấp").ToLower(),
+                Price = 25000000,
+                Quantity = 10,
+                PicturePath = "gucci_jacket.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 6,
+                CateID = 1,   // Áo khoác
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 32,
+                Name = "Quần tây Gucci nam",
+                NormalizedName = RemoveDiacritics("Quần tây Gucci nam").ToLower(),
+                Description = "Phong cách lịch lãm, chất liệu cao cấp",
+                NormalizedDescription = RemoveDiacritics("Phong cách lịch lãm, chất liệu cao cấp").ToLower(),
+                Price = 15500000,
+                Quantity = 15,
+                PicturePath = "gucci_pants.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 6,
+                CateID = 2,   // Quần
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 33,
+                Name = "Giày lười Gucci",
+                NormalizedName = RemoveDiacritics("Giày lười Gucci").ToLower(),
+                Description = "Thiết kế logo đặc trưng, đẳng cấp",
+                NormalizedDescription = RemoveDiacritics("Thiết kế logo đặc trưng, đẳng cấp").ToLower(),
+                Price = 22000000,
+                Quantity = 12,
+                PicturePath = "gucci_shoes.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 6,
+                CateID = 3,   // Giày
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 34,
+                Name = "Váy lụa cao cấp Gucci",
+                NormalizedName = RemoveDiacritics("Váy lụa cao cấp Gucci").ToLower(),
+                Description = "Chất liệu mềm mại, sang trọng",
+                NormalizedDescription = RemoveDiacritics("Chất liệu mềm mại, sang trọng").ToLower(),
+                Price = 30000000,
+                Quantity = 8,
+                PicturePath = "gucci_dress.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 6,
+                CateID = 4,   // Váy
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 35,
+                Name = "Áo thun Gucci logo lớn",
+                NormalizedName = RemoveDiacritics("Áo thun Gucci logo lớn").ToLower(),
+                Description = "Phong cách trẻ trung, thời thượng",
+                NormalizedDescription = RemoveDiacritics("Phong cách trẻ trung, thời thượng").ToLower(),
+                Price = 9000000,
+                Quantity = 20,
+                PicturePath = "gucci_tshirt.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 6,
+                CateID = 5,   // Áo thun
+                GenderID = 3, // Unisex
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 36,
+                Name = "Đồng hồ đính đá Gucci",
+                NormalizedName = RemoveDiacritics("Đồng hồ đính đá Gucci").ToLower(),
+                Description = "Đồng hồ xa xỉ với thiết kế tinh xảo",
+                NormalizedDescription = RemoveDiacritics("Đồng hồ xa xỉ với thiết kế tinh xảo").ToLower(),
+                Price = 45000000,
+                Quantity = 5,
+                PicturePath = "gucci_watch.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 6,
+                CateID = 6,   // Đồng hồ
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 37,
+                Name = "Áo khoác jean Levi's",
+                NormalizedName = RemoveDiacritics("Áo khoác jean Levi's").ToLower(),
+                Description = "Chất liệu jean bền, phong cách cổ điển",
+                NormalizedDescription = RemoveDiacritics("Chất liệu jean bền, phong cách cổ điển").ToLower(),
+                Price = 1450000,
+                Quantity = 40,
+                PicturePath = "levis_jacket.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 7,
+                CateID = 1,   // Áo khoác
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 38,
+                Name = "Quần jeans Levi's 501",
+                NormalizedName = RemoveDiacritics("Quần jeans Levi's 501").ToLower(),
+                Description = "Form dáng chuẩn Mỹ, chất lượng cao",
+                NormalizedDescription = RemoveDiacritics("Form dáng chuẩn Mỹ, chất lượng cao").ToLower(),
+                Price = 1250000,
+                Quantity = 60,
+                PicturePath = "levis_jeans.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 7,
+                CateID = 2,   // Quần
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 39,
+                Name = "Giày thể thao Levi's",
+                NormalizedName = RemoveDiacritics("Giày thể thao Levi's").ToLower(),
+                Description = "Thoải mái và thời trang hàng ngày",
+                NormalizedDescription = RemoveDiacritics("Thoải mái và thời trang hàng ngày").ToLower(),
+                Price = 1150000,
+                Quantity = 35,
+                PicturePath = "levis_shoes.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 7,
+                CateID = 3,   // Giày
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 40,
+                Name = "Váy bò Levi's nữ",
+                NormalizedName = RemoveDiacritics("Váy bò Levi's nữ").ToLower(),
+                Description = "Thiết kế trẻ trung, năng động",
+                NormalizedDescription = RemoveDiacritics("Thiết kế trẻ trung, năng động").ToLower(),
+                Price = 980000,
+                Quantity = 20,
+                PicturePath = "levis_dress.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 7,
+                CateID = 4,   // Váy
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 41,
+                Name = "Áo thun cổ tròn Levi's",
+                NormalizedName = RemoveDiacritics("Áo thun cổ tròn Levi's").ToLower(),
+                Description = "Logo cổ điển, phong cách Mỹ",
+                NormalizedDescription = RemoveDiacritics("Logo cổ điển, phong cách Mỹ").ToLower(),
+                Price = 500000,
+                Quantity = 100,
+                PicturePath = "levis_tshirt.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 7,
+                CateID = 5,   // Áo thun
+                GenderID = 3, // Unisex
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 42,
+                Name = "Đồng hồ dây da Levi's",
+                NormalizedName = RemoveDiacritics("Đồng hồ dây da Levi's").ToLower(),
+                Description = "Đơn giản, mạnh mẽ, cá tính",
+                NormalizedDescription = RemoveDiacritics("Đơn giản, mạnh mẽ, cá tính").ToLower(),
+                Price = 850000,
+                Quantity = 15,
+                PicturePath = "levis_watch.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 7,
+                CateID = 6,   // Đồng hồ
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 43,
+                Name = "Áo khoác thể thao Lacoste",
+                NormalizedName = RemoveDiacritics("Áo khoác thể thao Lacoste").ToLower(),
+                Description = "Thiết kế năng động, thời trang",
+                NormalizedDescription = RemoveDiacritics("Thiết kế năng động, thời trang").ToLower(),
+                Price = 2700000,
+                Quantity = 30,
+                PicturePath = "lacoste_jacket.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 8,
+                CateID = 1,   // Áo khoác
+                GenderID = 3, // Unisex
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 44,
+                Name = "Quần short Lacoste",
+                NormalizedName = RemoveDiacritics("Quần short Lacoste").ToLower(),
+                Description = "Phong cách thể thao, thoáng mát",
+                NormalizedDescription = RemoveDiacritics("Phong cách thể thao, thoáng mát").ToLower(),
+                Price = 1450000,
+                Quantity = 40,
+                PicturePath = "lacoste_shorts.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 8,
+                CateID = 2,   // Quần
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 45,
+                Name = "Giày sneaker Lacoste",
+                NormalizedName = RemoveDiacritics("Giày sneaker Lacoste").ToLower(),
+                Description = "Chất liệu cao cấp, thiết kế tinh tế",
+                NormalizedDescription = RemoveDiacritics("Chất liệu cao cấp, thiết kế tinh tế").ToLower(),
+                Price = 2200000,
+                Quantity = 25,
+                PicturePath = "lacoste_shoes.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 8,
+                CateID = 3,   // Giày
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 46,
+                Name = "Váy polo Lacoste",
+                NormalizedName = RemoveDiacritics("Váy polo Lacoste").ToLower(),
+                Description = "Lịch sự, sang trọng cho nữ",
+                NormalizedDescription = RemoveDiacritics("Lịch sự, sang trọng cho nữ").ToLower(),
+                Price = 1900000,
+                Quantity = 18,
+                PicturePath = "lacoste_dress.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 8,
+                CateID = 4,   // Váy
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 47,
+                Name = "Áo thun cá sấu Lacoste",
+                NormalizedName = RemoveDiacritics("Áo thun cá sấu Lacoste").ToLower(),
+                Description = "Biểu tượng nổi bật với logo cá sấu",
+                NormalizedDescription = RemoveDiacritics("Biểu tượng nổi bật với logo cá sấu").ToLower(),
+                Price = 1100000,
+                Quantity = 55,
+                PicturePath = "lacoste_tshirt.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 8,
+                CateID = 5,   // Áo thun
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 48,
+                Name = "Đồng hồ thể thao Lacoste",
+                NormalizedName = RemoveDiacritics("Đồng hồ thể thao Lacoste").ToLower(),
+                Description = "Năng động, trẻ trung, phù hợp với người chơi thể thao",
+                NormalizedDescription = RemoveDiacritics("Năng động, trẻ trung, phù hợp với người chơi thể thao").ToLower(),
+                Price = 2600000,
+                Quantity = 20,
+                PicturePath = "lacoste_watch.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 8,
+                CateID = 6,   // Đồng hồ
+                GenderID = 3, // Unisex
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 49,
+                Name = "Áo khoác thể thao Puma",
+                NormalizedName = RemoveDiacritics("Áo khoác thể thao Puma").ToLower(),
+                Description = "Thiết kế hiện đại, năng động",
+                NormalizedDescription = RemoveDiacritics("Thiết kế hiện đại, năng động").ToLower(),
+                Price = 1550000,
+                Quantity = 50,
+                PicturePath = "puma_jacket.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 9,
+                CateID = 1,   // Áo khoác
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 50,
+                Name = "Quần jogger Puma",
+                NormalizedName = RemoveDiacritics("Quần jogger Puma").ToLower(),
+                Description = "Thoải mái, phù hợp vận động",
+                NormalizedDescription = RemoveDiacritics("Thoải mái, phù hợp vận động").ToLower(),
+                Price = 1100000,
+                Quantity = 70,
+                PicturePath = "puma_pants.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 9,
+                CateID = 2,   // Quần
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 51,
+                Name = "Giày chạy bộ Puma",
+                NormalizedName = RemoveDiacritics("Giày chạy bộ Puma").ToLower(),
+                Description = "Thiết kế thể thao, hỗ trợ di chuyển",
+                NormalizedDescription = RemoveDiacritics("Thiết kế thể thao, hỗ trợ di chuyển").ToLower(),
+                Price = 1800000,
+                Quantity = 40,
+                PicturePath = "puma_shoes.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 9,
+                CateID = 3,   // Giày
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 52,
+                Name = "Váy thể thao Puma nữ",
+                NormalizedName = RemoveDiacritics("Váy thể thao Puma nữ").ToLower(),
+                Description = "Phù hợp tập luyện hoặc mặc thường ngày",
+                NormalizedDescription = RemoveDiacritics("Phù hợp tập luyện hoặc mặc thường ngày").ToLower(),
+                Price = 950000,
+                Quantity = 25,
+                PicturePath = "puma_dress.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 9,
+                CateID = 4,   // Váy
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 53,
+                Name = "Áo thun thể thao Puma",
+                NormalizedName = RemoveDiacritics("Áo thun thể thao Puma").ToLower(),
+                Description = "Chất vải thấm hút, thoáng mát",
+                NormalizedDescription = RemoveDiacritics("Chất vải thấm hút, thoáng mát").ToLower(),
+                Price = 600000,
+                Quantity = 90,
+                PicturePath = "puma_tshirt.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 9,
+                CateID = 5,   // Áo thun
+                GenderID = 3, // Unisex
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 54,
+                Name = "Đồng hồ thể thao Puma",
+                NormalizedName = RemoveDiacritics("Đồng hồ thể thao Puma").ToLower(),
+                Description = "Thiết kế mạnh mẽ, phong cách",
+                NormalizedDescription = RemoveDiacritics("Thiết kế mạnh mẽ, phong cách").ToLower(),
+                Price = 1200000,
+                Quantity = 18,
+                PicturePath = "puma_watch.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 9,
+                CateID = 6,   // Đồng hồ
+                GenderID = 1, // Nam
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 55,
+                Name = "Áo khoác dạ Chanel",
+                NormalizedName = RemoveDiacritics("Áo khoác dạ Chanel").ToLower(),
+                Description = "Đẳng cấp, thời thượng, thiết kế quý phái",
+                NormalizedDescription = RemoveDiacritics("Đẳng cấp, thời thượng, thiết kế quý phái").ToLower(),
+                Price = 9500000,
+                Quantity = 15,
+                PicturePath = "chanel_jacket.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 10,
+                CateID = 1,   // Áo khoác
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 56,
+                Name = "Quần vải cao cấp Chanel",
+                NormalizedName = RemoveDiacritics("Quần vải cao cấp Chanel").ToLower(),
+                Description = "Đường may tinh xảo, chất liệu mềm mịn",
+                NormalizedDescription = RemoveDiacritics("Đường may tinh xảo, chất liệu mềm mịn").ToLower(),
+                Price = 7200000,
+                Quantity = 12,
+                PicturePath = "chanel_pants.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 10,
+                CateID = 2,   // Quần
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 57,
+                Name = "Giày cao gót Chanel",
+                NormalizedName = RemoveDiacritics("Giày cao gót Chanel").ToLower(),
+                Description = "Thanh lịch, sang trọng",
+                NormalizedDescription = RemoveDiacritics("Thanh lịch, sang trọng").ToLower(),
+                Price = 8300000,
+                Quantity = 10,
+                PicturePath = "chanel_heels.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 10,
+                CateID = 3,   // Giày
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 58,
+                Name = "Váy dạ hội Chanel",
+                NormalizedName = RemoveDiacritics("Váy dạ hội Chanel").ToLower(),
+                Description = "Lộng lẫy, thiết kế quyến rũ",
+                NormalizedDescription = RemoveDiacritics("Lộng lẫy, thiết kế quyến rũ").ToLower(),
+                Price = 13000000,
+                Quantity = 8,
+                PicturePath = "chanel_dress.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 10,
+                CateID = 4,   // Váy
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 59,
+                Name = "Áo thun cao cấp Chanel",
+                NormalizedName = RemoveDiacritics("Áo thun cao cấp Chanel").ToLower(),
+                Description = "Đơn giản nhưng đầy tinh tế",
+                NormalizedDescription = RemoveDiacritics("Đơn giản nhưng đầy tinh tế").ToLower(),
+                Price = 3200000,
+                Quantity = 20,
+                PicturePath = "chanel_tshirt.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 10,
+                CateID = 5,   // Áo thun
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            },
+            new Products
+            {
+                ID = 60,
+                Name = "Đồng hồ Chanel sang trọng",
+                NormalizedName = RemoveDiacritics("Đồng hồ Chanel sang trọng").ToLower(),
+                Description = "Tinh xảo, sang trọng và nữ tính",
+                NormalizedDescription = RemoveDiacritics("Tinh xảo, sang trọng và nữ tính").ToLower(),
+                Price = 18000000,
+                Quantity = 6,
+                PicturePath = "chanel_watch.jpg",
+                Created = new DateTime(2025, 4, 18),
+                BrandID = 10,
+                CateID = 6,   // Đồng hồ
+                GenderID = 2, // Nữ
+                FeaturedID = 2
+            }
+        };
 
             #endregion
 
             return products;
         }
+
+
+        public static string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return text;
+            }
+
+            var textNormalFormD = text.Normalize(NormalizationForm.FormD);
+            StringBuilder builderText = new StringBuilder();
+
+            foreach (var item in textNormalFormD)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(item);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    builderText.Append(item);
+                }
+            }
+
+            return builderText.ToString().Normalize(NormalizationForm.FormC);
+        }
     }
+
+
 
 }
 

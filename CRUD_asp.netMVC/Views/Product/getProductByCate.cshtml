@@ -5,12 +5,13 @@
     var cateID = ViewData["cateID"];
     var index = (int)cateID;
     var cateName = Model.Categories[index - 1].Name;
+    var brandImage = ViewData["image"];
 
     ViewData["Title"] = "Product Page";
     Layout = "_HomeLayout";
 }
 
-<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(images/banner/banner1.jpg);">
+<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm animate-box" role="banner" style="background-image:url(@Url.Content($"~/{brandImage}")); ">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">

@@ -61,7 +61,7 @@
                                         <ul class="dropdown sub-dropdown">
                                             @foreach (var item in Model.Brands)
                                             {
-                                                <li><a asp-controller="Product" asp-route-brandID="@item.ID">@item.Name</a></li>
+                                                <li><a asp-controller="Product" asp-action="getProductByBrand" asp-route-brandID="@item.ID">@item.Name</a></li>
                                             }
                                         </ul>
                                     </li>
@@ -70,7 +70,7 @@
                                         <ul class="dropdown sub-dropdown">
                                             @foreach (var item in Model.Categories)
                                             {
-                                                <li><a asp-controller="Product" asp-route-cateID="@item.ID">@item.Name</a></li>
+                                                <li><a asp-controller="Product" asp-action="getProductByCate" asp-route-cateID="@item.ID">@item.Name</a></li>
                                             }
                                         </ul>
                                     </li>
@@ -93,12 +93,14 @@
                     <div class="col-md-3 col-xs-4 text-right hidden-xs menu-2">
                         <ul>
                             <li class="search nav-item">
-                                <div class="input-group">
-                                    <input type="text" placeholder="Search..">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-primary" type="button"><i class="icon-search"></i></button>
-                                    </span>
-                                </div>
+                                <form method="post" asp-controller="Product" asp-action="Index">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="Search.." name="keyword" oninvalid="this.setCustomValidity('Vui lòng nhập từ khóa để tìm kiếm sản phẩm !!!')">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+                                        </span>
+                                    </div>
+                                </form>
                             </li>
                             <li class="shopping-cart nav-item"><a href="#" class="cart"><span><small>0</small><i class="icon-shopping-cart"></i></span></a></li>
                         </ul>
@@ -125,6 +127,7 @@
                     </p>
 
                 </div>
+
                 <div class="col-md-2 col-sm-4 col-xs-6 col-md-push-1">
                     <ul class="fh5co-footer-links">
                         <li class="nav-item-f"><a asp-action="About" asp-controller="Home">About</a></li>
@@ -135,25 +138,25 @@
                     </ul>
                 </div>
 
-                <div class="col-md-2 col-sm-4 col-xs-6 col-md-push-1">
+                <div class="col-md-3 col-sm-4 col-xs-6 col-md-push-1">
                     <ul class="fh5co-footer-links">
-                        <li><a href="#">Shop</a></li>
-                        <li><a href="#">Privacy</a></li>
-                        <li><a href="#">Testimonials</a></li>
-                        <li><a href="#">Handbook</a></li>
-                        <li><a href="#">Held Desk</a></li>
+                        @foreach (var item in Model.Categories)
+                        {
+                            <li><a asp-controller="Product" asp-action="getProductByCate" asp-route-cateID="@item.ID">@item.Name</a></li>
+                        }
                     </ul>
                 </div>
 
-                <div class="col-md-2 col-sm-4 col-xs-6 col-md-push-1">
+                <div class="col-md-3 col-sm-4 col-xs-6 col-md-push-1">
                     <ul class="fh5co-footer-links">
-                        <li><a href="#">Find Designers</a></li>
-                        <li><a href="#">Find Developers</a></li>
-                        <li><a href="#">Teams</a></li>
-                        <li><a href="#">Advertise</a></li>
-                        <li><a href="#">API</a></li>
+                        @foreach (var item in Model.Brands)
+                        {
+                            <li><a asp-controller="Product" asp-action="getProductByBrand" asp-route-brandID="@item.ID">@item.Name</a></li>
+                        }
                     </ul>
                 </div>
+
+
             </div>
 
             <div class="row copyright">

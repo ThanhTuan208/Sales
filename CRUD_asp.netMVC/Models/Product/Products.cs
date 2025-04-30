@@ -19,6 +19,7 @@ namespace CRUD_asp.netMVC.Models.Product
 
         [Required(ErrorMessage = "Ban can phai nhap Ten !!!"), StringLength(50, MinimumLength = 5, ErrorMessage = "Do dai ten tu {2} den {1} ky tu")]
         public string? Name { get; set; }
+        public string? NormalizedName { get; set; }
 
         [NotMapped]
         [DataType(DataType.Upload)]
@@ -28,6 +29,7 @@ namespace CRUD_asp.netMVC.Models.Product
 
         [Required, Column(TypeName = "nvarchar(max)")]
         public string? Description { get; set; }
+        public string? NormalizedDescription { get; set; }
 
         [Required(ErrorMessage = "Ban can phai nhap {0} sp !!!")]
         [DataType(DataType.Currency)]

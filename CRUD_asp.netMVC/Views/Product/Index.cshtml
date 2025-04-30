@@ -2,6 +2,7 @@
 @using System.Globalization
 @model BrandShowProductViewModel
 @{
+    var info = Convert.ToString(ViewData["Info"]);
     ViewData["Title"] = "Product Page";
     Layout = "_HomeLayout";
 }
@@ -13,7 +14,6 @@
             <div class="col-md-8 col-md-offset-2 text-center">
                 <div class="display-t">
                     <div class="display-tc animate-box" data-animate-effect="fadeIn">
-                        
                     </div>
                 </div>
             </div>
@@ -42,25 +42,26 @@
         </div>
 
         <div class="row">
+
             @foreach (var item in Model.Products)
             {
-                <div class="col-md-3 text-center animate-box">
-                    <div class="product">
+            <div class="col-md-3 text-center animate-box">
+                <div class="product">
 
-                        <div class="product-grid" style="background-image:url(@Url.Content($"~/{@item.PicturePath}");">
-                            <div class="inner">
-                                <p>
-                                    <a href="single.html" class="icon"><i class="icon-shopping-cart"></i></a>
-                                    <a asp-action="ProductDetail" asp-route-id="@item.ID" class="icon"><i class="icon-eye"></i></a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="desc">
-                            <h3><a href="single.html">@item.Name</a></h3>
-                            <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
+                    <div class="product-grid" style="background-image:url(@Url.Content($"~/{@item.PicturePath}");">
+                        <div class="inner">
+                            <p>
+                                <a href="single.html" class="icon"><i class="icon-shopping-cart"></i></a>
+                                <a asp-action="ProductDetail" asp-route-id="@item.ID" class="icon"><i class="icon-eye"></i></a>
+                            </p>
                         </div>
                     </div>
+                    <div class="desc">
+                        <h3><a href="single.html">@item.Name</a></h3>
+                        <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
+                    </div>
                 </div>
+            </div>
             }
             <div class="pagination d-flex justify-content-center animate-box">
                 <div class="pagination d-flex justify-content-center animate-box">
@@ -80,7 +81,6 @@
                     }
                 </div>
             </div>
-
         </div>
 
         <div class="row animate-box mt-5">
@@ -93,7 +93,8 @@
                 <div class="owl-clients owl-carousel text-center">
                     @foreach (var item in Model.Brands)
                     {
-                        <div class="service-item" style="margin:auto;"> @* width: 200px;  *@
+                        <div class="service-item" style="margin:auto;">
+                            @* width: 200px;  *@
                             <a asp-action="getProductByBrand" asp-route-brandID="@item.ID" asp-route-productPage="1" class="services-item-image" style="display: block;">
 
                                 <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow"

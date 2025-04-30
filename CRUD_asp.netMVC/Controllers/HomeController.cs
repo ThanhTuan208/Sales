@@ -26,6 +26,7 @@ public class HomeController : Controller
             .Include(p => p.Brands)
             .Include(p => p.Cate)
             .Include(p => p.Gender)
+            .Where(p => p.FeaturedID == 1)
             .Take(6).OrderByDescending(p => p.ID).ToListAsync();
 
         var brand = await context.Brand.AsNoTracking().ToListAsync();
@@ -63,6 +64,22 @@ public class HomeController : Controller
     }
 
     public async Task<IActionResult> Contact()
+    {
+        var brandList = await context.Brand.AsNoTracking().ToListAsync();
+
+        var cateList = await context.Category.AsNoTracking().ToListAsync();
+
+        GeneralProduct_ListCateBrand ViewModel = new()
+        {
+            Product = await context.Products.FirstOrDefaultAsync(),
+            Brands = brandList,
+            Categories = cateList
+        };
+
+        return View(ViewModel);
+    }
+
+    public async Task<IActionResult> ProductFeatured()
     {
         var brandList = await context.Brand.AsNoTracking().ToListAsync();
 

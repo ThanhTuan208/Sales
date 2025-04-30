@@ -517,37 +517,37 @@ namespace CRUD_asp.netMVC.Migrations
                         {
                             ID = 1,
                             Name = "Áo khoác",
-                            PicturePath = "images/Category/jacket.png"
+                            PicturePath = "images/Category/jacket1.png"
                         },
                         new
                         {
                             ID = 2,
                             Name = "Quần",
-                            PicturePath = "images/Category/trousers.png"
+                            PicturePath = "images/Category/trousers1.png"
                         },
                         new
                         {
                             ID = 3,
                             Name = "Giày",
-                            PicturePath = "images/Category/shoes.png"
+                            PicturePath = "images/Category/shoes1.png"
                         },
                         new
                         {
                             ID = 4,
                             Name = "Váy",
-                            PicturePath = "images/Category/skirt.png"
+                            PicturePath = "images/Category/skirt1.png"
                         },
                         new
                         {
                             ID = 5,
                             Name = "Áo thun",
-                            PicturePath = "images/Category/tshirt.png"
+                            PicturePath = "images/Category/tshirt1.png"
                         },
                         new
                         {
                             ID = 6,
                             Name = "Đồng hồ",
-                            PicturePath = "images/Category/wristwatch.png"
+                            PicturePath = "images/Category/wristwatch1.png"
                         });
                 });
 
@@ -5596,6 +5596,12 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("NormalizedDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PicturePath")
                         .HasColumnType("nvarchar(max)");
 
@@ -5628,6 +5634,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Áo khoác nam Nike",
+                            NormalizedDescription = "ao khoac nam chinh hang nike, phong cach the thao",
+                            NormalizedName = "ao khoac nam nike",
                             PicturePath = "jacket1.jpg",
                             Price = 1500000.0,
                             Quantity = 100
@@ -5642,6 +5650,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Quần thể thao Nike",
+                            NormalizedDescription = "quan the thao nike chat lieu thoang mat, phu hop tap luyen",
+                            NormalizedName = "quan the thao nike",
                             PicturePath = "pants1.webp",
                             Price = 900000.0,
                             Quantity = 80
@@ -5656,6 +5666,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Giày Nike Air Max",
+                            NormalizedDescription = "giay the thao nike air max thoai mai va ben bi",
+                            NormalizedName = "giay nike air max",
                             PicturePath = "shoes1.jpg",
                             Price = 2800000.0,
                             Quantity = 60
@@ -5670,6 +5682,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Váy thể thao Nike nữ",
+                            NormalizedDescription = "vay the thao nu nang đong, thiet ke hien đai",
+                            NormalizedName = "vay the thao nike nu",
                             PicturePath = "dress1.jpg",
                             Price = 1100000.0,
                             Quantity = 40
@@ -5684,6 +5698,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Áo thun Nike basic",
+                            NormalizedDescription = "ao thun nam nike co tron, chat lieu cotton thoai mai",
+                            NormalizedName = "ao thun nike basic",
                             PicturePath = "tshirt1.jpg",
                             Price = 590000.0,
                             Quantity = 200
@@ -5698,6 +5714,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 3,
                             Name = "Đồng hồ thể thao Nike",
+                            NormalizedDescription = "đong ho the thao phong cach nike, chong nuoc, day silicon",
+                            NormalizedName = "đong ho the thao nike",
                             PicturePath = "watch1.jpg",
                             Price = 1900000.0,
                             Quantity = 25
@@ -5712,6 +5730,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Áo khoác Adidas Originals",
+                            NormalizedDescription = "thiet ke co đien, chong gio va giu am tot",
+                            NormalizedName = "ao khoac adidas originals",
                             PicturePath = "adidas_jacket.jpg",
                             Price = 1450000.0,
                             Quantity = 70
@@ -5726,6 +5746,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Quần jogger Adidas",
+                            NormalizedDescription = "quan the thao thoai mai, phu hop van đong",
+                            NormalizedName = "quan jogger adidas",
                             PicturePath = "adidas_pants.jpg",
                             Price = 850000.0,
                             Quantity = 90
@@ -5740,6 +5762,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 3,
                             Name = "Giày Adidas Ultraboost",
+                            NormalizedDescription = "đem boost em ai, ho tro chay bo hieu qua",
+                            NormalizedName = "giay adidas ultraboost",
                             PicturePath = "adidas_shoes.webp",
                             Price = 3200000.0,
                             Quantity = 50
@@ -5754,6 +5778,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Váy tennis Adidas nữ",
+                            NormalizedDescription = "vay the thao nhe, tham hut mo hoi tot",
+                            NormalizedName = "vay tennis adidas nu",
                             PicturePath = "adidas_dress.jpg",
                             Price = 990000.0,
                             Quantity = 45
@@ -5768,6 +5794,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Áo thun Adidas cổ tròn",
+                            NormalizedDescription = "ao thun co đien, logo 3 soc đac trung",
+                            NormalizedName = "ao thun adidas co tron",
                             PicturePath = "adidas_tshirt.jpg",
                             Price = 650000.0,
                             Quantity = 150
@@ -5782,6 +5810,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 3,
                             Name = "Đồng hồ thể thao Adidas",
+                            NormalizedDescription = "thiet ke nang đong, chong nuoc tot",
+                            NormalizedName = "đong ho the thao adidas",
                             PicturePath = "adidas_watch.jpg",
                             Price = 1750000.0,
                             Quantity = 30
@@ -5796,6 +5826,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Áo khoác Zara Dáng Dài",
+                            NormalizedDescription = "ao khoac nu dang dai thanh lich",
+                            NormalizedName = "ao khoac zara dang dai",
                             PicturePath = "zara_jacket.jpg",
                             Price = 1900000.0,
                             Quantity = 60
@@ -5810,6 +5842,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Quần Ống Rộng Zara",
+                            NormalizedDescription = "phong cach hien đai, thoi trang",
+                            NormalizedName = "quan ong rong zara",
                             PicturePath = "zara_pants.jpg",
                             Price = 980000.0,
                             Quantity = 40
@@ -5824,6 +5858,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Giày Cao Gót Zara",
+                            NormalizedDescription = "thiet ke sang trong, phu hop tiec tung",
+                            NormalizedName = "giay cao got zara",
                             PicturePath = "zara_heels.jpg",
                             Price = 1200000.0,
                             Quantity = 55
@@ -5838,6 +5874,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Váy Xếp Ly Zara",
+                            NormalizedDescription = "vay dai thuot tha, thanh lich",
+                            NormalizedName = "vay xep ly zara",
                             PicturePath = "zara_dress.jpg",
                             Price = 1250000.0,
                             Quantity = 35
@@ -5852,6 +5890,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 3,
                             Name = "Áo Thun Zara Basic",
+                            NormalizedDescription = "ao thun đon gian, de phoi đo",
+                            NormalizedName = "ao thun zara basic",
                             PicturePath = "zara_tshirt.jpg",
                             Price = 450000.0,
                             Quantity = 90
@@ -5866,6 +5906,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Đồng Hồ Kim Zara",
+                            NormalizedDescription = "thiet ke mat tron, day da tinh te",
+                            NormalizedName = "đong ho kim zara",
                             PicturePath = "zara_watch.jpg",
                             Price = 1350000.0,
                             Quantity = 25
@@ -5880,6 +5922,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Áo Khoác Dù H&M",
+                            NormalizedDescription = "chong gio, nhe va gon",
+                            NormalizedName = "ao khoac du h&m",
                             PicturePath = "hm_jacket.jpg",
                             Price = 950000.0,
                             Quantity = 80
@@ -5894,6 +5938,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Quần Tây H&M",
+                            NormalizedDescription = "phong cach cong so lich su",
+                            NormalizedName = "quan tay h&m",
                             PicturePath = "hm_pants.jpg",
                             Price = 700000.0,
                             Quantity = 65
@@ -5908,6 +5954,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 3,
                             Name = "Giày Thể Thao H&M",
+                            NormalizedDescription = "giay đon gian, nang đong",
+                            NormalizedName = "giay the thao h&m",
                             PicturePath = "hm_shoes.jpg",
                             Price = 820000.0,
                             Quantity = 100
@@ -5922,6 +5970,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Váy Ngắn Hoa Nhí H&M",
+                            NormalizedDescription = "vay xinh xan cho mua he",
+                            NormalizedName = "vay ngan hoa nhi h&m",
                             PicturePath = "hm_dress.jpg",
                             Price = 600000.0,
                             Quantity = 45
@@ -5936,6 +5986,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Áo Thun Nam Basic H&M",
+                            NormalizedDescription = "ao thun tron gia re",
+                            NormalizedName = "ao thun nam basic h&m",
                             PicturePath = "hm_tshirt.jpg",
                             Price = 200000.0,
                             Quantity = 150
@@ -5950,6 +6002,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 3,
                             Name = "Đồng Hồ Dây Silicon H&M",
+                            NormalizedDescription = "thiet ke đon gian, hien đai",
+                            NormalizedName = "đong ho day silicon h&m",
                             PicturePath = "hm_watch.jpg",
                             Price = 550000.0,
                             Quantity = 40
@@ -5964,6 +6018,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Áo khoác lông vũ Uniqlo",
+                            NormalizedDescription = "giu am nhe nhang, tien loi",
+                            NormalizedName = "ao khoac long vu uniqlo",
                             PicturePath = "uniqlo_jacket.jpg",
                             Price = 1750000.0,
                             Quantity = 70
@@ -5978,6 +6034,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Quần Jean Uniqlo",
+                            NormalizedDescription = "jean co gian, phong cach toi gian",
+                            NormalizedName = "quan jean uniqlo",
                             PicturePath = "uniqlo_jeans.jpg",
                             Price = 950000.0,
                             Quantity = 50
@@ -5992,6 +6050,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Giày Sneaker Uniqlo",
+                            NormalizedDescription = "thiet ke toi gian, thoai mai",
+                            NormalizedName = "giay sneaker uniqlo",
                             PicturePath = "uniqlo_shoes.jpg",
                             Price = 1050000.0,
                             Quantity = 60
@@ -6006,6 +6066,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Váy Cotton Uniqlo",
+                            NormalizedDescription = "thiet ke toi gian, thoai mai cho mua he",
+                            NormalizedName = "vay cotton uniqlo",
                             PicturePath = "uniqlo_dress.jpg",
                             Price = 850000.0,
                             Quantity = 40
@@ -6020,6 +6082,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 3,
                             Name = "Áo thun Airism Uniqlo",
+                            NormalizedDescription = "thoang mat, nhanh kho, thich hop mua he",
+                            NormalizedName = "ao thun airism uniqlo",
                             PicturePath = "uniqlo_tshirt.jpg",
                             Price = 400000.0,
                             Quantity = 120
@@ -6034,6 +6098,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Đồng hồ tối giản Uniqlo",
+                            NormalizedDescription = "phong cach toi gian, day da đen",
+                            NormalizedName = "đong ho toi gian uniqlo",
                             PicturePath = "uniqlo_watch.jpg",
                             Price = 980000.0,
                             Quantity = 30
@@ -6048,6 +6114,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Áo khoác cao cấp Gucci",
+                            NormalizedDescription = "thiet ke sang trong, danh cho thoi trang cao cap",
+                            NormalizedName = "ao khoac cao cap gucci",
                             PicturePath = "gucci_jacket.jpg",
                             Price = 25000000.0,
                             Quantity = 10
@@ -6062,6 +6130,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Quần tây Gucci nam",
+                            NormalizedDescription = "phong cach lich lam, chat lieu cao cap",
+                            NormalizedName = "quan tay gucci nam",
                             PicturePath = "gucci_pants.jpg",
                             Price = 15500000.0,
                             Quantity = 15
@@ -6076,6 +6146,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Giày lười Gucci",
+                            NormalizedDescription = "thiet ke logo đac trung, đang cap",
+                            NormalizedName = "giay luoi gucci",
                             PicturePath = "gucci_shoes.jpg",
                             Price = 22000000.0,
                             Quantity = 12
@@ -6090,6 +6162,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Váy lụa cao cấp Gucci",
+                            NormalizedDescription = "chat lieu mem mai, sang trong",
+                            NormalizedName = "vay lua cao cap gucci",
                             PicturePath = "gucci_dress.jpg",
                             Price = 30000000.0,
                             Quantity = 8
@@ -6104,6 +6178,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 3,
                             Name = "Áo thun Gucci logo lớn",
+                            NormalizedDescription = "phong cach tre trung, thoi thuong",
+                            NormalizedName = "ao thun gucci logo lon",
                             PicturePath = "gucci_tshirt.jpg",
                             Price = 9000000.0,
                             Quantity = 20
@@ -6118,6 +6194,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Đồng hồ đính đá Gucci",
+                            NormalizedDescription = "đong ho xa xi voi thiet ke tinh xao",
+                            NormalizedName = "đong ho đinh đa gucci",
                             PicturePath = "gucci_watch.jpg",
                             Price = 45000000.0,
                             Quantity = 5
@@ -6132,6 +6210,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Áo khoác jean Levi's",
+                            NormalizedDescription = "chat lieu jean ben, phong cach co đien",
+                            NormalizedName = "ao khoac jean levi's",
                             PicturePath = "levis_jacket.jpg",
                             Price = 1450000.0,
                             Quantity = 40
@@ -6146,6 +6226,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Quần jeans Levi's 501",
+                            NormalizedDescription = "form dang chuan my, chat luong cao",
+                            NormalizedName = "quan jeans levi's 501",
                             PicturePath = "levis_jeans.jpg",
                             Price = 1250000.0,
                             Quantity = 60
@@ -6160,6 +6242,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Giày thể thao Levi's",
+                            NormalizedDescription = "thoai mai va thoi trang hang ngay",
+                            NormalizedName = "giay the thao levi's",
                             PicturePath = "levis_shoes.jpg",
                             Price = 1150000.0,
                             Quantity = 35
@@ -6174,6 +6258,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Váy bò Levi's nữ",
+                            NormalizedDescription = "thiet ke tre trung, nang đong",
+                            NormalizedName = "vay bo levi's nu",
                             PicturePath = "levis_dress.jpg",
                             Price = 980000.0,
                             Quantity = 20
@@ -6188,6 +6274,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 3,
                             Name = "Áo thun cổ tròn Levi's",
+                            NormalizedDescription = "logo co đien, phong cach my",
+                            NormalizedName = "ao thun co tron levi's",
                             PicturePath = "levis_tshirt.jpg",
                             Price = 500000.0,
                             Quantity = 100
@@ -6202,6 +6290,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Đồng hồ dây da Levi's",
+                            NormalizedDescription = "đon gian, manh me, ca tinh",
+                            NormalizedName = "đong ho day da levi's",
                             PicturePath = "levis_watch.jpg",
                             Price = 850000.0,
                             Quantity = 15
@@ -6216,6 +6306,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 3,
                             Name = "Áo khoác thể thao Lacoste",
+                            NormalizedDescription = "thiet ke nang đong, thoi trang",
+                            NormalizedName = "ao khoac the thao lacoste",
                             PicturePath = "lacoste_jacket.jpg",
                             Price = 2700000.0,
                             Quantity = 30
@@ -6230,6 +6322,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Quần short Lacoste",
+                            NormalizedDescription = "phong cach the thao, thoang mat",
+                            NormalizedName = "quan short lacoste",
                             PicturePath = "lacoste_shorts.jpg",
                             Price = 1450000.0,
                             Quantity = 40
@@ -6244,6 +6338,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Giày sneaker Lacoste",
+                            NormalizedDescription = "chat lieu cao cap, thiet ke tinh te",
+                            NormalizedName = "giay sneaker lacoste",
                             PicturePath = "lacoste_shoes.jpg",
                             Price = 2200000.0,
                             Quantity = 25
@@ -6258,6 +6354,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Váy polo Lacoste",
+                            NormalizedDescription = "lich su, sang trong cho nu",
+                            NormalizedName = "vay polo lacoste",
                             PicturePath = "lacoste_dress.jpg",
                             Price = 1900000.0,
                             Quantity = 18
@@ -6272,6 +6370,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Áo thun cá sấu Lacoste",
+                            NormalizedDescription = "bieu tuong noi bat voi logo ca sau",
+                            NormalizedName = "ao thun ca sau lacoste",
                             PicturePath = "lacoste_tshirt.jpg",
                             Price = 1100000.0,
                             Quantity = 55
@@ -6286,6 +6386,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 3,
                             Name = "Đồng hồ thể thao Lacoste",
+                            NormalizedDescription = "nang đong, tre trung, phu hop voi nguoi choi the thao",
+                            NormalizedName = "đong ho the thao lacoste",
                             PicturePath = "lacoste_watch.jpg",
                             Price = 2600000.0,
                             Quantity = 20
@@ -6300,6 +6402,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Áo khoác thể thao Puma",
+                            NormalizedDescription = "thiet ke hien đai, nang đong",
+                            NormalizedName = "ao khoac the thao puma",
                             PicturePath = "puma_jacket.jpg",
                             Price = 1550000.0,
                             Quantity = 50
@@ -6314,6 +6418,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Quần jogger Puma",
+                            NormalizedDescription = "thoai mai, phu hop van đong",
+                            NormalizedName = "quan jogger puma",
                             PicturePath = "puma_pants.jpg",
                             Price = 1100000.0,
                             Quantity = 70
@@ -6328,6 +6434,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Giày chạy bộ Puma",
+                            NormalizedDescription = "thiet ke the thao, ho tro di chuyen",
+                            NormalizedName = "giay chay bo puma",
                             PicturePath = "puma_shoes.jpg",
                             Price = 1800000.0,
                             Quantity = 40
@@ -6342,6 +6450,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Váy thể thao Puma nữ",
+                            NormalizedDescription = "phu hop tap luyen hoac mac thuong ngay",
+                            NormalizedName = "vay the thao puma nu",
                             PicturePath = "puma_dress.jpg",
                             Price = 950000.0,
                             Quantity = 25
@@ -6356,6 +6466,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 3,
                             Name = "Áo thun thể thao Puma",
+                            NormalizedDescription = "chat vai tham hut, thoang mat",
+                            NormalizedName = "ao thun the thao puma",
                             PicturePath = "puma_tshirt.jpg",
                             Price = 600000.0,
                             Quantity = 90
@@ -6370,6 +6482,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 1,
                             Name = "Đồng hồ thể thao Puma",
+                            NormalizedDescription = "thiet ke manh me, phong cach",
+                            NormalizedName = "đong ho the thao puma",
                             PicturePath = "puma_watch.jpg",
                             Price = 1200000.0,
                             Quantity = 18
@@ -6384,6 +6498,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Áo khoác dạ Chanel",
+                            NormalizedDescription = "đang cap, thoi thuong, thiet ke quy phai",
+                            NormalizedName = "ao khoac da chanel",
                             PicturePath = "chanel_jacket.jpg",
                             Price = 9500000.0,
                             Quantity = 15
@@ -6398,6 +6514,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Quần vải cao cấp Chanel",
+                            NormalizedDescription = "đuong may tinh xao, chat lieu mem min",
+                            NormalizedName = "quan vai cao cap chanel",
                             PicturePath = "chanel_pants.jpg",
                             Price = 7200000.0,
                             Quantity = 12
@@ -6412,6 +6530,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Giày cao gót Chanel",
+                            NormalizedDescription = "thanh lich, sang trong",
+                            NormalizedName = "giay cao got chanel",
                             PicturePath = "chanel_heels.jpg",
                             Price = 8300000.0,
                             Quantity = 10
@@ -6426,6 +6546,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Váy dạ hội Chanel",
+                            NormalizedDescription = "long lay, thiet ke quyen ru",
+                            NormalizedName = "vay da hoi chanel",
                             PicturePath = "chanel_dress.jpg",
                             Price = 13000000.0,
                             Quantity = 8
@@ -6440,6 +6562,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Áo thun cao cấp Chanel",
+                            NormalizedDescription = "đon gian nhung đay tinh te",
+                            NormalizedName = "ao thun cao cap chanel",
                             PicturePath = "chanel_tshirt.jpg",
                             Price = 3200000.0,
                             Quantity = 20
@@ -6454,6 +6578,8 @@ namespace CRUD_asp.netMVC.Migrations
                             FeaturedID = 2,
                             GenderID = 2,
                             Name = "Đồng hồ Chanel sang trọng",
+                            NormalizedDescription = "tinh xao, sang trong va nu tinh",
+                            NormalizedName = "đong ho chanel sang trong",
                             PicturePath = "chanel_watch.jpg",
                             Price = 18000000.0,
                             Quantity = 6

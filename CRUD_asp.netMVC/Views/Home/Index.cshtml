@@ -78,6 +78,10 @@
             </div>
         </div>
         <div class="row">
+            <div class="d-flex justify-content-between">
+                <h1 style="font-weight: 600;text-shadow: 2px 3px 8px">Product Featured</h1>
+                <a asp-action="" class="fs-2"><p>View More</p></a>
+            </div>
             @foreach (var item in Model.Products)
             {
                 <div class="col-md-4 text-center animate-box">
