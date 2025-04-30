@@ -237,8 +237,7 @@ namespace CRUD_asp.netMVC.Controllers
         // Hien thi chi tiet cua san pham theo id
         public async Task<IActionResult> ProductDetail(int id)
         {
-            var product = id > 0 && !string.IsNullOrWhiteSpace(id.ToString()) ?
-                 await context.Products.AsNoTracking()
+            var product = await context.Products.AsNoTracking()
                 .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)
@@ -249,7 +248,7 @@ namespace CRUD_asp.netMVC.Controllers
                 .Include(p => p.ProductSeasons).ThenInclude(p => p.Season)
                 .Include(p => p.ProductTags).ThenInclude(p => p.Tag)
                 .Include(p => p.ProductImages)
-                .FirstOrDefaultAsync(p => p.ID == id) : null;
+                .FirstOrDefaultAsync(p => p.ID == id);
 
             var brandList = await context.Brand.AsNoTracking().ToListAsync();
 

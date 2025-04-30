@@ -68,5 +68,7 @@ namespace CRUD_asp.netMVC.Models.Product
         public List<ProductSeason>? ProductSeasons { get; set; }
         public List<ProductMaterial>? ProductMaterial { get; set; }
         public List<ProductImages>? ProductImages { get; set; } = new List<ProductImages>();
+
+
     }
 }
