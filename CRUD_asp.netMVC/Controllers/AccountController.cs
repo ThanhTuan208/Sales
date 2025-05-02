@@ -128,7 +128,7 @@ namespace CRUD_asp.netMVC.Controllers
 
                 }
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Account", "Login");
             }
 
             foreach (var error in account.Errors)

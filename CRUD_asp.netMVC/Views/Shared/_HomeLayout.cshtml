@@ -51,7 +51,7 @@
                     <div class="col-md-3 col-xs-2">
                         <div id="fh5co-logo"><a asp-action="Index" asp-controller="Home">Tuan.</a></div>
                     </div>
-                    <div class="col-md-6 col-xs-6 text-center menu-1">
+                    <div class="col-md-6 col-xs-6 text-center menu-1 ">
                         <ul>
                             <li class="has-dropdown nav-item">
                                 <a asp-action="Index" asp-controller="Product">Product</a>
@@ -77,17 +77,21 @@
 
                                 </ul>
                             </li>
-                            <li class="nav-item"><a asp-action="About" asp-controller="Home">About</a></li>
-                            <li class="has-dropdown nav-item">
-                                <a href="#">Services</a>
-                                <ul class="dropdown">
-                                    <li><a href="#">Web Design</a></li>
-                                    <li><a href="#">eCommerce</a></li>
-                                    <li><a href="#">Branding</a></li>
-                                    <li><a href="#">API</a></li>
+                            <li class="has-dropdown nav-item ">
+                                <a href="#">Service</a>
+                                <ul class="dropdown" style="width: 150px">
+                                    <li class="nav-item"><a asp-action="About" asp-controller="Home">About</a></li>
+                                    <li class="nav-item"><a asp-action="Contact" asp-controller="Home">Contact</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item"><a asp-action="Contact" asp-controller="Home">Contact</a></li>
+                            <li class="has-dropdown nav-item ">
+                                <a href="#">Your Cart</a>
+                                <ul class="dropdown" style="width: 150px">
+                                    
+                                    <li><a href="#">Order history</a></li>
+                                    <li><a href="#">Favorite order</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
                     <div class="col-md-3 col-xs-4 text-right hidden-xs menu-2">
@@ -103,6 +107,7 @@
                                 </form>
                             </li>
                             <li class="shopping-cart nav-item"><a href="#" class="cart"><span><small>0</small><i class="icon-shopping-cart"></i></span></a></li>
+                            <li class="user nav-item"><a asp-controller="Account" asp-action="Login" class="cart"><span><i class="icon-user"></i></span></a></li>
                         </ul>
                     </div>
                 </div>

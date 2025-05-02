@@ -20,6 +20,7 @@ public class HomeController : Controller
         context = _context;
     }
 
+    // Hien thi san pham noi bat (Featured) tren giao dien chinh
     public async Task<IActionResult> Index()
     {
         var product = await context.Products.AsNoTracking()
@@ -79,6 +80,7 @@ public class HomeController : Controller
         return View(ViewModel);
     }
 
+    // note: chua xu li xong
     public async Task<IActionResult> ProductFeatured()
     {
         var brandList = await context.Brand.AsNoTracking().ToListAsync();

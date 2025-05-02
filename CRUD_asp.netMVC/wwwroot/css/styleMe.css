@@ -1,5 +1,13 @@
-﻿namespace CRUD_asp.netMVC.wwwroot.css
-
+﻿
+.form1 {
+    box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    max-width: 150vh;
+    margin: auto;
+    backdrop-filter: blur(2px);
+}
 
 .login-button {
     background-color: darkcyan;
@@ -12,10 +20,10 @@
     transition: 0.3s background-color;
 }
 
-.login-button:hover {
-    background-color: cadetblue;
-    color: black;
-}
+    .login-button:hover {
+        background-color: cadetblue;
+        color: black;
+    }
 
 .navbar {
     border-radius: 20px;

@@ -6,8 +6,12 @@
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
+<style>
 
-<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(images/banner/banner2.jpg    );">
+
+
+</style>
+<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(~/images/banner/banner2.jpg);">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
@@ -35,7 +39,6 @@
                             <div class="active text-center">
                                 <figure>
                                     <img src="~/@item.PathNameImage" alt="user" style="object-fit: cover" class="img-fluid " />
-
                                 </figure>
                             </div>
                         </div>
@@ -44,6 +47,12 @@
                 </div>
                 <div class="row animate-box">
                     <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+                        <div class="inner">
+                            <input type="checkbox" id="toggle-heart">
+                            <label for="toggle-heart" class="icon fs-1">
+                                <i class="icon-heart2"></i>
+                            </label>
+                        </div>
                         <h2>@Model.Product.Name</h2>
                         <p>
                             <a href="#" class="btn btn-primary btn-outline btn-lg">Add to Cart</a>

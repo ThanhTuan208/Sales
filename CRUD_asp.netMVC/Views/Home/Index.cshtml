@@ -11,7 +11,7 @@
         <ul class="slides" style="height: 100%;">
             @foreach (var item in Model.Products.Take(4))
             {
-                <li style="background: url(@item.PicturePath) no-repeat 80% center; background-size: contain; height: 80vh; ">
+                <li style="background: url(@Url.Content($"~/{@item.PicturePath}")) no-repeat 80% center; background-size: contain; height: 80vh; ">
 
                     <div class="container h-100">
                         <div class="col-md-6 col-md-offset-3 col-md-pull-3 js-fullheight slider-text">

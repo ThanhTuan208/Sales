@@ -76,7 +76,10 @@ namespace CRUD_asp.netMVC.Controllers
         //}
         #endregion
 
+
+        // Search Products
         // Tu tao pagination rieng vi vấn đề gốc rễ là sử dụng AsEnumerable() để gọi RemoveDiacritics, EF Core không thể dịch RemoveDiacritics sang SQL.
+        [Route("Product")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(int productPage = 1, string keyword = "")
@@ -102,8 +105,8 @@ namespace CRUD_asp.netMVC.Controllers
             var pagProduct = new PaginatedList<Products>(filteredProducts, productCount, productPage, 16);
             if (!pagProduct.Any())
             {
-                pagProduct = new PaginatedList<Products>(products, productCount, productPage, 16);
-                //ViewData["Info"] = "Không tìm thấy sản phẩm nào với từ khóa này";
+                //pagProduct = new PaginatedList<Products>(products, productCount, productPage, 16);
+                ViewData["Info"] = $"Không tìm thấy sản phẩm nào với từ khóa '{keyword}' ";
             }
 
             var brands = context.Brand.AsNoTracking();
