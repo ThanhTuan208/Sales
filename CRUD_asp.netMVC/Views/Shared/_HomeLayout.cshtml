@@ -51,7 +51,7 @@
                     <div class="col-md-3 col-xs-2">
                         <div id="fh5co-logo"><a asp-action="Index" asp-controller="Home">Tuan.</a></div>
                     </div>
-                    <div class="col-md-6 col-xs-6 text-center menu-1 ">
+                    <div class="col-md-6 col-xs-6 text-center menu-1">
                         <ul>
                             <li class="has-dropdown nav-item">
                                 <a asp-action="Index" asp-controller="Product">Product</a>
@@ -74,20 +74,18 @@
                                             }
                                         </ul>
                                     </li>
-
                                 </ul>
                             </li>
-                            <li class="has-dropdown nav-item ">
+                            <li class="has-dropdown nav-item">
                                 <a href="#">Service</a>
                                 <ul class="dropdown" style="width: 150px">
                                     <li class="nav-item"><a asp-action="About" asp-controller="Home">About</a></li>
                                     <li class="nav-item"><a asp-action="Contact" asp-controller="Home">Contact</a></li>
                                 </ul>
                             </li>
-                            <li class="has-dropdown nav-item ">
+                            <li class="has-dropdown nav-item">
                                 <a href="#">Your Cart</a>
                                 <ul class="dropdown" style="width: 150px">
-                                    
                                     <li><a href="#">Order history</a></li>
                                     <li><a href="#">Favorite order</a></li>
                                 </ul>
@@ -97,17 +95,35 @@
                     <div class="col-md-3 col-xs-4 text-right hidden-xs menu-2">
                         <ul>
                             <li class="search nav-item">
-                                <form method="post" asp-controller="Product" asp-action="Index">
+                                <form method="get" asp-controller="Product" asp-action="SearchProduct">
                                     <div class="input-group">
-                                        <input type="text" placeholder="Search.." name="keyword" oninvalid="this.setCustomValidity('Vui lòng nhập từ khóa để tìm kiếm sản phẩm !!!')">
+                                        <input type="text" placeholder="Search.." name="keyword"
+                                               oninvalid="this.setCustomValidity('Vui lòng nhập từ khóa để tìm kiếm sản phẩm !!!')"
+                                               oninput="this.setCustomValidity('')" required>
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
                                         </span>
                                     </div>
                                 </form>
                             </li>
-                            <li class="shopping-cart nav-item"><a href="#" class="cart"><span><small>0</small><i class="icon-shopping-cart"></i></span></a></li>
-                            <li class="user nav-item"><a asp-controller="Account" asp-action="Login" class="cart"><span><i class="icon-user"></i></span></a></li>
+                            <li class="shopping-cart nav-item"><a asp-controller="Cart" asp-action="Index" class="cart"><span><small>0</small><i class="icon-shopping-cart"></i></span></a></li>
+                            <li class="user nav-item">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <form id="logoutForm" asp-controller="Account" asp-action="Logout" method="post" style="display: none;">
+                                        @* @Html.AntiForgeryToken() *@
+                                    </form>
+                                    <a href="javascript:void(0);" onclick="document.getElementById('logoutForm').submit();" class="cart">
+                                        <span><i class="icon-user"></i></span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Account" asp-action="Login" class="cart">
+                                        <span><i class="icon-user"></i></span>
+                                    </a>
+                                }
+                            </li>
                         </ul>
                     </div>
                 </div>

@@ -3,6 +3,7 @@ using CRUD_asp.netMVC.Models.Account;
 using CRUD_asp.netMVC.Models.ViewModels.Product;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 namespace CRUD_asp.netMVC
 {
@@ -22,6 +23,16 @@ namespace CRUD_asp.netMVC
             builder.Services.AddDbContext<AppDBContext>(option =>
                 option.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext")) // appsettings.json
             );
+
+            // Them dich vu Session
+            builder.Services.AddSession(options =>
+            {
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Chỉ gửi qua HTTPS
+                options.Cookie.SameSite = SameSiteMode.Lax; // Ngăn CSRF
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // Thoi gian session ton tai
+                options.Cookie.HttpOnly = true; // Chi cho server truy cap
+                options.Cookie.IsEssential = true; // Bat buoc phai co session (neu false van lay cookie can thiet nhu luu tru sessionID de duy tri dang nhap)
+            });
 
             builder.Services.AddIdentity<Users, Roles>(options =>
             {
@@ -50,6 +61,8 @@ namespace CRUD_asp.netMVC
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            app.UseSession();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

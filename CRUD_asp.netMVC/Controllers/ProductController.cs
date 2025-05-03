@@ -3,9 +3,11 @@ using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Models.ViewModels.Home;
 using Humanizer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using NuGet.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 
@@ -20,7 +22,7 @@ namespace CRUD_asp.netMVC.Controllers
             context = _context;
         }
 
-        // Ham chuyen doi co dau sang ko dau, chu hoa thanh chu thuong NormalizationFormD, FormC
+        /// Ham chuyen doi co dau sang ko dau, chu hoa thanh chu thuong NormalizationFormD, FormC
         public string RemoveDiacritics(string text)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -77,55 +79,77 @@ namespace CRUD_asp.netMVC.Controllers
         #endregion
 
 
-        // Search Products
-        // Tu tao pagination rieng vi vấn đề gốc rễ là sử dụng AsEnumerable() để gọi RemoveDiacritics, EF Core không thể dịch RemoveDiacritics sang SQL.
-        [Route("Product")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(int productPage = 1, string keyword = "")
+        /// <summary>
+        /// Search Products
+        /// </summary>
+        /// <param name="productPage"></param>
+        /// <param name="keyword"></param>
+        /// <param name="cateID"></param>
+        /// <param name="brandID"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> SearchProduct(int productPage = 1, string keyword = "", int? cateID = null, int? brandID = null)
         {
-            var keywordDiacritics = RemoveDiacritics(keyword.ToLower());
-
-            // Lấy danh sách sản phẩm từ DB
-            var products = await context.Products
-                .AsNoTracking()
-                .Include(p => p.Brands)
-                .Include(p => p.Cate).ToListAsync();
-
-            var filteredProducts = products
-                .Where(p => RemoveDiacritics(p.Name.ToLower()).Contains(keywordDiacritics) ||
-                            RemoveDiacritics(p.Description.ToLower()).Contains(keywordDiacritics))
-                .ToList();
-
-            var productCount = products
-               .Where(p => RemoveDiacritics(p.Name.ToLower()).Contains(keywordDiacritics) ||
-                           RemoveDiacritics(p.Description.ToLower()).Contains(keywordDiacritics))
-               .Count();
-
-            var pagProduct = new PaginatedList<Products>(filteredProducts, productCount, productPage, 16);
-            if (!pagProduct.Any())
+            try
             {
-                //pagProduct = new PaginatedList<Products>(products, productCount, productPage, 16);
-                ViewData["Info"] = $"Không tìm thấy sản phẩm nào với từ khóa '{keyword}' ";
+                var keywordDiacritics = !string.IsNullOrWhiteSpace(keyword) ? RemoveDiacritics(keyword.ToLower().Trim()) : string.Empty;
+
+                IQueryable<Products> products = context.Products.AsNoTracking()
+                   .Include(p => p.Brands)
+                   .Include(p => p.Cate)
+                   .Where(p => p.NormalizedName.ToLower().Contains(keywordDiacritics) ||
+                                p.NormalizedDescription.ToLower().Contains(keywordDiacritics));
+
+                if (cateID > 0 && cateID.HasValue)
+                {
+                    products = products.Where(p => p.CateID == cateID);
+
+                }
+
+                if (brandID > 0 && brandID.HasValue)
+                {
+                    products = products.Where(p => p.BrandID == brandID);
+
+                }
+
+                var productCount = await products.CountAsync();
+
+                ViewData["cateID"] = cateID;
+                ViewData["brandID"] = brandID;
+
+                ViewBag.ProductCount = productCount;
+                ViewBag.Keyword = keyword;
+
+
+                var pagProduct = await PaginatedList<Products>.CreatePagAsync(products, productPage, 8);
+                if (!pagProduct.Any())
+                {
+                    //pagProduct = new PaginatedList<Products>(products, productCount, productPage, 16);
+                    ViewData["Info"] = $"Không tìm thấy sản phẩm nào với từ khóa '{keyword}' ";
+                }
+
+                var brands = await context.Brand.AsNoTracking().ToListAsync();
+
+                var cates = await context.Category.AsNoTracking().ToListAsync();
+
+                BrandShowProductViewModel ViewModel = new()
+                {
+                    Products = pagProduct,
+                    Brands = new PaginatedList<Brand>(brands, brands.Count, 1, brands.Count),
+                    Categories = new PaginatedList<Category>(cates, cates.Count, 1, cates.Count),
+                };
+
+                return View(ViewModel);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Search", "Lỗi tìm kiếm hiển thị sản phẩm: " + ex.Message);
+                throw;
             }
 
-            var brands = context.Brand.AsNoTracking();
-            var brandList = await context.Brand.AsNoTracking().ToListAsync();
-
-            var cates = context.Category.AsNoTracking();
-            var cateList = await context.Category.AsNoTracking().ToListAsync();
-
-            BrandShowProductViewModel ViewModel = new()
-            {
-                Products = pagProduct,
-                Brands = await PaginatedList<Brand>.CreatePagAsync(brands, 1, brandList.Count),
-                Categories = await PaginatedList<Category>.CreatePagAsync(cates, 1, cateList.Count),
-            };
-
-            return View(ViewModel);
         }
 
-        // Hien thi danh sach phan trang san pham va phan trang thuong hieu
+        /// Hien thi danh sach phan trang san pham va phan trang thuong hieu
         //[Route("Product/{productPage:int?}")]
         [HttpGet]
         public async Task<IActionResult> Index(int productPage = 1)
@@ -238,6 +262,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // Hien thi chi tiet cua san pham theo id
+        [HttpGet]
         public async Task<IActionResult> ProductDetail(int id)
         {
             var product = await context.Products.AsNoTracking()

@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.Json;
 using NuGet.Protocol.Plugins;
 using System.Collections.Immutable;
 using System.Diagnostics.Eventing.Reader;
+using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -162,5 +164,23 @@ namespace CRUD_asp.netMVC.Controllers
             ModelState.AddModelError(string.Empty, "Error occurred while logging in");
             return View(login);
         }
+
+        // Dang xuat va dieu huong toi Login
+        // Nen dung post thay get vi tin tac co the truy van qua link de pha trai nghiem client
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            var jsonCart = HttpContext.Session.GetString("Cart");
+
+            await _signInManager.SignOutAsync();
+
+            if (!string.IsNullOrWhiteSpace(jsonCart))
+            {
+                HttpContext.Session.SetString("Cart", jsonCart);
+            }
+
+            return RedirectToAction("Login", "Account");
+        }
+
     }
 }

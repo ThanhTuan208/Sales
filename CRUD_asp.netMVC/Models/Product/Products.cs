@@ -1,14 +1,6 @@
-﻿using CRUD_asp.netMVC.Data;
-using CRUD_asp.netMVC.Models.Account;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
+﻿using CRUD_asp.netMVC.Models.Cart;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Net.NetworkInformation;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace CRUD_asp.netMVC.Models.Product
 {
