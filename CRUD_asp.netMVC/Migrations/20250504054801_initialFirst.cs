@@ -493,7 +493,8 @@ namespace CRUD_asp.netMVC.Migrations
                 name: "Carts",
                 columns: table => new
                 {
-                    ID = table.Column<string>(type: "nvarchar(10)", nullable: false),
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserID = table.Column<int>(type: "int", nullable: false),
                     ProductID = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),

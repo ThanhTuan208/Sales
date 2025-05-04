@@ -303,7 +303,7 @@ h1, h2, h3, h4, h5, h6, figure {
         }
 
 .fh5co-nav .menu-2 li.shopping-cart {
-    float: right;
+    float: left;
 }
 
 .fh5co-nav .menu-2 li a.cart {
@@ -407,8 +407,8 @@ h1, h2, h3, h4, h5, h6, figure {
             }
 
                 .fh5co-nav ul li.has-dropdown .dropdown:before {
-                    bottom: 100%;
-                    left: 40px;
+                    bottom: 105%;
+                    left: 25px;
                     border: solid transparent;
                     content: " ";
                     height: 0;

@@ -7,7 +7,7 @@ namespace CRUD_asp.netMVC.Models.Cart
 {
     public class AddToCart
     {
-        [Key, Column(TypeName = "nvarchar(10)")]
+        [Key]
         public int ID { get; set; }
 
         [Required]
@@ -22,6 +22,5 @@ namespace CRUD_asp.netMVC.Models.Cart
         public int Quantity { get; set; }
 
         public DateTime created_at { get; set; }
-
     }
 }

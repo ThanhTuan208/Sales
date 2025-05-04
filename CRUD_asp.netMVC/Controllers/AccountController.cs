@@ -165,6 +165,28 @@ namespace CRUD_asp.netMVC.Controllers
             return View(login);
         }
 
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginByProductID(Login login, int productID)
+        {
+            if (!ModelState.IsValid) return View(login);
+
+            var user = await _userManager.FindByEmailAsync(login.Email.Trim());
+            if (user == null || !await _userManager.CheckPasswordAsync(user, login.Password))
+            {
+                ModelState.AddModelError(string.Empty, "Email or Password is incorrect");
+                return View(login);
+            }
+
+            var account = await _signInManager.PasswordSignInAsync(user, login.Password, login.RememberMe, lockoutOnFailure: false);
+            if (account.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError(string.Empty, "Error occurred while logging in");
+            return View("Login", login);
+        }
+
         // Dang xuat va dieu huong toi Login
         // Nen dung post thay get vi tin tac co the truy van qua link de pha trai nghiem client
         [HttpPost, ValidateAntiForgeryToken]

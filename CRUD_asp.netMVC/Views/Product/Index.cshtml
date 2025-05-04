@@ -3,6 +3,9 @@
 @model BrandShowProductViewModel
 @{
     var info = Convert.ToString(ViewData["Info"]);
+    var productCount = ViewBag.ProductCount ?? 0;
+    var ActionNameByUrl = ViewBag.ActionNameUrl;
+
     ViewData["Title"] = "Product Page";
     Layout = "_HomeLayout";
 }
@@ -48,15 +51,14 @@
             }
             else
             {
-                <p class="text-center p-5 fs-1">@Model.Products.Count() sản phẩm được thấy</p>
+                <p class="text-center p-5 fs-1">@productCount sản phẩm được thấy</p>
                 @foreach (var item in Model.Products)
                 {
                     <div class="col-md-3 text-center animate-box">
                         <div class="product">
                             <div class="product-grid" style="background-image:url(@Url.Content($"~/{@item.PicturePath}"));">
                                 <div class="inner">
-                                    <p>
-                                        <a href="single.html" class="icon"><i class="icon-shopping-cart"></i></a>
+                                    <p>    
                                         <a asp-action="ProductDetail" asp-route-id="@item.ID" class="icon"><i class="icon-eye"></i></a>
                                     </p>
                                 </div>

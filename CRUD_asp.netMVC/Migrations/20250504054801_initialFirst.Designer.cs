@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUD_asp.netMVC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20250429152939_initialFirst")]
+    [Migration("20250504054801_initialFirst")]
     partial class initialFirst
     {
         /// <inheritdoc />
@@ -370,11 +370,13 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.AddToCart", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Cart.AddToCart", b =>
                 {
-                    b.Property<string>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
@@ -7021,7 +7023,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Navigation("Roles");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.AddToCart", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Cart.AddToCart", b =>
                 {
                     b.HasOne("CRUD_asp.netMVC.Models.Product.Products", "Product")
                         .WithMany("Carts")

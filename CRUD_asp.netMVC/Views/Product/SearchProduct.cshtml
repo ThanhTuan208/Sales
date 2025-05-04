@@ -2,6 +2,7 @@
 @using System.Globalization
 @model BrandShowProductViewModel
 @{
+    var ActionNameByUrl = ViewBag.ActionNameUrl;
     var info = Convert.ToString(ViewData["Info"] ?? string.Empty);
     var productCount = ViewBag.ProductCount ?? 0;
     var keyword = ViewBag.Keyword;
@@ -62,7 +63,6 @@
                             <div class="product-grid" style="background-image:url(@Url.Content($"~/{@item.PicturePath}"));">
                                 <div class="inner">
                                     <p>
-                                        <a href="single.html" class="icon"><i class="icon-shopping-cart"></i></a>
                                         <a asp-action="ProductDetail" asp-route-id="@item.ID" class="icon"><i class="icon-eye"></i></a>
                                     </p>
                                 </div>

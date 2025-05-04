@@ -92,13 +92,20 @@ namespace CRUD_asp.netMVC.Controllers
         {
             try
             {
-                var keywordDiacritics = !string.IsNullOrWhiteSpace(keyword) ? RemoveDiacritics(keyword.ToLower().Trim()) : string.Empty;
+                var keywordDiacritics = !string.IsNullOrWhiteSpace(keyword) && keyword.Length < 10
+                    ? RemoveDiacritics(keyword.ToLower().Trim())
+                    : string.Empty;
+
+                if (keywordDiacritics == string.Empty)
+                {
+                    return RedirectToAction("Index", "Product");
+                }
 
                 IQueryable<Products> products = context.Products.AsNoTracking()
-                   .Include(p => p.Brands)
-                   .Include(p => p.Cate)
-                   .Where(p => p.NormalizedName.ToLower().Contains(keywordDiacritics) ||
-                                p.NormalizedDescription.ToLower().Contains(keywordDiacritics));
+                  .Include(p => p.Brands)
+                  .Include(p => p.Cate)
+                  .Where(p => p.NormalizedName.ToLower().Contains(keywordDiacritics) ||
+                               p.NormalizedDescription.ToLower().Contains(keywordDiacritics));
 
                 if (cateID > 0 && cateID.HasValue)
                 {
@@ -111,17 +118,19 @@ namespace CRUD_asp.netMVC.Controllers
                     products = products.Where(p => p.BrandID == brandID);
 
                 }
-
                 var productCount = await products.CountAsync();
+                var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
+                var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
 
                 ViewData["cateID"] = cateID;
                 ViewData["brandID"] = brandID;
 
+                ViewBag.ActionNameUrl = actionNameUrl;
                 ViewBag.ProductCount = productCount;
                 ViewBag.Keyword = keyword;
 
 
-                var pagProduct = await PaginatedList<Products>.CreatePagAsync(products, productPage, 8);
+                var pagProduct = await PaginatedList<Products>.CreatePagAsync(products, productPage, 12);
                 if (!pagProduct.Any())
                 {
                     //pagProduct = new PaginatedList<Products>(products, productCount, productPage, 16);
@@ -160,20 +169,26 @@ namespace CRUD_asp.netMVC.Controllers
                 .Include(p => p.Gender)
                 .Include(p => p.ProductImages).OrderByDescending(p => p.ID);
 
+            var productCount = await products.CountAsync();
+            ViewBag.ProductCount = productCount;
+
             var pagProduct = await PaginatedList<Products>.CreatePagAsync(products, productPage, 16);
 
-            var brands = context.Brand.AsNoTracking();
-            var brandList = await context.Brand.AsNoTracking().ToListAsync();
+            var brands = await context.Brand.AsNoTracking().ToListAsync();
 
-            var cates = context.Category.AsNoTracking();
-            var cateList = await context.Category.AsNoTracking().ToListAsync();
+            var cates = await context.Category.AsNoTracking().ToListAsync();
 
             BrandShowProductViewModel ViewModel = new()
             {
                 Products = pagProduct,
-                Brands = await PaginatedList<Brand>.CreatePagAsync(brands, 1, brandList.Count),
-                Categories = await PaginatedList<Category>.CreatePagAsync(cates, 1, cateList.Count),
+                Brands = new PaginatedList<Brand>(brands, brands.Count, 1, brands.Count),
+                Categories = new PaginatedList<Category>(cates, cates.Count, 1, cates.Count),
             };
+
+            var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
+            var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
+
+            ViewBag.ActionNameUrl = actionNameUrl;
 
             return View(ViewModel);
         }
@@ -192,8 +207,14 @@ namespace CRUD_asp.netMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var getPagProductByBrand = context.Products.AsNoTracking().Where(p => p.Brands == brands).Include(p => p.Brands);
+            IQueryable<Products> getPagProductByBrand = context.Products.AsNoTracking()
+                .Where(p => p.Brands == brands)
+                .Include(p => p.Brands);
+
             var getPagProductListByBrand = await getPagProductByBrand.ToListAsync();
+
+            var productCount = await getPagProductByBrand.CountAsync();
+            ViewBag.ProductCount = productCount;
 
             BrandShowProductViewModel ViewModel = new()
             {
@@ -201,6 +222,11 @@ namespace CRUD_asp.netMVC.Controllers
                 Brands = await PaginatedList<Brand>.CreatePagAsync(context.Brand.AsNoTracking(), 1, context.Brand.Count()),
                 Categories = await PaginatedList<Category>.CreatePagAsync(context.Category.AsNoTracking(), 1, context.Category.Count())
             };
+
+            var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
+            var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
+
+            ViewBag.ActionNameUrl = actionNameUrl;
 
             return View(ViewModel);
         }
@@ -218,9 +244,14 @@ namespace CRUD_asp.netMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            IQueryable<Products> getPagProductByCate = context.Products.AsNoTracking()
+                .Where(p => p.CateID == CateID)
+                .Include(p => p.Cate);
 
-            var getPagProductByCate = context.Products.AsNoTracking().Where(p => p.CateID == CateID).Include(p => p.Cate);
             var getPagProductListByCate = await getPagProductByCate.ToListAsync();
+
+            var productCount = await getPagProductByCate.CountAsync();
+            ViewBag.ProductCount = productCount;
 
             BrandShowProductViewModel ViewModel = new()
             {
@@ -228,6 +259,11 @@ namespace CRUD_asp.netMVC.Controllers
                 Brands = await PaginatedList<Brand>.CreatePagAsync(context.Brand.AsNoTracking(), 1, context.Brand.Count()),
                 Categories = await PaginatedList<Category>.CreatePagAsync(context.Category.AsNoTracking(), 1, context.Category.Count())
             };
+
+            var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
+            var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
+
+            ViewBag.ActionNameUrl = actionNameUrl;
 
             return View(ViewModel);
         }
@@ -248,8 +284,15 @@ namespace CRUD_asp.netMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var getPagProductByCate_Brand = context.Products.AsNoTracking().Where(p => p.CateID == CateID && p.BrandID == brandID).Include(p => p.Cate).Include(p => p.Brands);
+            IQueryable<Products> getPagProductByCate_Brand = context.Products.AsNoTracking()
+                .Where(p => p.CateID == CateID && p.BrandID == brandID)
+                .Include(p => p.Cate)
+                .Include(p => p.Brands);
+
             var getPagProductListByCate = await getPagProductByCate_Brand.ToListAsync();
+
+            var productCount = await getPagProductByCate_Brand.CountAsync();
+            ViewBag.ProductCount = productCount;
 
             BrandShowProductViewModel ViewModel = new()
             {
@@ -257,6 +300,11 @@ namespace CRUD_asp.netMVC.Controllers
                 Brands = await PaginatedList<Brand>.CreatePagAsync(context.Brand.AsNoTracking(), 1, context.Brand.Count()),
                 Categories = await PaginatedList<Category>.CreatePagAsync(context.Category.AsNoTracking(), 1, context.Category.Count())
             };
+
+            var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
+            var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
+
+            ViewBag.ActionNameUrl = actionNameUrl;
 
             return View(ViewModel);
         }

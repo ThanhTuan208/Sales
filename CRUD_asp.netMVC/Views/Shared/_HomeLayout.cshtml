@@ -76,20 +76,13 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="has-dropdown nav-item">
+                            <li class="nav-item"><a asp-action="About" asp-controller="Home">About</a></li>
+                            <li class="nav-item"><a asp-action="Contact" asp-controller="Home">Contact</a></li>
+                            @* <li class="has-dropdown nav-item">
                                 <a href="#">Service</a>
                                 <ul class="dropdown" style="width: 150px">
-                                    <li class="nav-item"><a asp-action="About" asp-controller="Home">About</a></li>
-                                    <li class="nav-item"><a asp-action="Contact" asp-controller="Home">Contact</a></li>
                                 </ul>
-                            </li>
-                            <li class="has-dropdown nav-item">
-                                <a href="#">Your Cart</a>
-                                <ul class="dropdown" style="width: 150px">
-                                    <li><a href="#">Order history</a></li>
-                                    <li><a href="#">Favorite order</a></li>
-                                </ul>
-                            </li>
+                            </li> *@
                         </ul>
                     </div>
                     <div class="col-md-3 col-xs-4 text-right hidden-xs menu-2">
@@ -106,22 +99,50 @@
                                     </div>
                                 </form>
                             </li>
-                            <li class="shopping-cart nav-item"><a asp-controller="Cart" asp-action="Index" class="cart"><span><small>0</small><i class="icon-shopping-cart"></i></span></a></li>
-                            <li class="user nav-item">
+
+                            <li class="has-dropdown nav-item">
+                                <a class="cart">
+                                    <span><small>0</small><i class="icon-shopping-cart fs-4"></i></span>
+                                </a>
+
+                                <ul class="dropdown" style="width: 150px">
+                                    <li class="shopping-cart ">
+                                        <a asp-controller="Cart" asp-action="Index" class="cart">Cart</a>
+                                        <a asp-controller="Cart" asp-action="Index" class="cart">Favorite order</a>
+                                        <a asp-controller="Cart" asp-action="Index" class="cart">History order</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            
+
+                            <li class="has-dropdown nav-item">
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     <form id="logoutForm" asp-controller="Account" asp-action="Logout" method="post" style="display: none;">
-                                        @* @Html.AntiForgeryToken() *@
-                                    </form>
-                                    <a href="javascript:void(0);" onclick="document.getElementById('logoutForm').submit();" class="cart">
-                                        <span><i class="icon-user"></i></span>
+                                        @* @Html.AntiForgeryToken(): Khi dung attribute ValidateAntiForgeryToken thi phai su dung hepler html nay nhung khi check devtool kiem tra thi da co phat sinh doan ma nen ko can them  *@ 
+                                            </form>
+
+                                    <a class="cart">
+                                        <span><i class="icon-user fs-4"></i><small>&check;</small></span>
                                     </a>
+
+                                    <ul class="dropdown" style="width: 150px">
+                                        <li>
+                                            <a href="javascript:void(0);" onclick="document.getElementById('logoutForm').submit();">Đăng xuất</a>
+                                        </li>
+                                    </ul>
                                 }
                                 else
                                 {
-                                    <a asp-controller="Account" asp-action="Login" class="cart">
-                                        <span><i class="icon-user"></i></span>
+                                    <a class="cart fs-3">
+                                        <span><i class="icon-user"><small>&plus;</small></i></span>
                                     </a>
+
+                                    <ul class="dropdown" style="width: 150px">
+                                        <li>
+                                            <a asp-controller="Account" asp-action="Login">Đăng nhập</a>
+                                        </li>
+                                    </ul>
                                 }
                             </li>
                         </ul>
@@ -137,7 +158,7 @@
     </main>
 
 
-    <footer id="fh5co-footer" role="contentinfo" class="animate-box">
+    <footer id="fh5co-footer" role="contentinfo" class="">
         <div class="container">
             <div class="row row-pb-md">
                 <div class="col-md-4 fh5co-widget">

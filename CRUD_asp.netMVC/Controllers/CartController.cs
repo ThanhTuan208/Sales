@@ -26,7 +26,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // GET: Cart
-        [HttpGet]
+        [HttpGet, Route("Cart")]
         public async Task<IActionResult> Index()
         {
             try
@@ -76,6 +76,79 @@ namespace CRUD_asp.netMVC.Controllers
             {
                 ModelState.AddModelError("Cart", "Lỗi hiển thị giỏ hàng: " + ex.Message);
                 return View(new CartViewModel());
+            }
+        }
+
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToCart(int? cateID, int? brandID, int productID, string actionCurent)
+        {
+            try
+            {
+                var productExists = await context.Products.FindAsync(productID);
+                if (productExists == null)
+                {
+                    ModelState.AddModelError("Cart", "Sản phẩm không tồn tại");
+                    return Json(new
+                    {
+                        status = false,
+                        message = "Sản phẩm không tồn tại.",
+                    });
+                }
+
+                var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
+
+                if (userID > 0)
+                {
+                    var cartItem = context.Carts.FirstOrDefault(p => p.UserID == userID && p.ProductID == productID);
+
+                    if (cartItem != null) // San pham ton tai, +1 qty 
+                    {
+                        cartItem.Quantity += 1;
+                        context.Carts.Update(cartItem);
+                    }
+                    else // Sp ko ton tai, them moi
+                    {
+                        cartItem = new AddToCart()
+                        {
+                            UserID = userID,
+                            ProductID = productID,
+                            Quantity = 1,
+                        };
+
+                        context.Carts.Add(cartItem);
+                    }
+
+                    await context.SaveChangesAsync();
+
+                    //var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
+                    //var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
+
+                    if (actionCurent != null)
+                    {
+                        if (cateID > 0 && cateID.HasValue)
+                        {
+                            return RedirectToAction(actionCurent, "Product", new { cateID = cateID });
+                        }
+
+                        return RedirectToAction(actionCurent, "Product", new { id = productID });
+                    }
+
+                    return RedirectToAction("ProductDetail", "Product", new { id = productID });
+                }
+                else
+                {
+                    return RedirectToAction("LoginByProductID", "Account", new { ProductID = productID });
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return Json(new
+                {
+                    status = false,
+                    message = "Thêm sản phẩm vào giỏ hàng không thành công." + ex.Message,
+                });
             }
         }
     }
