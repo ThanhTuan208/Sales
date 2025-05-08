@@ -55,7 +55,7 @@
                 @Html.DisplayNameFor(model => model[0].picture)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].Price)
+                @Html.DisplayNameFor(model => model[0].NewPrice)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model[0].BrandID)
@@ -78,7 +78,7 @@
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.ID">
-                        <img src="@item.PicturePath" alt="" style="width: 150px; height: 100px; object-fit: cover; border-radius:8px; text-decoration: none " class="img-fluid shadow-lg" />
+                        <img src="@Url.Content($"~/{@item.PicturePath}")" alt="" style="width: 150px; height: 100px; object-fit: cover; border-radius:8px; text-decoration: none " class="img-fluid shadow-lg" />
 
                     </a>
 
@@ -90,7 +90,7 @@
                 </td>
 
                 <td>
-                    <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
+                    <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.NewPrice)</span>
                 </td>
 
                 <td>

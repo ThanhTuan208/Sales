@@ -17,7 +17,7 @@
                 <input type="hidden" asp-for="ID" />
 
                 <div class="form-floating mb-3">
-                    <input asp-for="Name" class="form-control" placeholder="Nhập tên sản phẩm" />
+                    <input asp-for="Name" class="form-control" placeholder="Nhập tên sản phẩm" required/>
                     <label asp-for="Name" class="form-label">Tên sản phẩm</label>
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
@@ -29,29 +29,12 @@
                 </div>
 
                 <div class="form-floating mb-3">
-                    <textarea asp-for="Description" class="form-control" placeholder="Nhập mô tả" style="height: 113px"></textarea>
+                    <textarea asp-for="Description" class="form-control" placeholder="Nhập mô tả" required style="height: 113px"></textarea>
                     <label asp-for="Description" class="form-label">Mô tả</label>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="form-floating mb-3">
-                            <input asp-for="Price" class="form-control" type="number" step="0.01" placeholder="Nhập giá" />
-                            <label asp-for="Price" class="form-label">Giá</label>
-                            <span asp-validation-for="Price" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-floating mb-3">
-                            <input asp-for="Quantity" class="form-control" type="number" placeholder="Nhập số lượng" />
-                            <label asp-for="Quantity" class="form-label">Số lượng</label>
-                            <span asp-validation-for="Quantity" class="text-danger"></span>
-                        </div>
-
-                    </div>
-                </div>
-
+               
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="form-floating mb-3">
@@ -92,6 +75,30 @@
                             <label asp-for="GenderID" class="form-label">Giới tính</label>
                             <span asp-validation-for="GenderID" class="text-danger"></span>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-floating mb-3">
+                            <input asp-for="NewPrice" class="form-control" type="number" step="0.01" required placeholder="Nhập giá mới" />
+                            <label asp-for="NewPrice" class="form-label">Giá mới</label>
+                            <span asp-validation-for="NewPrice" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-floating mb-3">
+                            <input asp-for="OldPrice" class="form-control" type="number" step="0.01" placeholder="Nhập giá cũ" />
+                            <label asp-for="OldPrice" class="form-label">Giá cũ</label>
+                            <span asp-validation-for="OldPrice" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Quantity" class="form-control" type="number" required placeholder="Nhập số lượng" />
+                            <label asp-for="Quantity" class="form-label">Số lượng</label>
+                            <span asp-validation-for="Quantity" class="text-danger"></span>
+                        </div>
+
                     </div>
                 </div>
             </div>

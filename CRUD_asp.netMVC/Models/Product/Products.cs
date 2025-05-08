@@ -23,9 +23,12 @@ namespace CRUD_asp.netMVC.Models.Product
         public string? Description { get; set; }
         public string? NormalizedDescription { get; set; }
 
+        [DataType(DataType.Currency)]
+        public double OldPrice { get; set; }
+
         [Required(ErrorMessage = "Ban can phai nhap {0} sp !!!")]
         [DataType(DataType.Currency)]
-        public double Price { get; set; }
+        public double NewPrice { get; set; }
 
         [Required(ErrorMessage = "Ban can phai nhap {0} !!!")]
         public int Quantity { get; set; }

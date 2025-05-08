@@ -19,6 +19,12 @@ namespace CRUD_asp.netMVC.Models.Cart
         public Products? Product { get; set; }
 
         [Required]
+        public string? SelectColor { get; set; }
+
+        [Required]
+        public string? SelectSize { get; set; }
+
+        [Required]
         public int Quantity { get; set; }
 
         public DateTime created_at { get; set; }

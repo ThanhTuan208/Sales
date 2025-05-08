@@ -38,6 +38,9 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // GET: GetProducts
+        [Route("Admin")]
+        [Route("Admin/Index")]
+        [Route("admin/{page:int}")]
         public async Task<IActionResult> Index(int page = 1)
         {
             var product = _context.Products.AsNoTracking()
@@ -135,16 +138,14 @@ namespace CRUD_asp.netMVC.Controllers
                         NormalizedName = RemoveDiacritics(viewModel.Name),
                         Description = viewModel.Description,
                         NormalizedDescription = RemoveDiacritics(viewModel.Description),
-                        Price = viewModel.Price,
+                        NewPrice = viewModel.NewPrice,
+                        OldPrice = viewModel.OldPrice,
                         Quantity = viewModel.Quantity,
                         GenderID = viewModel.GenderID,
                         BrandID = viewModel.BrandID,
                         CateID = viewModel.CateID,
                         FeaturedID = viewModel.FeaturedID
                     };
-
-                    _context.Add(products);
-                    await _context.SaveChangesAsync();
 
                     if (viewModel.Picture != null && viewModel.Picture.Any())
                     {
@@ -183,7 +184,12 @@ namespace CRUD_asp.netMVC.Controllers
                             }
 
                         }
+
                     }
+
+                    _context.Add(products);
+                    await _context.SaveChangesAsync(); // Them du lieu productID truoc khi them cac entity khac
+
                     if (viewModel.SelectedColorID != null && viewModel.SelectedColorID.Any())
                     {
                         foreach (var ColorID in viewModel.SelectedColorID)
@@ -301,7 +307,8 @@ namespace CRUD_asp.netMVC.Controllers
                 Name = Product.Name,
                 Description = Product.Description,
                 PicturePath = Product.PicturePath,
-                Price = Product.Price,
+                NewPrice = Product.NewPrice,
+                OldPrice = Product.OldPrice,
                 Quantity = Product.Quantity,
                 GenderID = Product.GenderID,
                 BrandID = Product.BrandID,
@@ -336,7 +343,7 @@ namespace CRUD_asp.netMVC.Controllers
                 try
                 {
                     // Da reload data o method ReloadViewModel => ko can include dbset<entity>
-                    var Product = await _context.Products.AsNoTracking()
+                    var Product = await _context.Products
                        .Include(p => p.Brands)
                        .Include(p => p.Cate)
                        .Include(p => p.Gender)
@@ -356,14 +363,14 @@ namespace CRUD_asp.netMVC.Controllers
                         Product.NormalizedName = RemoveDiacritics(viewModel.Name);
                         Product.Description = viewModel.Description;
                         Product.NormalizedDescription = RemoveDiacritics(viewModel.Description);
-                        Product.Price = viewModel.Price;
+                        Product.NewPrice = viewModel.NewPrice;
+                        Product.OldPrice = viewModel.OldPrice;
                         Product.Quantity = viewModel.Quantity;
                         Product.GenderID = viewModel.GenderID;
                         Product.BrandID = viewModel.BrandID;
                         Product.CateID = viewModel.CateID;
                         Product.FeaturedID = viewModel.FeaturedID;
                     }
-
 
                     if (viewModel.Picture != null && viewModel.Picture.Length > 0)
                     {
@@ -448,10 +455,6 @@ namespace CRUD_asp.netMVC.Controllers
 
                     Product.PicturePath = viewModel.PicturePath;
 
-                    if (Product.ProductColor != null)
-                    {
-
-                    }
                     var ProductColorList = Product.ProductColor.Select(p => p.ColorID).ToList();
                     var selectColors = viewModel.SelectedColorID ?? Array.Empty<int>();
                     var addColor = selectColors.Except(ProductColorList).ToList();
@@ -492,9 +495,9 @@ namespace CRUD_asp.netMVC.Controllers
                         }));
 
                     var ProductTagList = Product.ProductTags.Select(p => p.TagID).ToList();
-                    var selectTags = viewModel.SelectedColorID ?? Array.Empty<int>();
-                    var addCTag = selectColors.Except(ProductColorList).ToList();
-                    var removeTag = ProductColorList.Except(selectColors).ToList();
+                    var selectTags = viewModel.SelectedTagID ?? Array.Empty<int>();
+                    var addCTag = selectTags.Except(ProductTagList).ToList();
+                    var removeTag = ProductTagList.Except(selectTags).ToList();
 
                     _context.ProductTag.RemoveRange(Product.ProductTags.Where(p => removeTag.Contains(p.TagID)));
                     _context.ProductTag.AddRange(
@@ -518,9 +521,9 @@ namespace CRUD_asp.netMVC.Controllers
                         }));
 
                     var ProductMaterialList = Product.ProductMaterial.Select(p => p.MaterialID).ToList();
-                    var selectMaterials = viewModel.SelectedColorID ?? Array.Empty<int>();
-                    var addMaterial = selectColors.Except(ProductColorList).ToList();
-                    var removeMaterial = ProductColorList.Except(selectColors).ToList();
+                    var selectMaterials = viewModel.SelectedMaterialID ?? Array.Empty<int>();
+                    var addMaterial = selectMaterials.Except(ProductMaterialList).ToList();
+                    var removeMaterial = ProductMaterialList.Except(selectMaterials).ToList();
 
                     _context.ProductMaterial.RemoveRange(Product.ProductMaterial.Where(p => removeMaterial.Contains(p.MaterialID)));
                     _context.ProductMaterial.AddRange(

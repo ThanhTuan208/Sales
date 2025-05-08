@@ -7,7 +7,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration.EnvironmentVariables;
 using Microsoft.Identity.Client;
-
 using NuGet.Protocol.Plugins;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Metadata.Ecma335;
@@ -67,7 +66,7 @@ namespace CRUD_asp.netMVC.Controllers
                 CartViewModel viewModel = new()
                 {
                     CartItems = cartItems,
-                    TotalPrice = cartItems.Sum(p => p.Product != null ? p.Product.Price * p.Quantity : 0)
+                    TotalPrice = cartItems.Sum(p => p.Product != null ? p.Product.NewPrice * p.Quantity : 0)
                 };
 
                 return View(viewModel);
@@ -81,7 +80,7 @@ namespace CRUD_asp.netMVC.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddToCart(int? cateID, int? brandID, int productID, string actionCurent)
+        public async Task<IActionResult> AddToCart(int productID, string pageCurrent)
         {
             try
             {
@@ -89,11 +88,7 @@ namespace CRUD_asp.netMVC.Controllers
                 if (productExists == null)
                 {
                     ModelState.AddModelError("Cart", "Sản phẩm không tồn tại");
-                    return Json(new
-                    {
-                        status = false,
-                        message = "Sản phẩm không tồn tại.",
-                    });
+                    return NotFound();
                 }
 
                 var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
@@ -124,17 +119,12 @@ namespace CRUD_asp.netMVC.Controllers
                     //var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
                     //var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
 
-                    if (actionCurent != null)
+                    if (pageCurrent == null)
                     {
-                        if (cateID > 0 && cateID.HasValue)
-                        {
-                            return RedirectToAction(actionCurent, "Product", new { cateID = cateID });
-                        }
-
-                        return RedirectToAction(actionCurent, "Product", new { id = productID });
+                        return RedirectToAction("ProductDetail", "Product", new { id = productID });
                     }
 
-                    return RedirectToAction("ProductDetail", "Product", new { id = productID });
+                    return RedirectToAction(pageCurrent, "Product", new { id = productID });
                 }
                 else
                 {

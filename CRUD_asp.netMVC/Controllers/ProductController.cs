@@ -110,14 +110,13 @@ namespace CRUD_asp.netMVC.Controllers
                 if (cateID > 0 && cateID.HasValue)
                 {
                     products = products.Where(p => p.CateID == cateID);
-
                 }
 
                 if (brandID > 0 && brandID.HasValue)
                 {
                     products = products.Where(p => p.BrandID == brandID);
-
                 }
+
                 var productCount = await products.CountAsync();
                 var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
                 var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
