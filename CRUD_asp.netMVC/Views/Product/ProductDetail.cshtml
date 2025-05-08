@@ -3,22 +3,24 @@
 @model GeneralProduct_ListCateBrand
 
 @{
+    var count = 0;
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
+
+<link rel="stylesheet" href="~/css/productDetail.css" asp-append-version="true">
 <style>
 
-
-
 </style>
-<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(~/images/banner/banner2.jpg);">
+
+<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(@Url.Content($"~/images/banner/banner2.jpg"));">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2 text-center">
                 <div class="display-t">
                     <div class="display-tc animate-box" data-animate-effect="fadeIn">
-                        <h1>Product Details</h1>
+
                         <h2>Free html5 templates by <a href="https://themewagon.com/theme_tag/free/" target="_blank">Themewagon</a></h2>
                     </div>
                 </div>
@@ -28,168 +30,254 @@
 </header>
 
 <div id="fh5co-product">
-    <div class="container">
+    <div class="container animate-box">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 animate-box">
+            @* updated *@
+            <div class="col-md-5">
                 <div class="owl-carousel owl-carousel-fullwidth product-carousel">
-
                     @foreach (var item in Model.Product.ProductImages)
                     {
-                        <div class="item" style="">
+                        <div class="item">
                             <div class="active text-center">
                                 <figure>
-                                    <img src="~/@item.PathNameImage" alt="user" style="object-fit: cover" class="img-fluid " />
+                                    <img src="@Url.Content($"~/{item.PathNameImage}")" alt="user" style="object-fit: cover" class="img-fluid p-3" />
                                 </figure>
                             </div>
                         </div>
                     }
-
                 </div>
-                <div class="row animate-box">
-                    <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-                        <div class="inner">
-                            <input type="checkbox" id="toggle-heart">
-                            <label for="toggle-heart" class="icon fs-1">
-                                <i class="icon-heart2"></i>
-                            </label>
-                        </div>
-                        <h2>@Model.Product.Name</h2>
-                        <p>
-                            <form method="post" asp-controller="Cart" asp-action="AddToCart">
-                                <input type="hidden" name="productID" value="@Model.Product.ID" />
-                                <button type="submit" class="btn btn-primary btn-outline btn-lg" >Add to Cart</button>
-                                <a href="#" class="btn btn-primary btn-outline btn-lg">Compare</a>
-                            </form>
-                        </p>
-                    </div>
+                @* <img id="main-img" src="@Url.Content($"~/{Model.Product.ProductImages[0].PathNameImage}") " class="img-fluid mb-3" alt="Ảnh chính"> *@
+                <div class="d-flex gap-2 pb-5 justify-content-center">
+                    @for (int i = 0; i < Model.Product.ProductImages.Count; i++)
+                    {
+                        var item = Model.Product.ProductImages[i];
+
+                        <img src="@Url.Content($"~/{item.PathNameImage}")" class="thumbnail-img @(i == 0 ? "image-active" : "") " onclick="changeImage(this)">
+                    }
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-10 col-md-offset-1">
-                    <div class="fh5co-tabs animate-box">
-                        <ul class="fh5co-tab-nav">
-                            <li class="active"><a href="#" data-tab="1"><span class="icon visible-xs"><i class="icon-file"></i></span><span class="hidden-xs">Product Details</span></a></li>
-                            <li><a href="#" data-tab="2"><span class="icon visible-xs"><i class="icon-bar-graph"></i></span><span class="hidden-xs">Specification</span></a></li>
-                            <li><a href="#" data-tab="3"><span class="icon visible-xs"><i class="icon-star"></i></span><span class="hidden-xs">Feedback &amp; Ratings</span></a></li>
-                        </ul>
-
-                        <!-- Tabs -->
-                        <div class="fh5co-tab-content-wrap">
-
-                            <div class="fh5co-tab-content tab-content active" data-tab-content="1">
-                                <div class="col-md-10 col-md-offset-1">
-                                    <span class="price">SRP: @string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.Price)</span>
-                                    <h2>@Model.Product.Name</h2>
-                                    <ul>
-                                        <li><p>Giới tính: @Model.Product.Gender.Name</p></li>
-                                        <li><p>Thương hiệu: @Model.Product.Brands.Name</p></li>
-                                        <li><p>Danh mục: @Model.Product.Cate.Name</p></li>
-                                        <li><p>Mổ tả sản phẩm: @Model.Product.Description</p></li>
-                                        <li>Kích cỡ: @string.Join(", ", Model.Product.ProductSize.Select(s => s.size.Name))</li>
-                                        <li>Phong cách: @string.Join(", ", Model.Product.ProductTags.Select(p => p.Tag.Name))</li>
-                                        <li>Chất liệu: @string.Join(", ", Model.Product.ProductMaterial.Select(p => p.Material.Name))</li>
-                                        <li>Màu sắc: @string.Join(", ", Model.Product.ProductColor.Select(c => c.Color.Name))</li>
-                                    </ul>
+            <!-- Thông tin sản phẩm -->
+            <div class="col-md-7">
+                <div class="product-content" style="font-size: 3rem">
+                    <h2 class="product-title text-center mb-5 fw-bold">@Model.Product.Description</h2>
+                    <div class="product-general d-flex justify-content-between align-items-center fs-4 my-3">
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>4.7(21)</span>
+                        </div>|
+                        <div class="sold">
+                            da ban: 100 sp
+                        </div>|
+                        <div class="sold">
+                            danh gia: 100 reviews
+                        </div>
+                    </div>
 
 
-                                    <p>Ullam dolorum iure dolore dicta fuga ipsa velit veritatis molestias totam fugiat soluta accusantium omnis quod similique placeat at. Dolorum ducimus libero fuga molestiae asperiores obcaecati corporis sint illo facilis.</p>
+                    <div class="pro-detail fs-4">
 
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h2 class="uppercase">Keep it simple</h2>
-                                            <p>Ullam dolorum iure dolore dicta fuga ipsa velit veritatis</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h2 class="uppercase">Less is more</h2>
-                                            <p>Ullam dolorum iure dolore dicta fuga ipsa velit veritatis</p>
-                                        </div>
-                                    </div>
-
-                                </div>
+                        <div class="row align-items-center">
+                            <div class="col-md-3 fw-bold">
+                                <p class="fs-3 mb-0 me-2">Giá: </p>
                             </div>
+                            <div class="col-md-9 d-flex">
+                                <div class="product-price d-inline-flex fs-1">
 
-                            <div class="fh5co-tab-content tab-content" data-tab-content="2">
-                                <div class="col-md-10 col-md-offset-1">
-                                    <h3>Product Specification</h3>
-                                    <ul>
-                                        <li>Paragraph placeat quis fugiat provident veritatis quia iure a debitis adipisci dignissimos consectetur magni quas eius</li>
-                                        <li>adipisci dignissimos consectetur magni quas eius nobis reprehenderit soluta eligendi</li>
-                                        <li>Veritatis tenetur odio delectus quibusdam officiis est.</li>
-                                        <li>Magni quas eius nobis reprehenderit soluta eligendi quo reiciendis fugit? Veritatis tenetur odio delectus quibusdam officiis est.</li>
-                                    </ul>
-                                    <ul>
-                                        <li>Paragraph placeat quis fugiat provident veritatis quia iure a debitis adipisci dignissimos consectetur magni quas eius</li>
-                                        <li>adipisci dignissimos consectetur magni quas eius nobis reprehenderit soluta eligendi</li>
-                                        <li>Veritatis tenetur odio delectus quibusdam officiis est.</li>
-                                        <li>Magni quas eius nobis reprehenderit soluta eligendi quo reiciendis fugit? Veritatis tenetur odio delectus quibusdam officiis est.</li>
-                                    </ul>
-                                </div>
-                            </div>
+                                    <p> <span class="price-new mb-0 me-5">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.NewPrice)</span></p>
 
-                            <div class="fh5co-tab-content tab-content" data-tab-content="3">
-                                <div class="col-md-10 col-md-offset-1">
-                                    <h3>Happy Buyers</h3>
-                                    <div class="feed">
-                                        <div>
-                                            <blockquote>
-                                                <p>Paragraph placeat quis fugiat provident veritatis quia iure a debitis adipisci dignissimos consectetur magni quas eius nobis reprehenderit soluta eligendi quo reiciendis fugit? Veritatis tenetur odio delectus quibusdam officiis est.</p>
-                                            </blockquote>
-                                            <h3>&mdash; Louie Knight</h3>
-                                            <span class="rate">
-                                                <i class="icon-star2"></i>
-                                                <i class="icon-star2"></i>
-                                                <i class="icon-star2"></i>
-                                                <i class="icon-star2"></i>
-                                                <i class="icon-star2"></i>
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <blockquote>
-                                                <p>Paragraph placeat quis fugiat provident veritatis quia iure a debitis adipisci dignissimos consectetur magni quas eius nobis reprehenderit soluta eligendi quo reiciendis fugit? Veritatis tenetur odio delectus quibusdam officiis est.</p>
-                                            </blockquote>
-                                            <h3>&mdash; Joefrey Gwapo</h3>
-                                            <span class="rate">
-                                                <i class="icon-star2"></i>
-                                                <i class="icon-star2"></i>
-                                                <i class="icon-star2"></i>
-                                                <i class="icon-star2"></i>
-                                                <i class="icon-star2"></i>
-                                            </span>
-                                        </div>
-                                    </div>
+                                    @if (Model.Product.OldPrice != 0)
+                                    {
+                                        <sub><del><span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.OldPrice)</span></del></sub>
+                                    }
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Chọn số lượng -->
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md-3 fw-bold">
+                                <p class="fs-3 mb-0 me-3">số lượng: </p>
+                            </div>
+                            <div class="col-md-9 d-flex">
+                                <button class="btn btn-outline-secondary qty-btn" id="decrease">-</button>
+                                <input type="text" id="quantity" class="form-control mx-2 text-center" value="1" style="width: 60px; height: 40px" readonly>
+                                <button class="btn btn-outline-secondary qty-btn" id="increase">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Chọn màu sắc -->
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md-3 fw-bold">
+                                <p class="fs-3 mb-0 me-2">Màu sắc: </p>
+                            </div>
+                            <div class="col-md-9 d-flex gap-2">
+                                @foreach (var item in Model.Product.ProductColor)
+                                {
+                                    <div class="border p-2 px-3 color-option">@item.Color.Name</div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Chọn size -->
+                        <div class="row align-items-center mb-5">
+                            <div class="col-md-3 fw-bold">
+                                <p class="fs-3 mb-0 me-2">Kích thước: </p>
+                            </div>
+                            <div class="col-md-9 d-flex gap-2">
+                                @foreach (var item in Model.Product.ProductSize)
+                                {
+                                    <div class="border p-2 px-3 size-option">@item.size.Name</div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3 mt-5">
+                                <form method="post" asp-controller="Cart" asp-action="AddToCart">
+                                    <p class="d-flex justify-content-center me-4">
+                                        <input type="hidden" name="productID" value="@Model.Product.ID" />
+                                        <button type="submit" class="btn btn-primary btn-outline btn-lg me-5">Thêm giỏ hàng</button>
+                                        <button type="submit" class="btn btn-primary btn-outline btn-lg">Mua ngay</button>
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        @* updated *@
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="fh5co-tabs animate-box">
+                    <ul class="fh5co-tab-nav">
+                        <li class="active"><a href="#" data-tab="1"><span class="icon visible-xs"><i class="icon-file"></i></span><span class="hidden-xs">Product Details</span></a></li>
+                        <li><a href="#" data-tab="2"><span class="icon visible-xs"><i class="icon-bar-graph"></i></span><span class="hidden-xs">Specification</span></a></li>
+                        <li><a href="#" data-tab="3"><span class="icon visible-xs"><i class="icon-star"></i></span><span class="hidden-xs">Feedback &amp; Ratings</span></a></li>
+                    </ul>
 
-    <div id="fh5co-started">
-        <div class="container">
-            <div class="row animate-box">
-                <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-                    <h2>Newsletter</h2>
-                    <p>Just stay tune for our latest Product. Now you can subscribe</p>
-                </div>
-            </div>
-            <div class="row animate-box">
-                <div class="col-md-8 col-md-offset-2">
-                    <form class="form-inline">
-                        <div class="col-md-6 col-sm-6">
-                            <div class="form-group">
-                                <label for="email" class="sr-only">Email</label>
-                                <input type="email" class="form-control" id="email" placeholder="Email">
+                    <!-- Tabs -->
+                    <div class="fh5co-tab-content-wrap">
+
+                        <div class="fh5co-tab-content tab-content active" data-tab-content="1">
+                            <div class="col-md-10 col-md-offset-1">
+                                <span class="price">SRP: @string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.NewPrice)</span>
+                                <h2>@Model.Product.Name</h2>
+                                <ul>
+                                    <li><p>Giới tính: @Model.Product.Gender.Name</p></li>
+                                    <li><p>Thương hiệu: @Model.Product.Brands.Name</p></li>
+                                    <li><p>Danh mục: @Model.Product.Cate.Name</p></li>
+                                    <li><p>Mổ tả sản phẩm: @Model.Product.Description</p></li>
+                                    <li>Kích cỡ: @string.Join(", ", Model.Product.ProductSize.Select(s => s.size.Name))</li>
+                                    <li>Phong cách: @string.Join(", ", Model.Product.ProductTags.Select(p => p.Tag.Name))</li>
+                                    <li>Chất liệu: @string.Join(", ", Model.Product.ProductMaterial.Select(p => p.Material.Name))</li>
+                                    <li>Màu sắc: @string.Join(", ", Model.Product.ProductColor.Select(c => c.Color.Name))</li>
+                                </ul>
+
+
+                                <p>Ullam dolorum iure dolore dicta fuga ipsa velit veritatis molestias totam fugiat soluta accusantium omnis quod similique placeat at. Dolorum ducimus libero fuga molestiae asperiores obcaecati corporis sint illo facilis.</p>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h2 class="uppercase">Keep it simple</h2>
+                                        <p>Ullam dolorum iure dolore dicta fuga ipsa velit veritatis</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h2 class="uppercase">Less is more</h2>
+                                        <p>Ullam dolorum iure dolore dicta fuga ipsa velit veritatis</p>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-6">
-                            <button type="submit" class="btn btn-default btn-block">Subscribe</button>
+
+                        <div class="fh5co-tab-content tab-content" data-tab-content="2">
+                            <div class="col-md-10 col-md-offset-1">
+                                <h3>Product Specification</h3>
+                                <ul>
+                                    <li>Paragraph placeat quis fugiat provident veritatis quia iure a debitis adipisci dignissimos consectetur magni quas eius</li>
+                                    <li>adipisci dignissimos consectetur magni quas eius nobis reprehenderit soluta eligendi</li>
+                                    <li>Veritatis tenetur odio delectus quibusdam officiis est.</li>
+                                    <li>Magni quas eius nobis reprehenderit soluta eligendi quo reiciendis fugit? Veritatis tenetur odio delectus quibusdam officiis est.</li>
+                                </ul>
+                                <ul>
+                                    <li>Paragraph placeat quis fugiat provident veritatis quia iure a debitis adipisci dignissimos consectetur magni quas eius</li>
+                                    <li>adipisci dignissimos consectetur magni quas eius nobis reprehenderit soluta eligendi</li>
+                                    <li>Veritatis tenetur odio delectus quibusdam officiis est.</li>
+                                    <li>Magni quas eius nobis reprehenderit soluta eligendi quo reiciendis fugit? Veritatis tenetur odio delectus quibusdam officiis est.</li>
+                                </ul>
+                            </div>
                         </div>
-                    </form>
+
+                        <div class="fh5co-tab-content tab-content" data-tab-content="3">
+                            <div class="col-md-10 col-md-offset-1">
+                                <h3>Happy Buyers</h3>
+                                <div class="feed">
+                                    <div>
+                                        <blockquote>
+                                            <p>Paragraph placeat quis fugiat provident veritatis quia iure a debitis adipisci dignissimos consectetur magni quas eius nobis reprehenderit soluta eligendi quo reiciendis fugit? Veritatis tenetur odio delectus quibusdam officiis est.</p>
+                                        </blockquote>
+                                        <h3>&mdash; Louie Knight</h3>
+                                        <span class="rate">
+                                            <i class="icon-star2"></i>
+                                            <i class="icon-star2"></i>
+                                            <i class="icon-star2"></i>
+                                            <i class="icon-star2"></i>
+                                            <i class="icon-star2"></i>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <blockquote>
+                                            <p>Paragraph placeat quis fugiat provident veritatis quia iure a debitis adipisci dignissimos consectetur magni quas eius nobis reprehenderit soluta eligendi quo reiciendis fugit? Veritatis tenetur odio delectus quibusdam officiis est.</p>
+                                        </blockquote>
+                                        <h3>&mdash; Joefrey Gwapo</h3>
+                                        <span class="rate">
+                                            <i class="icon-star2"></i>
+                                            <i class="icon-star2"></i>
+                                            <i class="icon-star2"></i>
+                                            <i class="icon-star2"></i>
+                                            <i class="icon-star2"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<div id="fh5co-started">
+    <div class="container">
+        <div class="row animate-box">
+            <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+                <h2>Newsletter</h2>
+                <p>Just stay tune for our latest Product. Now you can subscribe</p>
+            </div>
+        </div>
+        <div class="row animate-box">
+            <div class="col-md-8 col-md-offset-2">
+                <form class="form-inline">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group">
+                            <label for="email" class="sr-only">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <button type="submit" class="btn btn-default btn-block">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

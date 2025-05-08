@@ -1,5 +1,4 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
     $('.owl-clients').owlCarousel({
         loop: true, // Vòng lặp carousel
         margin: 10, // Khoảng cách giữa các phần tử
@@ -27,3 +26,67 @@ $(document).ready(function () {
     });
 });
 
+/*product-detail*/
+//const imgs = document.querySelectorAll('.img-select a');
+//const imgBtns = [...imgs];
+//let imgId = 1;
+
+//imgBtns.forEach((imgItem) => {
+//    imgItem.addEventListener('click', (event) => {
+//        event.preventDefault();
+//        imgId = imgItem.dataset.id;
+//        slideImage();
+//    });
+//});
+
+//function slideImage() {
+//    const displayWidth = document.querySelector('.img-showcase img:first-child').clientWidth;
+
+//    document.querySelector('.img-showcase').style.transform = `translateX(${- (imgId - 1) * displayWidth}px)`;
+//}
+
+//window.addEventListener('resize', slideImage);
+
+
+// Tăng giảm số lượng
+$('#increase').click(() => {
+    let qty = parseInt($('#quantity').val());
+    $('#quantity').val(qty + 1);
+});
+
+$('#decrease').click(() => {
+    let qty = parseInt($('#quantity').val());
+    if (qty > 1) $('#quantity').val(qty - 1);
+});
+
+// Chọn size mượt mà
+$('.size-option').click(function () {
+    $('.size-option').removeClass('size-active');
+    $(this).addClass('size-active');
+});
+
+$('.color-option').click(function () {
+    $('.color-option').removeClass('color-active');
+    $(this).addClass('color-active')
+}
+)
+/*product-detail*/
+
+
+var owl;
+$(document).ready(function () {
+    owl = $('.owl-carousel-fullwidth').owlCarousel({
+        items: 1,
+        loop: true,
+        dots: false,
+        nav: true
+    });
+});
+
+function changeImage(el) {
+    const index = $(el).index();
+    owl.trigger('to.owl.carousel', [index, 700]);
+
+    $('.thumbnail-img').removeClass('image-active');
+    $(el).addClass('image-active');
+}

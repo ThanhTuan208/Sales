@@ -19,6 +19,7 @@ body {
     background: #fff;
 }
 
+
 #toggle-heart {
     display: none; /* Ẩn checkbox */
 }
@@ -2136,22 +2137,5 @@ h1, h2, h3, h4, h5, h6, figure {
 .js .animate-box {
     opacity: 0;
 }
-
-.item .active img {
-    margin: auto;
-    margin-top: 20px;
-    margin-bottom: 5px;
-    width: 800px;
-    height: 700px;
-    transition: all 0.5s ease;
-}
-
-    .item .active img:hover {
-        margin: auto;
-        margin-top: 20px;
-        margin-bottom: 25px;
-        height: 700px;
-        transform: scale(0.97);
-    }
 
 /*# sourceMappingURL=style.css.map */
