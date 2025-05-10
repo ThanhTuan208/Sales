@@ -2,6 +2,7 @@
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.ViewModels.Cart;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -80,7 +81,7 @@ namespace CRUD_asp.netMVC.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddToCart(int productID, string pageCurrent)
+        public async Task<IActionResult> AddToCart(int productID, int qty, string color, string size)
         {
             try
             {
@@ -91,54 +92,156 @@ namespace CRUD_asp.netMVC.Controllers
                     return NotFound();
                 }
 
+                if (color == null)
+                {
+                    TempData["ErrorMessage"] = "Bạn cần chọn màu của sản phẩm";
+                }
+
+                if (size == null)
+                {
+                    TempData["ErrorMessage"] = "Bạn cần chọn kích thước của sản phẩm";
+                }
+
+                if (color != null && size != null)
+                {
+                    var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
+
+                    if (userID > 0)
+                    {
+                        var cartItem = context.Carts.FirstOrDefault(p => p.UserID == userID && p.ProductID == productID && p.SelectColor == color && p.SelectSize == size);
+
+                        if (cartItem != null) // San pham ton tai, + so so luong san pham
+                        {
+                            cartItem.Quantity += qty;
+                            context.Carts.Update(cartItem);
+                        }
+                        else // Sp ko ton tai, them moi
+                        {
+                            cartItem = new AddToCart()
+                            {
+                                UserID = userID,
+                                ProductID = productID,
+                                Quantity = qty,
+                                SelectColor = color,
+                                SelectSize = size,
+                            };
+
+                            context.Carts.Add(cartItem);
+                        }
+
+                        await context.SaveChangesAsync();
+                        //var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
+                        //var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
+                        TempData["SuccessMessage"] = "Thêm sản phẩm vào giỏ hàng thành công";
+                        return RedirectToAction("ProductDetail", "Product", new { id = productID });
+                    }
+                    else
+                    {
+                        return RedirectToAction("LoginByProductID", "Account", new { ProductID = productID });
+                    }
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Vui lòng chọn phân loại sản phẩm";
+                    return RedirectToAction("ProductDetail", "Product", new { id = productID });
+                }
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Thêm sản phẩm vào giỏ hàng không thành công";
+                return RedirectToAction("ProductDetail", "Product", new { id = productID });
+            }
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateToCart(int id, int qty, string opera, string accept)
+        {
+            try
+            {
+                var productExists = await context.Carts.FindAsync(id);
+                if (productExists == null)
+                {
+                    ModelState.AddModelError("Cart", "Sản phẩm trong giỏ hàng không tồn tại");
+                    return NotFound();
+                }
+
                 var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
 
                 if (userID > 0)
                 {
-                    var cartItem = context.Carts.FirstOrDefault(p => p.UserID == userID && p.ProductID == productID);
+                    var cartItem = context.Carts.FirstOrDefault(p => p.UserID == userID && p.ID == id);
 
                     if (cartItem != null) // San pham ton tai, +1 qty 
                     {
-                        cartItem.Quantity += 1;
-                        context.Carts.Update(cartItem);
-                    }
-                    else // Sp ko ton tai, them moi
-                    {
-                        cartItem = new AddToCart()
+                        if (opera == "+")
                         {
-                            UserID = userID,
-                            ProductID = productID,
-                            Quantity = 1,
-                        };
+                            cartItem.Quantity = qty;
+                        }
+                        else
+                        {
+                            if (cartItem.Quantity > 1)
+                            {
+                                cartItem.Quantity = qty;
+                            }
+                        }
 
-                        context.Carts.Add(cartItem);
+                        context.Carts.Update(cartItem);
                     }
 
                     await context.SaveChangesAsync();
 
-                    //var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
-                    //var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
-
-                    if (pageCurrent == null)
-                    {
-                        return RedirectToAction("ProductDetail", "Product", new { id = productID });
-                    }
-
-                    return RedirectToAction(pageCurrent, "Product", new { id = productID });
+                    return RedirectToAction("Index", "Cart");
                 }
                 else
                 {
-                    return RedirectToAction("LoginByProductID", "Account", new { ProductID = productID });
+                    return RedirectToAction("LoginByProductID", "Account");
                 }
-            }
-            catch (Exception ex)
-            {
 
-                return Json(new
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Thêm sản phẩm vào giỏ hàng không thành công";
+                return RedirectToAction("ProductDetail", "Product");
+            }
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteToCart(int id)
+        {
+            try
+            {
+                var productExists = await context.Carts.FindAsync(id);
+                if (productExists == null)
                 {
-                    status = false,
-                    message = "Thêm sản phẩm vào giỏ hàng không thành công." + ex.Message,
-                });
+                    ModelState.AddModelError("Cart", "Sản phẩm trong giỏ hàng không tồn tại");
+                    return NotFound();
+                }
+
+                var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
+
+                if (userID > 0)
+                {
+                    var cartItem = context.Carts.FirstOrDefault(p => p.UserID == userID && p.ID == id);
+
+                    if (cartItem != null) // xoa san pham ton tai
+                    {
+                        context.Carts.Remove(cartItem);
+                    }
+
+                    await context.SaveChangesAsync();
+
+                    return RedirectToAction("Index", "Cart");
+                }
+                else
+                {
+                    return RedirectToAction("LoginByProductID", "Account");
+                }
+
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Thêm sản phẩm vào giỏ hàng không thành công";
+                return RedirectToAction("ProductDetail", "Product");
             }
         }
     }

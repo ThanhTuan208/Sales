@@ -48,7 +48,7 @@
 //window.addEventListener('resize', slideImage);
 
 
-// Tăng giảm số lượng
+/*Tăng giảm số lượng (Chi ap dung duoc 1 tang giam so luong)*/
 $('#increase').click(() => {
     let qty = parseInt($('#quantity').val());
     $('#quantity').val(qty + 1);
@@ -59,7 +59,54 @@ $('#decrease').click(() => {
     if (qty > 1) $('#quantity').val(qty - 1);
 });
 
-// Chọn size mượt mà
+/*Ap dung cho nhieu id (tranh bi trung id) tang giam so luong*/
+$(document).ready(function () {
+    $('.increase').click(function () {
+        const $input = $(this).siblings('.quantity-input');
+        let qty = parseInt($input.val());
+        if (qty < 100) {
+            $input.val(qty + 1);
+            updateTotal($(this).closest('tr'));
+        }
+    });
+
+    $('.decrease').click(function () {
+        const $input = $(this).siblings('.quantity-input');
+        let qty = parseInt($input.val());
+        if (qty > 1) {
+            $input.val(qty - 1);
+            updateTotal($(this).closest('tr'));
+        }
+    });
+
+    //$('.decrease').click(function () {
+    //    const $input = $(this).siblings('.quantity-input');
+    //    let qty = parseInt($input.val());
+    //    if (qty <= 1) {
+    //        let $container = $(this).closest('.quantity-container');
+    //        const proID = $container.data('id');
+    //        $('#modalItemId').val(proID);
+    //        const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+    //        modal.show();
+    //    }
+    //    else {
+    //        $input.val(qty - 1);
+    //        updateTotal($(this).closest('tr'));
+    //    }
+    //});
+  
+
+    function updateTotal($row) {
+        let price = parseFloat($row.find('.price').text().replace(/[^0-9]/g, '')); // chi du lai so, con cac ki tu khac thi chuyen sang null
+        /*console.log("price = " + price);*/
+        let qty = parseInt($row.find('.quantity-input').val());
+        const total = price * qty;
+        $row.find('.priceTotal').text(total.toLocaleString('vi-VN', { style: 'currency', currency: "VND" }));
+        /*$row.find('td:nth-child(6)').text(total.toLocaleString('vi-VN', { style: 'currency', currency: "VND" }));*/
+    };
+})
+
+/*chon active cho size va color*/
 $('.size-option').click(function () {
     $('.size-option').removeClass('size-active');
     $(this).addClass('size-active');
@@ -70,8 +117,21 @@ $('.color-option').click(function () {
     $(this).addClass('color-active')
 }
 )
-/*product-detail*/
 
+/* Lay gia tri color -> product detail*/
+function selectColor(el) {
+    const color = $(el).data('color');
+    $('#selectColor').val(color);
+}
+
+/*Lay gia tri size -> product detail*/
+function selectSize(el) {
+    const size = $(el).data('size');
+    $('#selectSize').val(size);
+}
+
+
+/*product-detail*/
 
 var owl;
 $(document).ready(function () {
@@ -90,3 +150,11 @@ function changeImage(el) {
     $('.thumbnail-img').removeClass('image-active');
     $(el).addClass('image-active');
 }
+
+// Thoi gian thong bao them thanh cong hoac that bai
+$(document).ready(function () {
+    setTimeout(() => {
+        $('.alert').alert('close')
+    }, 5000);
+})
+
