@@ -61,50 +61,47 @@ $('#decrease').click(() => {
 
 /*Ap dung cho nhieu id (tranh bi trung id) tang giam so luong*/
 $(document).ready(function () {
-    $('.increase').click(function () {
-        const $input = $(this).siblings('.quantity-input');
-        let qty = parseInt($input.val());
-        if (qty < 100) {
-            $input.val(qty + 1);
-            updateTotal($(this).closest('tr'));
+    $('.quantity-btn').on('click', function () {
+        var itemID = $(this).data('id');
+        var operation = $(this).data('opera');
+        var quantityInput = $(this).siblings('.quantity-input');
+        var CurrentQty = parseInt(quantityInput.val());
+        var NewQty = operation === '+' ? CurrentQty + 1 : CurrentQty - 1;
+
+        if (NewQty < 1) {
+            NewQty = 1;
         }
+        /*gan bien cho $(this) ben ngoai ajax vi ko con la pham tu DOM($('.quantity-btn') <=> $(this)) ma chuyen sang thanh ngu canh khac*/
+        /*day la this cu truoc khi truyen vao ajax, neu su dung trong ajax thi no la 1 this khac nen ko gan truc tiep se lam thay doi du lieu this truoc va sau no*/
+        var $btn = $(this);
+        $.ajax({
+            url: 'Cart/UpdateToCart',
+            type: 'POST',
+            data: {
+                id: itemID,
+                qty: NewQty,
+                opera: operation,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+
+            success: function (response) {
+                if (response.success) {
+                    quantityInput.val(NewQty);
+                    let price = parseFloat($btn.closest('tr').find('.price').text().replace(/[^0-9]+/g, ''));
+                    var totalPrice = price * NewQty;
+                    $btn.closest('tr').find('.priceTotal').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice));
+                }
+                else {
+                    alert('Cập nhật số lượng không thành công.' + response.message);
+                }
+            },
+            error: function (xhr) {
+                alert('Đã xảy ra lỗi trong quá trình cập nhật số lượng.');
+            }
+        })
     });
+});
 
-    $('.decrease').click(function () {
-        const $input = $(this).siblings('.quantity-input');
-        let qty = parseInt($input.val());
-        if (qty > 1) {
-            $input.val(qty - 1);
-            updateTotal($(this).closest('tr'));
-        }
-    });
-
-    //$('.decrease').click(function () {
-    //    const $input = $(this).siblings('.quantity-input');
-    //    let qty = parseInt($input.val());
-    //    if (qty <= 1) {
-    //        let $container = $(this).closest('.quantity-container');
-    //        const proID = $container.data('id');
-    //        $('#modalItemId').val(proID);
-    //        const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
-    //        modal.show();
-    //    }
-    //    else {
-    //        $input.val(qty - 1);
-    //        updateTotal($(this).closest('tr'));
-    //    }
-    //});
-  
-
-    function updateTotal($row) {
-        let price = parseFloat($row.find('.price').text().replace(/[^0-9]/g, '')); // chi du lai so, con cac ki tu khac thi chuyen sang null
-        /*console.log("price = " + price);*/
-        let qty = parseInt($row.find('.quantity-input').val());
-        const total = price * qty;
-        $row.find('.priceTotal').text(total.toLocaleString('vi-VN', { style: 'currency', currency: "VND" }));
-        /*$row.find('td:nth-child(6)').text(total.toLocaleString('vi-VN', { style: 'currency', currency: "VND" }));*/
-    };
-})
 
 /*chon active cho size va color*/
 $('.size-option').click(function () {
@@ -157,4 +154,3 @@ $(document).ready(function () {
         $('.alert').alert('close')
     }, 5000);
 })
-

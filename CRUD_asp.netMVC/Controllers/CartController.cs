@@ -39,6 +39,8 @@ namespace CRUD_asp.netMVC.Controllers
                     cartItems = await context.Carts
                         .AsNoTracking()
                         .Include(c => c.Product)
+                        .Include(c => c.Product).ThenInclude(p => p.ProductColor)
+                        .Include(c => c.Product).ThenInclude(p => p.ProductSize)
                         .Include(c => c.Users)
                         .Where(c => c.UserID == userID)
                         .ToListAsync();
@@ -161,47 +163,59 @@ namespace CRUD_asp.netMVC.Controllers
                 var productExists = await context.Carts.FindAsync(id);
                 if (productExists == null)
                 {
-                    ModelState.AddModelError("Cart", "Sản phẩm trong giỏ hàng không tồn tại");
-                    return NotFound();
+                    return Json(new { success = false, message = "Sản phẩm trong giỏ hàng không tồn tại" });
                 }
 
                 var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
 
                 if (userID > 0)
                 {
-                    var cartItem = context.Carts.FirstOrDefault(p => p.UserID == userID && p.ID == id);
+                    var cartItem = context.Carts.Include(p => p.Product).FirstOrDefault(p => p.UserID == userID && p.ID == id);
 
-                    if (cartItem != null) // San pham ton tai, +1 qty 
+                    if (cartItem != null)
                     {
                         if (opera == "+")
                         {
-                            cartItem.Quantity = qty;
+                            cartItem.Quantity = qty > 0 ? qty : cartItem.Quantity + 1;
                         }
-                        else
+                        else if (opera == "-")
                         {
                             if (cartItem.Quantity > 1)
                             {
-                                cartItem.Quantity = qty;
+                                cartItem.Quantity = qty > 0 ? qty : cartItem.Quantity - 1;
                             }
+                            else
+                            {
+                                return Json(new { success = false, message = "Số lượng không thể nhỏ hơn 1" });
+                            }
+                        }
+                        else
+                        {
+                            return Json(new { success = false, message = "Thao tác không hợp lệ" });
                         }
 
                         context.Carts.Update(cartItem);
+                        await context.SaveChangesAsync();
+
+                        return Json(new
+                        {
+                            success = true,
+                            NewQty = cartItem.Quantity,
+                            NewTotalPrice = cartItem.Product.NewPrice * cartItem.Quantity
+                        });
+
                     }
 
-                    await context.SaveChangesAsync();
-
-                    return RedirectToAction("Index", "Cart");
+                    return Json(new { success = false, message = "Không tìm thấy sản phẩm trong giỏ hàng" });
                 }
                 else
                 {
-                    return RedirectToAction("LoginByProductID", "Account");
+                    return Json(new { success = false, message = "Vui lòng đăng nhập để cập nhật giỏ hàng" });
                 }
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Thêm sản phẩm vào giỏ hàng không thành công";
-                return RedirectToAction("ProductDetail", "Product");
+                return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message }); // Trả về JSON thay vì redirect
             }
         }
 

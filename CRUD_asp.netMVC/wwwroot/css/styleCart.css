@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * Bootstrap v4.3.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 The Bootstrap Authors
  * Copyright 2011-2019 Twitter, Inc.
@@ -11565,14 +11565,13 @@ h1, h2, h3, h4, h5,
 }
 
 @media (max-width: 767px) {
-    .table thead th:nth-child(3), /* C?t S?n ph?m */
+    .table thead th:nth-child(3), /* Cột Sản phẩm */
     .table tbody td:nth-child(3) {
-        display: none; /* ?n c?t m� t? s?n ph?m */
+        display: none; /* Ẩn cột mô tả sản phẩm */
     }
 }
 
 .table-wrap {
-    margin-left: 0;
     width: 100%;
     box-shadow: 2px 3px 10px;
     border-radius: 20px;
@@ -11581,33 +11580,41 @@ h1, h2, h3, h4, h5,
 }
 
 .table {
-    width: 100%;
+    width: 100%; /* Đảm bảo bảng chiếm toàn bộ chiều rộng container */
+    margin: 0 auto;
     margin-bottom: 1rem;
     -webkit-box-shadow: 0px 5px 12px -12px rgba(0, 0, 0, 0.29);
     -moz-box-shadow: 0px 5px 12px -12px rgba(0, 0, 0, 0.29);
     box-shadow: 0px 5px 12px -12px rgba(0, 0, 0, 0.29);
+    table-layout: auto; /* Cho phép bảng tự điều chỉnh theo nội dung */
 }
+
+    .table thead th,
+    .table tbody td {
+        padding: 10px; /* Tăng padding để tránh chữ bị chèn */
+        vertical-align: middle;
+        white-space: normal; /* Cho phép xuống dòng khi cần */
+        word-wrap: break-word; /* Tự động ngắt chữ khi quá dài */
+    }
+
+    .table thead th {
+        border: none;
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+        white-space: nowrap; /* Ngăn header bị ngắt dòng */
+    }
+
+
 
     .table thead.thead-primary {
         background: #99b19c;
         border-radius: 20px;
     }
 
-    .table thead th {
-        border: none;
-        padding: 30px;
-        font-size: 1rem;
-        font-weight: 600;
-        color: white;
-    }
-
-    .table tbody tr {
-        margin-bottom: 10px;
-    }
-
     .table tbody th, .table tbody td {
         border: none;
-        padding: 30px;
+        padding: 20px;
         font-size: 14px;
         background: #fff;
         border-bottom: 4px solid #f8f9fd;
