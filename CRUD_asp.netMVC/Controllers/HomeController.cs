@@ -27,17 +27,20 @@ public class HomeController : Controller
             .Include(p => p.Brands)
             .Include(p => p.Cate)
             .Include(p => p.Gender)
+            .Include(p => p.Carts)
             .Where(p => p.FeaturedID == 1)
             .Take(6).OrderByDescending(p => p.ID).ToListAsync();
 
         var brand = await context.Brand.AsNoTracking().ToListAsync();
         var categories = await context.Category.AsNoTracking().ToListAsync();
+        var carts = await context.Carts.AsNoTracking().ToListAsync();
 
         HomeViewModel ViewModel = new HomeViewModel()
         {
             Products = product,
             Brands = brand,
-            Categories = categories
+            Categories = categories,
+            Carts = carts
         };
 
         if (ViewModel == null)

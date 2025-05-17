@@ -4,6 +4,7 @@
 
 @{
     var count = 0;
+    var info = TempData["SuccessMessage"];
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
@@ -40,7 +41,7 @@
                         <div class="item">
                             <div class="active text-center">
                                 <figure>
-                                    <img src="@Url.Content($"~/{item.PathNameImage}")" alt="user" style="object-fit: cover" class="img-fluid p-3"/>
+                                    <img src="@Url.Content($"~/{item.PathNameImage}")" alt="user" style="object-fit: cover" class="img-fluid p-3" />
                                 </figure>
                             </div>
                         </div>
@@ -98,16 +99,18 @@
                             </div>
                         </div>
 
+                        @* Xu li post *@
                         <!-- Chọn số lượng -->
-                        <form method="post" asp-controller="Cart" asp-action="AddToCart">
+                        <div class="addCart">
+
                             <div class="row align-items-center mb-4">
                                 <div class="col-md-3 fw-bold">
                                     <p class="fs-3 mb-0 me-3">số lượng: </p>
                                 </div>
                                 <div class="col-md-9 d-flex">
-                                    <a class="btn btn-outline-secondary qty-btn" id="decrease">-</a>
-                                    <input type="text" id="quantity" name="qty" class="form-control mx-2 text-center" value="1" style="width: 60px; height: 40px" readonly>
-                                    <a class="btn btn-outline-secondary qty-btn" id="increase">+</a>
+                                    <a class="btn btn-outline-secondary qty-btn" data-qty="-" id="decrease">-</a>
+                                    <input type="text" id="quantity" class="qtyInput form-control mx-2 text-center" value="1" style="width: 60px; height: 40px" readonly>
+                                    <a class="btn btn-outline-secondary qty-btn" data-qty="+" id="increase">+</a>
                                 </div>
                             </div>
 
@@ -117,9 +120,9 @@
                                     <p class="fs-3 mb-0 me-2">Màu sắc: </p>
                                 </div>
                                 <div class="col-md-9 d-flex gap-2">
-                                    <input type="hidden" id="selectColor" name="color" value="" />
+                                    <input type="hidden" id="selectColor" name="color" class="color" />
                                     @foreach (var item in Model.Product.ProductColor)
-                                    {   
+                                    {
                                         <div class="border p-2 px-3 color-option" data-color="@item.Color.Name" onclick="selectColor(this)">@item.Color.Name</div>
                                     }
                                 </div>
@@ -131,7 +134,7 @@
                                     <p class="fs-3 mb-0 me-2">Kích thước: </p>
                                 </div>
                                 <div class="col-md-9 d-flex gap-2">
-                                        <input type="hidden" id="selectSize" name="size" value="" />
+                                    <input type="hidden" id="selectSize" name="size" class="size" />
                                     @foreach (var item in Model.Product.ProductSize)
                                     {
                                         <div class="border p-2 px-3 size-option" data-size="@item.size.Name" onclick="selectSize(this)">@item.size.Name</div>
@@ -142,17 +145,20 @@
                             <div class="row">
                                 <div class="col-md-6 offset-md-3 mt-5">
                                     <p class="d-flex justify-content-center me-4">
-                                        <input type="hidden" name="productID" value="@Model.Product.ID" />
-                                        <button type="submit" class="btn btn-primary btn-outline btn-lg me-5">Thêm giỏ hàng</button>
-                                        <button type="submit" class="btn btn-primary btn-outline btn-lg">Mua ngay</button>
+                                        <input type="hidden" class="productID" name="productID" data-id="@Model.Product.ID" value="@Model.Product.ID" />
+                                        <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5" data-method="cart">Thêm giỏ hàng</button>
+                                        <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5" data-method="buy">Mua ngay</button>
                                     </p>
                                 </div>
                             </div>
-                        </form>
+                        </div>
+                        @* Xu li post *@
+
                         <!-- Hiển thị thông báo lỗi -->
+
                         @if (TempData["ErrorMessage"] != null)
                         {
-                            <div class="alert alert-danger alert-dismissible " role="alert">
+                            <div class="alert alert-danger alert-dismissible show" role="alert">
                                 @TempData["ErrorMessage"]
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
@@ -160,7 +166,7 @@
                         <!-- Hiển thị thông báo thành công -->
                         @if (TempData["SuccessMessage"] != null)
                         {
-                            <div class="alert alert-success alert-dismissible " role="alert">
+                            <div class="alert alert-success alert-dismissible show" role="alert">
                                 @TempData["SuccessMessage"]
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
@@ -298,4 +304,4 @@
         </div>
     </div>
 </div>
-</div>
+

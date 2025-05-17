@@ -55,7 +55,6 @@ namespace CRUD_asp.netMVC.Controllers
                 SecurityStamp = Guid.NewGuid().ToString("D"),
             };
 
-
             string role = "Customer";
 
             if (register.Email.Contains("nhanvien", StringComparison.OrdinalIgnoreCase))
@@ -165,6 +164,13 @@ namespace CRUD_asp.netMVC.Controllers
             return View(login);
         }
 
+        [HttpGet]
+        public IActionResult LoginByProductID(int productID)
+        {
+            ViewData["id"] = productID;
+            return View(nameof(Login));
+        }
+
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> LoginByProductID(Login login, int productID)
         {
@@ -180,7 +186,7 @@ namespace CRUD_asp.netMVC.Controllers
             var account = await _signInManager.PasswordSignInAsync(user, login.Password, login.RememberMe, lockoutOnFailure: false);
             if (account.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("ProductDetail", "Product", new { id = productID });
             }
 
             ModelState.AddModelError(string.Empty, "Error occurred while logging in");

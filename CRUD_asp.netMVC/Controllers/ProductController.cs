@@ -1,4 +1,5 @@
 ﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Models.ViewModels.Home;
 using Humanizer;
@@ -66,7 +67,7 @@ namespace CRUD_asp.netMVC.Controllers
         //    var cates = context.Category.AsNoTracking();
         //    var cateList = await context.Category.AsNoTracking().ToListAsync();
 
-        //    BrandShowProductViewModel ViewModel = new()
+        //    getPaginationByProductViewModel ViewModel = new()
         //    {
         //        Products = pagProduct,
         //        Brands = await PaginatedList<Brand>.CreatePagAsync(brands, 1, brandList.Count),
@@ -118,34 +119,23 @@ namespace CRUD_asp.netMVC.Controllers
                 }
 
                 var productCount = await products.CountAsync();
-                var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
-                var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
+                //var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
+                //var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
 
                 ViewData["cateID"] = cateID;
                 ViewData["brandID"] = brandID;
 
-                ViewBag.ActionNameUrl = actionNameUrl;
                 ViewBag.ProductCount = productCount;
                 ViewBag.Keyword = keyword;
-
 
                 var pagProduct = await PaginatedList<Products>.CreatePagAsync(products, productPage, 12);
                 if (!pagProduct.Any())
                 {
-                    //pagProduct = new PaginatedList<Products>(products, productCount, productPage, 16);
                     ViewData["Info"] = $"Không tìm thấy sản phẩm nào với từ khóa '{keyword}' ";
                 }
 
-                var brands = await context.Brand.AsNoTracking().ToListAsync();
-
-                var cates = await context.Category.AsNoTracking().ToListAsync();
-
-                BrandShowProductViewModel ViewModel = new()
-                {
-                    Products = pagProduct,
-                    Brands = new PaginatedList<Brand>(brands, brands.Count, 1, brands.Count),
-                    Categories = new PaginatedList<Category>(cates, cates.Count, 1, cates.Count),
-                };
+                // Pagination truyen tham so cho product, brand, category, cart
+                var ViewModel = await CreatePaginationGeneral(products, productPage, 12);
 
                 return View(ViewModel);
             }
@@ -157,9 +147,8 @@ namespace CRUD_asp.netMVC.Controllers
 
         }
 
-        /// Hien thi danh sach phan trang san pham va phan trang thuong hieu
-        //[Route("Product/{productPage:int?}")]
         [HttpGet]
+        /// Hien thi danh sach phan trang san pham va phan trang thuong hieu
         public async Task<IActionResult> Index(int productPage = 1)
         {
             IQueryable<Products> products = context.Products.AsNoTracking()
@@ -173,26 +162,18 @@ namespace CRUD_asp.netMVC.Controllers
 
             var pagProduct = await PaginatedList<Products>.CreatePagAsync(products, productPage, 16);
 
-            var brands = await context.Brand.AsNoTracking().ToListAsync();
-
-            var cates = await context.Category.AsNoTracking().ToListAsync();
-
-            BrandShowProductViewModel ViewModel = new()
-            {
-                Products = pagProduct,
-                Brands = new PaginatedList<Brand>(brands, brands.Count, 1, brands.Count),
-                Categories = new PaginatedList<Category>(cates, cates.Count, 1, cates.Count),
-            };
-
-            var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
-            var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
-
-            ViewBag.ActionNameUrl = actionNameUrl;
+            // Pagination truyen tham so cho product, brand, category, cart
+            var ViewModel = await CreatePaginationGeneral(products, productPage, 12);
 
             return View(ViewModel);
         }
 
-        // Hien thi san pham cua brand qua id brand
+        /// <summary>
+        /// Hien thi san pham cua brand qua id brand
+        /// </summary>
+        /// <param name="brandID"></param>
+        /// <param name="productPage"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> getProductByBrand(int brandID, int productPage = 1)
         {
@@ -210,27 +191,25 @@ namespace CRUD_asp.netMVC.Controllers
                 .Where(p => p.Brands == brands)
                 .Include(p => p.Brands);
 
-            var getPagProductListByBrand = await getPagProductByBrand.ToListAsync();
-
             var productCount = await getPagProductByBrand.CountAsync();
             ViewBag.ProductCount = productCount;
 
-            BrandShowProductViewModel ViewModel = new()
-            {
-                Products = await PaginatedList<Products>.CreatePagAsync(getPagProductByBrand, productPage, 6),
-                Brands = await PaginatedList<Brand>.CreatePagAsync(context.Brand.AsNoTracking(), 1, context.Brand.Count()),
-                Categories = await PaginatedList<Category>.CreatePagAsync(context.Category.AsNoTracking(), 1, context.Category.Count())
-            };
+            // Pagination truyen tham so cho product, brand, category, cart
+            var ViewModel = await CreatePaginationGeneral(getPagProductByBrand, productPage, 6);
 
-            var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
-            var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
-
-            ViewBag.ActionNameUrl = actionNameUrl;
+            //var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
+            //var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
+            //ViewBag.ActionNameUrl = actionNameUrl;
 
             return View(ViewModel);
         }
 
-        // Hien thi san pham cua Category qua id danh muc CateID
+        /// <summary>
+        /// Hien thi san pham cua Category qua id danh muc CateID
+        /// </summary>
+        /// <param name="CateID"></param>
+        /// <param name="productPage"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> getProductByCate(int CateID = 1, int productPage = 1)
         {
@@ -247,32 +226,28 @@ namespace CRUD_asp.netMVC.Controllers
                 .Where(p => p.CateID == CateID)
                 .Include(p => p.Cate);
 
-            var getPagProductListByCate = await getPagProductByCate.ToListAsync();
-
             var productCount = await getPagProductByCate.CountAsync();
             ViewBag.ProductCount = productCount;
 
-            BrandShowProductViewModel ViewModel = new()
-            {
-                Products = await PaginatedList<Products>.CreatePagAsync(getPagProductByCate, productPage, 6),
-                Brands = await PaginatedList<Brand>.CreatePagAsync(context.Brand.AsNoTracking(), 1, context.Brand.Count()),
-                Categories = await PaginatedList<Category>.CreatePagAsync(context.Category.AsNoTracking(), 1, context.Category.Count())
-            };
-
-            var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
-            var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
-
-            ViewBag.ActionNameUrl = actionNameUrl;
+            // Pagination truyen tham so cho product, brand, category, cart
+            var ViewModel = await CreatePaginationGeneral(getPagProductByCate, productPage, 6);
 
             return View(ViewModel);
         }
 
-        // hien thi san pham cua brand duoc phan loai boi category 
+        /// <summary>
+        /// hien thi san pham cua brand duoc phan loai boi category 
+        /// </summary>
+        /// <param name="brandID"></param>
+        /// <param name="CateID"></param>
+        /// <param name="productPage"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> getProductByCate_Brand(int brandID = 1, int CateID = 1, int productPage = 1)
         {
             var cates = await context.Category.AsNoTracking().FirstOrDefaultAsync(p => p.ID == CateID);
             var brands = await context.Brand.AsNoTracking().FirstOrDefaultAsync(p => p.ID == brandID);
+            var cart = await context.Carts.AsNoTracking().ToListAsync();
 
             ViewData["cateID"] = CateID;
             ViewData["brandID"] = brandID;
@@ -288,27 +263,20 @@ namespace CRUD_asp.netMVC.Controllers
                 .Include(p => p.Cate)
                 .Include(p => p.Brands);
 
-            var getPagProductListByCate = await getPagProductByCate_Brand.ToListAsync();
-
             var productCount = await getPagProductByCate_Brand.CountAsync();
             ViewBag.ProductCount = productCount;
 
-            BrandShowProductViewModel ViewModel = new()
-            {
-                Products = await PaginatedList<Products>.CreatePagAsync(getPagProductByCate_Brand, productPage, 6),
-                Brands = await PaginatedList<Brand>.CreatePagAsync(context.Brand.AsNoTracking(), 1, context.Brand.Count()),
-                Categories = await PaginatedList<Category>.CreatePagAsync(context.Category.AsNoTracking(), 1, context.Category.Count())
-            };
-
-            var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
-            var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
-
-            ViewBag.ActionNameUrl = actionNameUrl;
+            // Pagination truyen tham so cho product, brand, category, cart
+            var ViewModel = await CreatePaginationGeneral(getPagProductByCate_Brand, productPage, 6);
 
             return View(ViewModel);
         }
 
-        // Hien thi chi tiet cua san pham theo id
+        /// <summary>
+        /// Hien thi chi tiet cua san pham theo id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> ProductDetail(int id)
         {
@@ -316,32 +284,57 @@ namespace CRUD_asp.netMVC.Controllers
                 .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)
+                .Include(p => p.ProductImages)
                 .Include(p => p.ProductSize).ThenInclude(p => p.size)
                 .Include(p => p.ProductColor).ThenInclude(p => p.Color)
                 .Include(p => p.ProductMaterial).ThenInclude(p => p.Material)
                 .Include(p => p.ProductStyles).ThenInclude(p => p.Style)
                 .Include(p => p.ProductSeasons).ThenInclude(p => p.Season)
                 .Include(p => p.ProductTags).ThenInclude(p => p.Tag)
-                .Include(p => p.ProductImages)
                 .FirstOrDefaultAsync(p => p.ID == id);
 
             var brandList = await context.Brand.AsNoTracking().ToListAsync();
 
             var cateList = await context.Category.AsNoTracking().ToListAsync();
 
+            var cartList = await context.Carts.AsNoTracking().ToListAsync();
             GeneralProduct_ListCateBrand ViewModel = new()
             {
                 Product = product,
                 Brands = brandList,
-                Categories = cateList
+                Categories = cateList,
+                Carts = cartList
             };
 
+            Console.WriteLine(id);
             if (ViewModel != null)
             {
                 return View(ViewModel);
             }
 
             return NotFound();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="Iqueryable"></param>
+        /// <param name="pageCurrent"></param>
+        /// <param name="pageCount"></param>
+        /// <param name="carts"></param>
+        /// <returns></returns>
+        public async Task<getPaginationByProductViewModel> CreatePaginationGeneral(IQueryable<Products> Iqueryable, int pageCurrent, int pageCount)
+        {
+            var brands = context.Brand.AsNoTracking();
+            var cates = context.Category.AsNoTracking();
+            var carts = context.Carts.AsNoTracking().ToListAsync();
+
+            return new getPaginationByProductViewModel
+            {
+                Products = await PaginatedList<Products>.CreatePagAsync(Iqueryable, pageCurrent, pageCount),
+                Brands = await PaginatedList<Brand>.CreatePagAsync(brands, 1, brands.Count()),
+                Categories = await PaginatedList<Category>.CreatePagAsync(cates, 1, cates.Count()),
+                Carts = await carts
+            };
         }
     }
 }

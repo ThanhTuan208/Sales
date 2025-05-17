@@ -1,6 +1,6 @@
 ﻿@using CRUD_asp.netMVC.Models.ViewModels.Home;
 @using System.Globalization
-@model BrandShowProductViewModel
+@model getPaginationByProductViewModel
 @{
     var ActionNameByUrl = ViewBag.ActionNameUrl;
     var productCount = ViewBag.ProductCount ?? 0;
@@ -30,6 +30,14 @@
 
 <div id="fh5co-product">
     <div class="container">
+        <div class="row animate-box my-5">
+            <div class="col-md-12 text-center">
+                <div class="desc">
+                    <h1 style="font-weight: 700; text-shadow: 2px 3px 6px; font-size: 6rem">@cateName.ToUpper()</h1>
+                </div>
+            </div>
+        </div>
+
         <div class="row animate-box">
             @foreach (var item in Model.Categories)
             {
@@ -46,14 +54,6 @@
                     </div>
                 </div>
             }
-        </div>
-
-        <div class="row animate-box my-5">
-            <div class="col-md-12 text-center">
-                <div class="desc">
-                    <h1 style="font-weight: 700; text-shadow: 2px 3px 6px; font-size: 6rem">@cateName.ToUpper()</h1>
-                </div>
-            </div>
         </div>
 
         <div class="row">

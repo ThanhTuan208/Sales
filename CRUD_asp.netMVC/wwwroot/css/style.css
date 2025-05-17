@@ -457,7 +457,7 @@ h1, h2, h3, h4, h5, h6, figure {
                 opacity: 0;
                 position: absolute;
                 top: 0;
-                left: 95%;
+                left: 100%;
                 width: 130px;
                 background: #d1c286;
                 padding: 10px;

@@ -1,7 +1,7 @@
 ﻿@using CRUD_asp.netMVC.Models.ViewModels.Home;
 @using System.Globalization
-@model BrandShowProductViewModel
-@{
+@model getPaginationByProductViewModel
+@{  
     var ActionNameByUrl = ViewBag.ActionNameUrl;
     var productCount = ViewBag.ProductCount ?? 0;
     var cateID = ViewData["cateID"];
@@ -54,7 +54,7 @@
                 </div>
             }
         </div>
-        
+
 
         <div class="row">
             <p class="text-center p-5 fs-1">@productCount sản phẩm được thấy</p>
@@ -128,4 +128,3 @@
         </div>
     </div>
 </div>
-

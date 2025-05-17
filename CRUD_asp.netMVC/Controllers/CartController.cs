@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration.EnvironmentVariables;
 using Microsoft.Identity.Client;
+using NuGet.Protocol;
 using NuGet.Protocol.Plugins;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Metadata.Ecma335;
@@ -88,23 +89,29 @@ namespace CRUD_asp.netMVC.Controllers
             try
             {
                 var productExists = await context.Products.FindAsync(productID);
+
                 if (productExists == null)
                 {
                     ModelState.AddModelError("Cart", "Sản phẩm không tồn tại");
                     return NotFound();
                 }
 
-                if (color == null)
+                if (color == null && size == null)
+                {
+                    TempData["ErrorMessage"] = "Vui lòng chọn phân loại sản phẩm";
+                    return Json(new { success = false, message = "Vui lòng chọn phân loại sản phẩm" });
+                }
+                else if (color == null)
                 {
                     TempData["ErrorMessage"] = "Bạn cần chọn màu của sản phẩm";
+                    return Json(new { success = false, message = "Bạn cần chọn màu của sản phẩm" });
                 }
-
-                if (size == null)
+                else if (size == null)
                 {
                     TempData["ErrorMessage"] = "Bạn cần chọn kích thước của sản phẩm";
+                    return Json(new { success = false, message = "Bạn cần chọn kích thước của sản phẩm" });
                 }
-
-                if (color != null && size != null)
+                else
                 {
                     var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
 
@@ -132,26 +139,20 @@ namespace CRUD_asp.netMVC.Controllers
                         }
 
                         await context.SaveChangesAsync();
-                        //var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
-                        //var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
+
                         TempData["SuccessMessage"] = "Thêm sản phẩm vào giỏ hàng thành công";
-                        return RedirectToAction("ProductDetail", "Product", new { id = productID });
+                        return Json(new { success = true, message = "Thêm sản phẩm vào giỏ hàng thành công" });
                     }
                     else
                     {
                         return RedirectToAction("LoginByProductID", "Account", new { ProductID = productID });
                     }
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Vui lòng chọn phân loại sản phẩm";
-                    return RedirectToAction("ProductDetail", "Product", new { id = productID });
-                }
             }
             catch (Exception)
             {
                 TempData["ErrorMessage"] = "Thêm sản phẩm vào giỏ hàng không thành công";
-                return RedirectToAction("ProductDetail", "Product", new { id = productID });
+                return Json(new { success = false, message = "Thêm sản phẩm vào giỏ hàng không thành công" });
             }
         }
 
@@ -244,7 +245,7 @@ namespace CRUD_asp.netMVC.Controllers
 
                     await context.SaveChangesAsync();
 
-                    return RedirectToAction("Index", "Cart");
+                    return Json(new { success = true, message = "Xóa sản phẩm thành công." });
                 }
                 else
                 {
@@ -254,8 +255,7 @@ namespace CRUD_asp.netMVC.Controllers
             }
             catch (Exception)
             {
-                TempData["ErrorMessage"] = "Thêm sản phẩm vào giỏ hàng không thành công";
-                return RedirectToAction("ProductDetail", "Product");
+                return Json(new { success = false, message = "Vui lòng đăng nhập để cập nhật giỏ hàng" });
             }
         }
     }

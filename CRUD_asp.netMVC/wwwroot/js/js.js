@@ -26,51 +26,20 @@
     });
 });
 
-/*product-detail*/
-//const imgs = document.querySelectorAll('.img-select a');
-//const imgBtns = [...imgs];
-//let imgId = 1;
-
-//imgBtns.forEach((imgItem) => {
-//    imgItem.addEventListener('click', (event) => {
-//        event.preventDefault();
-//        imgId = imgItem.dataset.id;
-//        slideImage();
-//    });
-//});
-
-//function slideImage() {
-//    const displayWidth = document.querySelector('.img-showcase img:first-child').clientWidth;
-
-//    document.querySelector('.img-showcase').style.transform = `translateX(${- (imgId - 1) * displayWidth}px)`;
-//}
-
-//window.addEventListener('resize', slideImage);
-
-
-/*Tăng giảm số lượng (Chi ap dung duoc 1 tang giam so luong)*/
-$('#increase').click(() => {
-    let qty = parseInt($('#quantity').val());
-    $('#quantity').val(qty + 1);
-});
-
-$('#decrease').click(() => {
-    let qty = parseInt($('#quantity').val());
-    if (qty > 1) $('#quantity').val(qty - 1);
-});
-
-/*Ap dung cho nhieu id (tranh bi trung id) tang giam so luong*/
 $(document).ready(function () {
+
+    // Tang giam so luong trong gio hang (tranh bi luu lich su trang web khong nhu su dung method post)
     $('.quantity-btn').on('click', function () {
-        var itemID = $(this).data('id');
-        var operation = $(this).data('opera');
-        var quantityInput = $(this).siblings('.quantity-input');
-        var CurrentQty = parseInt(quantityInput.val());
-        var NewQty = operation === '+' ? CurrentQty + 1 : CurrentQty - 1;
+        const itemID = $(this).data('id');
+        let operation = $(this).data('opera');
+        let quantityInput = $(this).siblings('.quantity-input');
+        let CurrentQty = parseInt(quantityInput.val());
+        let NewQty = operation === '+' ? CurrentQty + 1 : CurrentQty - 1;
 
         if (NewQty < 1) {
             NewQty = 1;
         }
+
         /*gan bien cho $(this) ben ngoai ajax vi ko con la pham tu DOM($('.quantity-btn') <=> $(this)) ma chuyen sang thanh ngu canh khac*/
         /*day la this cu truoc khi truyen vao ajax, neu su dung trong ajax thi no la 1 this khac nen ko gan truc tiep se lam thay doi du lieu this truoc va sau no*/
         var $btn = $(this);
@@ -100,36 +69,126 @@ $(document).ready(function () {
             }
         })
     });
+
+    /*Tăng giảm số lượng (Chi ap dung duoc 1 tang giam so luong)*/
+    $('#increase').click(() => {
+        let qty = parseInt($('#quantity').val());
+        $('#quantity').val(qty + 1);
+    });
+
+    $('#decrease').click(() => {
+        let qty = parseInt($('#quantity').val());
+        if (qty > 1) $('#quantity').val(qty - 1);
+    });
+
+
+    // page product detail de them san pham vao gio hang
+    $('.btn-option').on('click', function () {
+        let btn = $(this);
+        const itemID = $('.productID').data('id');
+        let qtyInputNumber = parseInt($('#quantity').val()) || 1;
+
+        let colorBtn = null;
+        let sizeBtn = null;
+        if ($('.color-option').hasClass('color-active') || $('.color-option').hasClass('size-active')) {
+
+            colorBtn = btn.closest('.addCart').find('#selectColor').val();
+            sizeBtn = btn.closest('.addCart').find('#selectSize').val();
+        }
+
+        let optionMethod = btn.data('method');
+
+        if (optionMethod == 'cart') {
+
+            $.ajax({
+                url: '/Cart/AddToCart',
+                type: 'POST',
+                data: {
+                    productID: itemID,
+                    qty: qtyInputNumber,
+                    size: sizeBtn,
+                    color: colorBtn,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+
+                success: function (response) {
+                    if (response.success) {
+                        console.log("Thêm sản phẩm vào giỏ hàng thành công." + response.message);
+                        window.location.href = `/Product/ProductDetail/${itemID}`;
+                    }
+                    else {
+                        console.log("Thêm sản phẩm vào giỏ hàng thất bại." + response.message);
+                        window.location.href = `/Product/ProductDetail/${itemID}`;
+                    }
+                },
+
+                error: function (response) {
+                    console.log("Sản phẩm thêm vào bị lỗi!!!" + response.message);
+                    alert('Sản phẩm thêm vào bị lỗi !!!');
+                }
+            });
+        }
+        else {
+            // xu li khi mua truc tiep
+        }
+    });
+
+    $('.close').on('click', function () {
+        let itemID = $('.itemID').data('id');
+
+        $.ajax({
+            url: '/Cart/DeleteToCart',
+            type: 'POST',
+            data: {
+                id: itemID,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+
+            success: function (response) {
+                if (response.success) {
+                    console.log("Xóa sản phẩm thành công." + response.message);
+                    window.location.href = `/Cart`;
+                }
+                else {
+                    console.log("Xóa sản phẩm thất bại." + response.message);
+                    window.location.href = `/Cart`;
+                }
+            },
+
+            error: function (response) {
+                console.log("Sản phẩm xóa bị lỗi!!!" + response.message);
+                alert('Sản phẩm xóa bị lỗi !!!');
+            }
+        });
+    });
+
+    /*chon active cho size va color*/
+    $('.size-option').click(function () {
+        if ($(this).hasClass('size-active')) {
+
+            $(this).removeClass('size-active');
+        }
+        else {
+            $('.size-option').removeClass('size-active');
+            $(this).addClass('size-active');
+        }
+    });
+
+    $('.color-option').click(function () {
+
+        if ($(this).hasClass('color-active')) {
+
+            $(this).removeClass('color-active')
+        }
+        else {
+            $('.color-option').removeClass('color-active');
+            $(this).addClass('color-active')
+        }
+    });
+
 });
 
-
-/*chon active cho size va color*/
-$('.size-option').click(function () {
-    $('.size-option').removeClass('size-active');
-    $(this).addClass('size-active');
-});
-
-$('.color-option').click(function () {
-    $('.color-option').removeClass('color-active');
-    $(this).addClass('color-active')
-}
-)
-
-/* Lay gia tri color -> product detail*/
-function selectColor(el) {
-    const color = $(el).data('color');
-    $('#selectColor').val(color);
-}
-
-/*Lay gia tri size -> product detail*/
-function selectSize(el) {
-    const size = $(el).data('size');
-    $('#selectSize').val(size);
-}
-
-
-/*product-detail*/
-
+// dung cho hieu ung hinh anh qua lai (product detail)
 var owl;
 $(document).ready(function () {
     owl = $('.owl-carousel-fullwidth').owlCarousel({
@@ -154,3 +213,16 @@ $(document).ready(function () {
         $('.alert').alert('close')
     }, 5000);
 })
+
+/* Lay gia tri color -> product detail*/
+function selectColor(el) {
+    const color = $(el).data('color');
+    $('#selectColor').val(color);
+}
+
+/*Lay gia tri size -> product detail*/
+function selectSize(el) {
+    const size = $(el).data('size');
+    $('#selectSize').val(size);
+}
+/*product-detail*/

@@ -56,7 +56,7 @@
                                 <a asp-action="Index" asp-controller="Product">Product</a>
                                 <ul class="dropdown">
                                     <li class="has-dropdown">
-                                        <a href="#">Brand</a>
+                                        <a>Thương hiệu</a>
                                         <ul class="dropdown sub-dropdown">
                                             @foreach (var item in Model.Brands)
                                             {
@@ -65,7 +65,7 @@
                                         </ul>
                                     </li>
                                     <li class="has-dropdown">
-                                        <a href="#">Category</a>
+                                        <a>Danh mục</a>
                                         <ul class="dropdown sub-dropdown">
                                             @foreach (var item in Model.Categories)
                                             {
@@ -101,7 +101,7 @@
 
                             <li class="has-dropdown nav-item">
                                 <a class="cart">
-                                    <span><small>0</small><i class="icon-shopping-cart fs-4"></i></span>
+                                    <span><small>@Model.Carts.Count</small><i class="icon-shopping-cart fs-4"></i></span>
                                 </a>
 
                                 <ul class="dropdown" style="width: 150px">
@@ -119,7 +119,7 @@
                                 {
                                     <form id="logoutForm" asp-controller="Account" asp-action="Logout" method="post" style="display: none;">
                                         @* @Html.AntiForgeryToken(): Khi dung attribute ValidateAntiForgeryToken thi phai su dung hepler html nay nhung khi check devtool kiem tra thi da co phat sinh doan ma nen ko can them  *@ 
-                                                            </form>
+                                    </form>
 
                                     <a class="cart">
                                         <span><i class="icon-user fs-4"></i><small>&check;</small></span>

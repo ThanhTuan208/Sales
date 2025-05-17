@@ -12,25 +12,24 @@
 
 <section class="ftco-section">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 text-center mb-4">
-                <h1 style="font-weight: 600; text-shadow: 2px 3px 10px; font-size: 3rem">GIỎ HÀNG</h1>
-            </div>
-        </div>
+
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-8  mb-5">
+                <div class="col-md-12 text-center mb-4">
+                    <h1 style="font-weight: 600; text-shadow: 2px 3px 10px; font-size: 3rem">GIỎ HÀNG</h1>
+                </div>
                 <div class="table-wrap table-responsive">
-                    <table class="table">
+                    <table class="table" style="width: 100%">
                         <thead class="thead-primary" style="text-align:center">
                             <tr>
                                 <th>Check</th>
                                 <th>&nbsp;</th>
-                                <th style="text-align: left">Sản phẩm</th>
-                                <th style="width: 5%">Loại màu</th>
-                                <th style="width: 5%">kích thước</th>
-                                <th style="width: 15%">Giá</th>
+                                <th>Sản phẩm</th>
+                                <th>Loại màu</th>
+                                <th>kích thước</th>
+                                <th>Giá</th>
                                 <th>Số lượng</th>
-                                <th style="width: 25%">Tổng giá</th>
+                                <th>Tổng giá</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
@@ -60,13 +59,13 @@
                                     </td>
 
                                     <td>
-                                        <div class="email" style="text-align: left">
+                                        <div class="color" style="text-align: center">
                                             <span>@item.SelectColor</span>
                                         </div>
                                     </td>
 
                                     <td>
-                                        <div class="email" style="text-align: left">
+                                        <div class="size" style="text-align: center">
                                             <span>@item.SelectSize</span>
                                         </div>
                                     </td>
@@ -84,17 +83,16 @@
 
                                     <td class="priceTotal">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", (item.Product.NewPrice * item.Quantity))</td>
 
-                                    <td style="vertical-align:middle; text-align:center ">
-                                        <form method="post" asp-controller="Cart" asp-action="DeleteToCart">
-                                            <input type="hidden" name="id" value="@item.ID">
-                                            <button type="submit"
-                                                    class="close"
-                                                    aria-label="Close">
-                                                <span aria-hidden="true">
-                                                    <i class="fa fa-close" style="font-size: 3rem;"></i>
-                                                </span>
-                                            </button>
-                                        </form>
+                                    <td class="deleteCartItem" style="vertical-align:middle; text-align:center">
+
+                                        <input class="itemID" type="hidden" name="id" data-id="@item.ID">
+                                        <button type="submit"
+                                                class="close"
+                                                aria-label="Close">
+                                            <span aria-hidden="true">
+                                                <i class="fa fa-close" style="font-size: 3rem;"></i>
+                                            </span>
+                                        </button>
                                     </td>
 
                                 </tr>
@@ -104,12 +102,98 @@
                     </table>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="card shadow-2-strong mb-5 mb-lg-0" style="border-radius: 16px">
+                    <div class="card-body p-4">
+                        <h3 class="mb-4 text-center">Thanh toán</h3>
+                        <form method="post" asp-controller="Cart" asp-action="Checkout">
+                            <!-- Payment Methods -->
+                            <div class="mb-4">
+                                <h5>Phương thức thanh toán</h5>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="PaymentMethod" value="CreditCard" id="creditCard" checked />
+                                    <label class="form-check-label" for="creditCard">
+                                        <i class="fab fa-cc-mastercard fa-lg me-2"></i>Thẻ tín dụng
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="PaymentMethod" value="DebitCard" id="debitCard" />
+                                    <label class="form-check-label" for="debitCard">
+                                        <i class="fab fa-cc-visa fa-lg me-2"></i>Thẻ ghi nợ
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="PaymentMethod" value="PayPal" id="paypal" />
+                                    <label class="form-check-label" for="paypal">
+                                        <i class="fab fa-cc-paypal fa-lg me-2"></i>PayPal
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Card Info -->
+                            <div class="mb-4">
+                                <h5>Thông tin thẻ</h5>
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <div class="form-outline">
+                                            <input type="text" class="form-control form-control-lg" name="CardName" placeholder="Tên trên thẻ" required />
+                                            <label class="form-label">Tên trên thẻ</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <div class="form-outline">
+                                            <input type="text" class="form-control form-control-lg" name="CardNumber" placeholder="Số thẻ" required pattern="\d{16}" />
+                                            <label class="form-label">Số thẻ</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <div class="form-outline">
+                                            <input type="text" class="form-control form-control-lg" name="Expiration" placeholder="MM/YY" required pattern="\d{2}/\d{2}" />
+                                            <label class="form-label">Hết hạn</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <div class="form-outline">
+                                            <input type="password" class="form-control form-control-lg" name="CVV" placeholder="CVV" required pattern="\d{3}" />
+                                            <label class="form-label">CVV</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Total -->
+                            <div>
+                                @{
+                                    double subtotal = Model.CartItems.Sum(item => item.Product.NewPrice * item.Quantity);
+                                    double shipping = 30000; // Giả định phí vận chuyển cố định
+                                    double total = subtotal + shipping;
+                                }
+                                <div class="d-flex justify-content-between fw-semibold mb-2">
+                                    <span>Tạm tính</span>
+                                    <span>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", subtotal)</span>
+                                </div>
+                                <div class="d-flex justify-content-between fw-semibold mb-2">
+                                    <span>Phí vận chuyển</span>
+                                    <span>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", shipping)</span>
+                                </div>
+                                <hr class="my-4" />
+                                <div class="d-flex justify-content-between fw-semibold mb-4">
+                                    <span>Tổng cộng (bao gồm thuế)</span>
+                                    <span>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", total)</span>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block btn-lg">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Thanh toán</span>
+                                        <span>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", total)</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    
 </section>
-
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="~/js/js.js" asp-append-version="true"></script>
 <script src="~/js/jquery.min.js" asp-append-version="true"></script>

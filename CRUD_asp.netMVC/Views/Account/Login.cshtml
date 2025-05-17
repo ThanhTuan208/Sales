@@ -1,14 +1,15 @@
 ﻿@using CRUD_asp.netMVC.Models.Account.ActionViewModel
 @model Login
 @{
+    var productID = ViewData["id"] as int?;
+    var controller = "Account";
+    var action = productID > 0 ? "LoginByProductID" : "Login";
+    var ProductID = productID > 0 ? productID.ToString() : string.Empty;
+
     Layout = "_AccountLayout";
 }
-<style>
-    body{
-        
-    }
-</style>
-<form method="post" asp-controller="Account" asp-action="Login" class="form1">
+
+<form method="post" asp-controller="@controller" asp-action="@action" asp-route-productID="@ProductID" class="form1">
     <div class="container my-5">
         <div class="row justify-content-center align-items-center"
              style="height: 81vh;">
