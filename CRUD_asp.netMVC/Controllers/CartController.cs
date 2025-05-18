@@ -253,7 +253,7 @@ namespace CRUD_asp.netMVC.Controllers
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return Json(new { success = false, message = "Vui lòng đăng nhập để cập nhật giỏ hàng" });
             }

@@ -28,6 +28,36 @@
 
 $(document).ready(function () {
 
+    function updateQtyAfterCheck() {
+
+        let total = 0;
+        let qty = 0;
+        let price = 0;
+        let ship = 0;
+        let totalVAT = 0;
+        let countItem = 0;
+
+        $('.checkbox.active').each(function () {
+            qty = parseInt($(this).closest('tr').find('.quantity-input').val());
+            price = parseFloat($(this).closest('tr').find('.price').text().replace(/[^0-9]+/g, ''));
+            total += price * qty;
+            countItem++;
+        });
+
+        if ($('.checkbox').hasClass('active')) {
+
+            ship = 50000;
+        }
+        let vat = total * 0.005;
+        totalVAT += total + ship + vat;
+
+        $('.countItem').text(`x ` + countItem);
+        $('.price-provisional').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total));
+        $('.price-ship').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(ship));
+        $('.price-totalVAT').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total) + ' * 0.5%');
+        $('.price-complete').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalVAT));
+    }
+
     // Tang giam so luong trong gio hang (tranh bi luu lich su trang web khong nhu su dung method post)
     $('.quantity-btn').on('click', function () {
         const itemID = $(this).data('id');
@@ -59,15 +89,17 @@ $(document).ready(function () {
                     let price = parseFloat($btn.closest('tr').find('.price').text().replace(/[^0-9]+/g, ''));
                     var totalPrice = price * NewQty;
                     $btn.closest('tr').find('.priceTotal').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice));
+                    /*$('.payment').find('.priceTotal').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice));*/
+                    updateQtyAfterCheck();
                 }
                 else {
                     alert('Cập nhật số lượng không thành công.' + response.message);
                 }
             },
-            error: function (xhr) {
+            error: function (response) {
                 alert('Đã xảy ra lỗi trong quá trình cập nhật số lượng.');
             }
-        })
+        });
     });
 
     /*Tăng giảm số lượng (Chi ap dung duoc 1 tang giam so luong)*/
@@ -90,10 +122,11 @@ $(document).ready(function () {
 
         let colorBtn = null;
         let sizeBtn = null;
-        if ($('.color-option').hasClass('color-active') || $('.color-option').hasClass('size-active')) {
+        if ($('.color-option').hasClass('color-active') || $('.size-option').hasClass('size-active')) {
 
-            colorBtn = btn.closest('.addCart').find('#selectColor').val();
-            sizeBtn = btn.closest('.addCart').find('#selectSize').val();
+            // colorBtn = $('#selectColor').val(); Cach 1 (line 242 de lay gia tri #selectColor)
+            sizeBtn = $('#selectSize').val();
+            colorBtn = $('.color-option.color-active').data('color'); // Cach 2
         }
 
         let optionMethod = btn.data('method');
@@ -133,8 +166,9 @@ $(document).ready(function () {
         }
     });
 
+    // Xoa san pham trong gio hang
     $('.close').on('click', function () {
-        let itemID = $('.itemID').data('id');
+        const itemID = $(this).data('id') ?? 0;
 
         $.ajax({
             url: '/Cart/DeleteToCart',
@@ -160,6 +194,26 @@ $(document).ready(function () {
                 alert('Sản phẩm xóa bị lỗi !!!');
             }
         });
+    });
+
+    $('.checkbox').on('click', function () {
+
+        if ($(this).hasClass('active')) {
+
+            $(this).removeClass('active');
+        }
+        else {
+            $(this).addClass('active');
+        }
+
+        updateQtyAfterCheck();
+    });
+
+    // Tinh phan thanh toan san pham da chon (Cart/index)
+    $('#buy').on('click', function () {
+        const btn = $(this);
+        let itemID = $('.productID').data('id');
+
     });
 
     /*chon active cho size va color*/

@@ -16,11 +16,13 @@ namespace CRUD_asp.netMVC.Controllers
 {
     public class ProductController : Controller
     {
-        public readonly AppDBContext context;
+        private readonly AppDBContext context;
+        //private readonly IDbContextFactory<AppDBContext> dbContextFactory;
 
         public ProductController(AppDBContext _context)
         {
             context = _context;
+            //dbContextFactory = _dbContextFactory;
         }
 
         /// Ham chuyen doi co dau sang ko dau, chu hoa thanh chu thuong NormalizationFormD, FormC
@@ -324,16 +326,18 @@ namespace CRUD_asp.netMVC.Controllers
         /// <returns></returns>
         public async Task<getPaginationByProductViewModel> CreatePaginationGeneral(IQueryable<Products> Iqueryable, int pageCurrent, int pageCount)
         {
-            var brands = context.Brand.AsNoTracking();
-            var cates = context.Category.AsNoTracking();
-            var carts = context.Carts.AsNoTracking().ToListAsync();
+
+            var product = await PaginatedList<Products>.CreatePagAsync(Iqueryable, pageCurrent, pageCount);
+            var brands = await PaginatedList<Brand>.CreatePagAsync(context.Brand.AsNoTracking(), 1, context.Brand.AsNoTracking().Count());
+            var cates = await PaginatedList<Category>.CreatePagAsync(context.Category.AsNoTracking(), 1, context.Category.AsNoTracking().Count());
+            var carts = await context.Carts.AsNoTracking().ToListAsync();
 
             return new getPaginationByProductViewModel
             {
-                Products = await PaginatedList<Products>.CreatePagAsync(Iqueryable, pageCurrent, pageCount),
-                Brands = await PaginatedList<Brand>.CreatePagAsync(brands, 1, brands.Count()),
-                Categories = await PaginatedList<Category>.CreatePagAsync(cates, 1, cates.Count()),
-                Carts = await carts
+                Products = product,
+                Brands = brands,
+                Categories = cates,
+                Carts = carts
             };
         }
     }

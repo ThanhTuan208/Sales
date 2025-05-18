@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
+
 namespace CRUD_asp.netMVC
 {
     public class Program
@@ -14,15 +15,19 @@ namespace CRUD_asp.netMVC
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllersWithViews();
-            builder.Services.AddSingleton<ProductCreateViewModel>();
-            builder.Services.AddSingleton<ProductEditViewModel>();
+            //builder.Services.AddSingleton<ProductCreateViewModel>();
+            //builder.Services.AddSingleton<ProductEditViewModel>();
 
             builder.Services.AddRazorPages();
 
-            // Dky context 
+            // Dky AppDBContext voi pham vi scope
             builder.Services.AddDbContext<AppDBContext>(option =>
                 option.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext")) // appsettings.json
             );
+
+            // Dky AddDbContextFactory de tao AppDBContext theo nhu cau
+            //builder.Services.AddDbContextFactory<AppDBContext>(option =>
+            //    option.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext")));
 
             // Them dich vu Session
             builder.Services.AddSession(options =>
@@ -70,7 +75,6 @@ namespace CRUD_asp.netMVC
             app.UseRouting();
             app.MapRazorPages();
 
-            app.UseAuthorization();
             app.UseAuthorization();
 
             app.MapControllerRoute(
