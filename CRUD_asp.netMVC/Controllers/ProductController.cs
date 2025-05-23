@@ -10,7 +10,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using NuGet.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -326,11 +328,13 @@ namespace CRUD_asp.netMVC.Controllers
         /// <returns></returns>
         public async Task<getPaginationByProductViewModel> CreatePaginationGeneral(IQueryable<Products> Iqueryable, int pageCurrent, int pageCount)
         {
-
             var product = await PaginatedList<Products>.CreatePagAsync(Iqueryable, pageCurrent, pageCount);
             var brands = await PaginatedList<Brand>.CreatePagAsync(context.Brand.AsNoTracking(), 1, context.Brand.AsNoTracking().Count());
             var cates = await PaginatedList<Category>.CreatePagAsync(context.Category.AsNoTracking(), 1, context.Category.AsNoTracking().Count());
-            var carts = await context.Carts.AsNoTracking().ToListAsync();
+
+            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
+            var carts = await context.Carts.Where(p => p.UserID == userID).ToListAsync();
+            ViewData["cart"] = carts.Count;
 
             return new getPaginationByProductViewModel
             {

@@ -730,10 +730,16 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.OrderDetail", b =>
                 {
-                    b.Property<string>("ID")
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<double?>("Price")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.Property<int>("ProductID")
@@ -742,23 +748,22 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("orderID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(10)");
-
                     b.HasKey("ID");
 
-                    b.HasIndex("ProductID");
+                    b.HasIndex("OrderID");
 
-                    b.HasIndex("orderID");
+                    b.HasIndex("ProductID");
 
                     b.ToTable("OrderDetail");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Orders", b =>
                 {
-                    b.Property<string>("ID")
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -766,11 +771,11 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("float");
+
                     b.Property<int>("UserID")
                         .HasColumnType("int");
-
-                    b.Property<double>("totalPrice")
-                        .HasColumnType("float");
 
                     b.HasKey("ID");
 
@@ -781,17 +786,19 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Payment", b =>
                 {
-                    b.Property<string>("ID")
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("OrderID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(10)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("OrderID")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<double?>("paidAmount")
+                    b.Property<double>("paidAmount")
                         .HasColumnType("float");
 
                     b.Property<string>("paymentMethod")
@@ -7112,15 +7119,15 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.OrderDetail", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Product.Products", "Product")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("ProductID")
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Orders", "Orders")
+                        .WithMany("OrderDetail")
+                        .HasForeignKey("OrderID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CRUD_asp.netMVC.Models.Product.Orders", "Orders")
-                        .WithMany("OrderDetail")
-                        .HasForeignKey("orderID")
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Products", "Product")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

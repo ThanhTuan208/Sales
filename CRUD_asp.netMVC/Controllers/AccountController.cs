@@ -11,8 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.Json;
 using NuGet.Protocol.Plugins;
 using System.Collections.Immutable;
 using System.Diagnostics.Eventing.Reader;
+using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -39,105 +42,144 @@ namespace CRUD_asp.netMVC.Controllers
         public IActionResult Register() => View();
 
 
+        public string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            var stringNormal = text.Normalize(NormalizationForm.FormD);
+            StringBuilder builder = new StringBuilder();
+
+            foreach (char c in stringNormal)
+            {
+                var unicodeCate = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCate != UnicodeCategory.NonSpacingMark)
+                {
+                    builder.Append(c);
+                }
+            }
+
+            return builder.ToString().Normalize(NormalizationForm.FormC).Replace(" ", "");
+        }
+
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(Register register)
         {
-            if (!ModelState.IsValid) return View(register);
-
-            var user = new Users
+            try
             {
-                UserName = register.UserName,
-                Email = register.Email,
-                PhoneNumber = register.Phone,
-                StartDate = register.StartDate,
-                PhoneNumberConfirmed = false, // Xac thuc sdt
-                EmailConfirmed = true, // Xac thuc email
-                SecurityStamp = Guid.NewGuid().ToString("D"),
-            };
+                if (!ModelState.IsValid) return View(register);
 
-            string role = "Customer";
+                var existEmail = await _userManager.FindByEmailAsync(register.Email.Trim());
 
-            if (register.Email.Contains("nhanvien", StringComparison.OrdinalIgnoreCase))
-            {
-                role = "Staff";
-            }
-            else if (register.Email.Contains("nguyenthanhtuankrp1", StringComparison.OrdinalIgnoreCase))
-            {
-                role = "Manager";
-            }
-
-            if (!await _roleManager.RoleExistsAsync(role))
-            {
-                await _roleManager.CreateAsync(new Roles { Name = role });
-            }
-
-            //var UserID = await _userManager.FindByNameAsync(role);
-            var UserID = await _context.Roles.FirstOrDefaultAsync(p => p.Name == role);
-            user.RoleID = UserID?.Id;
-
-            var account = await _userManager.CreateAsync(user, register.Password);
-
-            await _userManager.AddToRoleAsync(user, role);
-
-            if (account.Succeeded)
-            {
-                switch (role)
+                if (existEmail != null)
                 {
-                    case "Manager":
-                        _context.Manager.Add(new Manager
-                        {
-                            UserID = user.Id,
-                            UserName = user.UserName,
-                            Email = user.Email,
-                            StartDate = user.StartDate,
-
-                            FirstName = register.FirstName,
-                            LastName = register.LastName,
-                            PhoneNumber = register.Phone
-
-                        });
-                        break;
-
-                    case "Staff":
-                        _context.Staff.Add(new Staff
-                        {
-                            UserID = user.Id,
-                            UserName = user.UserName,
-                            Email = user.Email,
-                            StartDate = user.StartDate,
-
-                            FirstName = register.FirstName,
-                            LastName = register.LastName,
-                            PhoneNumber = register.Phone,
-
-                        });
-                        break;
-
-                    case "Customer":
-                        _context.Customer.Add(new Customer
-                        {
-                            UserID = user.Id,
-                            UserName = user.UserName,
-                            Email = user.Email,
-                            JoinDate = user.StartDate,
-
-                            FirstName = register.FirstName,
-                            LastName = register.LastName,
-                            PhoneNumber = register.Phone
-                        });
-                        break;
-
+                    ModelState.AddModelError("Email", "Email đã tồn tại");
+                    return View(register);
                 }
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Account", "Login");
-            }
 
-            foreach (var error in account.Errors)
+                var user = new Users
+                {
+                    UserName = RemoveDiacritics(register.UserName),
+                    Email = register.Email,
+                    PhoneNumber = register.Phone,
+                    StartDate = register.StartDate,
+                    PhoneNumberConfirmed = true, // Xac thuc sdt
+                    EmailConfirmed = true, // Xac thuc email
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                };
+
+                string role = "Customer";
+
+                if (register.Email.Contains("nhanvien", StringComparison.OrdinalIgnoreCase))
+                {
+                    role = "Staff";
+                }
+                else if (register.Email.Contains("nguyenthanhtuankrp1", StringComparison.OrdinalIgnoreCase))
+                {
+                    role = "Manager";
+                }
+
+                if (!await _roleManager.RoleExistsAsync(role))
+                {
+                    await _roleManager.CreateAsync(new Roles { Name = role });
+                }
+
+                //var UserID = await _userManager.FindByNameAsync(role);
+                var RoleID = await _context.Roles.FirstOrDefaultAsync(p => p.Name == role);
+                user.RoleID = RoleID.Id;
+
+                var account = await _userManager.CreateAsync(user, register.Password);
+
+                await _userManager.AddToRoleAsync(user, role);
+
+                if (account.Succeeded)
+                {
+                    switch (role)
+                    {
+                        case "Manager":
+                            _context.Manager.Add(new Manager
+                            {
+                                UserID = user.Id,
+                                UserName = user.UserName,
+                                Email = user.Email,
+                                StartDate = user.StartDate,
+
+                                FirstName = register.FirstName,
+                                LastName = register.LastName,
+                                PhoneNumber = register.Phone
+
+                            });
+                            break;
+
+                        case "Staff":
+                            _context.Staff.Add(new Staff
+                            {
+                                UserID = user.Id,
+                                UserName = user.UserName,
+                                Email = user.Email,
+                                StartDate = user.StartDate,
+
+                                FirstName = register.FirstName,
+                                LastName = register.LastName,
+                                PhoneNumber = register.Phone,
+
+                            });
+                            break;
+
+                        case "Customer":
+                            _context.Customer.Add(new Customer
+                            {
+                                UserID = user.Id,
+                                UserName = user.UserName,
+                                Email = user.Email,
+                                JoinDate = user.StartDate,
+
+                                FirstName = register.FirstName,
+                                LastName = register.LastName,
+                                PhoneNumber = register.Phone
+                            });
+                            break;
+
+                    }
+
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Login", "Account");
+                }
+
+                foreach (var error in account.Errors)
+                {
+                    Console.WriteLine(error.Code, error.Description);
+                    ModelState.AddModelError(error.Code, error.Description);
+                }
+
+                return View(register);
+            }
+            catch (Exception)
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                ModelState.AddModelError(string.Empty, "Lỗi đăng kí tài khoản");
+                return View(register);
             }
 
-            return View(register);
         }
 
         public IActionResult Login() => View();

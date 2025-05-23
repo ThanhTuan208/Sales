@@ -76,6 +76,7 @@ namespace CRUD_asp.netMVC
             app.MapRazorPages();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.MapControllerRoute(
                 name: "default",

@@ -9,11 +9,11 @@ namespace CRUD_asp.netMVC.Models.Product
 {
     public class Orders
     {
-        [Key, Column(TypeName = "nvarchar(10)")]
-        public string? ID { get; set; }
+        [Key]
+        public int ID { get; set; }
 
         [Required]
-        public int? UserID { get; set; }
+        public int UserID { get; set; }
         public Users? Users { get; set; }
 
         public DateTime OrderDate { get; set; }
@@ -21,7 +21,7 @@ namespace CRUD_asp.netMVC.Models.Product
         public string? Status { get; set; } = "Pending";
 
         [DataType(DataType.Currency)]
-        public double totalPrice { get; set; }
+        public double TotalPrice { get; set; }
 
         public List<OrderDetail>? OrderDetail { get; set; }
         public Payment? Payment { get; set; }

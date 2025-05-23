@@ -18,26 +18,25 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/styleMe.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/CRUD_asp.netMVC.styles.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/css/styleMe.css" asp-append-version="true" /> *@
+    @* <link rel="stylesheet" href="~/CRUD_asp.netMVC.styles.css" asp-append-version="true" /> *@
 
     <!-- Animate.css -->
     <link rel="stylesheet" href="~/css/animate.css" asp-append-version="true">
     <!-- Icomoon Icon Fonts-->
     <link rel="stylesheet" href="~/css/icomoon.css" asp-append-version="true">
     <!-- Bootstrap  -->
-    <link rel="stylesheet" href="~/css/bootstrap.css" asp-append-version="true">
 
+    <link rel="stylesheet" href="~/css/bootstrap.css" asp-append-version="true">
     <!-- Flexslider  -->
     <link rel="stylesheet" href="~/css/flexslider.css" asp-append-version="true">
 
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
     <!-- Owl Carousel  -->
     <link rel="stylesheet" href="~/css/owl.carousel.min.css" asp-append-version="true">
     <link rel="stylesheet" href="~/css/owl.theme.default.min.css" asp-append-version="true">
 
     <!-- Theme style  -->
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
-
     <!-- Modernizr JS -->
     <script src="~/js/modernizr-2.6.2.min.js" asp-append-version="true"></script>
 
@@ -99,9 +98,17 @@
                                 </form>
                             </li>
 
+                            @{
+                                var countCart = ViewData["cart"] as int?;
+                                if (countCart == null)
+                                {
+                                    countCart = 0;
+                                }
+                            }
+
                             <li class="has-dropdown nav-item">
                                 <a class="cart">
-                                    <span><small>@Model.Carts.Count</small><i class="icon-shopping-cart fs-4"></i></span>
+                                    <span><small>@countCart</small><i class="icon-shopping-cart fs-4"></i></span>
                                 </a>
 
                                 <ul class="dropdown" style="width: 150px">
@@ -119,7 +126,7 @@
                                 {
                                     <form id="logoutForm" asp-controller="Account" asp-action="Logout" method="post" style="display: none;">
                                         @* @Html.AntiForgeryToken(): Khi dung attribute ValidateAntiForgeryToken thi phai su dung hepler html nay nhung khi check devtool kiem tra thi da co phat sinh doan ma nen ko can them  *@ 
-                                    </form>
+                                                    </form>
 
                                     <a class="cart">
                                         <span><i class="icon-user fs-4"></i><small>&check;</small></span>
@@ -152,50 +159,42 @@
     </div>
 
 
-    <main role="main" style="margin-top: 70px;">
+    <main role="main" style="margin-top: ;">
         @RenderBody()
     </main>
 
 
     <footer id="fh5co-footer" role="contentinfo" class="">
         <div class="container">
-            <div class="row row-pb-md">
-                <div class="col-md-4 fh5co-widget">
+            <div class="row row-pb-md text-center">
+                <div class="col-md-4 fh5co-widget ">
                     <h3>Sứ mệnh của chúng tôi.</h3>
                     <p>
-                        Mang đến các sản phẩm công nghệ mới nhất với giá cả hợp lý, cùng với dịch vụ hỗ trợ tận tâm, nhằm giúp
-                        khách hàng trải nghiệm công nghệ một cách dễ dàng và tiện lợi nhất.
+                        Mang đến phong cách thời trang mới mẻ với giá cả hợp lý, cùng với dịch vụ hỗ trợ tận tâm, giúp
+                        khách hàng trải nghiệm sản phẩm dễ dàng và tiện nghi.
                     </p>
 
                 </div>
 
-                <div class="col-md-2 col-sm-4 col-xs-6 col-md-push-1">
-                    <ul class="fh5co-footer-links">
-                        <li class="nav-item-f"><a asp-action="About" asp-controller="Home">About</a></li>
-                        <li class="nav-item-f"><a href="#">Help</a></li>
-                        <li class="nav-item-f"><a asp-action="Contact" asp-controller="Home">Contact</a></li>
-                        <li class="nav-item-f"><a href="#">Terms</a></li>
-                        <li class="nav-item-f"><a href="#">Meetups</a></li>
-                    </ul>
+                <div class="col-md-4 fh5co-widget ">
+                    <h3>Thông tin liên hệ.</h3>
+                    <div class="infomation">
+                        <div class="d-block"><span class="fw-bold">SDT</span>: <a href="tel:0358986823" class="text-secondary"> 0358986823 </a></div>
+                        <div class="d-block"><span class="fw-bold">Email</span>:<a href="mailto:nguyenthanhtuankrp1@gmail.com" class="text-secondary"> nguyenthanhtuankrp1@gmail.com</a> </div>
+                        <div class="d-block"><span class="fw-bold">Address</span>: Số 219/4 Lê Văn Chí,P. Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh</div>
+                        
+                    </div>
                 </div>
 
-                <div class="col-md-3 col-sm-4 col-xs-6 col-md-push-1">
-                    <ul class="fh5co-footer-links">
-                        @foreach (var item in Model.Categories)
-                        {
-                            <li><a asp-controller="Product" asp-action="getProductByCate" asp-route-cateID="@item.ID">@item.Name</a></li>
-                        }
-                    </ul>
+                <div class="col-md-4 fh5co-widget ">
+                    <h3>Sứ mệnh của chúng tôi.</h3>
+                    <p>
+                        Mang đến phong cách thời trang mới mẻ với giá cả hợp lý, cùng với dịch vụ hỗ trợ tận tâm, giúp
+                        khách hàng trải nghiệm sản phẩm dễ dàng và tiện nghi.
+                    </p>
+
                 </div>
 
-                <div class="col-md-3 col-sm-4 col-xs-6 col-md-push-1">
-                    <ul class="fh5co-footer-links">
-                        @foreach (var item in Model.Brands)
-                        {
-                            <li><a asp-controller="Product" asp-action="getProductByBrand" asp-route-brandID="@item.ID">@item.Name</a></li>
-                        }
-                    </ul>
-                </div>
 
             </div>
 
@@ -203,8 +202,7 @@
 
                 <div class="col-md-12 text-center">
                     <p>
-                        <small class="block">&copy; 2018 Free HTML5. All Rights Reserved.</small>
-                        <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FreeHTML5.co</a> Demo Images: <a href="http://blog.gessato.com/" target="_blank">Gessato</a> &amp; <a href="http://unsplash.co/" target="_blank">Unsplash</a></small>
+                        <span class="fw-bold">Created by </span> <a href="#"> Nguyễn Thành Tuấn </a>
                     </p>
                     <p>
                         <div class="text-center d-inline-block">
@@ -215,23 +213,26 @@
                             </a>
                         </div>
                         <div class="text-center d-inline-block">
-                            <a class="fh5co_display_table">
+                            <a href="https://www.facebook.com/thanh.tuan.736009"
+                               class="fh5co_display_table">
                                 <div class="fh5co_verticle_middle">
                                     <i class="icon-facebook"></i>
                                 </div>
                             </a>
                         </div>
                         <div class="text-center d-inline-block">
-                            <a href="https://twitter.com/fh5co"
+                            <a href="https://www.tiktok.com/@@thanhtuan20.8"
                                target="_blank"
                                class="fh5co_display_table">
                                 <div class="fh5co_verticle_middle">
-                                    <i class="icon-linkedin"></i>
+                                    <i class="icon-tiktok">
+                                        <img src="/images/icon/./tik-tok.png" alt="" width="18" href="18" />
+                                    </i>
                                 </div>
                             </a>
                         </div>
                         <div class="text-center d-inline-block">
-                            <a href="https://fb.com/fh5co"
+                            <a href="https://www.instagram.com/thanhtuan20805"
                                target="_blank"
                                class="fh5co_display_table">
                                 <div class="fh5co_verticle_middle">
@@ -239,11 +240,9 @@
                                 </div>
                             </a>
                         </div>
-
                     </p>
                 </div>
             </div>
-
         </div>
     </footer>
 

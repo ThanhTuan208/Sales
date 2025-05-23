@@ -5,6 +5,11 @@ using CRUD_asp.netMVC.Data;
 using Microsoft.EntityFrameworkCore;
 using CRUD_asp.netMVC.Models.ViewModels.Home;
 using CRUD_asp.netMVC.Models.Product;
+using System.CodeDom;
+using CRUD_asp.netMVC.Models.Cart;
+using System.Text.Json;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace CRUD_asp.netMVC.Controllers;
 
@@ -31,9 +36,11 @@ public class HomeController : Controller
             .Where(p => p.FeaturedID == 1)
             .Take(6).OrderByDescending(p => p.ID).ToListAsync();
 
+        var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
+
         var brand = await context.Brand.AsNoTracking().ToListAsync();
         var categories = await context.Category.AsNoTracking().ToListAsync();
-        var carts = await context.Carts.AsNoTracking().ToListAsync();
+        var carts = await context.Carts.Where(p => p.UserID == userID).ToListAsync();
 
         HomeViewModel ViewModel = new HomeViewModel()
         {
@@ -48,6 +55,7 @@ public class HomeController : Controller
             return NotFound();
         }
 
+        ViewData["cart"] = carts.Count;
         return View(ViewModel);
     }
 

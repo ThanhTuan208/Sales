@@ -28,36 +28,6 @@
 
 $(document).ready(function () {
 
-    function updateQtyAfterCheck() {
-
-        let total = 0;
-        let qty = 0;
-        let price = 0;
-        let ship = 0;
-        let totalVAT = 0;
-        let countItem = 0;
-
-        $('.checkbox.active').each(function () {
-            qty = parseInt($(this).closest('tr').find('.quantity-input').val());
-            price = parseFloat($(this).closest('tr').find('.price').text().replace(/[^0-9]+/g, ''));
-            total += price * qty;
-            countItem++;
-        });
-
-        if ($('.checkbox').hasClass('active')) {
-
-            ship = 50000;
-        }
-        let vat = total * 0.005;
-        totalVAT += total + ship + vat;
-
-        $('.countItem').text(`x ` + countItem);
-        $('.price-provisional').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total));
-        $('.price-ship').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(ship));
-        $('.price-totalVAT').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total) + ' * 0.5%');
-        $('.price-complete').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalVAT));
-    }
-
     // Tang giam so luong trong gio hang (tranh bi luu lich su trang web khong nhu su dung method post)
     $('.quantity-btn').on('click', function () {
         const itemID = $(this).data('id');
@@ -124,9 +94,11 @@ $(document).ready(function () {
         let sizeBtn = null;
         if ($('.color-option').hasClass('color-active') || $('.size-option').hasClass('size-active')) {
 
-            // colorBtn = $('#selectColor').val(); Cach 1 (line 242 de lay gia tri #selectColor)
-            sizeBtn = $('#selectSize').val();
-            colorBtn = $('.color-option.color-active').data('color'); // Cach 2
+            //(line 242 de lay gia tri #selectColor)
+            // colorBtn = $('#selectColor').val(); Cach 1 -> gia tri se tu luu vao colorBtn ngay ca khi client click gia tri co active va tat di khi ko co active nhung van lay gia tri 
+
+            sizeBtn = $('.size-option.size-active').data('size');
+            colorBtn = $('.color-option.color-active').data('color');
         }
 
         let optionMethod = btn.data('method');
@@ -210,9 +182,10 @@ $(document).ready(function () {
     });
 
     // Tinh phan thanh toan san pham da chon (Cart/index)
-    $('#buy').on('click', function () {
+    $('.buy').on('click', function () {
         const btn = $(this);
-        let itemID = $('.productID').data('id');
+        let priceTotal = parseFloat(btn.closest('.payment').find('.price-complete').text().replace(/[^0-9]/g, ''));
+
 
     });
 
@@ -280,3 +253,34 @@ function selectSize(el) {
     $('#selectSize').val(size);
 }
 /*product-detail*/
+
+// cap nhat so luong va gia san pham sau khi check va tang giam so luong cho gia sp
+function updateQtyAfterCheck() {
+
+    let total = 0;
+    let qty = 0;
+    let price = 0;
+    let ship = 0;
+    let totalVAT = 0;
+    let countItem = 0;
+
+    $('.checkbox.active').each(function () {
+        qty = parseInt($(this).closest('tr').find('.quantity-input').val());
+        price = parseFloat($(this).closest('tr').find('.price').text().replace(/[^0-9]+/g, ''));
+        total += price * qty;
+        countItem++;
+    });
+
+    if ($('.checkbox').hasClass('active')) {
+
+        ship = 50000;
+    }
+    let vat = total * 0.005;
+    totalVAT += total + ship + vat;
+
+    $('.countItem').text(`x ` + countItem);
+    $('.price-provisional').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total));
+    $('.price-ship').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(ship));
+    $('.price-totalVAT').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total) + ' * 0.5%');
+    $('.price-complete').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalVAT));
+}
