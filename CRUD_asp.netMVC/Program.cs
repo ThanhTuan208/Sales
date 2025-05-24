@@ -1,5 +1,6 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Account;
+using CRUD_asp.netMVC.Models.Service;
 using CRUD_asp.netMVC.Models.ViewModels.Product;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,19 +16,12 @@ namespace CRUD_asp.netMVC
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllersWithViews();
-            //builder.Services.AddSingleton<ProductCreateViewModel>();
-            //builder.Services.AddSingleton<ProductEditViewModel>();
-
             builder.Services.AddRazorPages();
 
-            // Dky AppDBContext voi pham vi scope
+            // Dky AppDBContext 
             builder.Services.AddDbContext<AppDBContext>(option =>
                 option.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext")) // appsettings.json
             );
-
-            // Dky AddDbContextFactory de tao AppDBContext theo nhu cau
-            //builder.Services.AddDbContextFactory<AppDBContext>(option =>
-            //    option.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext")));
 
             // Them dich vu Session
             builder.Services.AddSession(options =>
@@ -39,6 +33,7 @@ namespace CRUD_asp.netMVC
                 options.Cookie.IsEssential = true; // Bat buoc phai co session (neu false van lay cookie can thiet nhu luu tru sessionID de duy tri dang nhap)
             });
 
+            // Dang ky identity
             builder.Services.AddIdentity<Users, Roles>(options =>
             {
                 // Cấu hình mật khẩu
@@ -50,14 +45,16 @@ namespace CRUD_asp.netMVC
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders(); // Để dùng chức năng reset password, confirm email, v.v.
 
-
-            // Cấu hình Cookie
+            // Dang ky Cookie
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
                 options.AccessDeniedPath = "/Account/AccessDenied";
             });
+
+            // Dang ky dich vu gmail
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
 
             var app = builder.Build();
 

@@ -1,4 +1,5 @@
 ﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Models.ViewModels.Home;
@@ -301,13 +302,16 @@ namespace CRUD_asp.netMVC.Controllers
 
             var cateList = await context.Category.AsNoTracking().ToListAsync();
 
-            var cartList = await context.Carts.AsNoTracking().ToListAsync();
+            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
+            var carts = await context.Carts.Where(p => p.UserID == userID).ToListAsync();
+            ViewData["cart"] = carts.Count;
+
             GeneralProduct_ListCateBrand ViewModel = new()
             {
                 Product = product,
                 Brands = brandList,
                 Categories = cateList,
-                Carts = cartList
+                Carts = carts
             };
 
             Console.WriteLine(id);

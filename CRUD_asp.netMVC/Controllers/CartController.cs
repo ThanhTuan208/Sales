@@ -133,6 +133,7 @@ namespace CRUD_asp.netMVC.Controllers
                                 Quantity = qty,
                                 SelectColor = color,
                                 SelectSize = size,
+                                created_at = DateTime.Now
                             };
 
                             context.Carts.Add(cartItem);

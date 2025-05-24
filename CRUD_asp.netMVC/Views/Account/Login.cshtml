@@ -18,8 +18,7 @@
                 <div class="form-floating my-3">
                     <input asp-for="Email"
                            class="form-control"
-                           placeholder="Enter Email" 
-                           required/>
+                           placeholder="Enter Email" />
                     <label for="" class="form-label ms-1">Email</label>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
@@ -27,12 +26,11 @@
                 <div class="form-floating my-3">
                     <input asp-for="Password"
                            class="form-control"
-                           placeholder="Enter Password" 
-                           required />
+                           placeholder="Enter Password"  />
                     <label for="" class="form-label ms-1">Mật khẩu</label>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
-
+                <span asp-validation-for="InfoGeneral" class="text-danger"></span>
                 <div class="d-flex justify-content-between my-2 mb-3">
                     <div class="form-check ">
                         <input asp-for="RememberMe" class="form-check-input" />

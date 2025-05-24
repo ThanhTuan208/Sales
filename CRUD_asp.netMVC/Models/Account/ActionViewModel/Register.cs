@@ -24,14 +24,14 @@ namespace CRUD_asp.netMVC.Models.Account.ActionViewModel
         [Phone(ErrorMessage = "Số điện thoại không đúng định dạng")]
         public string Phone { get; set; }
 
-        [Required(ErrorMessage = "Cần nhập  mật khẩu")]
+        [Required(ErrorMessage = "Cần nhập mật khẩu")]
         [DataType(DataType.Password)]
         [StringLength(20, MinimumLength = 8, ErrorMessage = "Mật khẩu phải từ {1} đến {2} ký tự")]
         [RegularExpression(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[~!@#$%^&*()_+=?])[A-Za-z0-9~!@#$%^&*()_+=?]{8,20}$",
             ErrorMessage = "Mật khẩu phải từ 8-20 ký tự, bao gồm ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (~!@#$%^&*()_+=?).")]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Cần nhập So sánh mật khẩu"), Compare("Password", ErrorMessage = "Mật khẩu không giống nhau !!!")]
+        [Required(ErrorMessage = "Nhập lại mật khẩu của bạn"), Compare("Password", ErrorMessage = "Mật khẩu không giống nhau !!!")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
