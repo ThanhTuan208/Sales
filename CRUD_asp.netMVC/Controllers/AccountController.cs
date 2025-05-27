@@ -23,6 +23,7 @@ using Register = CRUD_asp.netMVC.Models.Account.ActionViewModel.Register;
 using Login = CRUD_asp.netMVC.Models.Account.ActionViewModel.Login;
 using CRUD_asp.netMVC.Models.Service;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using NuGet.Protocol.Core.Types;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -155,6 +156,7 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
+        [HttpGet]
         public IActionResult Login() => View();
 
         /// <summary>
@@ -165,30 +167,66 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(Login login)
         {
-            if (!ModelState.IsValid) return View(login);
-
-            var user = await _userManager.FindByEmailAsync(login.Email.Trim());
-
-            if (user == null || !await _userManager.CheckPasswordAsync(user, login.Password))
+            try
             {
-                ModelState.AddModelError("Email", "Email không tồn tại !!!");
-                return View(login);
-            }
+                //var error = new List<string>();
 
-            if (!user.EmailConfirmed)
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError("InfoGeneral", "Cần nhập đủ email và mật khẩu của bạn!!!");
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Nhập email và mật khẩu của bạn !!!",
+                        errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList()
+                        // tra ve loi moi khi submit neu co loi
+                    });
+                }
+
+                var user = await _userManager.FindByEmailAsync(login.Email.Trim());
+
+                if (user == null || !await _userManager.CheckPasswordAsync(user, login.Password))
+                {
+                    ModelState.AddModelError("InfoGeneral", "Email hoặc mật khẩu không đúng !!!");
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Email hoặc mật khẩu không đúng !!!",
+                        errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList()
+                        // tra ve loi moi khi submit neu co loi
+                    });
+                }
+
+                if (!user.EmailConfirmed)
+                {
+                    ModelState.AddModelError("Email", "Email chưa được xác thực !!!");
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Email chưa được xác thực !!!",
+                        errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList()
+                    });
+                }
+
+                var account = await _signInManager.PasswordSignInAsync(user, login.Password, login.RememberMe, lockoutOnFailure: false);
+                if (account.Succeeded)
+                {
+                    return Json(new { success = true, message = "Đăng nhập thành công." });
+                }
+
+
+                ModelState.AddModelError("InfoGeneral", "Đã xảy ra lỗi khi đăng nhập !!!");
+                return Json(new
+                {
+                    success = false,
+                    message = "Đã xảy ra lỗi khi đăng nhập !!!",
+                    errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList()
+                });
+            }
+            catch (Exception ex)
             {
-                ModelState.AddModelError("Email", "Email chưa được xác thực !!!");
-                return View(login);
+                return Json(new { responseText = "Lỗi đăng nhập tài khoản: " + ex.Message });
             }
-
-            var account = await _signInManager.PasswordSignInAsync(user, login.Password, login.RememberMe, lockoutOnFailure: false);
-            if (account.Succeeded)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            ModelState.AddModelError("InfoGeneral", "Đã xảy ra lỗi khi đăng nhập !!!");
-            return View(login);
         }
 
         [HttpGet] // Duoc dung khi them san pham vao gio hang nhung chua dang nhap
@@ -309,7 +347,6 @@ namespace CRUD_asp.netMVC.Controllers
                             FirstName = user.FirstName,
                             LastName = user.LastName,
                             PhoneNumber = user.PhoneNumber
-
                         });
                         break;
 

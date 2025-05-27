@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
     $('.owl-clients').owlCarousel({
         loop: true, // Vòng lặp carousel
         margin: 10, // Khoảng cách giữa các phần tử
@@ -23,6 +24,65 @@
                 items: 5 // Màn hình rất lớn (1200px trở lên): 5 phần tử
             }
         }
+    });
+});
+
+// truyen du lieu dang nhap dang ky qua pt post
+$(document).ready(function () {
+
+    $('.bn5').on('click', function () {
+        const btn = $(this);
+        const email = $('.email').val();
+        const pass = $('.pass').val();
+        const check = $('.form-check-input').is(':checked');
+        const productID = $('.productID').data('id') || 0;
+
+        //if (!email || !pass || email.trim() === '' || pass.trim() === '') {
+        //    alert('Vui lòng nhập đầy đủ thông tin.');
+        //    return;
+        //}
+
+        let controller = "Account";
+        let ProductID = parseInt(productID) > 0 ? productID : '';
+        let action = ProductID > 0 ? "LoginByProductID" : "Login";
+        const url = productID > 0 ? `/${controller}/${action}/${productID}` : `/${controller}/${action}`;
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                Email: email,
+                Password: pass,
+                RememberMe: check,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+            success: function (response) {
+                if (response.success) {
+                    console.log("Đăng nhập thành công: " + response.message);
+                    window.location.href = '/Home/Index';
+                } else {
+                    console.log("Đăng nhập thất bại: " + response.message);
+
+                    $('.text-danger').text('');
+
+                    if (response.errors && response.errors.length > 0) {
+                        response.errors.forEach(error => {
+                            $('span[data-valmsg-for="InfoGeneral"]').each(function () {
+                                if (error.includes($(this).attr('data-valmsg-for')) || error.includes('Email') || error.includes('mật khẩu')) {
+                                    $(this).text(error).show();
+                                }
+                            });
+                        });
+                    }
+                }
+            },
+
+            error: function (xhr) {
+                console.log('Lỗi AJAX: ', xhr.responseText); // Log chi tiết lỗi
+                alert('Đã xảy ra lỗi trong quá trình đăng nhập: ' + (xhr.responseText || 'Không xác định'));
+            }
+        });
+
     });
 });
 

@@ -51,40 +51,6 @@ namespace CRUD_asp.netMVC.Controllers
             return builderText.ToString().Normalize(NormalizationForm.FormC);
         }
 
-        // Hien thi danh sach san pham theo tu khoa tim kiem
-        #region Cach 1: chi co the truy van dung gia tri keyword truyen vao ma ko the phan biet chu co dau va ko dau -> chuyen cach 2 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Index(int productPage = 1, string keyword = "")
-        //{
-
-        //    var products = context.Products.AsNoTracking()
-        //        .Include(p => p.Brands)
-        //        .Include(p => p.Cate)
-
-        //        .Where(p => p.Name.ToLower().Contains(keyword.ToLower().Trim()) || p.Description.ToLower().Contains(keyword.ToLower().Trim()));
-
-        //    var pagProduct = await PaginatedList<Products>.CreatePagAsync(products, productPage, 16);
-
-        //    var brands = context.Brand.AsNoTracking();
-        //    var brandList = await context.Brand.AsNoTracking().ToListAsync();
-
-        //    var cates = context.Category.AsNoTracking();
-        //    var cateList = await context.Category.AsNoTracking().ToListAsync();
-
-        //    getPaginationByProductViewModel ViewModel = new()
-        //    {
-        //        Products = pagProduct,
-        //        Brands = await PaginatedList<Brand>.CreatePagAsync(brands, 1, brandList.Count),
-        //        Categories = await PaginatedList<Category>.CreatePagAsync(cates, 1, cateList.Count),
-        //    };
-
-        //    return View(ViewModel);
-
-        //}
-        #endregion
-
-
         /// <summary>
         /// Search Products
         /// </summary>

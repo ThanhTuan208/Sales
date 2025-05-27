@@ -16,7 +16,7 @@
 <style>
     body {
         font-family: 'Times New Roman', Times, serif;
-        background: url('../images/Login_Logout/Login.jpg') no-repeat center center/cover;
+        background: url('@Url.Content($"~/images/Login_Logout/Login.jpg")') no-repeat center center/cover;
     }
 </style>
 
@@ -34,9 +34,12 @@
             
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
+    @* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
     <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/js.js" asp-append-version="true"></script>
 
     @* <script src="~/assets/jquery-3.6.0.min.js"></script> *@
     @await RenderSectionAsync("Scripts", required: false)
