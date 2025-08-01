@@ -1,0 +1,10 @@
+﻿# Đảm bảo rằng đây là file editorconfig gốc cho toàn bộ solution
+root = true
+
+# Cấu hình cho tất cả các file .cs trong dự án hoặc solution
+[*.cs]
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+csharp_style_var_for_built_in_types = true:suggestion
+dotnet_format_on_save = true
