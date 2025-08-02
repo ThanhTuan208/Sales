@@ -25,7 +25,7 @@ namespace CRUD_asp.netMVC.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.ActionViewModel.Login", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.ActionViewModel.Login", b =>
                 {
                     b.Property<string>("Email")
                         .IsRequired()
@@ -41,7 +41,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("Login");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.ActionViewModel.Register", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.ActionViewModel.Register", b =>
                 {
                     b.Property<string>("ConfirmPassword")
                         .HasColumnType("nvarchar(max)");
@@ -87,7 +87,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("Register");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Customer", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Customer", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -137,7 +137,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("Customer");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Manager", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Manager", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -187,7 +187,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("Manager");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Roles", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Roles", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -229,7 +229,7 @@ namespace CRUD_asp.netMVC.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Staff", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Staff", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -288,7 +288,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("Staff");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Users", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Users", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -7053,48 +7053,48 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.ActionViewModel.Register", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.ActionViewModel.Register", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Roles", "Roles")
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Roles", "Roles")
                         .WithMany()
                         .HasForeignKey("RolesId");
 
                     b.Navigation("Roles");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Customer", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Customer", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Users", "Users")
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
                         .WithOne("Customer")
-                        .HasForeignKey("CRUD_asp.netMVC.Models.Account.Customer", "UserID")
+                        .HasForeignKey("CRUD_asp.netMVC.Models.Auth.Customer", "UserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Manager", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Manager", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Users", "Users")
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
                         .WithOne("Manager")
-                        .HasForeignKey("CRUD_asp.netMVC.Models.Account.Manager", "UserID")
+                        .HasForeignKey("CRUD_asp.netMVC.Models.Auth.Manager", "UserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Staff", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Staff", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Users", "Users")
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
                         .WithOne("Staff")
-                        .HasForeignKey("CRUD_asp.netMVC.Models.Account.Staff", "UserID")
+                        .HasForeignKey("CRUD_asp.netMVC.Models.Auth.Staff", "UserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Users", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Users", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Roles", "Roles")
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Roles", "Roles")
                         .WithMany()
                         .HasForeignKey("RolesId");
 
@@ -7109,7 +7109,7 @@ namespace CRUD_asp.netMVC.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Users", "Users")
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
                         .WithMany("Carts")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -7141,7 +7141,7 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Orders", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Users", "Users")
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
                         .WithMany("Orders")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -7329,7 +7329,7 @@ namespace CRUD_asp.netMVC.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Users", "Users")
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
                         .WithMany("Reviews")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -7342,7 +7342,7 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Roles", null)
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Roles", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -7351,7 +7351,7 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Users", null)
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -7360,7 +7360,7 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Users", null)
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -7369,13 +7369,13 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Roles", null)
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Roles", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Users", null)
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -7384,14 +7384,14 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Account.Users", null)
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Account.Users", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Users", b =>
                 {
                     b.Navigation("Carts");
 

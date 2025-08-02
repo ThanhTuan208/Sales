@@ -42,7 +42,7 @@ $(document).ready(function () {
         //    return;
         //}
 
-        let controller = "Account";
+        let controller = "Auth";
         let ProductID = parseInt(productID) > 0 ? productID : '';
         let action = ProductID > 0 ? "LoginByProductID" : "Login";
         const url = productID > 0 ? `/${controller}/${action}/${productID}` : `/${controller}/${action}`;

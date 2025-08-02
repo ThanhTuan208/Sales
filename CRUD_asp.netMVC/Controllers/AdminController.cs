@@ -4,24 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Product;
 using SixLabors.ImageSharp;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using EFCoreSecondLevelCacheInterceptor;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
-using System.Diagnostics;
 using System.Data;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
-using Microsoft.CodeAnalysis.CSharp;
 using System.Collections.Immutable;
 using CRUD_asp.netMVC.Models.ViewModels.Product;
-using System.Net.Quic;
 using System.Globalization;
 using System.Text;
-using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow.ValueContentAnalysis;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
-using Microsoft.IdentityModel.Logging;
-using System.Linq;
 
 
 namespace CRUD_asp.netMVC.Controllers
@@ -171,6 +160,9 @@ namespace CRUD_asp.netMVC.Controllers
 
                             var imagePath = Path.Combine("images", "Products", nameFile).ToLower().Replace("\\", "/");
 
+                            _context.Products.Add(products);
+                            await _context.SaveChangesAsync(); // Them du lieu productID truoc khi them cac entity khac
+
                             _context.ProductImages.Add(new ProductImages()
                             {
                                 ProductID = products.ID,
@@ -186,9 +178,6 @@ namespace CRUD_asp.netMVC.Controllers
                         }
 
                     }
-
-                    _context.Add(products);
-                    await _context.SaveChangesAsync(); // Them du lieu productID truoc khi them cac entity khac
 
                     if (viewModel.SelectedColorID != null && viewModel.SelectedColorID.Any())
                     {
@@ -250,7 +239,6 @@ namespace CRUD_asp.netMVC.Controllers
                         }
                     }
 
-
                     if (viewModel.SelectedTagID != null && viewModel.SelectedTagID.Any())
                     {
                         foreach (var TagID in viewModel.SelectedTagID)
@@ -276,7 +264,6 @@ namespace CRUD_asp.netMVC.Controllers
                     }
                     return await ReloadViewModel(viewModel);
                 }
-
             }
 
             return await ReloadViewModel(viewModel);

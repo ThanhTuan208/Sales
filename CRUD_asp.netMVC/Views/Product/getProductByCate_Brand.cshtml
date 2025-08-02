@@ -63,7 +63,7 @@
                 <div class="col-md-4 text-center animate-box">
                     <div class="product">
 
-                        <div class="product-grid" style="background-image:url(@item.PicturePath);">
+                        <div class="product-grid" style="background-image:url(@Url.Content($"~/images/products/{item.PicturePath}"));">
                             <div class="inner">
                                 <p>
                                     <a asp-action="ProductDetail" asp-route-id="@item.ID" class="icon"><i class="icon-eye"></i></a>

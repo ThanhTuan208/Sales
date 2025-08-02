@@ -1,5 +1,5 @@
-﻿using CRUD_asp.netMVC.Models.Account;
-using CRUD_asp.netMVC.Models.Account.ActionViewModel;
+﻿using CRUD_asp.netMVC.Models.Auth;
+using CRUD_asp.netMVC.Models.Auth.ActionViewModel;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Product;
 using Microsoft.AspNetCore.Identity;
@@ -710,7 +710,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                 OldPrice = 1800000,
                 NewPrice = 1500000,
                 Quantity = 100,
-                PicturePath = "jacket1.jpg",
+                PicturePath = "nike_jacket.jpg",
                 Created = new DateTime(2025, 4, 18),
                 BrandID = 1,  // Nike
                 CateID = 1,   // Áo khoác
@@ -727,7 +727,7 @@ new Products
     OldPrice = 0,
     NewPrice = 900000,
     Quantity = 80,
-    PicturePath = "pants1.webp",
+    PicturePath = "nike_pants.webp",
     Created = new DateTime(2025, 4, 18),
     BrandID = 1,
     CateID = 2,   // Quần
@@ -744,7 +744,7 @@ new Products
     OldPrice = 3000000,
     NewPrice = 2800000,
     Quantity = 60,
-    PicturePath = "shoes1.jpg",
+    PicturePath = "nike_shoes.jpg",
     Created = new DateTime(2025, 4, 18),
     BrandID = 1,
     CateID = 3,   // Giày
@@ -761,7 +761,7 @@ new Products
     OldPrice = 0,
     NewPrice = 1100000,
     Quantity = 40,
-    PicturePath = "dress1.jpg",
+    PicturePath = "nike_dress.jpg",
     Created = new DateTime(2025, 4, 18),
     BrandID = 1,
     CateID = 4,   // Váy
@@ -778,7 +778,7 @@ new Products
     OldPrice = 650000,
     NewPrice = 590000,
     Quantity = 200,
-    PicturePath = "tshirt1.jpg",
+    PicturePath = "nike_tshirt.jpg",
     Created = new DateTime(2025, 4, 18),
     BrandID = 1,
     CateID = 5,   // Áo thun
@@ -795,7 +795,7 @@ new Products
     OldPrice = 0,
     NewPrice = 1900000,
     Quantity = 25,
-    PicturePath = "watch1.jpg",
+    PicturePath = "nike_watch.jpg",
     Created = new DateTime(2025, 4, 18),
     BrandID = 1,
     CateID = 6,   // Đồng hồ
@@ -846,7 +846,7 @@ new Products
     OldPrice = 3400000,
     NewPrice = 3200000,
     Quantity = 50,
-    PicturePath = "adidas_shoes.webp",
+    PicturePath = "adidas_shoes.jpg",
     Created = new DateTime(2025, 4, 18),
     BrandID = 2,
     CateID = 3,   // Giày
@@ -1441,7 +1441,7 @@ new Products
     OldPrice = 0,
     NewPrice = 1450000,
     Quantity = 40,
-    PicturePath = "lacoste_shorts.jpg",
+    PicturePath = "lacoste_short.jpg",
     Created = new DateTime(2025, 4, 18),
     BrandID = 8,
     CateID = 2,   // Quần
@@ -1662,7 +1662,7 @@ new Products
     OldPrice = 9000000,
     NewPrice = 8300000,
     Quantity = 10,
-    PicturePath = "chanel_heels.jpg",
+    PicturePath = "chanel_shoes.jpg",
     Created = new DateTime(2025, 4, 18),
     BrandID = 10,
     CateID = 3,   // Giày

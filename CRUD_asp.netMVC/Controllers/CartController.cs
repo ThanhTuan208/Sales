@@ -146,7 +146,7 @@ namespace CRUD_asp.netMVC.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("LoginByProductID", "Account", new { ProductID = productID });
+                        return RedirectToAction("LoginByProductID", "Auth", new { ProductID = productID });
                     }
                 }
             }
@@ -250,7 +250,7 @@ namespace CRUD_asp.netMVC.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("LoginByProductID", "Account");
+                    return RedirectToAction("LoginByProductID", "Auth");
                 }
 
             }

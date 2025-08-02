@@ -36,16 +36,27 @@
             @* updated *@
             <div class="col-md-5">
                 <div class="owl-carousel owl-carousel-fullwidth product-carousel">
-                    @foreach (var item in Model.Product.ProductImages)
-                    {
-                        <div class="item">
-                            <div class="active text-center">
-                                <figure>
-                                    <img src="@Url.Content($"~/{item.PathNameImage}")" alt="user" style="object-fit: cover" class="img-fluid p-3" />
-                                </figure>
-                            </div>
-                        </div>
+                    @{
+                        if (Model.Product.ProductImages.Count == 0)
+                        {
+                            <div class="product-grid" style="background-image:url(@Url.Content($"~/images/products/{Model.Product.PicturePath}"));"></div>
+                        }
+                        else
+                        {
+
+                            foreach (var item in Model.Product.ProductImages)
+                            {
+                                <div class="item">
+                                    <div class="active text-center">
+                                        <figure>
+                                            <img src="@Url.Content($"~/{item.PathNameImage}")" alt="user" style="object-fit: cover" class="img-fluid p-3" />
+                                        </figure>
+                                    </div>
+                                </div>
+                            }
+                        }
                     }
+
                 </div>
                 @* <img id="main-img" src="@Url.Content($"~/{Model.Product.ProductImages[0].PathNameImage}") " class="img-fluid mb-3" alt="Ảnh chính"> *@
                 <div class="d-flex gap-2 pb-5 justify-content-center">
@@ -155,7 +166,6 @@
                         @* Xu li post *@
 
                         <!-- Hiển thị thông báo lỗi -->
-
                         @if (TempData["ErrorMessage"] != null)
                         {
                             <div class="alert alert-danger alert-dismissible show" role="alert">

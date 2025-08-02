@@ -1,4 +1,4 @@
-﻿using CRUD_asp.netMVC.Models.Account;
+﻿using CRUD_asp.netMVC.Models.Auth;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

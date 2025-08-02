@@ -10,6 +10,7 @@ using CRUD_asp.netMVC.Models.Cart;
 using System.Text.Json;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using CRUD_asp.netMVC.Models.Auth;
 
 namespace CRUD_asp.netMVC.Controllers;
 
@@ -107,5 +108,11 @@ public class HomeController : Controller
 
         return View(ViewModel);
     }
+
+    //public async Task<IActionResult> SortUser(Users user)
+    //{
+
+    //    return
+    //}
 
 }

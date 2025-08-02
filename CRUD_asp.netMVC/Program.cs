@@ -1,5 +1,5 @@
 ﻿using CRUD_asp.netMVC.Data;
-using CRUD_asp.netMVC.Models.Account;
+using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Service;
 using CRUD_asp.netMVC.Models.ViewModels.Product;
 using Microsoft.AspNetCore.Identity;
@@ -48,9 +48,9 @@ namespace CRUD_asp.netMVC
             // Dang ky Cookie
             builder.Services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/Account/Login";
-                options.LogoutPath = "/Account/Logout";
-                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.LoginPath = "/Auth/Login";
+                options.LogoutPath = "/Auth/Logout";
+                options.AccessDeniedPath = "/Auth/AccessDenied";
             });
 
             // Dang ky dich vu gmail
@@ -78,7 +78,7 @@ namespace CRUD_asp.netMVC
             app.MapControllerRoute(
                 name: "default",
                 /*pattern: "{controller=Home}/{action=Index}/{id?}");*/
-                pattern: "{controller=Account}/{action=Login}/{id?}");
+                pattern: "{controller=Auth}/{action=Login}/{id?}");
 
             app.Run();
         }
