@@ -270,6 +270,7 @@ namespace CRUD_asp.netMVC.Controllers
 
             var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
             var carts = await context.Carts.Where(p => p.UserID == userID).ToListAsync();
+
             ViewData["cart"] = carts.Count;
 
             GeneralProduct_ListCateBrand ViewModel = new()
@@ -280,13 +281,7 @@ namespace CRUD_asp.netMVC.Controllers
                 Carts = carts
             };
 
-            Console.WriteLine(id);
-            if (ViewModel != null)
-            {
-                return View(ViewModel);
-            }
-
-            return NotFound();
+            return ViewModel != null ? View(ViewModel) : NotFound();
         }
 
         /// <summary>

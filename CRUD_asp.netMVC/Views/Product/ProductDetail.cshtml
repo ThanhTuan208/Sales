@@ -3,10 +3,11 @@
 @model GeneralProduct_ListCateBrand
 
 @{
-    var count = 0;
+    // var count = 0;
     var info = TempData["SuccessMessage"];
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    
 }
 
 <link rel="stylesheet" href="~/css/productDetail.css" asp-append-version="true">
@@ -30,41 +31,32 @@
     </div>
 </header>
 
+@Html.AntiForgeryToken()
+
 <div id="fh5co-product">
     <div class="container animate-box">
         <div class="row">
             @* updated *@
             <div class="col-md-5">
                 <div class="owl-carousel owl-carousel-fullwidth product-carousel">
-                    @{
-                        if (Model.Product.ProductImages.Count == 0)
-                        {
-                            <div class="product-grid" style="background-image:url(@Url.Content($"~/images/products/{Model.Product.PicturePath}"));"></div>
-                        }
-                        else
-                        {
-
-                            foreach (var item in Model.Product.ProductImages)
-                            {
-                                <div class="item">
-                                    <div class="active text-center">
-                                        <figure>
-                                            <img src="@Url.Content($"~/{item.PathNameImage}")" alt="user" style="object-fit: cover" class="img-fluid p-3" />
-                                        </figure>
-                                    </div>
-                                </div>
-                            }
-                        }
+                    @foreach (var item in Model.Product.ProductImages)
+                    {
+                    <div class="item">
+                        <div class="active text-center">
+                            <figure>
+                                <img src="@Url.Content($"~/images/products/{item.PathNameImage}")" alt="user" style="object-fit: cover" class="img-fluid p-3" />
+                            </figure>
+                        </div>
+                    </div>
                     }
-
                 </div>
-                @* <img id="main-img" src="@Url.Content($"~/{Model.Product.ProductImages[0].PathNameImage}") " class="img-fluid mb-3" alt="Ảnh chính"> *@
+                
                 <div class="d-flex gap-2 pb-5 justify-content-center">
                     @for (int i = 0; i < Model.Product.ProductImages.Count; i++)
                     {
                         var item = Model.Product.ProductImages[i];
 
-                        <img src="@Url.Content($"~/{item.PathNameImage}")" class="thumbnail-img @(i == 0 ? "image-active" : "")" onclick="changeImage(this)">
+                        <img src="@Url.Content($"~/images/products/{item.PathNameImage}")" class="thumbnail-img @(i == 0 ? "image-active" : "")" onclick="changeImage(this)">
                     }
                 </div>
             </div>
@@ -72,7 +64,7 @@
             <!-- Thông tin sản phẩm -->
             <div class="col-md-7">
                 <div class="product-content" style="font-size: 3rem">
-                    <h2 class="product-title text-center mb-5 fw-bold">@Model.Product.Description</h2>
+                    <h2 class="product-title text-center mb-5 fw-bold" style="font-size: 4rem">@Model.Product.Name</h2>
                     <div class="product-general d-flex justify-content-between align-items-center fs-4 my-3">
                         <div class="product-rating">
                             <i class="fas fa-star"></i>

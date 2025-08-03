@@ -42,6 +42,7 @@ namespace CRUD_asp.netMVC.Controllers
                         .Include(c => c.Product)
                         .Include(c => c.Product).ThenInclude(p => p.ProductColor)
                         .Include(c => c.Product).ThenInclude(p => p.ProductSize)
+                        .Include(c => c.Product).ThenInclude(p => p.ProductImages)
                         .Include(c => c.Users)
                         .Where(c => c.UserID == userID)
                         .ToListAsync();
@@ -92,24 +93,24 @@ namespace CRUD_asp.netMVC.Controllers
 
                 if (productExists == null)
                 {
-                    ModelState.AddModelError("Cart", "Sản phẩm không tồn tại");
+                    ModelState.AddModelError("Cart", "Sản phẩm khôn`g tồn tại");
                     return NotFound();
                 }
 
                 if (color == null && size == null)
                 {
                     TempData["ErrorMessage"] = "Vui lòng chọn phân loại sản phẩm";
-                    return Json(new { success = false, message = "Vui lòng chọn phân loại sản phẩm" });
+                    return Json(new { success = false, authenticated = 1, message = "Vui lòng chọn phân loại sản phẩm", productID = productID, });
                 }
                 else if (color == null)
                 {
                     TempData["ErrorMessage"] = "Bạn cần chọn màu của sản phẩm";
-                    return Json(new { success = false, message = "Bạn cần chọn màu của sản phẩm" });
+                    return Json(new { success = false, authenticated = 1, message = "Bạn cần chọn màu của sản phẩm", productID = productID, });
                 }
                 else if (size == null)
                 {
                     TempData["ErrorMessage"] = "Bạn cần chọn kích thước của sản phẩm";
-                    return Json(new { success = false, message = "Bạn cần chọn kích thước của sản phẩm" });
+                    return Json(new { success = false, authenticated = 1, message = "Bạn cần chọn kích thước của sản phẩm", productID = productID, });
                 }
                 else
                 {
@@ -142,11 +143,22 @@ namespace CRUD_asp.netMVC.Controllers
                         await context.SaveChangesAsync();
 
                         TempData["SuccessMessage"] = "Thêm sản phẩm vào giỏ hàng thành công";
-                        return Json(new { success = true, message = "Thêm sản phẩm vào giỏ hàng thành công" });
+                        return Json(new
+                        {
+                            success = true,
+                            authenticated = 1,
+                            message = "Thêm sản phẩm vào giỏ hàng thành công"
+                        });
                     }
                     else
                     {
-                        return RedirectToAction("LoginByProductID", "Auth", new { ProductID = productID });
+                        return Json(new
+                        {
+                            success = false,
+                            authenticated = 0,
+                            message = "Cần đăng nhập tài khoản trước khi thêm sản phẩm !!!",
+                            productID = productID,
+                        });
                     }
                 }
             }

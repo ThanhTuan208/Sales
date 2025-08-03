@@ -62,7 +62,7 @@ namespace CRUD_asp.netMVC.Models.Product
         public List<ProductTag>? ProductTags { get; set; }
         public List<ProductSeason>? ProductSeasons { get; set; }
         public List<ProductMaterial>? ProductMaterial { get; set; }
-        public List<ProductImages>? ProductImages { get; set; } = new List<ProductImages>();
+        public List<ProductImages>? ProductImages { get; set; }
 
 
     }

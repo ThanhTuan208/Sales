@@ -11,8 +11,7 @@
         <ul class="slides" style="height: 100%;">
             @foreach (var item in Model.Products.Take(4))
             {
-                <li style="background: url(@Url.Content($"~/{item.PicturePath}")) no-repeat 80% center; background-size: contain; height: 80vh; ">
-
+                <li style="background: url(@Url.Content($"~/images/products/{item.PicturePath}")) no-repeat 80% center; background-size: contain; height: 80vh; ">  
                     <div class="container h-100">
                         <div class="col-md-6 col-md-offset-3 col-md-pull-3 js-fullheight slider-text">
                             <div class="slider-text-inner d-flex align-items-center h-100">
@@ -20,7 +19,7 @@
                                     <h2>@item.Name</h2>
                                     <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.NewPrice)</span>
                                     <p>@item.Description</p>
-                                    <p><a asp-action="ProductDetail" asp-controller="Product" asp-route-id="@item.ID" class="btn btn-primary btn-outline btn-lg">Purchase Now</a></p>
+                                    <p><a asp-action="ProductDetail" asp-controller="Product" asp-route-id="@item.ID" class="btn btn-primary btn-outline btn-lg">Mua ngay</a></p>
                                 </div>
                             </div>
                         </div>
@@ -42,7 +41,7 @@
                     </span>
                     <h3>Credit Card</h3>
                     <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove</p>
-                    <p><a href="#" class="btn btn-primary btn-outline">Learn More</a></p>
+                    @* <p><a href="#" class="btn btn-primary btn-outline">Learn More</a></p> *@
                 </div>
             </div>
             <div class="col-md-4 col-sm-4 text-center">
@@ -52,7 +51,7 @@
                     </span>
                     <h3>Save Money</h3>
                     <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove</p>
-                    <p><a href="#" class="btn btn-primary btn-outline">Learn More</a></p>
+                    @* <p><a href="#" class="btn btn-primary btn-outline">Learn More</a></p> *@
                 </div>
             </div>
             <div class="col-md-4 col-sm-4 text-center">
@@ -62,7 +61,7 @@
                     </span>
                     <h3>Free Delivery</h3>
                     <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove</p>
-                    <p><a href="#" class="btn btn-primary btn-outline">Learn More</a></p>
+                        
                 </div>
             </div>
         </div>
@@ -79,14 +78,14 @@
         </div>
         <div class="row">
             <div class="d-flex justify-content-between">
-                <h1 style="font-weight: 600;text-shadow: 2px 3px 8px">Product Featured</h1>
+                <h1 style="font-weight: 600;text-shadow: 2px 3px 8px">Sản phẩm nổi bật</h1>
                 <a asp-action="" class="fs-2"><p>View More</p></a>
             </div>
             @foreach (var item in Model.Products)
             {
                 <div class="col-md-4 text-center animate-box">
                     <div class="product">
-                        <div class="product-grid shadow-lg" style="background: url(@Url.Content("~/" + @item.PicturePath)) no-repeat center center/ cover;">
+                        <div class="product-grid shadow-lg" style="background: url(@Url.Content("~/images/products/" + @item.PicturePath)) no-repeat center center/ cover;">
                             <div class="inner">
                                 <p>
                                     <a asp-action="ProductDetail" asp-controller="Product" asp-route-id="@item.ID" class="icon"><i class="icon-eye"></i></a>

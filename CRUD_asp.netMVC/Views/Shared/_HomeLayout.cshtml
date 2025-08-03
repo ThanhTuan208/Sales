@@ -47,12 +47,12 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-3 col-xs-2">
-                        <div id="fh5co-logo"><a asp-action="Index" asp-controller="Home">Tuan.</a></div>
+                        <div id="fh5co-logo"><a asp-action="Index" asp-controller="Home">E-commerce.</a></div>
                     </div>
                     <div class="col-md-6 col-xs-6 text-center menu-1">
                         <ul>
                             <li class="has-dropdown nav-item">
-                                <a asp-action="Index" asp-controller="Product">Product</a>
+                                <a asp-action="Index" asp-controller="Product">Sản phẩm</a>
                                 <ul class="dropdown">
                                     <li class="has-dropdown">
                                         <a>Thương hiệu</a>
@@ -74,8 +74,8 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="nav-item"><a asp-action="About" asp-controller="Home">About</a></li>
-                            <li class="nav-item"><a asp-action="Contact" asp-controller="Home">Contact</a></li>
+                            <li class="nav-item"><a asp-action="About" asp-controller="Home">Giới thiệu</a></li>
+                            <li class="nav-item"><a asp-action="Contact" asp-controller="Home">Liên hệ</a></li>
                             @* <li class="has-dropdown nav-item">
                                 <a href="#">Service</a>
                                 <ul class="dropdown" style="width: 150px">
@@ -88,7 +88,7 @@
                             <li class="search nav-item">
                                 <form method="get" asp-controller="Product" asp-action="SearchProduct">
                                     <div class="input-group">
-                                        <input type="text" placeholder="Search.." name="keyword"
+                                        <input type="text" placeholder="Tìm ..." name="keyword"
                                                oninvalid="this.setCustomValidity('Vui lòng nhập từ khóa để tìm kiếm sản phẩm !!!')"
                                                oninput="this.setCustomValidity('')" required>
                                         <span class="input-group-btn">
@@ -146,7 +146,7 @@
 
                                     <ul class="dropdown" style="width: 150px">
                                         <li>
-                                            <a asp-controller="Account" asp-action="Login">Đăng nhập</a>
+                                            <a asp-controller="Auth" asp-action="Login">Đăng nhập</a>
                                         </li>
                                     </ul>
                                 }
@@ -181,7 +181,7 @@
                     <div class="infomation">
                         <div class="d-block"><span class="fw-bold">SDT</span>: <a href="tel:0358986823" class="text-secondary"> 0358986823 </a></div>
                         <div class="d-block"><span class="fw-bold">Email</span>:<a href="mailto:nguyenthanhtuankrp1@gmail.com" class="text-secondary"> nguyenthanhtuankrp1@gmail.com</a> </div>
-                        <div class="d-block"><span class="fw-bold">Address</span>: Số 219/4 Lê Văn Chí,P. Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh</div>
+                        <div class="d-block"><span class="fw-bold">Address</span>: Số 219/4 Lê Văn Chí, P. Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh</div>
                         
                     </div>
                 </div>
@@ -202,7 +202,7 @@
 
                 <div class="col-md-12 text-center">
                     <p>
-                        <span class="fw-bold">Created by </span> <a href="#"> Nguyễn Thành Tuấn </a>
+                        <span class="fw-bold">Created by </span> <a href="#"> Team Summer </a>
                     </p>
                     <p>
                         <div class="text-center d-inline-block">

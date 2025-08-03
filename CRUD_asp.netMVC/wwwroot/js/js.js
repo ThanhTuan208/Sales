@@ -30,22 +30,19 @@ $(document).ready(function () {
 // truyen du lieu dang nhap dang ky qua pt post
 $(document).ready(function () {
 
-    $('.bn5').on('click', function () {
+    $('.bn5.login').on('click', function () {
         const btn = $(this);
         const email = $('.email').val();
         const pass = $('.pass').val();
         const check = $('.form-check-input').is(':checked');
         const productID = $('.productID').data('id') || 0;
 
-        //if (!email || !pass || email.trim() === '' || pass.trim() === '') {
-        //    alert('Vui lòng nhập đầy đủ thông tin.');
-        //    return;
-        //}
-
         let controller = "Auth";
         let ProductID = parseInt(productID) > 0 ? productID : '';
         let action = ProductID > 0 ? "LoginByProductID" : "Login";
         const url = productID > 0 ? `/${controller}/${action}/${productID}` : `/${controller}/${action}`;
+
+        console.log(url);
 
         $.ajax({
             url: url,
@@ -59,8 +56,14 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.success) {
                     console.log("Đăng nhập thành công: " + response.message);
-                    window.location.href = '/Home/Index';
-                } else {
+                    if (response.authenticated == 1) {
+                        window.location.href = `/Product/ProductDetail/${response.productID}`;
+                    }
+                    else {
+                        window.location.href = "/Home/Index";
+                    }
+                }
+                else {
                     console.log("Đăng nhập thất bại: " + response.message);
 
                     $('.text-danger').text('');
@@ -143,7 +146,6 @@ $(document).ready(function () {
         if (qty > 1) $('#quantity').val(qty - 1);
     });
 
-
     // page product detail de them san pham vao gio hang
     $('.btn-option').on('click', function () {
         let btn = $(this);
@@ -183,12 +185,18 @@ $(document).ready(function () {
                     }
                     else {
                         console.log("Thêm sản phẩm vào giỏ hàng thất bại." + response.message);
-                        window.location.href = `/Product/ProductDetail/${itemID}`;
+
+                        if (response.authenticated == 1) {
+                            window.location.href = `/Product/ProductDetail/${response.productID}`;
+                        }
+                        else {
+                            window.location.href = `/Auth/LoginByProductID/${response.productID}`;
+                        }
                     }
                 },
 
                 error: function (response) {
-                    console.log("Sản phẩm thêm vào bị lỗi!!!" + response.message);
+                    console.log("Sản phẩm thêm vào bị lỗi!!!" + response.message || " Không xác định");
                     alert('Sản phẩm thêm vào bị lỗi !!!');
                 }
             });

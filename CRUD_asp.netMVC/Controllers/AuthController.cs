@@ -219,31 +219,40 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpGet] // Duoc dung khi them san pham vao gio hang nhung chua dang nhap
-        public IActionResult LoginByProductID(int productID)
+        public IActionResult LoginByProductID(int id)
         {
-            ViewData["id"] = productID;
+            ViewData["id"] = id;
             return View(nameof(Login));
         }
 
         [HttpPost, ValidateAntiForgeryToken] // Xac thuc form dang nhap xong thi quay lai product detail de them san pham vao gio hang 
-        public async Task<IActionResult> LoginByProductID(Login login, int productID)
+        public async Task<IActionResult> LoginByProductID(Login login, int id)
         {
             if (!ModelState.IsValid) return View(login);
+
+            ViewData["id"] = id;
 
             var user = await _userManager.FindByEmailAsync(login.Email.Trim());
             if (user == null || !await _userManager.CheckPasswordAsync(user, login.Password))
             {
-                ModelState.AddModelError(string.Empty, "Email or Password is incorrect");
-                return View(login);
+                ModelState.AddModelError("InfoGeneral", "Email hoặc mật khẩu không đúng !!!");
+                return Json(new
+                {
+                    success = false,
+                    message = "Email hoặc mật khẩu không đúng !!!",
+                    errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList()
+                    // tra ve loi moi khi submit neu co loi
+                });
             }
 
             var account = await _signInManager.PasswordSignInAsync(user, login.Password, login.RememberMe, lockoutOnFailure: false);
             if (account.Succeeded)
             {
-                return RedirectToAction("ProductDetail", "Product", new { id = productID });
+                return Json(new { success = true, authenticated = 1, message = $"đăng nhập thành công, điều hướng tới sản phẩm ID: {id}", productID = id });
+                //return RedirectToAction("ProductDetail", "Product", new { id = id });
             }
 
-            ModelState.AddModelError(string.Empty, "Error occurred while logging in");
+            ModelState.AddModelError(string.Empty, "Đã xảy ra lỗi trong quá trình đăng nhập !!!");
             return View("Login", login);
         }
 

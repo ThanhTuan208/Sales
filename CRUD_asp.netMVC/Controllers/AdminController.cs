@@ -158,7 +158,7 @@ namespace CRUD_asp.netMVC.Controllers
                                 await file.CopyToAsync(fileStream);
                             }
 
-                            var imagePath = Path.Combine("images", "Products", nameFile).ToLower().Replace("\\", "/");
+                            var imagePath = Path.Combine("", "", nameFile).ToLower().Replace("\\", "/");
 
                             _context.Products.Add(products);
                             await _context.SaveChangesAsync(); // Them du lieu productID truoc khi them cac entity khac
@@ -412,7 +412,7 @@ namespace CRUD_asp.netMVC.Controllers
                                 await item.CopyToAsync(FileStream);
                             }
 
-                            var fileUploadImage = Path.Combine("images", "Products", nameFile).Replace("\\", "/");
+                            var fileUploadImage = Path.Combine("", "", nameFile).ToLower().Replace("\\", "/");
 
                             return new ProductImages()
                             {

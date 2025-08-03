@@ -34,70 +34,73 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @{
+                                var count = 0;
+                                foreach (var item in Model.CartItems)
+                                {
 
-                            @foreach (var item in Model.CartItems)
-                            {
-                                <tr class="alert1" role="alert">
-                                    @*    <td name="id" value="@item.ID">@item.ID</td> *@
-                                    <td>
-                                        <label class="checkbox-wrap checkbox-primary">
-                                            <input type="checkbox" class="checkbox" />
-                                            <span class="checkmark"></span>
-                                        </label>
-                                    </td>
+                                    <tr class="alert1" role="alert">
+                                        @*    <td name="id" value="@item.ID">@item.ID</td> *@
+                                        <td>
+                                            <label class="checkbox-wrap checkbox-primary">
+                                                <input type="checkbox" class="checkbox" />
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </td>
 
-                                    <td>
-                                        <div class="img"
-                                             style="background-image: url(@Url.Content($"~/{item.Product.PicturePath}"))"></div>
-                                    </td>
+                                        <td>
+                                            <div class="img"
+                                                 style="background-image: url(@Url.Content($"~/images/products/{item.Product.ProductImages.FirstOrDefault()?.PathNameImage}"))"></div>
+                                        </td>
 
-                                    <td>
-                                        <div class="email" style="text-align: left">
-                                            <p class="">@item.Product.Name</p>
+                                        <td>
+                                            <div class="email" style="text-align: left">
+                                                <p class="">@item.Product.Name</p>
 
-                                        </div>
-                                    </td>
+                                            </div>
+                                        </td>
 
-                                    <td>
-                                        <div class="color" style="text-align: center">
-                                            <span>@item.SelectColor</span>
-                                        </div>
-                                    </td>
+                                        <td>
+                                            <div class="color" style="text-align: center">
+                                                <span>@item.SelectColor</span>
+                                            </div>
+                                        </td>
 
-                                    <td>
-                                        <div class="size" style="text-align: center">
-                                            <span>@item.SelectSize</span>
-                                        </div>
-                                    </td>
+                                        <td>
+                                            <div class="size" style="text-align: center">
+                                                <span>@item.SelectSize</span>
+                                            </div>
+                                        </td>
 
-                                    <td class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Product.NewPrice)</td>
+                                        <td class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Product.NewPrice)</td>
 
-                                    @* xu li qua ajax (js.js) *@
-                                    <td class="quantity">
-                                        <div class="quantity-container" data-id="@item.ID">
-                                            <button type="button" class="quantity-btn decrease" data-id="@item.ID" data-opera="-">-</button>
-                                            <input type="text" name="qty" class="quantity-input" value="@item.Quantity" min="1" max="100" readonly>
-                                            <button type="button" class="quantity-btn increase" data-id="@item.ID" data-opera="+">+</button>
-                                        </div>
-                                    </td>
-                                    @{
-                                        TempData["totalPrice"] = item.Product.NewPrice * item.Quantity;
-                                    }
-                                    <td class="priceTotal">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", TempData["totalPrice"])</td>
+                                        @* xu li qua ajax (js.js) *@
+                                        <td class="quantity">
+                                            <div class="quantity-container" data-id="@item.ID">
+                                                <button type="button" class="quantity-btn decrease" data-id="@item.ID" data-opera="-">-</button>
+                                                <input type="text" name="qty" class="quantity-input" value="@item.Quantity" min="1" max="100" readonly>
+                                                <button type="button" class="quantity-btn increase" data-id="@item.ID" data-opera="+">+</button>
+                                            </div>
+                                        </td>
+                                        @{
+                                            TempData["totalPrice"] = item.Product.NewPrice * item.Quantity;
+                                        }
+                                        <td class="priceTotal">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", TempData["totalPrice"])</td>
 
-                                    <td class="deleteCartItem" style="vertical-align:middle; text-align:center">
-                                        @* Thieu token nen khi truyen du lieu qua ben ajax se chay xuong error *@
-                                        @Html.AntiForgeryToken()
-                                        <button type="submit"
-                                                class="close"
-                                                aria-label="Close"
-                                                data-id="@item.ID">
-                                            <span aria-hidden="true">
-                                                <i class="fa fa-close" style="font-size: 3rem;"></i>
-                                            </span>
-                                        </button>
-                                    </td>
-                                </tr>
+                                        <td class="deleteCartItem" style="vertical-align:middle; text-align:center">
+                                            @* Thieu token nen khi truyen du lieu qua ben ajax se chay xuong error *@
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit"
+                                                    class="close"
+                                                    aria-label="Close"
+                                                    data-id="@item.ID">
+                                                <span aria-hidden="true">
+                                                    <i class="fa fa-close" style="font-size: 3rem;"></i>
+                                                </span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>

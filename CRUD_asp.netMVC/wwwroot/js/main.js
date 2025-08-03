@@ -308,9 +308,8 @@
             nav: false,
             dots: true,
             smartSpeed: 800,
-            autoHeight: true
+            autoHeight: true,
         });
-
     };
 
 

@@ -1652,23 +1652,23 @@ new Products
     GenderID = 2, // Nữ
     FeaturedID = 2
 },
-new Products
-{
-    ID = 57,
-    Name = "Giày cao gót Chanel",
-    NormalizedName = RemoveDiacritics("Giày cao gót Chanel").ToLower(),
-    Description = "Thanh lịch, sang trọng",
-    NormalizedDescription = RemoveDiacritics("Thanh lịch, sang trọng").ToLower(),
-    OldPrice = 9000000,
-    NewPrice = 8300000,
-    Quantity = 10,
-    PicturePath = "chanel_shoes.jpg",
-    Created = new DateTime(2025, 4, 18),
-    BrandID = 10,
-    CateID = 3,   // Giày
-    GenderID = 2, // Nữ
-    FeaturedID = 2
-},
+    new Products
+    {
+        ID = 57,
+        Name = "Giày cao gót Chanel",
+        NormalizedName = RemoveDiacritics("Giày cao gót Chanel").ToLower(),
+        Description = "Thanh lịch, sang trọng",
+        NormalizedDescription = RemoveDiacritics("Thanh lịch, sang trọng").ToLower(),
+        OldPrice = 9000000,
+        NewPrice = 8300000,
+        Quantity = 10,
+        PicturePath = "chanel_shoes.jpg",
+        Created = new DateTime(2025, 4, 18),
+        BrandID = 10,
+        CateID = 3,   // Giày
+        GenderID = 2, // Nữ
+        FeaturedID = 2,
+    },
 new Products
 {
     ID = 58,

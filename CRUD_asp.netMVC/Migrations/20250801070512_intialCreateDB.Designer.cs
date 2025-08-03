@@ -2053,7 +2053,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("PathNameImage")
+                    b.Property<string>("PathImage")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductID")
