@@ -1,20 +1,21 @@
 ﻿@using CRUD_asp.netMVC.Models.ViewModels.Home;
 @using System.Globalization
-@model GeneralProduct_ListCateBrand
+@model HomeViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Trang Chủ";
+    var countCart = ViewData["cart"] as int?;
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
 
-<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(images/img_bg_2.jpg);">
+<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(@Url.Content($"~/images/banner/About-us-banner.jpg"));">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2 text-center">
                 <div class="display-t">
                     <div class="display-tc animate-box" data-animate-effect="fadeIn">
-                        <h1>About Us</h1>
-                        <h2>Free html5 templates by <a href="https://themewagon.com/theme_tag/free/" target="_blank">Themewagon</a></h2>
+                        <h1>Về Chúng Tôi</h1>
+
                     </div>
                 </div>
             </div>
@@ -28,69 +29,72 @@
             <div class="row animate-box">
                 <div class="col-md-6">
                     <div class="desc">
-                        <h3>Company History</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse quo est quis mollitia ratione magni assumenda repellat atque modi temporibus tempore ex. Dolore facilis ex sunt ea praesentium expedita numquam?</p>
-                        <p>Quos quia provident consequuntur culpa facere ratione maxime commodi voluptates id repellat velit eaque aspernatur expedita. Possimus itaque adipisci rem dolorem nesciunt perferendis quae amet deserunt eum labore quidem minima.</p>
+                        <h3 style="text-align: center; font-size: 3rem; font-weight: 600;">Lịch Sử Công Ty</h3>
+                        <p>Được thành lập vào năm 2015, sàn thương mại thời trang của chúng tôi bắt đầu với khát vọng mang đến những xu hướng thời trang mới nhất cho mọi người. Từ một cửa hàng trực tuyến nhỏ, chúng tôi đã phát triển thành một nền tảng thương mại điện tử hàng đầu tại Việt Nam, hợp tác với hơn 500 thương hiệu thời trang trong và ngoài nước.</p>
+                        <p>Chúng tôi không ngừng cải tiến để cung cấp trải nghiệm mua sắm trực tuyến tiện lợi, với hàng ngàn sản phẩm từ quần áo, giày dép đến phụ kiện, đáp ứng mọi phong cách và sở thích.</p>
                     </div>
-                    <div class="desc">
-                        <h3>Mission &amp; Vission</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse quo est quis mollitia ratione magni assumenda repellat atque modi temporibus tempore ex. Dolore facilis ex sunt ea praesentium expedita numquam?</p>
-                        <p>Quos quia provident consequuntur culpa facere ratione maxime commodi voluptates id repellat velit eaque aspernatur expedita. Possimus itaque adipisci rem dolorem nesciunt perferendis quae amet deserunt eum labore quidem minima.</p>
-                    </div>
+                    
                 </div>
                 <div class="col-md-6">
-                    <img class="img-responsive" src="images/img_bg_1.jpg" alt="about">
+                    <div class="desc">
+                        <h3 style="text-align: center; font-size: 3rem; font-weight: 600;">Sứ Mệnh & Tầm Nhìn</h3>
+                        <p>Sứ mệnh của chúng tôi là truyền cảm hứng và giúp mọi người tự tin thể hiện phong cách cá nhân qua thời trang. Chúng tôi cam kết mang đến các sản phẩm chất lượng, giá cả hợp lý và dịch vụ khách hàng xuất sắc.</p>
+                        <p>Tầm nhìn của chúng tôi là trở thành sàn thương mại thời trang số 1 khu vực Đông Nam Á, tiên phong trong việc kết nối người dùng với các xu hướng toàn cầu và thúc đẩy thời trang bền vững.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row animate-box">
-            <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-                <span>Productive Staff</span>
-                <h2>Meet Our Team</h2>
-                <p>Dignissimos asperiores vitae velit veniam totam fuga molestias accusamus alias autem provident. Odit ab aliquam dolor eius.</p>
+            <div class="row animate-box my-5">
+                <iframe class="img-responsive" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.231794902082!2d106.76965031474962!3d10.849699992297!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175270e7a7c7e3d%3A0x5b7a36d1e6e6b0c8!2sThu%20Duc%20College%20of%20Technology!5e0!3m2!1sen!2s!4v1699999999999!5m2!1sen!2s" width="100%" style="border:0; box-shadow: 3px 5px 10px; border-radius: 14px; height: 400px; margin-bottom: 40px" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Vị trí Trường Cao đẳng Công nghệ Thủ Đức"></iframe>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 col-sm-4 animate-box" data-animate-effect="fadeIn">
-                <div class="fh5co-staff">
-                    <img src="images/person1.jpg" alt="Free HTML5 Templates by gettemplates.co">
-                    <h3>Jean Smith</h3>
-                    <strong class="role">Chief Executive Officer</strong>
-                    <p>Quos quia provident consequuntur culpa facere ratione maxime commodi voluptates id repellat velit eaque aspernatur expedita. Possimus itaque adipisci.</p>
-                    <ul class="fh5co-social-icons">
-                        <li><a href="#"><i class="icon-facebook"></i></a></li>
-                        <li><a href="#"><i class="icon-twitter"></i></a></li>
-                        <li><a href="#"><i class="icon-dribbble"></i></a></li>
-                        <li><a href="#"><i class="icon-github"></i></a></li>
-                    </ul>
+            <div class="row animate-box">
+                <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+                    <span>Đội Ngũ Đam Mê</span>
+                    <h2 style="text-align: center; font-weight: 600;">Gặp Gỡ Đội Ngũ Của Chúng Tôi</h2>
+                    <p>Đội ngũ của chúng tôi là những người yêu thời trang, sáng tạo và tận tâm, luôn làm việc để mang đến những bộ sưu tập thời thượng và trải nghiệm mua sắm tuyệt vời cho khách hàng.</p>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-4 animate-box" data-animate-effect="fadeIn">
-                <div class="fh5co-staff">
-                    <img src="images/person2.jpg" alt="Free HTML5 Templates by gettemplates.co">
-                    <h3>Hush Raven</h3>
-                    <strong class="role">Co-Owner</strong>
-                    <p>Quos quia provident consequuntur culpa facere ratione maxime commodi voluptates id repellat velit eaque aspernatur expedita. Possimus itaque adipisci.</p>
-                    <ul class="fh5co-social-icons">
-                        <li><a href="#"><i class="icon-facebook"></i></a></li>
-                        <li><a href="#"><i class="icon-twitter"></i></a></li>
-                        <li><a href="#"><i class="icon-dribbble"></i></a></li>
-                        <li><a href="#"><i class="icon-github"></i></a></li>
-                    </ul>
+            <div class="row">
+                <div class="col-md-4 col-sm-4 animate-box" data-animate-effect="fadeIn">
+                    <div class="fh5co-staff">
+                        <img src="images/person1.jpg" alt="Nguyễn Thị Lan">
+                        <h3>Nguyễn Thị Lan</h3>
+                        <strong class="role">Giám Đốc Điều Hành</strong>
+                        <p>Lan có hơn 10 năm kinh nghiệm trong ngành thương mại điện tử, dẫn dắt công ty đạt được vị thế hàng đầu trong lĩnh vực thời trang trực tuyến.</p>
+                        <ul class="fh5co-social-icons">
+                            <li><a href="#"><i class="icon-facebook"></i></a></li>
+                            <li><a href="#"><i class="icon-twitter"></i></a></li>
+                            <li><a href="#"><i class="icon-linkedin"></i></a></li>
+                            <li><a href="#"><i class="icon-instagram"></i></a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4 col-sm-4 animate-box" data-animate-effect="fadeIn">
-                <div class="fh5co-staff">
-                    <img src="images/person3.jpg" alt="Free HTML5 Templates by gettemplates.co">
-                    <h3>Alex King</h3>
-                    <strong class="role">Co-Owner</strong>
-                    <p>Quos quia provident consequuntur culpa facere ratione maxime commodi voluptates id repellat velit eaque aspernatur expedita. Possimus itaque adipisci.</p>
-                    <ul class="fh5co-social-icons">
-                        <li><a href="#"><i class="icon-facebook"></i></a></li>
-                        <li><a href="#"><i class="icon-twitter"></i></a></li>
-                        <li><a href="#"><i class="icon-dribbble"></i></a></li>
-                        <li><a href="#"><i class="icon-github"></i></a></li>
-                    </ul>
+                <div class="col-md-4 col-sm-4 animate-box" data-animate-effect="fadeIn">
+                    <div class="fh5co-staff">
+                        <img src="images/person2.jpg" alt="Trần Minh Tuấn">
+                        <h3>Trần Minh Tuấn</h3>
+                        <strong class="role">Giám Đốc Sáng Tạo</strong>
+                        <p>Tuấn là người đứng sau các chiến dịch thời trang độc đáo, hợp tác với các nhà thiết kế để mang đến những xu hướng mới nhất cho khách hàng.</p>
+                        <ul class="fh5co-social-icons">
+                            <li><a href="#"><i class="icon-facebook"></i></a></li>
+                            <li><a href="#"><i class="icon-twitter"></i></a></li>
+                            <li><a href="#"><i class="icon-linkedin"></i></a></li>
+                            <li><a href="#"><i class="icon-instagram"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 animate-box" data-animate-effect="fadeIn">
+                    <div class="fh5co-staff">
+                        <img src="images/person3.jpg" alt="Phạm Ngọc Mai">
+                        <h3>Phạm Ngọc Mai</h3>
+                        <strong class="role">Trưởng Phòng Marketing</strong>
+                        <p>Mai phụ trách các chiến lược tiếp thị số, đảm bảo các sản phẩm thời trang của chúng tôi luôn nổi bật và tiếp cận đúng đối tượng khách hàng.</p>
+                        <ul class="fh5co-social-icons">
+                            <li><a href="#"><i class="icon-facebook"></i></a></li>
+                            <li><a href="#"><i class="icon-twitter"></i></a></li>
+                            <li><a href="#"><i class="icon-linkedin"></i></a></li>
+                            <li><a href="#"><i class="icon-instagram"></i></a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -101,8 +105,8 @@
     <div class="container">
         <div class="row animate-box">
             <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-                <h2>Newsletter</h2>
-                <p>Just stay tune for our latest Product. Now you can subscribe</p>
+                <h2>Bản Tin</h2>
+                <p>Cập nhật những xu hướng thời trang mới nhất và ưu đãi đặc biệt. Đăng ký ngay để không bỏ lỡ!</p>
             </div>
         </div>
         <div class="row animate-box">
@@ -115,7 +119,7 @@
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-6">
-                        <button type="submit" class="btn btn-default btn-block">Subscribe</button>
+                        <button type="submit" class="btn btn-default btn-block">Đăng Ký</button>
                     </div>
                 </form>
             </div>

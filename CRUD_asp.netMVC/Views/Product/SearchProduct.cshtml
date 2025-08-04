@@ -109,7 +109,7 @@
                         ViewBag.brandID = @item.ID;
                         <div class="service-item" style="margin:auto;">
                             @* width: 200px;  *@
-                            <a asp-action="SearchProduct" asp-route-brandID="@item.ID" asp-route-cateID="@cateID" asp-route-productPage="1" asp-route-keyword="@keyword" class="services-item-image" style="display: block;">
+                            <a asp-controller="Product" asp-action="getProductByBrand" asp-route-brandID="@item.ID" asp-route-productPage="1" class="services-item-image" style="display: block  ;"> 
 
                                 <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow"
                                      style="width: 100%; max-width: 230px; height: 100px; object-fit: cover; display: block; margin: auto;

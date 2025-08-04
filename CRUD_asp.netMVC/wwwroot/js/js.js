@@ -1,5 +1,4 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
     $('.owl-clients').owlCarousel({
         loop: true, // Vòng lặp carousel
         margin: 10, // Khoảng cách giữa các phần tử
@@ -25,11 +24,56 @@ $(document).ready(function () {
             }
         }
     });
-});
 
-// truyen du lieu dang nhap dang ky qua pt post
-$(document).ready(function () {
+    // Truyen thong tin gmail cua contactUs
+    $('.sendMess').on('click', function () {
+        const fname = $('#fname').val();
+        const lname = $('#lname').val();
+        const email = $('#email').val();
+        const subject = $('#subject').val();
+        const message = $('#message').val();
 
+        $.ajax({
+            url: '/Home/Contact',
+            type: 'POST',
+            data: {
+                FirstName: fname,
+                LastName: lname,
+                Email: email,
+                Subject: subject,
+                Message: message,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+
+            success: function (response) {
+                $('#contactForm').find('.alert').remove();
+                if (response.success) {
+                    $('#contactForm').prepend('<div class="alert alert-success alert-dismissible show" role="alert">' + response.message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                    $('#contactForm')[0].reset(); // xoa du lieu da them sau khi gui thanh cong, false se du lai nham tranh mat du lieu khi them that bai
+                    setTimeout(function () {
+                        $('#contactForm').find('.alert').fadeOut('slow', function () {
+                            $(this).remove();
+                        });
+                    }, 3000);
+                } else {
+                    $('#contactForm').prepend('<div class="alert alert-danger alert-dismissible show" role="alert">' + response.message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                    setTimeout(function () {
+                        $('#contactForm').find('.alert').fadeOut('slow', function () {
+                            $(this).remove();
+                        });
+                    }, 3000);
+                }
+            },
+
+            error: function () {
+                $('#contactForm').find('.alert').remove();
+                $('#contactForm').prepend('<div class="alert alert-danger alert-dismissible show" role="alert">Đã xảy ra lỗi trong quá trình gửi. Vui lòng thử lại.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                setTimeout(function () { $('#contactForm').find('.alert').fadeOut('slow', function () { $(this).remove(); }); }, 3000);
+            }
+        });
+    });
+
+    // truyen du lieu dang nhap, dang ky qua pt post
     $('.bn5.login').on('click', function () {
         const btn = $(this);
         const email = $('.email').val();
@@ -87,9 +131,6 @@ $(document).ready(function () {
         });
 
     });
-});
-
-$(document).ready(function () {
 
     // Tang giam so luong trong gio hang (tranh bi luu lich su trang web khong nhu su dung method post)
     $('.quantity-btn').on('click', function () {

@@ -95,7 +95,7 @@ namespace CRUD_asp.netMVC.Controllers
                 if (account.Succeeded)
                 {
                     // Tao token 
-                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user); // yser co trong db thi moi tao duoc token
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user); // user co trong db thi moi tao duoc token
                     var confirmEmail = Url.Action("ConfirmEmail", "Auth", new { UserID = user.Id, Token = token }, Request.Scheme); // scheme: http, https
 
                     try

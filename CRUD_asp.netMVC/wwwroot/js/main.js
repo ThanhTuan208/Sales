@@ -12,10 +12,7 @@
 
                     $('body').removeClass('offcanvas');
                     $('.js-fh5co-nav-toggle').removeClass('active');
-
                 }
-
-
             }
         });
 

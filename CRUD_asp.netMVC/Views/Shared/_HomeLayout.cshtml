@@ -18,9 +18,7 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    @* <link rel="stylesheet" href="~/css/styleMe.css" asp-append-version="true" /> *@
-    @* <link rel="stylesheet" href="~/CRUD_asp.netMVC.styles.css" asp-append-version="true" /> *@
-
+    
     <!-- Animate.css -->
     <link rel="stylesheet" href="~/css/animate.css" asp-append-version="true">
     <!-- Icomoon Icon Fonts-->
@@ -101,7 +99,7 @@
                             @{
                                 var countCart = ViewData["cart"] as int?;
                                 if (countCart == null)
-                                {
+                                {       
                                     countCart = 0;
                                 }
                             }
