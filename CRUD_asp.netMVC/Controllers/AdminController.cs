@@ -27,9 +27,8 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // GET: GetProducts
-        [Route("Admin")]
-        [Route("Admin/Index")]
-        [Route("admin/{page:int}")]
+        [HttpGet]
+        [Route("Admin"), Route("Admin/Index"), Route("admin/{page:int}")]
         public async Task<IActionResult> Index(int page = 1)
         {
             var product = _context.Products.AsNoTracking()
@@ -41,8 +40,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // Find Porduct by keyword
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost,ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(int page = 1, string keyword = "")
         {
             var product = _context.Products.AsNoTracking()
@@ -56,6 +54,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // GET: GetProducts/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -108,6 +107,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // GET: GetProducts/Create  -> data d/s duoc cap nhat qua phuong thuc ReloadViewModel
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             return await ReloadViewModel(new ProductCreateViewModel());
@@ -270,6 +270,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // GET: GetProducts/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -316,8 +317,7 @@ namespace CRUD_asp.netMVC.Controllers
 
         // Note: get all properties GetProducts class
         // POST: GetProducts/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ProductEditViewModel viewModel)
         {
             if (id != viewModel.ID)

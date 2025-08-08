@@ -3,17 +3,13 @@
 @model GeneralProduct_ListCateBrand
 
 @{
-    // var count = 0;
-    var info = TempData["SuccessMessage"];
+    var countCart = ViewData["cart"] as int? ?? 0; 
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
     
 }
 
 <link rel="stylesheet" href="~/css/productDetail.css" asp-append-version="true">
-<style>
-
-</style>
 
 <header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(@Url.Content($"~/images/banner/banner2.jpg"));">
     <div class="overlay"></div>
@@ -22,8 +18,6 @@
             <div class="col-md-8 col-md-offset-2 text-center">
                 <div class="display-t">
                     <div class="display-tc animate-box" data-animate-effect="fadeIn">
-
-                        <h2>Free html5 templates by <a href="https://themewagon.com/theme_tag/free/" target="_blank">Themewagon</a></h2>
                     </div>
                 </div>
             </div>
@@ -41,16 +35,16 @@
                 <div class="owl-carousel owl-carousel-fullwidth product-carousel">
                     @foreach (var item in Model.Product.ProductImages)
                     {
-                    <div class="item">
-                        <div class="active text-center">
-                            <figure>
-                                <img src="@Url.Content($"~/images/products/{item.PathNameImage}")" alt="user" style="object-fit: cover" class="img-fluid p-3" />
-                            </figure>
+                        <div class="item">
+                            <div class="active text-center">
+                                <figure>
+                                    <img src="@Url.Content($"~/images/products/{item.PathNameImage}")" alt="user" style="object-fit: cover" class="img-fluid p-3" />
+                                </figure>
+                            </div>
                         </div>
-                    </div>
                     }
                 </div>
-                
+
                 <div class="d-flex gap-2 pb-5 justify-content-center">
                     @for (int i = 0; i < Model.Product.ProductImages.Count; i++)
                     {
@@ -148,31 +142,16 @@
                             <div class="row">
                                 <div class="col-md-6 offset-md-3 mt-5">
                                     <p class="d-flex justify-content-center me-4">
-                                        <input type="hidden" class="productID" name="productID" data-id="@Model.Product.ID" value="@Model.Product.ID" />
+                                        <input type="hidden" class="countCart" value="@countCart" />
+                                            <input type="hidden" class="productID" name="productID" data-id="@Model.Product.ID" value="@Model.Product.ID" />
                                         <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5" data-method="cart">Thêm giỏ hàng</button>
                                         <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5" data-method="buy">Mua ngay</button>
                                     </p>
                                 </div>
                             </div>
                         </div>
-                        @* Xu li post *@
-
-                        <!-- Hiển thị thông báo lỗi -->
-                        @if (TempData["ErrorMessage"] != null)
-                        {
-                            <div class="alert alert-danger alert-dismissible show" role="alert">
-                                @TempData["ErrorMessage"]
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        }
-                        <!-- Hiển thị thông báo thành công -->
-                        @if (TempData["SuccessMessage"] != null)
-                        {
-                            <div class="alert alert-success alert-dismissible show" role="alert">
-                                @TempData["SuccessMessage"]
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        }
+                       
+                        <div class="alertInfo"></div>   
                     </div>
                 </div>
             </div>
@@ -194,19 +173,20 @@
                             <div class="col-md-10 col-md-offset-1">
                                 <span class="price">SRP: @string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.NewPrice)</span>
                                 <h2>@Model.Product.Name</h2>
+
                                 <ul>
+
                                     <li><p>Giới tính: @Model.Product.Gender.Name</p></li>
                                     <li><p>Thương hiệu: @Model.Product.Brands.Name</p></li>
                                     <li><p>Danh mục: @Model.Product.Cate.Name</p></li>
-                                    <li><p>Mổ tả sản phẩm: @Model.Product.Description</p></li>
+                                    @* <li><p>Mổ tả sản phẩm: @Model.Product.Description</p></li> *@
                                     <li>Kích cỡ: @string.Join(", ", Model.Product.ProductSize.Select(s => s.size.Name))</li>
                                     <li>Phong cách: @string.Join(", ", Model.Product.ProductTags.Select(p => p.Tag.Name))</li>
                                     <li>Chất liệu: @string.Join(", ", Model.Product.ProductMaterial.Select(p => p.Material.Name))</li>
                                     <li>Màu sắc: @string.Join(", ", Model.Product.ProductColor.Select(c => c.Color.Name))</li>
                                 </ul>
 
-
-                                <p>Ullam dolorum iure dolore dicta fuga ipsa velit veritatis molestias totam fugiat soluta accusantium omnis quod similique placeat at. Dolorum ducimus libero fuga molestiae asperiores obcaecati corporis sint illo facilis.</p>
+                                @* <p>Ullam dolorum iure dolore dicta fuga ipsa velit veritatis molestias totam fugiat soluta accusantium omnis quod similique placeat at. Dolorum ducimus libero fuga molestiae asperiores obcaecati corporis sint illo facilis.</p> *@
 
                                 <div class="row">
                                     <div class="col-md-6">
@@ -226,16 +206,7 @@
                             <div class="col-md-10 col-md-offset-1">
                                 <h3>Product Specification</h3>
                                 <ul>
-                                    <li>Paragraph placeat quis fugiat provident veritatis quia iure a debitis adipisci dignissimos consectetur magni quas eius</li>
-                                    <li>adipisci dignissimos consectetur magni quas eius nobis reprehenderit soluta eligendi</li>
-                                    <li>Veritatis tenetur odio delectus quibusdam officiis est.</li>
-                                    <li>Magni quas eius nobis reprehenderit soluta eligendi quo reiciendis fugit? Veritatis tenetur odio delectus quibusdam officiis est.</li>
-                                </ul>
-                                <ul>
-                                    <li>Paragraph placeat quis fugiat provident veritatis quia iure a debitis adipisci dignissimos consectetur magni quas eius</li>
-                                    <li>adipisci dignissimos consectetur magni quas eius nobis reprehenderit soluta eligendi</li>
-                                    <li>Veritatis tenetur odio delectus quibusdam officiis est.</li>
-                                    <li>Magni quas eius nobis reprehenderit soluta eligendi quo reiciendis fugit? Veritatis tenetur odio delectus quibusdam officiis est.</li>
+                                    <li><p>Mổ tả sản phẩm: @Model.Product.Description</p></li>
                                 </ul>
                             </div>
                         </div>
@@ -306,4 +277,3 @@
         </div>
     </div>
 </div>
-

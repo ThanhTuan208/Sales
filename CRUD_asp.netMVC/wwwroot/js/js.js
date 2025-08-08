@@ -86,8 +86,6 @@
         let action = ProductID > 0 ? "LoginByProductID" : "Login";
         const url = productID > 0 ? `/${controller}/${action}/${productID}` : `/${controller}/${action}`;
 
-        console.log(url);
-
         $.ajax({
             url: url,
             type: 'POST',
@@ -129,7 +127,6 @@
                 alert('Đã xảy ra lỗi trong quá trình đăng nhập: ' + (xhr.responseText || 'Không xác định'));
             }
         });
-
     });
 
     // Tang giam so luong trong gio hang (tranh bi luu lich su trang web khong nhu su dung method post)
@@ -191,6 +188,7 @@
     $('.btn-option').on('click', function () {
         let btn = $(this);
         const itemID = $('.productID').data('id');
+
         let qtyInputNumber = parseInt($('#quantity').val()) || 1;
 
         let colorBtn = null;
@@ -220,15 +218,32 @@
                 },
 
                 success: function (response) {
+                    $('.alertInfo').find('.alert').remove();
                     if (response.success) {
                         console.log("Thêm sản phẩm vào giỏ hàng thành công." + response.message);
-                        window.location.href = `/Product/ProductDetail/${itemID}`;
+
+                        $('a.cart small.count').text(response.qtyNewCart); // Cập nhật số hiển thị trong navbar
+                        $('.countCart').val(response.qtyNewCart);
+
+                        $('.alertInfo').prepend('<div class="alert alert-success alert-dismissible show" role="alert">' + response.message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                        setTimeout(function () {
+                            $('.alertInfo').find('.alert').fadeOut('slow', function () {
+                                $(this).remove();
+                            });
+                        }, 3000);
+                        //window.location.href = `/Product/ProductDetail/${itemID}`;
                     }
                     else {
                         console.log("Thêm sản phẩm vào giỏ hàng thất bại." + response.message);
-
                         if (response.authenticated == 1) {
-                            window.location.href = `/Product/ProductDetail/${response.productID}`;
+
+                            $('.alertInfo').prepend('<div class="alert alert-danger alert-dismissible show" role="alert">' + response.message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                            setTimeout(function () {
+                                $('.alertInfo').find('.alert').fadeOut('slow', function () {
+                                    $(this).remove();
+                                });
+                            }, 3000);
+                            //window.location.href = `/Product/ProductDetail/${response.productID}`;
                         }
                         else {
                             window.location.href = `/Auth/LoginByProductID/${response.productID}`;

@@ -9,10 +9,10 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 
 <link rel="stylesheet" href="~/css/styleCart.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/productDetail.css" asp-append-version="true" />
 
 <section class="ftco-section">
     <div class="container">
-
         <div class="row">
             <div class="col-md-8  mb-5">
                 <div class="col-md-12 text-center mb-4">
@@ -35,7 +35,6 @@
                         </thead>
                         <tbody>
                             @{
-                                var count = 0;
                                 foreach (var item in Model.CartItems)
                                 {
 
@@ -105,6 +104,7 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
             <div class="col-md-4">
                 <div class="card shadow-2-strong mb-5 mb-lg-0" style="border-radius: 16px">
@@ -194,6 +194,7 @@
                 </div>
             </div>
         </div>
+    </div>
 </section>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -5,20 +5,20 @@ namespace CRUD_asp.netMVC.DTO.Home
 {
     public class MailContactDTO
     {
-        [Required(ErrorMessage = "Vui lòng nhập tên")]
+        [Required(ErrorMessage = "tên")]
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập họ")]
+        [Required(ErrorMessage = "họ")]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập Email"), EmailAddress(ErrorMessage = "Vui lòng nhập địa chỉ email hợp lệ")]
+        [Required(ErrorMessage = "Email"), EmailAddress(ErrorMessage = "địa chỉ email hợp lệ")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập tiêu đề")]
+        [Required(ErrorMessage = "tiêu đề")]
         public string Subject { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập nội dung tin nhắn")]
-        [StringLength(1000, ErrorMessage = "Nội dung tin nhắn không được vượt quá 1000 ký tự")]
+        [Required(ErrorMessage = "nội dung tin nhắn")]
+        [StringLength(3000, ErrorMessage = "nội dung tin nhắn không được vượt quá {1} ký tự")]
         public string Message { get; set; }
     }
 }

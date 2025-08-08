@@ -1,19 +1,11 @@
 ﻿using CRUD_asp.netMVC.Data;
-using CRUD_asp.netMVC.Data;
-using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Models.ViewModels.Home;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Build.Logging;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using NuGet.Common;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 
 namespace CRUD_asp.netMVC.Controllers
 {

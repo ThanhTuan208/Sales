@@ -93,23 +93,19 @@ namespace CRUD_asp.netMVC.Controllers
 
                 if (productExists == null)
                 {
-                    ModelState.AddModelError("Cart", "Sản phẩm khôn`g tồn tại");
-                    return NotFound();
+                    return Json(new { success = false, message = "Sản phẩm không tồn tại" });
                 }
 
                 if (color == null && size == null)
                 {
-                    TempData["ErrorMessage"] = "Vui lòng chọn phân loại sản phẩm";
                     return Json(new { success = false, authenticated = 1, message = "Vui lòng chọn phân loại sản phẩm", productID = productID, });
                 }
                 else if (color == null)
                 {
-                    TempData["ErrorMessage"] = "Bạn cần chọn màu của sản phẩm";
                     return Json(new { success = false, authenticated = 1, message = "Bạn cần chọn màu của sản phẩm", productID = productID, });
                 }
                 else if (size == null)
                 {
-                    TempData["ErrorMessage"] = "Bạn cần chọn kích thước của sản phẩm";
                     return Json(new { success = false, authenticated = 1, message = "Bạn cần chọn kích thước của sản phẩm", productID = productID, });
                 }
                 else
@@ -142,11 +138,13 @@ namespace CRUD_asp.netMVC.Controllers
 
                         await context.SaveChangesAsync();
 
-                        TempData["SuccessMessage"] = "Thêm sản phẩm vào giỏ hàng thành công";
+                        var countCart = await context.Carts.Where(p => p.UserID == userID).ToListAsync();
+
                         return Json(new
                         {
                             success = true,
                             authenticated = 1,
+                            qtyNewCart = countCart.Count, // Cap nhat so luong gio hang
                             message = "Thêm sản phẩm vào giỏ hàng thành công"
                         });
                     }
@@ -164,8 +162,8 @@ namespace CRUD_asp.netMVC.Controllers
             }
             catch (Exception)
             {
-                TempData["ErrorMessage"] = "Thêm sản phẩm vào giỏ hàng không thành công";
-                return Json(new { success = false, message = "Thêm sản phẩm vào giỏ hàng không thành công" });
+                //TempData["ErrorMessage"] = "Thêm sản phẩm vào giỏ hàng không thành công";
+                return Json(new { success = false, message = "Thêm sản phẩm vào giỏ hàng không thành công. " });
             }
         }
 
@@ -266,7 +264,7 @@ namespace CRUD_asp.netMVC.Controllers
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json(new { success = false, message = "Vui lòng đăng nhập để cập nhật giỏ hàng" });
             }

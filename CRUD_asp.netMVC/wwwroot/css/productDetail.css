@@ -1,5 +1,16 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
+﻿/* Import font Open Sans */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
 
+/* Định nghĩa font icomoon */
+@font-face {
+    font-family: 'icomoon';
+    src: url("../fonts/icomoon/icomoon.eot?srf3rx");
+    src: url("../fonts/icomoon/icomoon.eot?srf3rx#iefix") format("embedded-opentype"), url("../fonts/icomoon/icomoon.ttf?srf3rx") format("truetype"), url("../fonts/icomoon/icomoon.woff?srf3rx") format("woff"), url("../fonts/icomoon/icomoon.svg?srf3rx#icomoon") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Phần CSS cho sản phẩm chi tiết (không thay đổi) */
 .item .active img {
     margin: auto;
     margin-bottom: 5px;
@@ -15,14 +26,6 @@
         transform: scale(1);
     }
 
-/*#main-img {
-    width: 100%;
-    height: 600px;
-    object-fit: cover;
-    border-radius: 15px;
-    box-shadow: 5px 4px 20px 4px;
-}
-*/
 .thumbnail-img {
     display: flex;
     justify-content: center;
@@ -136,28 +139,6 @@
             height: 600px;
             min-width: 100%;
         }
-    /* Đảm bảo img-select không vượt quá khung chứa */
-    /*.product-detail-container.img-select {
-        max-width: 100%;*/ /* Giới hạn chiều rộng tối đa bằng khung chứa */
-    /*overflow-x: auto;*/ /* Nếu có quá nhiều ảnh, cho phép cuộn ngang */
-    /*white-space: nowrap;*/ /* Đảm bảo các ảnh hiển thị trên một hàng */
-    /*display: flex;*/ /* Sử dụng flexbox để sắp xếp các ảnh */
-    /*gap: 10px;*/ /* Khoảng cách giữa các ảnh */
-    /*}*/
-
-    /* Điều chỉnh kích thước của img-item (thumbnail) */
-    /*.product-detail-container .img-item {
-        width: 100px;*/ /* Đặt chiều rộng cố định cho mỗi thumbnail */
-    /*height: 100px;*/ /* Đặt chiều cao cố định */
-    /*flex-shrink: 0;*/ /* Ngăn thumbnail bị co lại */
-    /*}*/
-
-    /* Đảm bảo ảnh bên trong img-item vừa khung */
-    /*.product-detail-container .img-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;*/ /* Đảm bảo ảnh không bị méo */
-    /*}*/
 
     .product-detail-container .img-select {
         display: flex;
@@ -189,7 +170,6 @@
         color: #12263a;
         margin: 1rem 0;
     }
-
 
     .product-detail-container .product-link {
         text-decoration: none;
@@ -263,7 +243,7 @@
     .product-detail-container .product-detail ul li {
         margin: 0;
         list-style: none;
-        background: url(https://fadzrinmadu.github.io/hosted-assets/product-detail-page-design-with-image-slider-html-css-and-javascript/checked.png) left center no-repeat;
+        background: ur[](https://fadzrinmadu.github.io/hosted-assets/product-detail-page-design-with-image-slider-html-css-and-javascript/checked.png) left center no-repeat;
         background-size: 18px;
         padding-left: 1.7rem;
         margin: 0.4rem 0;

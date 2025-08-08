@@ -112,7 +112,7 @@ public class HomeController : Controller
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                return Json(new { success = false, message = string.Join(", ", errors) });
+                return Json(new { success = false, message = "Vui lòng nhập " + string.Join(", ", errors.OrderBy(e => e)) });
             }
 
             if (!User.Identity.IsAuthenticated || !int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userCurrent))
@@ -154,8 +154,8 @@ public class HomeController : Controller
                 subject: "Xác nhận yêu cầu hỗ trợ - E-commerce",
                 message: $@"
             <p>Xin chào {HttpUtility.HtmlEncode(mail.FirstName)},</p>
-            <p>Cảm ơn bạn đã liên hệ với chúng tôi. Yêu cầu của bạn với tiêu đề <strong>{HttpUtility.HtmlEncode(mail.Subject)}</strong> đã được ghi nhận.</p>
-            <p>Chúng tôi sẽ phản hồi trong vòng 24 giờ. Nếu cần hỗ trợ ngay, vui lòng liên hệ: nguyenthanhtuankrp1@gmail.com hoặc 1900 1234.</p>
+            <p>Cảm ơn bạn đã liên hệ với chúng tôi. Yêu cầu của bạn với tiêu đề '<strong>{HttpUtility.HtmlEncode(mail.Subject)}</strong>' đã được ghi nhận.</p>
+            <p>Chúng tôi sẽ phản hồi trong vòng 24 giờ. Nếu cần hỗ trợ ngay, vui lòng liên hệ: nguyenthanhtuankrp1@gmail.com hoặc một chín không không một không không có.</p>
             <p>Trân trọng,<br>E-commerce</p>"
             );
 
@@ -164,7 +164,6 @@ public class HomeController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "Lỗi gửi email hỗ trợ: Contact");
-
             return Json(new { success = false, message = "Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại sau hoặc liên hệ qua nguyenthanhtuankrp1@gmail.com." });
         }
     }

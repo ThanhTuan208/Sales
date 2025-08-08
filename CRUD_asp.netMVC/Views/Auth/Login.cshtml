@@ -2,7 +2,6 @@
 @model Login
 @{
     var productID = ViewData["id"] as int?;
-    var controller = "Auth";
     var action = productID > 0 ? "LoginByProductID" : "Login";
     var ProductID = productID > 0 ? productID.ToString() : string.Empty;
 
