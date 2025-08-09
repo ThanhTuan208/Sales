@@ -20,7 +20,7 @@ namespace CRUD_asp.netMVC.Models.Auth
         public string? ProfileImage { get; set; }
         public DateTime StartDate { get; set; }
 
-        public int? RoleID { get; set; }
+        public int RoleID { get; set; }
         public Roles? Roles { get; set; }
 
         public Manager? Manager { get; set; }

@@ -77,8 +77,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             var hashPass2 = new PasswordHasher<Users>().HashPassword(null, "123456");
         }
 
-
-
+       
         public static void SeedFeatured(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Featured>().HasData(
@@ -88,12 +87,13 @@ namespace CRUD_asp.netMVC.Data.Seed
                  );
 
         }
+
         public static void SeedRoels(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Roles>().HasData(
 
-                 new Roles { Id = 1, Name = "Manager" },
-                 new Roles { Id = 2, Name = "Customer" }
+                 new Roles { Id = 1, Name = "Admin", NormalizedName = "ADMIN" },
+                 new Roles { Id = 2, Name = "Customer", NormalizedName ="CUSTOMER"}
                  );
         }
 

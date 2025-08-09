@@ -1,23 +1,26 @@
 ﻿@using CRUD_asp.netMVC.Models.Auth.ActionViewModel
 @model Register
 @{
+    var passView = ViewData["pass"] ?? string.Empty;
     Layout = "_AuthLayout";
 }
 
-<form method="post" asp-controller="Auth" asp-action="Register" class="form1">
+@* <form method="post" asp-controller="Auth" asp-action="Register" class="form1"> *@
+<div class="form1">
     <div class="container my-5">
         <div class="row justify-content-center align-items-center"
              style="height: 80vh;">
-            <div class="col-lg-5">
-                <h1 class="text-center" style="">REGISTER</h1>
+            <div class="col-md-5">
+                <h1 class="text-center" style="">ĐĂNG KÝ TÀI KHOẢN</h1>
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating my-2">
-                            <input asp-for="FirstName"                     
+                            <input asp-for="FirstName"
+                                   id="fname"
                                    class="form-control"
                                    placeholder="Enter First Name" />
-                            <label class="form-label ms-1">First Name</label>
+                            <label class="form-label ms-1">Tên</label>
                             <span asp-validation-for="FirstName" class="text-danger"></span>
                         </div>
                     </div>
@@ -25,9 +28,10 @@
                         <div class="form-floating my-2">
                             <div class="form-floating my-2">
                                 <input asp-for="LastName"
+                                       id="lname"
                                        class="form-control"
                                        placeholder="Enter Last Name" />
-                                <label for="" class="form-label ms-1">Last Name</label>
+                                <label for="" class="form-label ms-1">Họ</label>
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                         </div>
@@ -36,34 +40,68 @@
 
                 <div class="form-floating my-2">
                     <input asp-for="UserName"
+                           id="uname"
                            class="form-control"
                            placeholder="Enter User Name" />
-                    <label for="" class="form-label ms-1">User Name</label>
+                    <label for="" class="form-label ms-1">Tên người dùng</label>
                     <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
 
                 <div class="form-floating my-2">
                     <input asp-for="Email"
+                           id="email"
                            class="form-control"
                            placeholder="Enter Email" />
                     <label for="" class="form-label ms-1">Email</label>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
-                <div class="form-floating my-2">
-                    <input asp-for="Phone"
-                           class="form-control"
-                           placeholder="Enter Phone" />
-                    <label for="" class="form-label ms-1">Phone</label>
-                    <span asp-validation-for="Phone" class="text-danger"></span>
-                </div>
+
+                @if (passView.Equals("nhonaovay1"))
+                {
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating my-2">
+                                <select id="role"
+                                        class="form-control">
+                                    @* tinh chinh lai value phu hop voi db *@
+                                    <option value="1" selected>Admin</option>
+                                </select>
+                                <label class="form-label">Vai trò</label>
+                                <span class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating my-2">
+                                <input asp-for="Phone"
+                                       id="phone"
+                                       class="form-control"
+                                       placeholder="Enter Phone" />
+                                <label for="" class="form-label ms-1">Số điện thoại</label>
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-floating my-2">
+                        <input asp-for="Phone"
+                               id="phone"
+                               class="form-control"
+                               placeholder="Enter Phone" />
+                        <label for="" class="form-label ms-1">Số điện thoại</label>
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+                }
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating my-2">
                             <input asp-for="Password"
+                                   id="pass"
                                    class="form-control"
                                    placeholder="Enter Password" />
-                            <label for="" class="form-label ms-1">Password</label>
+                            <label for="" class="form-label ms-1">Mật khẩu</label>
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                     </div>
@@ -71,24 +109,32 @@
                         <div class="form-floating my-2">
                             <div class="form-floating my-2">
                                 <input asp-for="ConfirmPassword"
+                                       id="confirm"
                                        class="form-control"
                                        placeholder="Enter Confirm Password" />
-                                <label for="" class="form-label ms-1">Confirm Password</label>
+                                <label for="" class="form-label ms-1">Xác nhận mật khẩu</label>
                                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                @Html.AntiForgeryToken()
+                    
                 <div class="d-grid">
-                    <button type="submit" class="bn5">Sign up</button>
+                    <input type="hidden" id="passView" value="@passView" />
+                    <button type="button" class="bn5 register">Đăng ký</button>
                 </div>
+
+                @* <span asp-validation-for="InfoGeneral" class="text-danger"></span> *@
+
                 <div class="d-flex justify-content-end mt-3">
                     <a asp-action="Login" class="text-dark my-2"><strong><span>Quay lại</span></strong></a>
                 </div>
             </div>
         </div>
     </div>
-</form>
+</div>
+@* </form> *@
 
 

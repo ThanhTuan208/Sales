@@ -70,9 +70,6 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<int>("RoleID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RolesId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -80,8 +77,6 @@ namespace CRUD_asp.netMVC.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.HasIndex("RolesId");
 
                     b.ToTable("Register");
                 });
@@ -219,12 +214,14 @@ namespace CRUD_asp.netMVC.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Manager"
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Customer"
+                            Name = "Customer",
+                            NormalizedName = "CUSTOMER"
                         });
                 });
 
@@ -345,7 +342,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<string>("ProfileImage")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RoleID")
+                    b.Property<int>("RoleID")
                         .HasColumnType("int");
 
                     b.Property<int?>("RolesId")
@@ -2050,7 +2047,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("PathImage")
+                    b.Property<string>("PathNameImage")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductID")
@@ -5806,7 +5803,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "đem boost em ai, ho tro chay bo hieu qua",
                             NormalizedName = "giay adidas ultraboost",
                             OldPrice = 3400000.0,
-                            PicturePath = "adidas_shoes.webp",
+                            PicturePath = "adidas_shoes.jpg",
                             Quantity = 50
                         },
                         new
@@ -6401,7 +6398,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "phong cach the thao, thoang mat",
                             NormalizedName = "quan short lacoste",
                             OldPrice = 0.0,
-                            PicturePath = "lacoste_shorts.jpg",
+                            PicturePath = "lacoste_short.jpg",
                             Quantity = 40
                         },
                         new
@@ -6622,7 +6619,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thanh lich, sang trong",
                             NormalizedName = "giay cao got chanel",
                             OldPrice = 9000000.0,
-                            PicturePath = "chanel_heels.jpg",
+                            PicturePath = "chanel_shoes.jpg",
                             Quantity = 10
                         },
                         new
@@ -7060,15 +7057,6 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.ActionViewModel.Register", b =>
-                {
-                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Roles", "Roles")
-                        .WithMany()
-                        .HasForeignKey("RolesId");
-
-                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Customer", b =>

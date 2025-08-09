@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CRUD_asp.netMVC.Migrations
 {
     /// <inheritdoc />
-    public partial class initialFirstDB : Migration
+    public partial class innitialCreateDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -122,6 +122,24 @@ namespace CRUD_asp.netMVC.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Register",
+                columns: table => new
+                {
+                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoleID = table.Column<int>(type: "int", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    ConfirmPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Season",
                 columns: table => new
                 {
@@ -201,9 +219,11 @@ namespace CRUD_asp.netMVC.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ProfileImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RoleID = table.Column<int>(type: "int", nullable: true),
+                    RoleID = table.Column<int>(type: "int", nullable: false),
                     RolesId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -225,30 +245,6 @@ namespace CRUD_asp.netMVC.Migrations
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_AspNetRoles_RolesId",
-                        column: x => x.RolesId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Register",
-                columns: table => new
-                {
-                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ConfirmPassword = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RoleID = table.Column<int>(type: "int", nullable: false),
-                    RolesId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.ForeignKey(
-                        name: "FK_Register_AspNetRoles_RolesId",
                         column: x => x.RolesId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id");
@@ -768,8 +764,8 @@ namespace CRUD_asp.netMVC.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, null, "Manager", null },
-                    { 2, null, "Customer", null }
+                    { 1, null, "Admin", "ADMIN" },
+                    { 2, null, "Customer", "CUSTOMER" }
                 });
 
             migrationBuilder.InsertData(
@@ -913,15 +909,15 @@ namespace CRUD_asp.netMVC.Migrations
                 columns: new[] { "ID", "BrandID", "CateID", "Created", "Description", "FeaturedID", "GenderID", "Name", "NewPrice", "NormalizedDescription", "NormalizedName", "OldPrice", "PicturePath", "Quantity" },
                 values: new object[,]
                 {
-                    { 1, 1, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo khoác nam chính hãng Nike, phong cách thể thao", 2, 1, "Áo khoác nam Nike", 1500000.0, "ao khoac nam chinh hang nike, phong cach the thao", "ao khoac nam nike", 1800000.0, "jacket1.jpg", 100 },
-                    { 2, 1, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Quần thể thao Nike chất liệu thoáng mát, phù hợp tập luyện", 2, 1, "Quần thể thao Nike", 900000.0, "quan the thao nike chat lieu thoang mat, phu hop tap luyen", "quan the thao nike", 0.0, "pants1.webp", 80 },
-                    { 3, 1, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Giày thể thao Nike Air Max thoải mái và bền bỉ", 2, 1, "Giày Nike Air Max", 2800000.0, "giay the thao nike air max thoai mai va ben bi", "giay nike air max", 3000000.0, "shoes1.jpg", 60 },
-                    { 4, 1, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Váy thể thao nữ năng động, thiết kế hiện đại", 2, 2, "Váy thể thao Nike nữ", 1100000.0, "vay the thao nu nang đong, thiet ke hien đai", "vay the thao nike nu", 0.0, "dress1.jpg", 40 },
-                    { 5, 1, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo thun nam Nike cổ tròn, chất liệu cotton thoải mái", 2, 1, "Áo thun Nike basic", 590000.0, "ao thun nam nike co tron, chat lieu cotton thoai mai", "ao thun nike basic", 650000.0, "tshirt1.jpg", 200 },
-                    { 6, 1, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đồng hồ thể thao phong cách Nike, chống nước, dây silicon", 2, 3, "Đồng hồ thể thao Nike", 1900000.0, "đong ho the thao phong cach nike, chong nuoc, day silicon", "đong ho the thao nike", 0.0, "watch1.jpg", 25 },
+                    { 1, 1, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo khoác nam chính hãng Nike, phong cách thể thao", 2, 1, "Áo khoác nam Nike", 1500000.0, "ao khoac nam chinh hang nike, phong cach the thao", "ao khoac nam nike", 1800000.0, "nike_jacket.jpg", 100 },
+                    { 2, 1, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Quần thể thao Nike chất liệu thoáng mát, phù hợp tập luyện", 2, 1, "Quần thể thao Nike", 900000.0, "quan the thao nike chat lieu thoang mat, phu hop tap luyen", "quan the thao nike", 0.0, "nike_pants.webp", 80 },
+                    { 3, 1, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Giày thể thao Nike Air Max thoải mái và bền bỉ", 2, 1, "Giày Nike Air Max", 2800000.0, "giay the thao nike air max thoai mai va ben bi", "giay nike air max", 3000000.0, "nike_shoes.jpg", 60 },
+                    { 4, 1, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Váy thể thao nữ năng động, thiết kế hiện đại", 2, 2, "Váy thể thao Nike nữ", 1100000.0, "vay the thao nu nang đong, thiet ke hien đai", "vay the thao nike nu", 0.0, "nike_dress.jpg", 40 },
+                    { 5, 1, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo thun nam Nike cổ tròn, chất liệu cotton thoải mái", 2, 1, "Áo thun Nike basic", 590000.0, "ao thun nam nike co tron, chat lieu cotton thoai mai", "ao thun nike basic", 650000.0, "nike_tshirt.jpg", 200 },
+                    { 6, 1, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đồng hồ thể thao phong cách Nike, chống nước, dây silicon", 2, 3, "Đồng hồ thể thao Nike", 1900000.0, "đong ho the thao phong cach nike, chong nuoc, day silicon", "đong ho the thao nike", 0.0, "nike_watch.jpg", 25 },
                     { 7, 2, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế cổ điển, chống gió và giữ ấm tốt", 2, 1, "Áo khoác Adidas Originals", 1450000.0, "thiet ke co đien, chong gio va giu am tot", "ao khoac adidas originals", 1600000.0, "adidas_jacket.jpg", 70 },
                     { 8, 2, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Quần thể thao thoải mái, phù hợp vận động", 2, 1, "Quần jogger Adidas", 850000.0, "quan the thao thoai mai, phu hop van đong", "quan jogger adidas", 0.0, "adidas_pants.jpg", 90 },
-                    { 9, 2, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đệm Boost êm ái, hỗ trợ chạy bộ hiệu quả", 2, 3, "Giày Adidas Ultraboost", 3200000.0, "đem boost em ai, ho tro chay bo hieu qua", "giay adidas ultraboost", 3400000.0, "adidas_shoes.webp", 50 },
+                    { 9, 2, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đệm Boost êm ái, hỗ trợ chạy bộ hiệu quả", 2, 3, "Giày Adidas Ultraboost", 3200000.0, "đem boost em ai, ho tro chay bo hieu qua", "giay adidas ultraboost", 3400000.0, "adidas_shoes.jpg", 50 },
                     { 10, 2, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Váy thể thao nhẹ, thấm hút mồ hôi tốt", 2, 2, "Váy tennis Adidas nữ", 990000.0, "vay the thao nhe, tham hut mo hoi tot", "vay tennis adidas nu", 0.0, "adidas_dress.jpg", 45 },
                     { 11, 2, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo thun cổ điển, logo 3 sọc đặc trưng", 2, 1, "Áo thun Adidas cổ tròn", 650000.0, "ao thun co đien, logo 3 soc đac trung", "ao thun adidas co tron", 700000.0, "adidas_tshirt.jpg", 150 },
                     { 12, 2, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế năng động, chống nước tốt", 2, 3, "Đồng hồ thể thao Adidas", 1750000.0, "thiet ke nang đong, chong nuoc tot", "đong ho the thao adidas", 0.0, "adidas_watch.jpg", 30 },
@@ -956,7 +952,7 @@ namespace CRUD_asp.netMVC.Migrations
                     { 41, 7, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Logo cổ điển, phong cách Mỹ", 2, 3, "Áo thun cổ tròn Levi's", 500000.0, "logo co đien, phong cach my", "ao thun co tron levi's", 550000.0, "levis_tshirt.jpg", 100 },
                     { 42, 7, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đơn giản, mạnh mẽ, cá tính", 2, 1, "Đồng hồ dây da Levi's", 850000.0, "đon gian, manh me, ca tinh", "đong ho day da levi's", 0.0, "levis_watch.jpg", 15 },
                     { 43, 8, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế năng động, thời trang", 2, 3, "Áo khoác thể thao Lacoste", 2700000.0, "thiet ke nang đong, thoi trang", "ao khoac the thao lacoste", 2900000.0, "lacoste_jacket.jpg", 30 },
-                    { 44, 8, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách thể thao, thoáng mát", 2, 1, "Quần short Lacoste", 1450000.0, "phong cach the thao, thoang mat", "quan short lacoste", 0.0, "lacoste_shorts.jpg", 40 },
+                    { 44, 8, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách thể thao, thoáng mát", 2, 1, "Quần short Lacoste", 1450000.0, "phong cach the thao, thoang mat", "quan short lacoste", 0.0, "lacoste_short.jpg", 40 },
                     { 45, 8, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Chất liệu cao cấp, thiết kế tinh tế", 2, 1, "Giày sneaker Lacoste", 2200000.0, "chat lieu cao cap, thiet ke tinh te", "giay sneaker lacoste", 2400000.0, "lacoste_shoes.jpg", 25 },
                     { 46, 8, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lịch sự, sang trọng cho nữ", 2, 2, "Váy polo Lacoste", 1900000.0, "lich su, sang trong cho nu", "vay polo lacoste", 0.0, "lacoste_dress.jpg", 18 },
                     { 47, 8, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Biểu tượng nổi bật với logo cá sấu", 2, 1, "Áo thun cá sấu Lacoste", 1100000.0, "bieu tuong noi bat voi logo ca sau", "ao thun ca sau lacoste", 1200000.0, "lacoste_tshirt.jpg", 55 },
@@ -969,7 +965,7 @@ namespace CRUD_asp.netMVC.Migrations
                     { 54, 9, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế mạnh mẽ, phong cách", 2, 1, "Đồng hồ thể thao Puma", 1200000.0, "thiet ke manh me, phong cach", "đong ho the thao puma", 0.0, "puma_watch.jpg", 18 },
                     { 55, 10, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đẳng cấp, thời thượng, thiết kế quý phái", 2, 2, "Áo khoác dạ Chanel", 9500000.0, "đang cap, thoi thuong, thiet ke quy phai", "ao khoac da chanel", 10000000.0, "chanel_jacket.jpg", 15 },
                     { 56, 10, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đường may tinh xảo, chất liệu mềm mịn", 2, 2, "Quần vải cao cấp Chanel", 7200000.0, "đuong may tinh xao, chat lieu mem min", "quan vai cao cap chanel", 0.0, "chanel_pants.jpg", 12 },
-                    { 57, 10, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thanh lịch, sang trọng", 2, 2, "Giày cao gót Chanel", 8300000.0, "thanh lich, sang trong", "giay cao got chanel", 9000000.0, "chanel_heels.jpg", 10 },
+                    { 57, 10, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thanh lịch, sang trọng", 2, 2, "Giày cao gót Chanel", 8300000.0, "thanh lich, sang trong", "giay cao got chanel", 9000000.0, "chanel_shoes.jpg", 10 },
                     { 58, 10, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lộng lẫy, thiết kế quyến rũ", 2, 2, "Váy dạ hội Chanel", 13000000.0, "long lay, thiet ke quyen ru", "vay da hoi chanel", 0.0, "chanel_dress.jpg", 8 },
                     { 59, 10, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đơn giản nhưng đầy tinh tế", 2, 2, "Áo thun cao cấp Chanel", 3200000.0, "đon gian nhung đay tinh te", "ao thun cao cap chanel", 3500000.0, "chanel_tshirt.jpg", 20 },
                     { 60, 10, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Tinh xảo, sang trọng và nữ tính", 2, 2, "Đồng hồ Chanel sang trọng", 18000000.0, "tinh xao, sang trong va nu tinh", "đong ho chanel sang trong", 0.0, "chanel_watch.jpg", 6 }
@@ -2089,11 +2085,6 @@ namespace CRUD_asp.netMVC.Migrations
                 name: "IX_ProductTag_ProductID",
                 table: "ProductTag",
                 column: "ProductID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Register_RolesId",
-                table: "Register",
-                column: "RolesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_ProductID",

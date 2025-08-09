@@ -9,6 +9,8 @@ using Register = CRUD_asp.netMVC.Models.Auth.ActionViewModel.Register;
 using Login = CRUD_asp.netMVC.Models.Auth.ActionViewModel.Login;
 using CRUD_asp.netMVC.Models.Service;
 using System.Diagnostics.Eventing.Reader;
+using Microsoft.AspNetCore.Authorization;
+using Org.BouncyCastle.Tls;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -27,12 +29,23 @@ namespace CRUD_asp.netMVC.Controllers
             _roleManager = roleManager;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
+        [HttpGet, Route("Auth/Register")]
         public IActionResult Register() => View();
+
+        // Tro toi url dang ky admin de tao tk noi bo
+        //[Authorize(Roles = "Admin")]
+        [HttpGet, Route("Auth/Register/Admin")]
+        public IActionResult Register(string pass)
+        {
+            if (pass != null && pass.ToLower().Trim() == "nhonaovay1")
+            {
+                ViewData["pass"] = pass;
+
+                return View();
+            }
+
+            return Redirect("/Auth/Register"); // Link tuyet doi
+        }
 
         /// Thay doi name co cac ki tu co dau thanh khong dau
         public string RemoveDiacritics(string text)
@@ -66,14 +79,44 @@ namespace CRUD_asp.netMVC.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) return View(register);
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState
+                        .Where(ms => ms.Value.Errors.Count > 0)
+                        .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Nhập thông tin đăng kí tài khoản của bạn !!!",
+                        errors = errors
+                    });
+                }
+
+                // Kiem tra loi trung username trong identity
+                var UserNameExists = await _userManager.FindByNameAsync(RemoveDiacritics(register.UserName));
+                if (UserNameExists != null)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Tên của bạn đã bị trùng, bạn cần đổi tên khác. ",
+                        errors = new {  UserName = new[] { "Tên của bạn đã bị trùng, bạn cần đổi tên khác. " } }
+                    });
+                }
 
                 var existEmail = await _userManager.FindByEmailAsync(register.Email.Trim());
-
                 if (existEmail != null)
                 {
-                    ModelState.AddModelError("Email", "Email đã tồn tại");
-                    return View(register);
+                    //ModelState.AddModelError("Email", "Email đã tồn tại");
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Email đã tồn tại",
+                        errors = new { Email = new[] { "Email đã tồn tại" } }
+                    });
                 }
 
                 var user = new Users
@@ -83,6 +126,7 @@ namespace CRUD_asp.netMVC.Controllers
                     LastName = register.LastName,
                     Email = register.Email,
                     PhoneNumber = register.Phone,
+                    RoleID = register.RoleID,
                     StartDate = register.StartDate,
                     PhoneNumberConfirmed = true, // Xac thuc sdt
                     EmailConfirmed = false, // false email truoc khi gui xac thuc
@@ -94,7 +138,7 @@ namespace CRUD_asp.netMVC.Controllers
 
                 if (account.Succeeded)
                 {
-                    // Tao token 
+                    // Tao token cho action ConfirmEmail
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user); // user co trong db thi moi tao duoc token
                     var confirmEmail = Url.Action("ConfirmEmail", "Auth", new { UserID = user.Id, Token = token }, Request.Scheme); // scheme: http, https
 
@@ -112,22 +156,24 @@ namespace CRUD_asp.netMVC.Controllers
                             $"</div>"
                         );
                         // tra ve thong bao xac thuc email
-                        ModelState.AddModelError("Email", "Vui lòng xác thực Email của bạn tại trang https://mail.google.com/");
+                        //ModelState.AddModelError("Email", "Vui lòng xác thực Email của bạn tại trang https://mail.google.com/");
+                        return Json(new
+                        {
+                            success = true,
+                            message = "Vui lòng xác thực Email của bạn tại trang https://mail.google.com/",
+                            errors = new { Email = new[] { "Vui lòng xác thực Email của bạn tại trang https://mail.google.com/" } }
+                        });
                     }
                     catch (Exception ex)
                     {
                         ModelState.AddModelError(string.Empty, "Lỗi khi gửi email xác nhận: " + ex.Message);
-                        return View(register);
+                        return Json(new { success = false, message = "Lỗi khi gửi email xác nhận: " + ex.Message });
                     }
                 }
                 else
                 {
-                    //await _userManager.DeleteAsync(user);
-                    //await _context.SaveChangesAsync();
-
                     foreach (var error in account.Errors)
                     {
-                        Console.WriteLine(error.Code, error.Description);
                         ModelState.AddModelError(error.Code, error.Description);
                     }
                 }
@@ -136,8 +182,8 @@ namespace CRUD_asp.netMVC.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "Lỗi đăng kí tài khoản" + ex);
-                return View(register);
+                //ModelState.AddModelError(string.Empty, "Lỗi đăng kí tài khoản");
+                return Json(new { success = false, message = "Lỗi đăng kí tài khoản: " + ex.Message });
             }
         }
 
@@ -166,12 +212,6 @@ namespace CRUD_asp.netMVC.Controllers
                     });
                 }
 
-                if (login.Email == "Admin" && login.Password == "123")
-                {
-                    return Json(new { success = true, message = "Đăng nhập thành công." });
-                }
-
-
                 var user = await _userManager.FindByEmailAsync(login.Email.Trim());
 
                 if (user == null || !await _userManager.CheckPasswordAsync(user, login.Password))
@@ -188,7 +228,7 @@ namespace CRUD_asp.netMVC.Controllers
 
                 if (!user.EmailConfirmed)
                 {
-                    ModelState.AddModelError("Email", "Email chưa được xác thực !!!");
+                    //ModelState.AddModelError("Email", "Email chưa được xác thực !!!");
                     return Json(new
                     {
                         success = false,
@@ -281,14 +321,14 @@ namespace CRUD_asp.netMVC.Controllers
         /// <param name="UserID"></param>
         /// <param name="token"></param>
         /// <returns></returns>
+        [HttpGet]
         public async Task<IActionResult> ConfirmEmail(string UserID, string token)
         {
             var user = await _userManager.FindByIdAsync(UserID);
-            if (user == null) return View("Không tìm thấy người dùng này");
+            if (user == null) return View("Không tim thấy người dùng này !!!");
 
             // kiem tra khi nguoi dung da xac thuc email lan truoc nhung lai xac thuc lan nua
             if (_context.Manager.Where(p => p.UserID == user.Id).Any() ||
-               _context.Staff.Where(p => p.UserID == user.Id).Any() ||
                _context.Customer.Where(p => p.UserID == user.Id).Any())
             {
                 return RedirectToAction("Login", "Auth");
@@ -299,13 +339,9 @@ namespace CRUD_asp.netMVC.Controllers
             {
                 string role = "Customer";
 
-                if (user.Email.Contains("nhanvien", StringComparison.OrdinalIgnoreCase))
+                if (user.RoleID == 1)
                 {
-                    role = "Staff";
-                }
-                else if (user.Email.Contains("nguyenthanhtuankrp1", StringComparison.OrdinalIgnoreCase))
-                {
-                    role = "Manager";
+                    role = "Admin";
                 }
 
                 if (!await _roleManager.RoleExistsAsync(role))

@@ -73,9 +73,80 @@
         });
     });
 
-    // truyen du lieu dang nhap, dang ky qua pt post
+    // Truyen du lieu dang ki tai khoan
+    $('.bn5.register').on('click', function () {
+        const fname = $('#fname').val();
+        const lname = $('#lname').val();
+        const uname = $('#uname').val();
+        const email = $('#email').val();
+        const role = $('#role').val();
+        const phone = $('#phone').val();
+        const pass = $('#pass').val();
+        const confirm = $('#confirm').val();
+        const passRegisterView = $('#passView').val();
+
+        //let url;
+        //if (passRegisterView !== null && passRegisterView !== "undefined") {
+        //    url = "";
+        //}
+        console.log(role);
+        console.log(passRegisterView);
+        $.ajax({
+            url: "/Auth/Register",
+            type: "POST",
+            data: {
+                FirstName: fname,
+                LastName: lname,
+                UserName: uname,
+                Email: email,
+                Phone: phone,
+                RoleID: role,
+                Password: pass,
+                ConfirmPassword: confirm,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+
+            success: function (response) {
+                if (response.success) {
+
+                    console.log("Thông báo Email: " + response.message);
+
+                    $('.text-danger').text('');
+
+                    Object.keys(response.errors).forEach(function (field) {
+                        const messages = response.errors[field];
+                        const correctField = field.charAt(0).toUpperCase() + field.slice(1);
+                        $(`span[data-valmsg-for="${correctField}"]`).text(messages);
+                    });
+                }
+                else {
+
+                    console.log("Thông báo lỗi: " + response.message);
+
+                    $('.text-danger').text('');
+                    if (response.errors !== null || response.errors !== "undefined")
+                        Object.keys(response.errors).forEach(function (field) {
+                            const messages = response.errors[field];
+                            const correctField = field.charAt(0).toUpperCase() + field.slice(1);
+                            $(`span[data-valmsg-for="${correctField}"]`).text(messages);
+                            //console.log(correctField);
+                            //console.log(messages);
+                        });
+                    else {
+                        alert('Lỗi đăng ký trả về không xác định: ' + response.message);
+                    }
+                }
+            },
+
+            error: function (response) {
+                console.log('Lỗi AJAX: ', response.message); // Log chi tiết lỗi
+                alert('Đã xảy ra lỗi trong quá trình đăng ký: ' + (response.message || 'Không xác định'));
+            }
+        });
+    });
+
+    // truyen du lieu dang nhap qua pt post
     $('.bn5.login').on('click', function () {
-        const btn = $(this);
         const email = $('.email').val();
         const pass = $('.pass').val();
         const check = $('.form-check-input').is(':checked');
@@ -122,9 +193,9 @@
                 }
             },
 
-            error: function (xhr) {
-                console.log('Lỗi AJAX: ', xhr.responseText); // Log chi tiết lỗi
-                alert('Đã xảy ra lỗi trong quá trình đăng nhập: ' + (xhr.responseText || 'Không xác định'));
+            error: function (response) {
+                console.log('Lỗi AJAX: ', response.message); // Log chi tiết lỗi
+                alert('Đã xảy ra lỗi trong quá trình đăng nhập: ' + (response.message || 'Không xác định'));
             }
         });
     });
