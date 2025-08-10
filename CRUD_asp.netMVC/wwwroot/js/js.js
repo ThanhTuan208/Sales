@@ -25,6 +25,42 @@
         }
     });
 
+    // Them san pham moi
+    //$('#addProduct').on('click', function () {
+    //    const name = $('#name').val();
+    //    const price = $('#price').val();
+    //    const description = $('#description').val();
+    //    const category = $('#category').val();
+    //    const picture = $('#picture').val();
+
+    //    console.log(picture);
+    //    $.ajax({
+    //        url: '/Product/Add',
+    //        type: 'POST',
+    //        data: {
+    //            Name: name,
+    //            Price: price,
+    //            Description: description,
+    //            CategoryID: category,
+    //            Image: image,
+    //            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+    //        },
+    //        success: function (response) {
+    //            if (response.success) {
+    //                console.log("Thêm sản phẩm thành công." + response.message);
+    //                window.location.href = `/Product/Index`;
+    //            } else {
+    //                console.log("Thêm sản phẩm thất bại." + response.message);
+    //                alert('Lỗi thêm sản phẩm: ' + response.message);
+    //            }
+    //        },
+    //        error: function (response) {
+    //            console.log("Lỗi AJAX khi thêm sản phẩm." + response.message);
+    //            alert('Đã xảy ra lỗi trong quá trình thêm sản phẩm.');
+    //        }
+    //    });
+    //});
+
     // Truyen thong tin gmail cua contactUs
     $('.sendMess').on('click', function () {
         const fname = $('#fname').val();
@@ -73,6 +109,96 @@
         });
     });
 
+    // Thiet lap mat khau moi khi gui code mail
+    $('#newPassForget').on('click', function () {
+        const email = $('#email').val();
+        const code= $('#code').val();
+        const newPass = $('#newPass').val();
+
+        $.ajax({
+            url: "/Auth/ForgotPassword",
+            type: "POST",
+            data: {
+                Email: email,
+                Code: code,
+                NewPass: newPass,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+
+            success: function (response) {
+                if (response.success) {
+                    console.log("Thông báo sucess true: " + response.message || "Không xác định");
+                    window.location.href = "/Auth/Login";
+                }
+                else {
+                    console.log("Thông báo sucess false: " + response.message || "Không xác định");
+                    $('.text-danger').text('');
+
+                    Object.keys(response.errors).forEach(function (field) {
+                        const messages = response.errors[field];
+                        const correctField = field.charAt(0).toUpperCase() + field.slice(1);
+                        $(`span[data-valmsg-for="${correctField}"]`).text(messages);
+                    });
+                }
+            },
+
+            error: function (response) {
+                console.log('Lỗi AJAX: ', response.message);
+                alert('Đã xảy ra lỗi trong quá trình gửi mã OTP Code: ' + (response.message || 'Không xác định'));
+            }
+        });
+    });
+
+    // Truyen input email@gmail.com de gui code mail
+    $('#sendMailForget').on('click', function () {
+        const email = $('#email').val();
+
+        $.ajax({
+            url: "/Auth/SendOTPCodeMail",
+            type: "POST",
+            data: {
+                Email: email,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+
+            success: function (response) {
+                if (response.success) {
+                    console.log("Thông báo sucess true: " + response.message || "Không xác định");
+                    $('.text-danger').text('');
+
+                    Object.keys(response.corrects).forEach(function (field) {
+                        const messages = response.corrects[field];
+                        const correctField = field.charAt(0).toUpperCase() + field.slice(1);
+                        $(`span[data-valmsg-for="${correctField}"]`)
+                            .text(messages)
+                            .removeClass('text-danger')
+                            .addClass('text-success');
+                    });
+                }
+                else {
+                    console.log("Thông báo sucess false: " + response.message || "Không xác định");
+                    $('.text-danger').text('');
+
+                    Object.keys(response.errors).forEach(function (field) {
+                        const messages = response.errors[field];
+                        const correctField = field.charAt(0).toUpperCase() + field.slice(1);
+                        $(`span[data-valmsg-for="${correctField}"]`)
+                            .text(messages)
+                            .removeClass('text-success')
+                            .addClass('text-danger');;
+
+                    });
+
+                }
+            },
+
+            error: function (response) {
+                console.log('Lỗi AJAX: ', response.message);
+                alert('Đã xảy ra lỗi trong quá trình gửi mã OTP Code: ' + (response.message || 'Không xác định'));
+            }
+        });
+    });
+
     // Truyen du lieu dang ki tai khoan
     $('.bn5.register').on('click', function () {
         const fname = $('#fname').val();
@@ -83,14 +209,7 @@
         const phone = $('#phone').val();
         const pass = $('#pass').val();
         const confirm = $('#confirm').val();
-        const passRegisterView = $('#passView').val();
 
-        //let url;
-        //if (passRegisterView !== null && passRegisterView !== "undefined") {
-        //    url = "";
-        //}
-        console.log(role);
-        console.log(passRegisterView);
         $.ajax({
             url: "/Auth/Register",
             type: "POST",
@@ -139,7 +258,7 @@
             },
 
             error: function (response) {
-                console.log('Lỗi AJAX: ', response.message); // Log chi tiết lỗi
+                console.log('Lỗi AJAX: ', response.message);
                 alert('Đã xảy ra lỗi trong quá trình đăng ký: ' + (response.message || 'Không xác định'));
             }
         });
@@ -181,18 +300,14 @@
 
                     $('.text-danger').text('');
 
-                    if (response.errors && response.errors.length > 0) {
-                        response.errors.forEach(error => {
-                            $('span[data-valmsg-for="InfoGeneral"]').each(function () {
-                                if (error.includes($(this).attr('data-valmsg-for')) || error.includes('Email') || error.includes('mật khẩu')) {
-                                    $(this).text(error).show();
-                                }
-                            });
-                        });
-                    }
+                    Object.keys(response.errors).forEach(function (field) {
+                        const messages = response.errors[field];
+                        const correctField = field.charAt(0).toUpperCase() + field.slice(1);
+                        $(`span[data-valmsg-for="${correctField}"]`).text(messages);
+                    });
                 }
             },
-
+                
             error: function (response) {
                 console.log('Lỗi AJAX: ', response.message); // Log chi tiết lỗi
                 alert('Đã xảy ra lỗi trong quá trình đăng nhập: ' + (response.message || 'Không xác định'));

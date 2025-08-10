@@ -11,10 +11,13 @@ using System.Globalization;
 using System.Text;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
+using Microsoft.AspNetCore.Authorization;
+using NuGet.Protocol;
 
 
 namespace CRUD_asp.netMVC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         public readonly AppDBContext _context;
@@ -40,7 +43,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // Find Porduct by keyword
-        [HttpPost,ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(int page = 1, string keyword = "")
         {
             var product = _context.Products.AsNoTracking()
@@ -113,160 +116,172 @@ namespace CRUD_asp.netMVC.Controllers
             return await ReloadViewModel(new ProductCreateViewModel());
         }
 
-        // POST: GetProducts/Create 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductCreateViewModel viewModel)
         {
-            if (ModelState.IsValid)
+
+            try
             {
-                try
+                if (!ModelState.IsValid)
                 {
-                    Products products = new Products()
+                    var errors = ModelState
+                        .Where(ms => ms.Value.Errors.Count > 0)
+                        .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+                    return Json(new
                     {
-                        Name = viewModel.Name,
-                        NormalizedName = RemoveDiacritics(viewModel.Name),
-                        Description = viewModel.Description,
-                        NormalizedDescription = RemoveDiacritics(viewModel.Description),
-                        NewPrice = viewModel.NewPrice,
-                        OldPrice = viewModel.OldPrice,
-                        Quantity = viewModel.Quantity,
-                        GenderID = viewModel.GenderID,
-                        BrandID = viewModel.BrandID,
-                        CateID = viewModel.CateID,
-                        FeaturedID = viewModel.FeaturedID
-                    };
-
-                    if (viewModel.Picture != null && viewModel.Picture.Any())
-                    {
-                        bool IsFirstImage = true;
-                        foreach (var file in viewModel.Picture)
-                        {
-                            var getPathExtentions = Path.GetExtension(file.FileName).ToLower();
-                            var fileExtentions = new[] { ".jpg", ".png", ".jpeg", ".webp" };
-
-                            if (!fileExtentions.Contains(getPathExtentions))
-                            {
-                                ModelState.AddModelError("Picture", "Không thể tải lên file này, vui lòng chọn file có đuôi jpg, png, jpeg, webp");
-                                return await ReloadViewModel(viewModel);
-                            }
-
-                            var nameFile = Guid.NewGuid().ToString() + getPathExtentions;
-                            var fileUpLoadPath = Path.Combine(environment.WebRootPath, "images", "Products", nameFile).Replace("\\", "/");
-
-                            using (var fileStream = new FileStream(fileUpLoadPath, FileMode.Create))
-                            {
-                                await file.CopyToAsync(fileStream);
-                            }
-
-                            var imagePath = Path.Combine("", "", nameFile).ToLower().Replace("\\", "/");
-
-                            _context.Products.Add(products);
-                            await _context.SaveChangesAsync(); // Them du lieu productID truoc khi them cac entity khac
-
-                            _context.ProductImages.Add(new ProductImages()
-                            {
-                                ProductID = products.ID,
-                                PathNameImage = imagePath
-                            });
-
-                            if (IsFirstImage)
-                            {
-                                products.PicturePath = imagePath;
-                                IsFirstImage = false;
-                            }
-
-                        }
-
-                    }
-
-                    if (viewModel.SelectedColorID != null && viewModel.SelectedColorID.Any())
-                    {
-                        foreach (var ColorID in viewModel.SelectedColorID)
-                        {
-                            _context.ProductColor.Add(new ProductColors()
-                            {
-                                ProductID = products.ID,
-                                ColorID = ColorID
-                            });
-                        }
-                    }
-
-                    if (viewModel.SelectedSizeID != null && viewModel.SelectedSizeID.Any())
-                    {
-                        foreach (var SizeID in viewModel.SelectedSizeID)
-                        {
-                            _context.ProductSize.Add(new ProductSize()
-                            {
-                                ProductID = products.ID,
-                                SizeID = SizeID
-                            });
-                        }
-                    }
-
-                    if (viewModel.SelectedMaterialID != null && viewModel.SelectedMaterialID.Any())
-                    {
-                        foreach (var MateID in viewModel.SelectedMaterialID)
-                        {
-                            _context.ProductMaterial.Add(new ProductMaterial()
-                            {
-                                ProductID = products.ID,
-                                MaterialID = MateID
-                            });
-                        }
-                    }
-
-                    if (viewModel.SelectedSeasonID != null && viewModel.SelectedSeasonID.Any())
-                    {
-                        foreach (var SeasonID in viewModel.SelectedSeasonID)
-                        {
-                            _context.ProductSeason.Add(new ProductSeason()
-                            {
-                                ProductID = products.ID,
-                                SeasonID = SeasonID
-                            });
-                        }
-                    }
-
-                    if (viewModel.SelectedStyleID != null && viewModel.SelectedStyleID.Any())
-                    {
-                        foreach (var StyleID in viewModel.SelectedStyleID)
-                        {
-                            _context.ProductStyle.Add(new ProductStyle()
-                            {
-                                ProductID = products.ID,
-                                StyleID = StyleID
-                            });
-                        }
-                    }
-
-                    if (viewModel.SelectedTagID != null && viewModel.SelectedTagID.Any())
-                    {
-                        foreach (var TagID in viewModel.SelectedTagID)
-                        {
-                            _context.ProductTag.Add(new ProductTag()
-                            {
-                                ProductID = products.ID,
-                                TagID = TagID
-                            });
-                        }
-                    }
-
-
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                        success = false,
+                        message = "Nhập thông tin sản phẩm của bạn !!!",
+                        errors = errors
+                    });
                 }
-                catch (Exception ex)
+
+                Products products = new Products()
                 {
-                    ModelState.AddModelError("Loi: ", $"{ex.Message}");
-                    if (ex.InnerException != null)
+                    Name = viewModel.Name,
+                    NormalizedName = RemoveDiacritics(viewModel.Name),
+                    Description = viewModel.Description,
+                    NormalizedDescription = RemoveDiacritics(viewModel.Description),
+                    NewPrice = viewModel.NewPrice,
+                    OldPrice = viewModel.OldPrice,
+                    Quantity = viewModel.Quantity,
+                    GenderID = viewModel.GenderID,
+                    BrandID = viewModel.BrandID,
+                    CateID = viewModel.CateID,
+                    FeaturedID = viewModel.FeaturedID
+                };
+
+                if (viewModel.Picture != null && viewModel.Picture.Any())
+                {
+                    bool IsFirstImage = true;
+                    foreach (var file in viewModel.Picture)
                     {
-                        ModelState.AddModelError("Loi: ", $"{ex.InnerException.Message}");
+                        var getPathExtentions = Path.GetExtension(file.FileName).ToLower();
+                        var fileExtentions = new[] { ".jpg", ".png", ".jpeg", ".webp" };
+
+                        if (!fileExtentions.Contains(getPathExtentions))
+                        {
+                            ModelState.AddModelError("Picture", "Không thể tải lên file này, vui lòng chọn file có đuôi jpg, png, jpeg, webp");
+                            return await ReloadViewModel(viewModel);
+                        }
+
+                        var nameFile = Guid.NewGuid().ToString() + getPathExtentions;
+                        var fileUpLoadPath = Path.Combine(environment.WebRootPath, "images", "Products", nameFile).Replace("\\", "/");
+
+                        using (var fileStream = new FileStream(fileUpLoadPath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                        }
+
+                        var imagePath = Path.Combine(nameFile).ToLower().Replace("\\", "/");
+
+                        _context.Products.Add(products);
+                        await _context.SaveChangesAsync(); // Them du lieu productID truoc khi them cac entity khac
+
+                        _context.ProductImages.Add(new ProductImages()
+                        {
+                            ProductID = products.ID,
+                            PathNameImage = imagePath
+                        });
+
+                        if (IsFirstImage)
+                        {
+                            products.PicturePath = imagePath;
+                            IsFirstImage = false;
+                        }
                     }
-                    return await ReloadViewModel(viewModel);
                 }
+
+                if (viewModel.SelectedColorID != null && viewModel.SelectedColorID.Any())
+                {
+                    foreach (var ColorID in viewModel.SelectedColorID)
+                    {
+                        _context.ProductColor.Add(new ProductColors()
+                        {
+                            ProductID = products.ID,
+                            ColorID = ColorID
+                        });
+                    }
+                }
+
+                if (viewModel.SelectedSizeID != null && viewModel.SelectedSizeID.Any())
+                {
+                    foreach (var SizeID in viewModel.SelectedSizeID)
+                    {
+                        _context.ProductSize.Add(new ProductSize()
+                        {
+                            ProductID = products.ID,
+                            SizeID = SizeID
+                        });
+                    }
+                }
+
+                if (viewModel.SelectedMaterialID != null && viewModel.SelectedMaterialID.Any())
+                {
+                    foreach (var MateID in viewModel.SelectedMaterialID)
+                    {
+                        _context.ProductMaterial.Add(new ProductMaterial()
+                        {
+                            ProductID = products.ID,
+                            MaterialID = MateID
+                        });
+                    }
+                }
+
+                if (viewModel.SelectedSeasonID != null && viewModel.SelectedSeasonID.Any())
+                {
+                    foreach (var SeasonID in viewModel.SelectedSeasonID)
+                    {
+                        _context.ProductSeason.Add(new ProductSeason()
+                        {
+                            ProductID = products.ID,
+                            SeasonID = SeasonID
+                        });
+                    }
+                }
+
+                if (viewModel.SelectedStyleID != null && viewModel.SelectedStyleID.Any())
+                {
+                    foreach (var StyleID in viewModel.SelectedStyleID)
+                    {
+                        _context.ProductStyle.Add(new ProductStyle()
+                        {
+                            ProductID = products.ID,
+                            StyleID = StyleID
+                        });
+                    }
+                }
+
+                if (viewModel.SelectedTagID != null && viewModel.SelectedTagID.Any())
+                {
+                    foreach (var TagID in viewModel.SelectedTagID)
+                    {
+                        _context.ProductTag.Add(new ProductTag()
+                        {
+                            ProductID = products.ID,
+                            TagID = TagID
+                        });
+                    }
+                }
+
+
+                await _context.SaveChangesAsync();
+                //return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "Thêm sản vào thành công. " });
+
             }
-
-            return await ReloadViewModel(viewModel);
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Loi: ", $"{ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    ModelState.AddModelError("Loi: ", $"{ex.InnerException.Message}");
+                }
+                await ReloadViewModel(viewModel);
+                return Json(new { success = false, message = "Thêm sản vào thất bại. " });
+            }
         }
 
         // GET: GetProducts/Edit/5

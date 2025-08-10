@@ -1,6 +1,5 @@
 ﻿using CRUD_asp.netMVC.Data.Seed;
 using CRUD_asp.netMVC.Models.Auth;
-using CRUD_asp.netMVC.Models.Auth.ActionViewModel;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Product;
 using Microsoft.AspNetCore.Identity;
@@ -12,10 +11,7 @@ namespace CRUD_asp.netMVC.Data
 {
     public class AppDBContext : IdentityDbContext<Users, Roles, int>
     {
-        public AppDBContext(DbContextOptions<AppDBContext> DBContext) : base(DBContext)
-        {
-
-        }
+        public AppDBContext(DbContextOptions<AppDBContext> DBContext) : base(DBContext) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -83,6 +79,7 @@ namespace CRUD_asp.netMVC.Data
 
         //public DbSet<Users>? Users { get; set; }
         //public DbSet<Roles>? Roles { get; set; }
+        //public DbSet<Staff> Staff { get; set; }
         public DbSet<Featured>? Featured { get; set; }
         public DbSet<Products>? Products { get; set; }
         public DbSet<Brand>? Brand { get; set; }
@@ -93,7 +90,6 @@ namespace CRUD_asp.netMVC.Data
         public DbSet<Payment>? Payment { get; set; }
         public DbSet<Reviews>? Reviews { get; set; }
         public DbSet<Manager> Manager { get; set; }
-        public DbSet<Staff> Staff { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<Season> Season { get; set; }
         public DbSet<Tag> Tag { get; set; }

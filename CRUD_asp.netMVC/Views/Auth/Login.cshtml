@@ -1,15 +1,15 @@
-﻿@using CRUD_asp.netMVC.Models.Auth.ActionViewModel
+﻿@using CRUD_asp.netMVC.DTO.Auth
 @model Login
 @{
     var productID = ViewData["id"] as int?;
     var action = productID > 0 ? "LoginByProductID" : "Login";
-    var ProductID = productID > 0 ? productID.ToString() : string.Empty;
+    var Product = productID > 0 ? productID.ToString() : string.Empty;
 
     Layout = "_AuthLayout";
 }
 <input type="hidden" class="productID" data-id="@productID" />
-@* <form method="post" asp-controller="@controller" asp-action="@action" asp-route-productID="@ProductID" class="form1"> *@
-<div class="form1">
+<form method="post" asp-controller="Auth" asp-action="@action" asp-route-productID="@Product" class="form1">
+
     <div class="container my-5">
         <div class="row justify-content-center align-items-center"
              style="height: 81vh;">
@@ -18,7 +18,7 @@
                 <div class="form-floating my-3">
                     <input asp-for="Email"
                            class="form-control email"
-                           placeholder="Enter Email" />
+                           placeholder="Nhập Email" />
                     <label for="" class="form-label ms-1">Email</label>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
@@ -26,7 +26,7 @@
                 <div class="form-floating my-3">
                     <input asp-for="Password"
                            class="form-control pass"
-                           placeholder="Enter Password" />
+                           placeholder="Nhập mật khẩu" />
                     <label for="" class="form-label ms-1">Mật khẩu</label>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
@@ -47,9 +47,9 @@
                 @Html.AntiForgeryToken()
 
                 <div class="d-grid">
-                    <button type="submit" class="bn5 login">Đăng nhập</button>
+                    <button type="button" class="bn5 login">Đăng nhập</button>
                 </div>
-                
+
                 <div class="d-flex justify-content-between mt-3">
                     <p>Bạn đã có tài khoản chưa ?</p>
                     <a asp-action="register" class="text-decoration text-dark"><strong><span>Đăng ký</span></strong></a>
@@ -81,5 +81,5 @@
             </div>
         </div>
     </div>
-</div>
-@* </form> *@
+
+</form>

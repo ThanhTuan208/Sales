@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CRUD_asp.netMVC.Models.Auth.ActionViewModel
+namespace CRUD_asp.netMVC.DTO.Auth
 {
     public class Register
     {

@@ -1,12 +1,11 @@
-﻿@using CRUD_asp.netMVC.Models.Auth.ActionViewModel
+﻿@using CRUD_asp.netMVC.DTO.Auth
 @model Register
 @{
     var passView = ViewData["pass"] ?? string.Empty;
     Layout = "_AuthLayout";
 }
 
-@* <form method="post" asp-controller="Auth" asp-action="Register" class="form1"> *@
-<div class="form1">
+<form method="post" asp-controller="Auth" asp-action="Register" class="form1">
     <div class="container my-5">
         <div class="row justify-content-center align-items-center"
              style="height: 80vh;">
@@ -120,13 +119,11 @@
                 </div>
 
                 @Html.AntiForgeryToken()
-                    
+
                 <div class="d-grid">
                     <input type="hidden" id="passView" value="@passView" />
                     <button type="button" class="bn5 register">Đăng ký</button>
                 </div>
-
-                @* <span asp-validation-for="InfoGeneral" class="text-danger"></span> *@
 
                 <div class="d-flex justify-content-end mt-3">
                     <a asp-action="Login" class="text-dark my-2"><strong><span>Quay lại</span></strong></a>
@@ -134,7 +131,6 @@
             </div>
         </div>
     </div>
-</div>
-@* </form> *@
+</form>
 
 

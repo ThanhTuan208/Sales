@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CRUD_asp.netMVC.Migrations
 {
     /// <inheritdoc />
-    public partial class innitialCreateDB : Migration
+    public partial class intialFristDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

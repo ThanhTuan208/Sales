@@ -1,5 +1,5 @@
-﻿using CRUD_asp.netMVC.Models.Auth;
-using CRUD_asp.netMVC.Models.Auth.ActionViewModel;
+﻿using CRUD_asp.netMVC.DTO.Auth;
+using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Product;
 using Microsoft.AspNetCore.Identity;
