@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
 using NuGet.Protocol;
+using SixLabors.ImageSharp.Formats.Bmp;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -92,7 +94,6 @@ namespace CRUD_asp.netMVC.Controllers
                 }
 
                 var user = await _userManager.FindByEmailAsync(login.Email.Trim());
-
                 if (user == null || !await _userManager.CheckPasswordAsync(user, login.Password))
                 {
                     return Json(new
@@ -110,14 +111,23 @@ namespace CRUD_asp.netMVC.Controllers
                     {
                         success = false,
                         message = "Email chưa được xác thực !!!",
-                        errors = new { InfoGeneral = new[] { "Bạn cần truy cập vào email để xác thực tài khoản !" } }
+                        errors = new { InfoGeneral = new[] { "Bạn cần truy cập vào Gmail để xác thực tài khoản !" } }
                     });
                 }
 
                 var account = await _signInManager.PasswordSignInAsync(user, login.Password, login.RememberMe, lockoutOnFailure: false);
                 if (account.Succeeded)
                 {
-                    return Json(new { success = true, message = "Đăng nhập thành công." });
+                    var roleUser = await _userManager.GetRolesAsync(user);
+                    if (roleUser.Contains("Admin"))
+                    {
+                        return Json(new { success = true, role = "Admin", message = "Đăng nhập thành công acc Admin." });
+                    }
+                    else
+                    {
+                        return Json(new { success = true, role = "Customer", message = "Đăng nhập thành công acc Customer." });
+
+                    }
                 }
                 else
                 {
@@ -207,7 +217,6 @@ namespace CRUD_asp.netMVC.Controllers
                 var existEmail = await _userManager.FindByEmailAsync(register.Email.Trim());
                 if (existEmail != null)
                 {
-                    //ModelState.AddModelError("Email", "Email đã tồn tại");
                     return Json(new
                     {
                         success = false,
@@ -230,13 +239,14 @@ namespace CRUD_asp.netMVC.Controllers
                     SecurityStamp = Guid.NewGuid().ToString("D"),
                 };
 
-                // Tao truoc db user, mat khau duoc haspass
+                // Tao truoc db user, kem mat khau duoc haspass
                 var account = await _userManager.CreateAsync(user, register.Password);
 
                 if (account.Succeeded)
                 {
                     // Tao token cho action ConfirmEmail
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user); // user co trong db thi moi tao duoc token
+
                     var confirmEmail = Url.Action("ConfirmEmail", "Auth", new { UserID = user.Id, Token = token }, Request.Scheme); // scheme: http, https
 
                     try
@@ -252,8 +262,8 @@ namespace CRUD_asp.netMVC.Controllers
                             $"<p>Nếu bạn không đăng ký, vui lòng bỏ qua email này.</p>" +
                             $"</div>"
                         );
+
                         // tra ve thong bao xac thuc email
-                        //ModelState.AddModelError("Email", "Vui lòng xác thực Email của bạn tại trang https://mail.google.com/");
                         return Json(new
                         {
                             success = true,
@@ -319,7 +329,7 @@ namespace CRUD_asp.netMVC.Controllers
                 <p>Xin chào {HttpUtility.HtmlEncode(accout.UserName)},</p>
                 <p>Chúng tôi đã nhận được yêu cầu liên hệ của bạn.</p>
                 <p>Mã xác nhận của bạn là: <strong>{otpCode}</strong></p>
-                <p>Vui lòng nhập mã này để tiếp tục quá trình hỗ trợ.</p>
+                <p>Vui lòng nhập mã này để tiếp tục quá trình hỗ trợ. sau 5 phút chúng tôi sẽ hủy bỏ mã này, nếu bạn muốn lấy lại mã vui lòng thực hiện lại các bước trên.</p>
                 <br/>
                 <p><strong>Thông tin người liên hệ:</strong></p>
                 <ul>
@@ -328,7 +338,7 @@ namespace CRUD_asp.netMVC.Controllers
                 </ul>
                 <p><strong>Liên hệ hỗ trợ:</strong> nguyenthanhtuankrp1@gmail.com | 1900 1234</p>";
 
-                // Luu otp trong catche -> 5p
+                // Luu otp catche trong gmail -> 5p
                 _cache.Set($"OTP_{accout.Email}", otpCode, TimeSpan.FromMinutes(5));
 
                 // Gửi email trả lời
@@ -379,8 +389,8 @@ namespace CRUD_asp.netMVC.Controllers
                     return Json(new
                     {
                         success = false,
-                        message = "Mã chưa chính xác. ",
-                        errors = new { Code = new[] { $"Mã: {forgot.Code.Trim()} X. " } }
+                        message = "Mã OPT phải có 4 số. ",
+                        errors = new { InfoGeneral = new[] { $"Mã OPT phải có 4 số. " } }
                     });
                 }
 
@@ -391,7 +401,7 @@ namespace CRUD_asp.netMVC.Controllers
                     {
                         success = false,
                         message = "Mã chưa chính xác. ",
-                        errors = new { NewPass = new[] { "Mật khẩu phải từ 8-20 ký tự, bao gồm ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (~!@#$%^&*()_+=?).\"" } }
+                        errors = new { InfoGeneral = new[] { "Mật khẩu phải từ 8-20 ký tự, bao gồm ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (~!@#$%^&*()_+=?).\"" } }
                     });
                 }
 
@@ -401,8 +411,29 @@ namespace CRUD_asp.netMVC.Controllers
                     return Json(new
                     {
                         success = false,
-                        message = "cần nhập đúng email tài khoản của bạn. ",
-                        errors = new { Email = new[] { $"cần nhập đúng email tài khoản của bạn. " } }
+                        message = "Cần nhập đúng email tài khoản của bạn. ",
+                        errors = new { InfoGeneral = new[] { $"cần nhập đúng email tài khoản của bạn. " } }
+                    });
+                }
+
+                var verifyOTP = _cache.TryGetValue($"OTP_{forgot.Email}", out string? otpCode);
+                if (!verifyOTP)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Mã OTP đã hết hạn hoặc không tồn tại.",
+                        errors = new { InfoGeneral = new[] { "Mã OTP đã hết hạn hoặc không tồn tại." } }
+                    });
+                }
+
+                if (otpCode != null && !otpCode.Equals(forgot.Code.Trim()))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Mã OTP không đúng.",
+                        errors = new { InfoGeneral = new[] { "Mã OTP không đúng. " } }
                     });
                 }
 

@@ -37,19 +37,19 @@ namespace CRUD_asp.netMVC.Models.Product
         public DateTime Created { get; set; } = DateTime.Now;
 
         [Required]
-        public int FeaturedID { get; set; }
+        public int? FeaturedID { get; set; }
         public Featured? Featured { get; set; }
 
         [Required]
-        public int GenderID { get; set; }
+        public int? GenderID { get; set; }
         public Gender? Gender { get; set; }
 
         [Required]
-        public int BrandID { get; set; }
+        public int? BrandID { get; set; }
         public Brand? Brands { get; set; }
 
         [Required]
-        public int CateID { get; set; }
+        public int? CateID { get; set; }
         public Category? Cate { get; set; }
 
         public List<AddToCart>? Carts { get; set; }

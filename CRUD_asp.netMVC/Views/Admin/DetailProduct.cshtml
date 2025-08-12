@@ -1,0 +1,38 @@
+﻿@using CRUD_asp.netMVC.Models.Product
+@model Products
+
+@{
+    ViewData["Title"] = "DetailProduct";
+}
+
+<div class="product-detail-container">
+    <h1 class="text-center" style="color: #2c3e50; margin-bottom: 20px;">Sản phẩm chi tiết</h1>
+    <hr style="border-color: #ddd;" />
+    <div class="product-card">
+        <div class="product-image">
+            <img src="@Url.Content($"~/images/products/{Model.PicturePath}")" alt=""  />
+        </div>
+        <div class="product-info">
+            <dl>
+                <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+                <dd>@Html.DisplayFor(model => model.Name)</dd>
+                <dt>@Html.DisplayNameFor(model => model.NewPrice)</dt>
+                <dd>@Html.DisplayFor(model => model.NewPrice)</dd>
+                <dt>@Html.DisplayNameFor(model => model.Created)</dt>
+                <dd>@Html.DisplayFor(model => model.Created)</dd>
+                <dt>@Html.DisplayNameFor(model => model.GenderID)</dt>
+                <dd>@Html.DisplayFor(model => model.Gender.Name)</dd>
+                <dt>@Html.DisplayNameFor(model => model.BrandID)</dt>
+                <dd>@Html.DisplayFor(model => model.Brands.Name)</dd>
+                <dt>@Html.DisplayNameFor(model => model.CateID)</dt>
+                <dd>@Html.DisplayFor(model => model.Cate.Name)</dd>
+                <dt>@Html.DisplayNameFor(model => model.ProductMaterial)</dt>
+                <dd>@Html.DisplayFor(model => model.ProductMaterial)</dd>
+            </dl>
+        </div>
+    </div>
+    <div class="action-buttons">
+        @* <a asp-action="EditProduct" asp-route-id="@Model.ID">cập nhật</a>  *@
+        <a asp-action="Index">Qiuay lại d/s</a>
+    </div>
+</div>

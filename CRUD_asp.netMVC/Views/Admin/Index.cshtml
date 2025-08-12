@@ -27,7 +27,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-3">
-            <a asp-action="Create" class="btn btn-outline-success">Create New</a>
+            <a asp-action="CreateProduct" class="btn btn-outline-success">Create New</a>
         </div>
         <div class="col-lg-4 offset-5">
 
@@ -51,18 +51,14 @@
             <th>
                 @Html.DisplayNameFor(model => model[0].Name)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].picture)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].NewPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].BrandID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].CateID)
-            </th>
+            <th>Picture</th>
+
+            <th>Price</th>
+
+            <th>Brand</th>
+
+            <th>Categoies</th>
+
             <th>Action</th>
         </tr>
     </thead>
@@ -77,10 +73,10 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">
+                    <a asp-action="EditProduct" asp-route-id="@item.ID">
                         <img src="@Url.Content($"~/images/products/{item.PicturePath}")" alt="" style="width: 150px; height: 100px; object-fit: cover; border-radius:8px; text-decoration: none " class="img-fluid shadow-lg" />
 
-                    </a>       
+                    </a>
                 </td>
 
                 <td>
@@ -95,10 +91,11 @@
                     @Html.DisplayFor(modelItem => item.Cate.Name)
                 </td>
 
+
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-outline-secondary">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-outline-warning">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-outline-danger">Delete</a>
+                    <a asp-action="EditProduct" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Edit</span></a>
+                    <a asp-action="DetailProduct" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Details</span></a>
+                    <a asp-action="DeleteProduct" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Delete</span></a>
                 </td>
             </tr>
         }

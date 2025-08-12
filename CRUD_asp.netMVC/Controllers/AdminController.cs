@@ -31,7 +31,7 @@ namespace CRUD_asp.netMVC.Controllers
 
         // GET: GetProducts
         [HttpGet]
-        [Route("Admin"), Route("Admin/Index"), Route("admin/{page:int}")]
+        [Route("Admin"), Route("Admin/Index"), Route("Admin/{page:int}")]
         public async Task<IActionResult> Index(int page = 1)
         {
             var product = _context.Products.AsNoTracking()
@@ -56,9 +56,9 @@ namespace CRUD_asp.netMVC.Controllers
             return View(paginationProduct);
         }
 
-        // GET: GetProducts/Details/5
+        // GET: GetProducts/DetailProduct/5
         [HttpGet]
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> DetailProduct(int? id)
         {
             if (id == null)
             {
@@ -109,15 +109,15 @@ namespace CRUD_asp.netMVC.Controllers
             return builderText.ToString().Normalize(NormalizationForm.FormC);
         }
 
-        // GET: GetProducts/Create  -> data d/s duoc cap nhat qua phuong thuc ReloadViewModel
+        // data d/s duoc cap nhat qua phuong thuc ReloadViewModel
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> CreateProduct()
         {
             return await ReloadViewModel(new ProductCreateViewModel());
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductCreateViewModel viewModel)
+        public async Task<IActionResult> CreateProduct(ProductCreateViewModel viewModel)
         {
 
             try
@@ -155,6 +155,7 @@ namespace CRUD_asp.netMVC.Controllers
 
                 if (viewModel.Picture != null && viewModel.Picture.Any())
                 {
+                    string nameFile = "";
                     bool IsFirstImage = true;
                     foreach (var file in viewModel.Picture)
                     {
@@ -167,30 +168,30 @@ namespace CRUD_asp.netMVC.Controllers
                             return await ReloadViewModel(viewModel);
                         }
 
-                        var nameFile = Guid.NewGuid().ToString() + getPathExtentions;
+                        nameFile = Guid.NewGuid().ToString() + getPathExtentions;
                         var fileUpLoadPath = Path.Combine(environment.WebRootPath, "images", "Products", nameFile).Replace("\\", "/");
 
                         using (var fileStream = new FileStream(fileUpLoadPath, FileMode.Create))
                         {
                             await file.CopyToAsync(fileStream);
                         }
+                    }
 
-                        var imagePath = Path.Combine(nameFile).ToLower().Replace("\\", "/");
+                    var imagePath = Path.Combine(nameFile).ToLower().Replace("\\", "/");
 
-                        _context.Products.Add(products);
-                        await _context.SaveChangesAsync(); // Them du lieu productID truoc khi them cac entity khac
+                    _context.Products.Add(products);
+                    await _context.SaveChangesAsync(); // Them du lieu productID truoc khi them cac entity khac
 
-                        _context.ProductImages.Add(new ProductImages()
-                        {
-                            ProductID = products.ID,
-                            PathNameImage = imagePath
-                        });
+                    _context.ProductImages.Add(new ProductImages()
+                    {
+                        ProductID = products.ID,
+                        PathNameImage = imagePath
+                    });
 
-                        if (IsFirstImage)
-                        {
-                            products.PicturePath = imagePath;
-                            IsFirstImage = false;
-                        }
+                    if (IsFirstImage)
+                    {
+                        products.PicturePath = imagePath;
+                        IsFirstImage = false;
                     }
                 }
 
@@ -268,9 +269,8 @@ namespace CRUD_asp.netMVC.Controllers
 
 
                 await _context.SaveChangesAsync();
-                //return RedirectToAction(nameof(Index));
-                return Json(new { success = true, message = "Thêm sản vào thành công. " });
-
+                return RedirectToAction(nameof(Index));
+                //return Json(new { success = true, message = "Thêm sản vào thành công. " });
             }
             catch (Exception ex)
             {
@@ -279,14 +279,14 @@ namespace CRUD_asp.netMVC.Controllers
                 {
                     ModelState.AddModelError("Loi: ", $"{ex.InnerException.Message}");
                 }
-                await ReloadViewModel(viewModel);
-                return Json(new { success = false, message = "Thêm sản vào thất bại. " });
+                return await ReloadViewModel(viewModel);
+                //return Json(new { success = false, message = "Thêm sản vào thất bại. " });
             }
         }
 
-        // GET: GetProducts/Edit/5
+        // GET: GetProducts/EditProduct/5
         [HttpGet]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> EditProduct(int? id)
         {
             if (id == null) return NotFound();
 
@@ -331,9 +331,9 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // Note: get all properties GetProducts class
-        // POST: GetProducts/Edit/5
+        // POST: GetProducts/EditProduct/5
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProductEditViewModel viewModel)
+        public async Task<IActionResult> EditProduct(int id, ProductEditViewModel viewModel)
         {
             if (id != viewModel.ID)
             {
@@ -579,8 +579,8 @@ namespace CRUD_asp.netMVC.Controllers
             return View(IviewModel);
         }
 
-        // GET: GetProducts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: GetProducts/DeleteProduct/5
+        public async Task<IActionResult> DeleteProduct(int? id)
         {
             if (id == null)
             {
@@ -588,6 +588,8 @@ namespace CRUD_asp.netMVC.Controllers
             }
 
             var products = await _context.Products
+                .Include(p => p.Brands)
+                .Include(p => p.Cate)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (products == null)
             {
@@ -597,8 +599,8 @@ namespace CRUD_asp.netMVC.Controllers
             return View(products);
         }
 
-        // POST: GetProducts/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: GetProducts/DeleteProduct/5
+        [HttpPost, ActionName("DeleteProduct")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

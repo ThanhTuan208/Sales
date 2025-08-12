@@ -25,38 +25,150 @@
         }
     });
 
-    // Them san pham moi
-    //$('#addProduct').on('click', function () {
-    //    const name = $('#name').val();
-    //    const price = $('#price').val();
-    //    const description = $('#description').val();
-    //    const category = $('#category').val();
-    //    const picture = $('#picture').val();
+    // Toggle sidebar on mobile
+    document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'btn btn-dark d-block d-md-none position-absolute top-0 end-0 m-2';
+        toggleBtn.innerHTML = '<i class="bi bi-list"></i>';
+        document.body.appendChild(toggleBtn);
 
-    //    console.log(picture);
+        toggleBtn.addEventListener('click', function () {
+            sidebar.classList.toggle('active');
+        });
+
+        // Collapse sidebar on desktop (optional)
+        let isCollapsed = false;
+        sidebar.addEventListener('dblclick', function () {
+            sidebar.classList.toggle('collapsed');
+            isCollapsed = !isCollapsed;
+        });
+    });
+
+    // Thêm animation khi tải trang
+    document.addEventListener("DOMContentLoaded", function () {
+        const cards = document.querySelectorAll('.product-card');
+        cards.forEach(card => {
+            card.classList.add('animate-fade-in');
+        });
+    });
+
+    // Hiệu ứng hover cho nút
+    const buttons = document.querySelectorAll('.btn-custom');
+    buttons.forEach(button => {
+        button.addEventListener('mouseover', () => {
+            button.style.transform = 'scale(1.05)';
+        });
+        button.addEventListener('mouseout', () => {
+            button.style.transform = 'scale(1)';
+        });
+    });
+
+    // Truyen du lieu san pham, ktra dkien them hoac sua
+    //$('#btnAdminProduct').on('click', function () {
+    //    // Lấy dữ liệu từ form
+    //    const id = $('#id').val();
+    //    const name = $('#name').val();
+    //    const description = $('#description').val();
+    //    const feature = $('#feature').val() || 0;
+    //    const cate = $('#cate').val() || 0;
+    //    const brand = $('#brand').val() || 0;
+    //    const gender = $('#gender').val() || 0;
+    //    const newPrice = $('#newPrice').val();
+    //    const oldPrice = $('#oldPrice').val();
+    //    const qty = $('#qty').val();
+    //    const material = $('#material').val() || [];
+    //    const color = $('#color').val() || [];
+    //    const size = $('#size').val() || [];
+    //    const season = $('#season').val() || [];
+    //    const style = $('#style').val() || [];
+    //    const tag = $('#tag').val() || [];
+    //    const files = $('#picture')[0].files;
+
+    //    // Tạo formData để gửi dữ liệu và file
+    //    const formData = new FormData();
+    //    if (id) formData.append('ID', id);
+    //    formData.append('Name', name);
+    //    formData.append('Description', description);
+    //    formData.append('NewPrice', newPrice);
+    //    formData.append('OldPrice', oldPrice);
+    //    formData.append('Quantity', qty);
+    //    formData.append('FeaturedID', feature);
+    //    formData.append('GenderID', gender);
+    //    formData.append('BrandID', brand);
+    //    formData.append('CateID', cate);
+
+    //    // Append mảng các giá trị cho các trường select multiple
+    //    if (Array.isArray(material)) {
+    //        material.forEach(val => formData.append('SelectedMaterialID', val));
+    //    } else {
+    //        formData.append('SelectedMaterialID', material);
+    //    }
+    //    if (Array.isArray(color)) {
+    //        color.forEach(val => formData.append('SelectedColorID', val));
+    //    } else {
+    //        formData.append('SelectedColorID', color);
+    //    }
+    //    if (Array.isArray(size)) {
+    //        size.forEach(val => formData.append('SelectedSizeID', val));
+    //    } else {
+    //        formData.append('SelectedSizeID', size);
+    //    }
+    //    if (Array.isArray(season)) {
+    //        season.forEach(val => formData.append('SelectedSeasonID', val));
+    //    } else {
+    //        formData.append('SelectedSeasonID', season);
+    //    }
+    //    if (Array.isArray(style)) {
+    //        style.forEach(val => formData.append('SelectedStyleID', val));
+    //    } else {
+    //        formData.append('SelectedStyleID', style);
+    //    }
+    //    if (Array.isArray(tag)) {
+    //        tag.forEach(val => formData.append('SelectedTagID', val));
+    //    } else {
+    //        formData.append('SelectedTagID', tag);
+    //    }
+    //    //Thêm các file vào formData
+    //    for (let i = 0; i < files.length; i++) {
+    //        formData.append('Picture', files[i]); // Tên 'Picture' phải khớp với tên thuộc tính trong formData
+    //    }
+    //    console.log(color);
+    //    for (let [key, value] of formData.entries()) {
+    //        console.log(`${key}: ${value}`);
+    //    }
+
+    //    formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+
+    //    //Gửi AJAX request
     //    $.ajax({
-    //        url: '/Product/Add',
+    //        url: id ? `/Admin/Edit/${id}` : '/Admin/Create',
     //        type: 'POST',
-    //        data: {
-    //            Name: name,
-    //            Price: price,
-    //            Description: description,
-    //            CategoryID: category,
-    //            Image: image,
-    //            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-    //        },
+    //        data: formData,
+    //        processData: false, // Không xử lý dữ liệu (cần cho formData)
+    //        contentType: false, // Không đặt contentType (formData tự xử lý)
     //        success: function (response) {
     //            if (response.success) {
-    //                console.log("Thêm sản phẩm thành công." + response.message);
-    //                window.location.href = `/Product/Index`;
+    //                console.log("Thành công: " + response.message);
+    //                window.location.href = '/Admin/Index';
     //            } else {
-    //                console.log("Thêm sản phẩm thất bại." + response.message);
-    //                alert('Lỗi thêm sản phẩm: ' + response.message);
+    //                console.log("Lỗi: " + response.message);
+    //                if (response.errors) {
+    //                    $('.text-danger').text('');
+
+    //                    Object.keys(response.errors).forEach(function (field) {
+    //                        const messages = response.errors[field];
+    //                        const correctField = field.charAt(0).toUpperCase() + field.slice(1);
+    //                        console.log(field);
+    //                        console.log(messages);
+    //                        $(`span[data-valmsg-for="${correctField}"]`).text(messages);
+    //                    });
+    //                }
     //            }
     //        },
-    //        error: function (response) {
-    //            console.log("Lỗi AJAX khi thêm sản phẩm." + response.message);
-    //            alert('Đã xảy ra lỗi trong quá trình thêm sản phẩm.');
+    //        error: function (xhr) {
+    //            console.log("Lỗi AJAX: ", xhr.responseText);
+    //            alert('Đã xảy ra lỗi trong quá trình gửi yêu cầu.');
     //        }
     //    });
     //});
@@ -112,7 +224,7 @@
     // Thiet lap mat khau moi khi gui code mail
     $('#newPassForget').on('click', function () {
         const email = $('#email').val();
-        const code= $('#code').val();
+        const code = $('#code').val();
         const newPass = $('#newPass').val();
 
         $.ajax({
@@ -163,7 +275,7 @@
 
             success: function (response) {
                 if (response.success) {
-                    console.log("Thông báo sucess true: " + response.message || "Không xác định");
+                    console.log("Thông báo success true: " + response.message || "Không xác định");
                     $('.text-danger').text('');
 
                     Object.keys(response.corrects).forEach(function (field) {
@@ -176,7 +288,7 @@
                     });
                 }
                 else {
-                    console.log("Thông báo sucess false: " + response.message || "Không xác định");
+                    console.log("Thông báo success false: " + response.message || "Không xác định");
                     $('.text-danger').text('');
 
                     Object.keys(response.errors).forEach(function (field) {
@@ -235,7 +347,10 @@
                     Object.keys(response.errors).forEach(function (field) {
                         const messages = response.errors[field];
                         const correctField = field.charAt(0).toUpperCase() + field.slice(1);
-                        $(`span[data-valmsg-for="${correctField}"]`).text(messages);
+                        $(`span[data-valmsg-for="${correctField}"]`)
+                            .text(messages)
+                            .removeClass('text-danger')
+                            .addClass('text-success');
                     });
                 }
                 else {
@@ -247,7 +362,10 @@
                         Object.keys(response.errors).forEach(function (field) {
                             const messages = response.errors[field];
                             const correctField = field.charAt(0).toUpperCase() + field.slice(1);
-                            $(`span[data-valmsg-for="${correctField}"]`).text(messages);
+                            $(`span[data-valmsg-for="${correctField}"]`)
+                                .text(messages)
+                                .removeClass('text-success')
+                                .addClass('text-danger');
                             //console.log(correctField);
                             //console.log(messages);
                         });
@@ -292,7 +410,12 @@
                         window.location.href = `/Product/ProductDetail/${response.productID}`;
                     }
                     else {
-                        window.location.href = "/Home/Index";
+                        if (response.role === "Admin") {
+                            window.location.href = "/Admin/Index";
+                        }
+                        else {
+                            window.location.href = "/Home/Index";
+                        }
                     }
                 }
                 else {
@@ -307,7 +430,7 @@
                     });
                 }
             },
-                
+
             error: function (response) {
                 console.log('Lỗi AJAX: ', response.message); // Log chi tiết lỗi
                 alert('Đã xảy ra lỗi trong quá trình đăng nhập: ' + (response.message || 'Không xác định'));

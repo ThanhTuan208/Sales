@@ -77,7 +77,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             var hashPass2 = new PasswordHasher<Users>().HashPassword(null, "123456");
         }
 
-       
+
         public static void SeedFeatured(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Featured>().HasData(
@@ -93,7 +93,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             modelBuilder.Entity<Roles>().HasData(
 
                  new Roles { Id = 1, Name = "Admin", NormalizedName = "ADMIN" },
-                 new Roles { Id = 2, Name = "Customer", NormalizedName ="CUSTOMER"}
+                 new Roles { Id = 2, Name = "Customer", NormalizedName = "CUSTOMER" }
                  );
         }
 
@@ -356,8 +356,8 @@ namespace CRUD_asp.netMVC.Data.Seed
 
             for (int productId = 1; productId <= 60; productId++)
             {
-                int cateId = productMap[productId].CateID;
-                int brandId = productMap[productId].BrandID;
+                int? cateId = productMap[productId].CateID;
+                int? brandId = productMap[productId].BrandID;
 
                 switch (cateId)
                 {
@@ -465,7 +465,7 @@ namespace CRUD_asp.netMVC.Data.Seed
 
             for (int productId = 1; productId <= 60; productId++)
             {
-                int cateId = productCateMap[productId];
+                int? cateId = productCateMap[productId];
 
                 switch (cateId)
                 {
@@ -562,8 +562,8 @@ namespace CRUD_asp.netMVC.Data.Seed
 
             for (int productID = 1; productID <= 60; productID++)
             {
-                int cateID = productMap[productID].CateID;
-                int brandId = productMap[productID].BrandID;
+                int? cateID = productMap[productID].CateID;
+                int? brandId = productMap[productID].BrandID;
 
                 switch (cateID)
                 {

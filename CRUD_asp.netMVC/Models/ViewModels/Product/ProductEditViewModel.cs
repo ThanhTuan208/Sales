@@ -9,46 +9,58 @@ namespace CRUD_asp.netMVC.Models.ViewModels.Product
         [Required]
         public int ID { get; set; }
 
-        [Required(ErrorMessage = "Ban can phai nhap Ten !!!"), StringLength(50, MinimumLength = 5, ErrorMessage = "Do dai ten tu {2} den {1} ky tu")]
+        [Required(ErrorMessage = "Vui lòng nhập tên. "),
+            StringLength(60, MinimumLength = 5, ErrorMessage = "Do dai ten tu {2} den {1} ky tu")]
         public string? Name { get; set; }
 
+        //[Required(ErrorMessage = "Vui lòng chọn hình. ")]
         public IFormFile[]? Picture { get; set; }
 
         public string? PicturePath { get; set; }
 
-        [Required, Column(TypeName = "nvarchar(max)")]
+        [Required(ErrorMessage = "Vui lòng thêm mô tả. "), Column(TypeName = "nvarchar(max)")]
         public string? Description { get; set; }
 
-        [Required(ErrorMessage = "Ban can phai nhap {0} sp !!!")]
-        [DataType(DataType.Currency)]
+        [Required(ErrorMessage = "Nhập giá mới. "), DataType(DataType.Currency)]
         public double NewPrice { get; set; }
 
-        [DataType(DataType.Currency)]
+        [Required(ErrorMessage = "Nhập giá cũ. "), DataType(DataType.Currency)]
         public double OldPrice { get; set; }
 
-        [Required(ErrorMessage = "Ban can phai nhap {0} !!!")]
+        [Required(ErrorMessage = "Nhập số lượng. ")]
         public int Quantity { get; set; }
+
+        [Required(ErrorMessage = "Chọn nổi bật. ")]
+        public int? FeaturedID { get; set; }
+
+        [Required(ErrorMessage = "Chọn giới tính. ")]
+        public int? GenderID { get; set; }
+
+        [Required(ErrorMessage = "Chọn thương hiệu. ")]
+        public int? BrandID { get; set; }
+
+        [Required(ErrorMessage = "Chọn phân loại. ")]
+        public int? CateID { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime Created { get; set; } = DateTime.Now;
 
-        [Required]
-        public int FeaturedID { get; set; }
-
-        [Required]
-        public int GenderID { get; set; }
-
-        [Required]
-        public int BrandID { get; set; }
-
-        [Required]
-        public int CateID { get; set; }
-
+        [Required(ErrorMessage = "Chọn chất liệu. ")]
         public int[] SelectedMaterialID { get; set; }
+
+        [Required(ErrorMessage = "Chọn màu sắc. ")]
         public int[] SelectedColorID { get; set; }
+
+        [Required(ErrorMessage = "Chọn kích thước. ")]
         public int[] SelectedSizeID { get; set; }
-        public int[] SelectedStyleID { get; set; }
+
+        [Required(ErrorMessage = "Chọn mùa. ")]
         public int[] SelectedSeasonID { get; set; }
+
+        [Required(ErrorMessage = "Chọn kiểu dáng. ")]
+        public int[] SelectedStyleID { get; set; }
+
+        [Required(ErrorMessage = "Chọn nhãn dán. ")]
         public int[] SelectedTagID { get; set; }
 
         public SelectList? FeaturedList { get; set; }

@@ -6,10 +6,10 @@ namespace CRUD_asp.netMVC.Models.ViewModels.Product
 {
     public interface IProductGeneralViewModel
     {
-        public int GenderID { get; set; }
-        public int BrandID { get; set; }
-        public int CateID { get; set; }
-        public int FeaturedID { get; set; }
+        public int? GenderID { get; set; }
+        public int? BrandID { get; set; }
+        public int? CateID { get; set; }
+        public int? FeaturedID { get; set; }
 
         public int[] SelectedMaterialID { get; set; }
         public int[] SelectedColorID { get; set; }

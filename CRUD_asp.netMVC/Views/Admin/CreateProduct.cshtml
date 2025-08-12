@@ -1,44 +1,40 @@
 ﻿@using CRUD_asp.netMVC.Models.ViewModels.Product
-@model ProductEditViewModel
+@model ProductCreateViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Tạo sản phẩm mới";
 }
 
-<h1 class="text-center my-4">cập nhật sản phẩm </h1>
+<h1 class="text-center my-4">Tạo sản phẩm mới</h1>
 <hr />
 
 <div class="container">
-    <form asp-action="Edit" enctype="multipart/form-data">
-        <div asp-validation-summary="All" class="text-danger"></div>
+    <form asp-action="CreateProduct" enctype="multipart/form-data">
+        @* <div asp-validation-summary="All" class="text-danger"></div> *@
         <div class="row">
-
             <div class="col-lg-6">
-                <input type="hidden" asp-for="ID" />
-
                 <div class="form-floating mb-3">
-                    <input asp-for="Name" class="form-control" placeholder="Nhập tên sản phẩm" required/>
+                    <input asp-for="Name" id="name" class="form-control" placeholder="Nhập tên sản phẩm" required />
                     <label asp-for="Name" class="form-label">Tên sản phẩm</label>
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input asp-for="Picture" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp" multiple />
+                    <input asp-for="Picture" id="picture" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp" multiple />
                     <label asp-for="Picture" class="form-label">Hình ảnh</label>
                     <span asp-validation-for="Picture" class="text-danger"></span>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <textarea asp-for="Description" class="form-control" placeholder="Nhập mô tả" required style="height: 113px"></textarea>
+                    <textarea asp-for="Description" id="description" class="form-control" placeholder="Nhập mô tả" required style="height: 113px"></textarea>
                     <label asp-for="Description" class="form-label">Mô tả</label>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
-               
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="form-floating mb-3">
-                            <select asp-for="FeaturedID" class="form-select" asp-items="Model.FeaturedList ?? new SelectList(Enumerable.Empty<object>())">
+                            <select asp-for="FeaturedID" id="feature" class="form-select" asp-items="Model.FeaturedList ?? new SelectList(Enumerable.Empty<object>())">
                                 <option value="" disabled selected>Chọn nổi bật</option>
                             </select>
                             <label asp-for="FeaturedID" class="form-label">Nổi bật</label>
@@ -46,9 +42,8 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-
                         <div class="form-floating mb-3">
-                            <select asp-for="BrandID" class="form-select" asp-items="Model.BrandList ?? new SelectList(Enumerable.Empty<object>())">
+                            <select asp-for="BrandID" id="brand" class="form-select" asp-items="Model.BrandList ?? new SelectList(Enumerable.Empty<object>())">
                                 <option value="" disabled selected>Chọn thương hiệu</option>
                             </select>
                             <label asp-for="BrandID" class="form-label">Thương hiệu</label>
@@ -60,7 +55,7 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="form-floating mb-3">
-                            <select asp-for="CateID" class="form-select" asp-items="Model.CategoryList ?? new SelectList(Enumerable.Empty<object>())">
+                            <select asp-for="CateID" id="cate" class="form-select" asp-items="Model.CategoryList ?? new SelectList(Enumerable.Empty<object>())">
                                 <option value="" disabled selected>Chọn danh mục</option>
                             </select>
                             <label asp-for="CateID" class="form-label">Danh mục</label>
@@ -69,7 +64,7 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="form-floating mb-3">
-                            <select asp-for="GenderID" class="form-select" asp-items="Model.GenderList ?? new SelectList(Enumerable.Empty<object>())">
+                            <select asp-for="GenderID" id="gender" class="form-select" asp-items="Model.GenderList ?? new SelectList(Enumerable.Empty<object>())">
                                 <option value="" disabled selected>Chọn giới tính</option>
                             </select>
                             <label asp-for="GenderID" class="form-label">Giới tính</label>
@@ -80,21 +75,21 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="form-floating mb-3">
-                            <input asp-for="NewPrice" class="form-control" type="number" step="0.01" required placeholder="Nhập giá mới" />
+                            <input asp-for="NewPrice" id="newPrice" class="form-control" type="number" step="0.01" required placeholder="Nhập giá mới" />
                             <label asp-for="NewPrice" class="form-label">Giá mới</label>
                             <span asp-validation-for="NewPrice" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="form-floating mb-3">
-                            <input asp-for="OldPrice" class="form-control" type="number" step="0.01" placeholder="Nhập giá cũ" />
+                            <input asp-for="OldPrice" id="oldPrice" class="form-control" type="number" step="0.01" placeholder="Nhập giá cũ" />
                             <label asp-for="OldPrice" class="form-label">Giá cũ</label>
                             <span asp-validation-for="OldPrice" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="form-floating mb-3">
-                            <input asp-for="Quantity" class="form-control" type="number" required placeholder="Nhập số lượng" />
+                            <input asp-for="Quantity" id="qty" class="form-control" type="number" required placeholder="Nhập số lượng" />
                             <label asp-for="Quantity" class="form-label">Số lượng</label>
                             <span asp-validation-for="Quantity" class="text-danger"></span>
                         </div>
@@ -105,7 +100,7 @@
             <div class="col-lg-3">
 
                 <div class="form-floating mb-3">
-                    <select asp-for="SelectedMaterialID" style="height: 150px" class="form-select" multiple asp-items="Model.MaterialList ?? new SelectList(Enumerable.Empty<object>())">
+                    <select asp-for="SelectedMaterialID" id="material" style="height: 150px" class="form-select" multiple asp-items="Model.MaterialList ?? new SelectList(Enumerable.Empty<object>())">
                         <option value="" class="text-center" disabled>Chọn chất liệu</option>
                     </select>
                     <label asp-for="SelectedMaterialID" class="form-label">Chất liệu</label>
@@ -113,7 +108,7 @@
                 </div>
 
                 <div class="form-floating mb-3">
-                    <select asp-for="SelectedColorID" style="height: 150px" class="form-select" multiple asp-items="Model.ColorList ?? new SelectList(Enumerable.Empty<object>())">
+                    <select asp-for="SelectedColorID" id="color" style="height: 150px" class="form-select" multiple asp-items="Model.ColorList ?? new SelectList(Enumerable.Empty<object>())">
                         <option value="" class="text-center" disabled>Chọn màu sắc</option>
                     </select>
                     <label asp-for="SelectedColorID" class="form-label">Màu sắc</label>
@@ -121,7 +116,7 @@
                 </div>
 
                 <div class="form-floating mb-3">
-                    <select asp-for="SelectedSizeID" style="height: 150px" class="form-select" multiple asp-items="Model.SizeList ?? new SelectList(Enumerable.Empty<object>())" style="height: 150px">
+                    <select asp-for="SelectedSizeID" id="size" style="height: 150px" class="form-select" multiple asp-items="Model.SizeList ?? new SelectList(Enumerable.Empty<object>())" style="height: 150px">
                         <option value="" class="text-center" disabled>Chọn kích cỡ</option>
                     </select>
                     <label asp-for="SelectedSizeID" class="form-label">Kích cỡ</label>
@@ -130,7 +125,7 @@
             </div>
             <div class="col-lg-3">
                 <div class="form-floating mb-3">
-                    <select asp-for="SelectedSeasonID" style="height: 150px" class="form-select" multiple asp-items="Model.SeasonList ?? new SelectList(Enumerable.Empty<object>())" style="height: 150px">
+                    <select asp-for="SelectedSeasonID" id="season" style="height: 150px" class="form-select" multiple asp-items="Model.SeasonList ?? new SelectList(Enumerable.Empty<object>())" style="height: 150px">
                         <option value="" class="text-center" disabled>Chọn mùa</option>
                     </select>
                     <label asp-for="SelectedSeasonID" class="form-label">Mùa</label>
@@ -138,7 +133,7 @@
                 </div>
 
                 <div class="form-floating mb-3">
-                    <select asp-for="SelectedStyleID" style="height: 150px" class="form-select" multiple asp-items="Model.StyleList ?? new SelectList(Enumerable.Empty<object>())" style="height: 150px">
+                    <select asp-for="SelectedStyleID" id="style" style="height: 150px" class="form-select" multiple asp-items="Model.StyleList ?? new SelectList(Enumerable.Empty<object>())" style="height: 150px">
                         <option value="" class="text-center" disabled>Chọn phong cách</option>
                     </select>
                     <label asp-for="SelectedStyleID" class="form-label">Phong cách</label>
@@ -146,7 +141,7 @@
                 </div>
 
                 <div class="form-floating mb-3">
-                    <select asp-for="SelectedTagID" style="height: 150px" class="form-select" multiple asp-items="Model.TagList ?? new SelectList(Enumerable.Empty<object>())" style="height: 150px">
+                    <select asp-for="SelectedTagID" id="tag" style="height: 150px" class="form-select" multiple asp-items="Model.TagList ?? new SelectList(Enumerable.Empty<object>())" style="height: 150px">
                         <option value="" class="text-center" disabled>Chọn thể loại</option>
                     </select>
                     <label asp-for="SelectedTagID" class="form-label">Thể loại</label>
@@ -155,7 +150,12 @@
             </div>
         </div>
         <div class="d-flex justify-content-center align-items-center">
-            <button type="submit" class="btn btn-outline-secondary my-3" style="width: 15%">Cập nhật</button>
+            <button type="submit" id="btnAdminProduct" class="btn btn-outline-secondary my-3" style="width: 15%">Tạo</button>
         </div>
     </form>
 </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

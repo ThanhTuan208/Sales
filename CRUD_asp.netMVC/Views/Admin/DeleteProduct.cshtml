@@ -1,0 +1,41 @@
+﻿@using CRUD_asp.netMVC.Models.Product
+@model Products
+
+@{
+    ViewData["Title"] = "DeleteProduct";
+}
+
+<div class="delete-container">
+    <div class="delete-header">
+        <h1>Xóa sản phẩm</h1>
+        <h3>Bạn có muốn xóa sản phẩm này không ?</h3>
+    </div>
+    <hr />
+    <div class="delete-content">
+        <div class="delete-image">
+            <img src="@Url.Content("~/images/products/" + Model.PicturePath)" alt="Product Image" />
+        </div>
+        <div class="delete-info">
+            <h4>Product Details</h4>
+            <dl>
+                <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+                <dd>@Html.DisplayFor(model => model.Name)</dd>
+                <dt>@Html.DisplayNameFor(model => model.NewPrice)</dt>
+                <dd>@Html.DisplayFor(model => model.NewPrice)</dd>
+                <dt>@Html.DisplayNameFor(model => model.Created)</dt>
+                <dd>@Html.DisplayFor(model => model.Created)</dd>
+                <dt>@Html.DisplayNameFor(model => model.Brands)</dt>
+                <dd>@Html.DisplayFor(model => model.Brands.Name)</dd>
+                <dt>@Html.DisplayNameFor(model => model.Cate)</dt>
+                <dd>@Html.DisplayFor(model => model.Cate.Name)</dd>
+            </dl>
+        </div>
+    </div>
+    <form asp-action="DeleteProduct">
+        <input type="hidden" asp-for="ID" />
+        <div class="action-buttons">
+            <input type="submit" value="Xóa" /> |
+            <a asp-action="Index">Quay lai d/s</a>
+        </div>
+    </form>
+</div>
