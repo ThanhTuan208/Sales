@@ -1,0 +1,30 @@
+﻿@using CRUD_asp.netMVC.Models.Product
+@model Brand
+
+@{
+    ViewData["Title"] = "DetailProduct";
+}
+
+<div class="product-detail-container">
+    <h1 class="text-center" style="color: #2c3e50; margin-bottom: 20px;">Thương hiệu chi tiết</h1>
+    <hr style="border-color: #ddd;" />
+    <div class="product-card">
+        <div class="product-image">
+            <img src="@Url.Content($"~/{Model.PicturePath}")" alt="" />
+        </div>
+        <div class="product-info">
+            <dl>
+                <dt>@Html.DisplayNameFor(model => model.ID)</dt>
+                <dd>@Html.DisplayFor(model => model.ID)</dd>
+                <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+                <dd>@Html.DisplayFor(model => model.Name)</dd>
+                <dt>@Html.DisplayNameFor(model => model.Description)</dt>
+                <dd>@Html.DisplayFor(model => model.Description)</dd>
+            </dl>
+        </div>
+    </div>
+    <div class="action-buttons">
+        @* <a asp-action="EditProduct" asp-route-id="@Model.ID">cập nhật</a>  *@
+        <a asp-action="BrandList">Qiuay lại d/s</a>
+    </div>
+</div>

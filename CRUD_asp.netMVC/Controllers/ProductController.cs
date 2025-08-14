@@ -56,7 +56,7 @@ namespace CRUD_asp.netMVC.Controllers
         {
             try
             {
-                var keywordDiacritics = !string.IsNullOrWhiteSpace(keyword) 
+                var keywordDiacritics = !string.IsNullOrWhiteSpace(keyword)
                     ? RemoveDiacritics(keyword.ToLower().Trim())
                     : string.Empty;
 

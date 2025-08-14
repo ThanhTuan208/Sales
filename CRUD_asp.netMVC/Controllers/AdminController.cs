@@ -1,18 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.Models.Product;
+using CRUD_asp.netMVC.Models.ViewModels.Product;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CRUD_asp.netMVC.Data;
-using CRUD_asp.netMVC.Models.Product;
 using SixLabors.ImageSharp;
-using System.Data;
-using System.Collections.Immutable;
-using CRUD_asp.netMVC.Models.ViewModels.Product;
-using System.Globalization;
-using System.Text;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
-using Microsoft.AspNetCore.Authorization;
-using NuGet.Protocol;
+using System.Collections.Immutable;
+using System.Data;
+using System.Globalization;
+using System.Text;
 
 
 namespace CRUD_asp.netMVC.Controllers
@@ -29,7 +28,6 @@ namespace CRUD_asp.netMVC.Controllers
             environment = _environment;
         }
 
-        // GET: GetProducts
         [HttpGet]
         [Route("Admin"), Route("Admin/Index"), Route("Admin/{page:int}")]
         public async Task<IActionResult> Index(int page = 1)
@@ -56,8 +54,7 @@ namespace CRUD_asp.netMVC.Controllers
             return View(paginationProduct);
         }
 
-        // GET: GetProducts/DetailProduct/5
-        [HttpGet]
+        [HttpGet]// GET: GetProducts/DetailProduct/5
         public async Task<IActionResult> DetailProduct(int? id)
         {
             if (id == null)
@@ -109,15 +106,14 @@ namespace CRUD_asp.netMVC.Controllers
             return builderText.ToString().Normalize(NormalizationForm.FormC);
         }
 
-        // data d/s duoc cap nhat qua phuong thuc ReloadViewModel
-        [HttpGet]
+        [HttpGet] // data d/s duoc cap nhat qua phuong thuc ReloadViewModel
         public async Task<IActionResult> CreateProduct()
         {
-            return await ReloadViewModel(new ProductCreateViewModel());
+            return await ReloadViewModel(new ProductGeneralViewModel());
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateProduct(ProductCreateViewModel viewModel)
+        public async Task<IActionResult> CreateProduct(ProductGeneralViewModel viewModel)
         {
 
             try
@@ -175,23 +171,26 @@ namespace CRUD_asp.netMVC.Controllers
                         {
                             await file.CopyToAsync(fileStream);
                         }
-                    }
+                        var imagePath = Path.Combine(nameFile).ToLower().Replace("\\", "/");
 
-                    var imagePath = Path.Combine(nameFile).ToLower().Replace("\\", "/");
+                        // Them du lieu productID truoc khi them cac entity khac
+                        if (products.ID == 0)
+                        {
+                            _context.Products.Add(products);
+                            await _context.SaveChangesAsync();
+                        }
 
-                    _context.Products.Add(products);
-                    await _context.SaveChangesAsync(); // Them du lieu productID truoc khi them cac entity khac
+                        _context.ProductImages.Add(new ProductImages()
+                        {
+                            ProductID = products.ID,
+                            PathNameImage = imagePath
+                        });
 
-                    _context.ProductImages.Add(new ProductImages()
-                    {
-                        ProductID = products.ID,
-                        PathNameImage = imagePath
-                    });
-
-                    if (IsFirstImage)
-                    {
-                        products.PicturePath = imagePath;
-                        IsFirstImage = false;
+                        if (IsFirstImage)
+                        {
+                            products.PicturePath = imagePath;
+                            IsFirstImage = false;
+                        }
                     }
                 }
 
@@ -304,7 +303,7 @@ namespace CRUD_asp.netMVC.Controllers
                 .FirstOrDefaultAsync(p => p.ID == id);
 
             // Gan du lieu vao edit thong qua truy van qua id product
-            var viewModel = new ProductEditViewModel()
+            var viewModel = new ProductGeneralViewModel()
             {
                 ID = Product.ID,
                 Name = Product.Name,
@@ -333,7 +332,7 @@ namespace CRUD_asp.netMVC.Controllers
         // Note: get all properties GetProducts class
         // POST: GetProducts/EditProduct/5
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProduct(int id, ProductEditViewModel viewModel)
+        public async Task<IActionResult> EditProduct(int id, ProductGeneralViewModel viewModel)
         {
             if (id != viewModel.ID)
             {
@@ -344,7 +343,6 @@ namespace CRUD_asp.netMVC.Controllers
             {
                 try
                 {
-                    // Da reload data o method ReloadViewModel => ko can include dbset<entity>
                     var Product = await _context.Products
                        .Include(p => p.Brands)
                        .Include(p => p.Cate)
@@ -553,12 +551,6 @@ namespace CRUD_asp.netMVC.Controllers
             return await ReloadViewModel(viewModel);
         }
 
-        public async Task<IActionResult> Brand()
-        {
-            var product = await _context.Brand.AsNoTracking().ToListAsync();
-            return View(product);
-        }
-
         // cap nhat du lieu trong database len cac select or option trong create, edit
         public async Task<IActionResult> ReloadViewModel(IProductGeneralViewModel IviewModel)
         {
@@ -618,5 +610,217 @@ namespace CRUD_asp.netMVC.Controllers
         {
             return _context.Products.Any(e => e.ID == id);
         }
+
+        [HttpGet] // Danh sach thuong hieu
+        public async Task<IActionResult> BrandList(int page = 1)
+        {
+            var brand = _context.Brand.AsNoTracking().OrderByDescending(p => p.ID);
+
+            var paginationBrand = await PaginatedList<Brand>.CreatePagAsync(brand, page, 5);
+            return View(paginationBrand);
+        }
+
+        [HttpGet] // Hien thi giao dien create
+        public IActionResult CreateBrand() => View();
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateBrand(Brand brand)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState
+                        .Where(er => er.Value.Errors.Count > 0)
+                        .ToDictionary(k => k.Key, v => v.Value.Errors.Select(p => p.ErrorMessage).ToArray());
+
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Cần nhập dữ liệu các ô trống !!!",
+                        errors = errors
+                    });
+                }
+
+                if (brand.Picture != null)
+                {
+                    string nameFile = "";
+
+                    var getPathExtentions = Path.GetExtension(brand.Picture.FileName).ToLower();
+                    var fileExtentions = new[] { ".jpg", ".png", ".jpeg", ".webp" };
+
+                    if (!fileExtentions.Contains(getPathExtentions))
+                    {
+                        return Json(new
+                        {
+                            success = false,
+                            message = "Không thể tải lên file này, vui lòng chọn file có đuôi jpg, png, jpeg, webp",
+                            errors = new { PicturePath = new[] { "Không thể tải lên file này, vui lòng chọn file có đuôi jpg, png, jpeg, webp" } }
+                        });
+                    }
+
+                    nameFile = Guid.NewGuid().ToString() + getPathExtentions;
+                    var fileUpLoadPath = Path.Combine(environment.WebRootPath, "images", "Logo", nameFile).Replace("\\", "/");
+
+                    using (var fileStream = new FileStream(fileUpLoadPath, FileMode.Create))
+                    {
+                        await brand.Picture.CopyToAsync(fileStream);
+                    }
+
+                    brand.PicturePath = Path.Combine("images", "logo", nameFile).ToLower().Replace("\\", "/");
+
+                    _context.Brand.Add(brand);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = $"Bạn cần thêm ảnh trước khi thêm thương hiệu. ",
+                        errors = new { Picture = new[] { "Bạn cần thêm ảnh trước khi thêm thương hiệu này. " } }
+                    });
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    message = $"thêm thương hiệu {brand.Name} thành công. "
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = $"Thương hiệu thêm không thành công. {ex.Message}"
+                });
+            }
+
+        }
+
+        [HttpGet] // Chinh sua thuong hieu
+        public async Task<IActionResult> EditBrand(int id)
+        {
+            var Brand = await _context.Brand.FindAsync(id);
+            if (Brand == null)
+            {
+                return View();
+            }
+
+            return View(Brand);
+        }
+
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditBrand(Brand brand)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState
+                        .Where(er => er.Value.Errors.Count > 0)
+                        .ToDictionary(k => k.Key, v => v.Value.Errors.Select(p => p.ErrorMessage).ToArray());
+
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Cần nhập dữ liệu các ô trống !!!",
+                        errors = errors
+                    });
+                }
+
+                if (brand.Picture != null)
+                {
+                    string nameFile = "";
+
+                    var getPathExtentions = Path.GetExtension(brand.Picture.FileName).ToLower();
+                    var fileExtentions = new[] { ".jpg", ".png", ".jpeg", ".webp" };
+
+                    if (!fileExtentions.Contains(getPathExtentions))
+                    {
+                        return Json(new
+                        {
+                            success = false,
+                            message = "Không thể tải lên file này, vui lòng chọn file có đuôi jpg, png, jpeg, webp",
+                            errors = new { PicturePath = new[] { "Không thể tải lên file này, vui lòng chọn file có đuôi jpg, png, jpeg, webp" } }
+                        });
+                    }
+
+                    nameFile = Guid.NewGuid().ToString() + getPathExtentions;
+                    var fileUpLoadPath = Path.Combine(environment.WebRootPath, "images", "Logo", nameFile).Replace("\\", "/");
+
+                    using (var fileStream = new FileStream(fileUpLoadPath, FileMode.Create))
+                    {
+                        await brand.Picture.CopyToAsync(fileStream);
+                    }
+
+                    brand.PicturePath = Path.Combine("images", "logo", nameFile).ToLower().Replace("\\", "/");
+
+                }
+
+                _context.Brand.Update(brand);
+                await _context.SaveChangesAsync();
+
+
+                return Json(new
+                {
+                    success = true,
+                    message = $"Cập nhật thương hiệu {brand.Name} thành công. "
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = $"Thương hiệu cập nhật không thành công. {ex.Message}"
+                });
+            }
+        }
+
+        [HttpGet] // HIen thi chi tiet thuong hieu
+        public async Task<IActionResult> DetailBrand(int id)
+        {
+            var brand = await BrandByID(id);
+
+            return brand != null ? View(brand) : View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteBrand(int id)
+        {
+            var brand = await BrandByID(id);
+
+            return brand != null ? View(brand) : View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteBrandByID(int id)
+        {
+            var brand = await _context.Brand.FindAsync(id);
+            if (brand != null)
+            {
+                var product = await _context.Products.Where(p => p.BrandID == brand.ID).ToListAsync();
+
+                _context.Brand.Remove(brand);
+                _context.Products.RemoveRange(product);
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(BrandList));
+            }
+
+            return View();
+        }
+
+
+        public async Task<Brand?> BrandByID(int id)
+        {
+            var brand = await _context.Brand.FindAsync(id);
+            return brand;
+        }
+
+
     }
 }

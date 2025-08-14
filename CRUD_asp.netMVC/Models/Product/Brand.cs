@@ -8,13 +8,15 @@ namespace CRUD_asp.netMVC.Models.Product
         [Key]
         public int ID { get; set; }
 
-        [Required, StringLength(50)]
+        [Required(ErrorMessage = "Vui lòng nhập tên. "), StringLength(50)]
         public string? Name { get; set; }
 
-        [Required, Column(TypeName = "nvarchar(max)")]
+        [Required(ErrorMessage = "Vui lòng nhập mô tả. "), Column(TypeName = "nvarchar(max)")]
         public string? Description { get; set; }
 
-        [Required]
+        [NotMapped]
+        public IFormFile? Picture { get; set; }
+
         public string? PicturePath { get; set; }
 
         public List<Products>? products { get; set; }

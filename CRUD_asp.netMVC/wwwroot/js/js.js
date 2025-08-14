@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿//const { regions } = require("modernizr");
+
+$(document).ready(function () {
     $('.owl-clients').owlCarousel({
         loop: true, // Vòng lặp carousel
         margin: 10, // Khoảng cách giữa các phần tử
@@ -22,6 +24,114 @@
             1200: {
                 items: 5 // Màn hình rất lớn (1200px trở lên): 5 phần tử
             }
+        }
+    });
+
+    // Cap nhat brand
+    $('#btnBrandEdit').on('click', function () {
+
+        const id = $('#id').val();
+        const name = $('#name').val();
+        const image = $('#image')[0].files[0];
+        const picturePath = $('#picturePath').val();
+        const description = $('#description').val();
+
+        console.log(image);
+        let formData = new FormData();
+        formData.append("ID", id);
+        formData.append("Name", name);
+        formData.append("Picture", image);
+        formData.append("PicturePath", picturePath);
+        formData.append("Description", description);
+        formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+
+        $.ajax({
+            url: "/Admin/EditBrand",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+
+            success: function (response) {
+                if (response.success) {
+                    console.log("Thông báo: " + response.message);
+                    window.location.href = "/Admin/BrandList";
+                }
+                else {
+                    console.log("Thông báo: " + response.message || "KHong xac dinh");
+                    $('.text-danger').text('');
+
+                    Object.keys(response.errors).forEach(function (field) {
+                        const messages = response.errors[field];
+                        const correctField = field.charAt(0).toUpperCase() + field.slice(1);
+                        $(`span[data-valmsg-for="${correctField}"]`).text(messages);
+                    });
+                }
+            },
+
+            error: function (response) {
+                console.log("Lỗi: " + response.message || "Khong xac dinh");
+                alert("Lỗi thương hiệu: " + response.message || "Khong xac dinh")
+            }
+        });
+
+    });
+
+    // Them thuong hieu cho brand
+    $('#btnBrandCreate').on('click', function () {
+
+        const name = $('#name').val();
+        const image = $('#image')[0].files[0];
+        const description = $('#description').val();
+
+        console.log(image);
+        let formData = new FormData();
+        formData.append("Name", name);
+        formData.append("Picture", image);
+        formData.append("Description", description);
+        formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+
+        $.ajax({
+            url: "/Admin/CreateBrand",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+
+            success: function (response) {
+                if (response.success) {
+                    console.log("Thông báo: " + response.message);
+                    window.location.href = "/Admin/BrandList";
+                }
+                else {
+                    console.log("Thông báo: " + response.message || "KHong xac dinh");
+                    $('.text-danger').text('');
+
+                    Object.keys(response.errors).forEach(function (field) {
+                        const messages = response.errors[field];
+                        const correctField = field.charAt(0).toUpperCase() + field.slice(1);
+                        $(`span[data-valmsg-for="${correctField}"]`).text(messages);
+                    });
+                }
+            },
+
+            error: function (response) {
+                console.log("Lỗi: " + response.message || "Khong xac dinh");
+                alert("Lỗi thương hiệu: " + response.message || "Khong xac dinh")
+            }
+        });
+
+    });
+
+    // Them hinh cho createBrand
+    $("#image").on("change", function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $("#previewImage").attr("src", e.target.result).show();
+            }
+            reader.readAsDataURL(file);
         }
     });
 
@@ -63,6 +173,7 @@
             button.style.transform = 'scale(1)';
         });
     });
+
 
     // Truyen du lieu san pham, ktra dkien them hoac sua
     //$('#btnAdminProduct').on('click', function () {
@@ -174,6 +285,7 @@
     //});
 
     // Truyen thong tin gmail cua contactUs
+
     $('.sendMess').on('click', function () {
         const fname = $('#fname').val();
         const lname = $('#lname').val();

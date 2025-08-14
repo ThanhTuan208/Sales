@@ -1,0 +1,37 @@
+﻿@using CRUD_asp.netMVC.Models.Product
+@model Brand
+
+@{
+    ViewData["Title"] = "DeleteProduct";
+}
+
+<div class="delete-container">
+    <div class="delete-header">
+        <h1>Xóa thương hiệu</h1>
+        <h3>Tôi cho bạn cơ hội cuối cùng, bạn có chắc là xóa thương hiệu này chưa ?</h3>
+        <h3>Vì thương hiệu khi bị xóa sẽ xóa luôn các sản phẩm có trong thương hiệu này.  </h3>
+    </div>
+    <hr />
+    <div class="delete-content">
+        <div class="delete-image">
+            <img src="@Url.Content($"~/{Model.PicturePath}")" alt="Product Image" />
+        </div>
+        <div class="delete-info">
+            <h4>Product Details</h4>
+            <dl>
+                <dt>@Html.DisplayNameFor(model => model.ID)</dt>
+                <dd>@Html.DisplayFor(model => model.ID)</dd>
+                <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+                <dd>@Html.DisplayFor(model => model.Name)</dd>
+                <dt>@Html.DisplayNameFor(model => model.Description)</dt>
+                <dd>@Html.DisplayFor(model => model.Description)</dd>
+            </dl>
+        </div>
+    </div>
+    <form asp-action="DeleteBrandByID" asp-route-id="@Model.ID" method="post">
+        <div class="action-buttons">
+            <input type="submit" value="Xóa" /> |
+            <a asp-action="BrandList">Quay lai d/s</a>
+        </div>
+    </form>
+</div>

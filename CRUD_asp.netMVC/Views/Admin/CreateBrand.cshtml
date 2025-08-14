@@ -1,0 +1,50 @@
+﻿@using CRUD_asp.netMVC.Models.Product;
+@model Brand
+
+@{
+}
+
+<h1 class="text-center my-4">Tạo thương hiệu mới</h1>
+<hr />
+@Html.AntiForgeryToken()
+<div class="brand-create-form">
+    <div style="display: flex; gap: 2rem;">
+
+        <!-- Form bên trái -->
+        <div style="flex: 1;">
+            <div class="mb-3">
+                <label for="productName">Tên sản phẩm</label>
+                <input asp-for="Name" type="text" class="form-control" id="name">
+            </div>
+            <span asp-validation-for="Name" class="text-danger"></span>
+
+            <div class="mb-3">
+                <label for="image">Hình ảnh</label>
+                <input asp-for="Picture" type="file" class="form-control" id="image" accept="image/*">
+            </div>
+            <span asp-validation-for="Picture" class="text-danger"></span>
+
+            <div class="mb-3">
+                <label for="description">Mô tả</label>
+                <textarea asp-for="Description" class="form-control" id="description" rows="4"></textarea>
+            </div>
+            <span asp-validation-for="Description" class="text-danger"></span>
+
+            <div class="d-flex justify-content-center mt-4">
+                <button id="btnBrandCreate" class="btn btn-outline-secondary">Tạo</button>
+            </div>
+        </div>
+
+        <!-- Khung preview bên phải -->
+        <div class="preview-box">
+            <img id="previewImage" src="" alt="Preview">
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

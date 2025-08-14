@@ -1,4 +1,148 @@
-﻿/*deleteProduct*/
+﻿/* brandCreate */
+.brand-create-form {
+    max-width: 800px;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin: auto;
+}
+
+/* Khung preview */
+.preview-box {
+    width: 250px;
+    height: 290px;
+    border: 2px dashed red; /* Khung đỏ giống ảnh bạn gửi */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #f9f9f9;
+}
+
+    .preview-box img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+/* Form chính */
+.brand-create-form {
+    max-width: 800px;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    animation: scaleIn 0.5s ease-in-out;
+    margin: auto;
+}
+
+    .brand-create-form h1 {
+        font-weight: 600;
+        animation: slideDown 0.6s ease-in-out;
+    }
+
+    /* Input chung */
+    .brand-create-form .form-control {
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        transition: all 0.3s ease;
+        max-width: 400px;
+    }
+
+        .brand-create-form .form-control:focus {
+            border-color: #6c63ff;
+            box-shadow: 0 0 8px rgba(108, 99, 255, 0.3);
+            transform: scale(1.02);
+        }
+
+    .brand-create-form label {
+        font-weight: 500;
+    }
+
+    /* ===================== */
+    /* Input file + ảnh preview trong cùng hàng */
+    .brand-create-form .image-upload-row {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+    }
+
+        .brand-create-form .image-upload-row .form-control {
+            width: 100%;
+        }
+
+    /* Preview ảnh góc phải input */
+    .brand-create-form .preview-container {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .brand-create-form .preview-container img {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+    /* Nút bấm */
+    .brand-create-form #btnAdminProduct {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .brand-create-form #btnAdminProduct:hover {
+            background-color: #6c63ff;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+        }
+
+/* Animation keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/*deleteProduct*/
 .delete-container {
     max-width: 750px;
     margin: 50px auto;
@@ -842,4 +986,8 @@ h1 {
     100% {
         transform: translate3d(0, 0, 0) translateZ(0);
     }
+}
+
+table td, table th {
+    vertical-align: middle !important;
 }

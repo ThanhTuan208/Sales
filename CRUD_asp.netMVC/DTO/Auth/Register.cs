@@ -44,7 +44,5 @@ namespace CRUD_asp.netMVC.DTO.Auth
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; } = DateTime.Now;
 
-        //[NotMapped]
-        //public string InfoGeneral { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿@using CRUD_asp.netMVC.Models.Product;
 @using System.Globalization
-@model PaginatedList<Products>
+@model PaginatedList<Brand>
 
 @{
     ViewData["Title"] = "Index";
@@ -24,21 +24,21 @@
         }
 
 </style>
-<h1 style="text-align: center; padding: 20px; text-shadow: 1px 2px 10px rgba(236, 210, 11, 0.6)">Sản phẩm</h1>
+<h1 style="text-align: center; padding: 20px; text-shadow: 1px 2px 10px rgba(236, 210, 11, 0.6)">Thương hiệu</h1>
 <div class="container">
     <div class="row">
         <div class="col-lg-3">
-            <a asp-action="CreateProduct" class="btn btn-outline-success">Tạo mới</a>
+            <a asp-action="CreateBrand" class="btn btn-outline-success">Tạo mới</a>
         </div>
         <div class="col-lg-4 offset-5">
 
-            <form method="post" asp-action="Index">
+            @* <form method="post" asp-action="Index">
                 <div class="d-flex">
                     <input type="text" name="keyword" class="form-control me-2" placeholder="Find Product"
                            oninvalid="this.setCustomValidity('Vui lòng nhập từ khóa để tìm kiếm')" required />
                     <button type="submit" class="btn btn-outline-success">Find</button>
                 </div>
-            </form>
+            </form> *@
         </div>
     </div>
 </div>
@@ -54,12 +54,6 @@
             </th>
             <th>Picture</th>
 
-            <th>Price</th>
-
-            <th>Brand</th>
-
-            <th>Categoies</th>
-
             <th>Action</th>
         </tr>
     </thead>
@@ -74,32 +68,20 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    <a asp-action="EditProduct" asp-route-id="@item.ID">
-                        <img src="@Url.Content($"~/images/products/{item.PicturePath}")" alt="" style="width: 150px; height: 100px; object-fit: cover; border-radius:8px; text-decoration: none " class="img-fluid shadow-lg" />
+                    <a asp-action="EditBrand" asp-route-id="@item.ID">
+                        <img src="@Url.Content($"~/{item.PicturePath}")" alt="" style="width: 150px; height: 100px; object-fit: cover; border-radius:8px; text-decoration: none " class="img-fluid shadow-lg" />
 
                     </a>
                 </td>
 
-                <td>
-                    <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.NewPrice)</span>
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Brands.Name)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Cate.Name)
-                </td>
-
-
                 <td class="text-center">
                     <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-                        <a asp-action="EditProduct" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Edit</span></a>
-                        <a asp-action="DetailProduct" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Details</span></a>
-                        <a asp-action="DeleteProduct" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Delete</span></a>
+                        <a asp-action="EditBrand" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Edit</span></a>
+                        <a asp-action="DetailBrand" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Details</span></a>
+                        <a asp-action="DeleteBrand" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Delete</span></a>
                     </div>
                 </td>
+
             </tr>
         }
     </tbody>
@@ -108,16 +90,16 @@
 <div class="pagination d-flex justify-content-center">
     @if (Model.PreviousPage)
     {
-        <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-page="@(Model.PageCurrent - 1)">Previous</a>
+        <a class="btn btn-outline-warning m-1" asp-action="BrandList" asp-route-page="@(Model.PageCurrent - 1)">Previous</a>
     }
 
     @for (int i = 1; i <= Model.TotalPage; i++)
     {
-        <a asp-action="Index" asp-route-page="@i" class="btn btn-outline-warning m-1@(i == Model.PageCurrent ? "active" : string.Empty)">@i</a>
+        <a asp-action="BrandList" asp-route-page="@i" class="btn btn-outline-warning m-1@(i == Model.PageCurrent ? " active" : string.Empty)">@i</a>
     }
 
     @if (Model.NextPage)
     {
-        <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-page="@(Model.PageCurrent + 1)">Next</a>
+        <a class="btn btn-outline-warning m-1" asp-action="BrandList" asp-route-page="@(Model.PageCurrent + 1)">Next</a>
     }
 </div>

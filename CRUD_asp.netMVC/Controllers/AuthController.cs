@@ -126,7 +126,6 @@ namespace CRUD_asp.netMVC.Controllers
                     else
                     {
                         return Json(new { success = true, role = "Customer", message = "Đăng nhập thành công acc Customer." });
-
                     }
                 }
                 else
@@ -346,7 +345,7 @@ namespace CRUD_asp.netMVC.Controllers
                     email: accout.Email, // gửi lại cho người dùng
                     subject: subject,
                     message: htmlBody
-                );
+                );  
 
                 return Json(new
                 {
@@ -400,8 +399,8 @@ namespace CRUD_asp.netMVC.Controllers
                     return Json(new
                     {
                         success = false,
-                        message = "Mã chưa chính xác. ",
-                        errors = new { InfoGeneral = new[] { "Mật khẩu phải từ 8-20 ký tự, bao gồm ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (~!@#$%^&*()_+=?).\"" } }
+                        message = "Mật khẩu phải từ 8-20 ký tự, bao gồm ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (~!@#$%^&*()_+=?). ",
+                        errors = new { InfoGeneral = new[] { "Mật khẩu phải từ 8-20 ký tự, bao gồm ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (~!@#$%^&*()_+=?)." } }
                     });
                 }
 
@@ -434,6 +433,17 @@ namespace CRUD_asp.netMVC.Controllers
                         success = false,
                         message = "Mã OTP không đúng.",
                         errors = new { InfoGeneral = new[] { "Mã OTP không đúng. " } }
+                    });
+                }
+
+                var isSamePass = await _userManager.CheckPasswordAsync(user, forgot.NewPass.Trim());
+                if (isSamePass)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Mật khẩu mới không được giống mật khẩu trước.",
+                        errors = new { InfoGeneral = new[] { "Mật khẩu mới không được giống mật khẩu trước. " } }
                     });
                 }
 
@@ -550,7 +560,7 @@ namespace CRUD_asp.netMVC.Controllers
 
                 switch (roleName)
                 {
-                    case "Manager":
+                    case "Admin":
                         _context.Manager.Add(new Manager
                         {
                             UserID = user.Id,
@@ -560,8 +570,8 @@ namespace CRUD_asp.netMVC.Controllers
                             FirstName = user.FirstName,
                             LastName = user.LastName,
                             PhoneNumber = user.PhoneNumber
-
                         });
+
                         break;
 
                     case "Customer":
