@@ -2,6 +2,7 @@
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Product;
+using CRUD_asp.netMVC.Models.Product.Order;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +52,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             modelBuilder.Entity<ProductStyle>().HasKey(p => new { p.StyleID, p.ProductID });
             modelBuilder.Entity<ProductStyle>().HasOne(p => p.Product).WithMany(p => p.ProductStyles).HasForeignKey(p => p.ProductID);
             modelBuilder.Entity<ProductStyle>().HasOne(p => p.Style).WithMany(p => p.ProductStyles).HasForeignKey(p => p.StyleID);
-
+            // Cac thuc the khac....
             modelBuilder.Entity<ProductSize>().HasKey(p => new { p.ProductID, p.SizeID });
             modelBuilder.Entity<ProductSize>().HasOne(p => p.products).WithMany(p => p.ProductSize).HasForeignKey(p => p.ProductID);
             modelBuilder.Entity<ProductSize>().HasOne(p => p.size).WithMany(p => p.ProductSize).HasForeignKey(p => p.SizeID);

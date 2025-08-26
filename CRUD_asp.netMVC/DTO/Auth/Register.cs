@@ -1,10 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MimeKit.Tnef;
+using NuGet.Protocol;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Drawing.Printing;
 
 namespace CRUD_asp.netMVC.DTO.Auth
 {
     public class Register
     {
+        //public int ID { get; set; }
+
         [Required(ErrorMessage = "Vui lòng nhập tên đăng nhập")]
         [StringLength(50, ErrorMessage = "Tên đăng nhập không được vượt quá 50 ký tự")]
         public string UserName { get; set; }
@@ -39,7 +45,6 @@ namespace CRUD_asp.netMVC.DTO.Auth
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
-        [Required(ErrorMessage = "Ngày bắt đầu là bắt buộc")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; } = DateTime.Now;

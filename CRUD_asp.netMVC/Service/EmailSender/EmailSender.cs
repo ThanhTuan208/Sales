@@ -7,7 +7,7 @@ using SixLabors.ImageSharp.Processing.Processors;
 using System.Configuration;
 using System.Net.NetworkInformation;
 
-namespace CRUD_asp.netMVC.Models.Service
+namespace CRUD_asp.netMVC.Service.EmailSender
 {
     public class EmailSender : IEmailSender
     {

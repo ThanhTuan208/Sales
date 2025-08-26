@@ -5,15 +5,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Identity.Client;
-using Microsoft.IdentityModel.Tokens;
-using NuGet.Protocol;
-using SixLabors.ImageSharp.Formats.Bmp;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using IEmailSender = CRUD_asp.netMVC.Models.Service.IEmailSender;
+using IEmailSender = CRUD_asp.netMVC.Service.EmailSender.IEmailSender;
 using Login = CRUD_asp.netMVC.DTO.Auth.Login;
 using Register = CRUD_asp.netMVC.DTO.Auth.Register;
 
@@ -94,14 +90,23 @@ namespace CRUD_asp.netMVC.Controllers
                 }
 
                 var user = await _userManager.FindByEmailAsync(login.Email.Trim());
-                if (user == null || !await _userManager.CheckPasswordAsync(user, login.Password))
+                if (user == null)
                 {
                     return Json(new
                     {
                         success = false,
-                        message = "Email hoặc mật khẩu không đúng !!!",
-                        errors = new { InfoGeneral = new[] { "Email hoặc mật khẩu không đúng !!!" } }
-                        // tra ve loi moi khi submit neu co loi
+                        message = "Email không tồn tại !!!",
+                        errors = new { InfoGeneral = new[] { "Email không tồn tại !!!" } }
+                    });
+                }
+
+                if (!await _userManager.CheckPasswordAsync(user, login.Password))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Mật khẩu không đúng !!!",
+                        errors = new { InfoGeneral = new[] { "Mật khẩu không đúng !!!" } }
                     });
                 }
 
@@ -111,7 +116,7 @@ namespace CRUD_asp.netMVC.Controllers
                     {
                         success = false,
                         message = "Email chưa được xác thực !!!",
-                        errors = new { InfoGeneral = new[] { "Bạn cần truy cập vào Gmail để xác thực tài khoản !" } }
+                        errors = new { InfoGeneral = new[] { "Bạn cần truy cập Gmail để xác thực tài khoản !" } }
                     });
                 }
 
@@ -345,7 +350,7 @@ namespace CRUD_asp.netMVC.Controllers
                     email: accout.Email, // gửi lại cho người dùng
                     subject: subject,
                     message: htmlBody
-                );  
+                );
 
                 return Json(new
                 {

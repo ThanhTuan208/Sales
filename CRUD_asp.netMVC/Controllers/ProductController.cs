@@ -132,7 +132,6 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         /// <summary>
-        /// Hien thi san pham cua brand qua id brand
         /// </summary>
         /// <param name="brandID"></param>
         /// <param name="productPage"></param>

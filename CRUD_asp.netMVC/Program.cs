@@ -1,7 +1,7 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Auth;
-using CRUD_asp.netMVC.Models.Service;
 using CRUD_asp.netMVC.Models.ViewModels.Product;
+using CRUD_asp.netMVC.Service.EmailSender;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -23,10 +23,10 @@ namespace CRUD_asp.netMVC
                 option.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext")) // appsettings.json
             );
 
-            // Them dich vu Session
+            // Dabg ky Session
             builder.Services.AddSession(options =>
             {
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Chỉ gửi qua HTTPS
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Chỉ gui qua HTTPS
                 options.Cookie.SameSite = SameSiteMode.Lax; // Ngăn CSRF
                 options.IdleTimeout = TimeSpan.FromMinutes(30); // Thoi gian session ton tai
                 options.Cookie.HttpOnly = true; // Chi cho server truy cap
@@ -36,14 +36,15 @@ namespace CRUD_asp.netMVC
             // Dang ky identity
             builder.Services.AddIdentity<Users, Roles>(options =>
             {
-                // Cấu hình mật khẩu
+                // Cau hinh mat khau
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 6;
                 options.Password.RequireNonAlphanumeric = false;
 
-                // Cấu hình người dùng
+                // Cau hinh nguoi dung
                 options.User.RequireUniqueEmail = true;
-            }).AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders(); // Để dùng chức năng reset password, confirm email, v.v.
+            })
+                .AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders(); // Để dùng chức năng reset password, confirm email, v.v.
 
             // Dang ky Cookie
             builder.Services.ConfigureApplicationCookie(options =>
@@ -53,7 +54,7 @@ namespace CRUD_asp.netMVC
                 options.AccessDeniedPath = "/Auth/AccessDenied";
             });
 
-            // Dang ky dich vu gmail
+            // Dang ky gmail
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
             var app = builder.Build();

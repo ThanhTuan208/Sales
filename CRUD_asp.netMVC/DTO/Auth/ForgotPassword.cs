@@ -14,6 +14,6 @@ namespace CRUD_asp.netMVC.DTO.Auth
         [Required(ErrorMessage = "Vui lòng nhập mật khẩu mới. ")]
         public string NewPass { get; set; }
 
-        public string? InfoGeneral { get; set;  }
+        public string? InfoGeneral { get; set; }
     }
 }

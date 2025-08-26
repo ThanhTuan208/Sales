@@ -1,4 +1,4 @@
-﻿namespace CRUD_asp.netMVC.Models.Service
+﻿namespace CRUD_asp.netMVC.Service.EmailSender
 {
     public interface IEmailSender
     {

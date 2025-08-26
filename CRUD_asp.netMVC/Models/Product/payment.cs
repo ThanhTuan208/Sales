@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using CRUD_asp.netMVC.Models.Product.Order;
+using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.FileSystemGlobbing.Internal.PatternContexts;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
