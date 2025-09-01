@@ -70,12 +70,13 @@ namespace CRUD_asp.netMVC.Data.Seed
             modelBuilder.Entity<ProductColors>().HasOne(p => p.Color).WithMany(p => p.ProductColor).HasForeignKey(p => p.ColorID);
 
             modelBuilder.Entity<ProductImages>().HasOne(p => p.Products).WithMany(p => p.ProductImages).HasForeignKey(p => p.ProductID);
-            //-------------------------------------------------------------------------
-            modelBuilder.Entity<Login>().HasNoKey();
-            modelBuilder.Entity<Register>().HasNoKey();
 
-            var hashPass1 = new PasswordHasher<Users>().HashPassword(null, "admin123");
-            var hashPass2 = new PasswordHasher<Users>().HashPassword(null, "123456");
+            //-------------------------------------------------------------------------
+            //modelBuilder.Entity<Login>().HasNoKey();
+            //modelBuilder.Entity<Register>().HasNoKey();
+
+            //var hashPass1 = new PasswordHasher<Users>().HashPassword(null, "admin123");
+            //var hashPass2 = new PasswordHasher<Users>().HashPassword(null, "123456");
         }
 
 
@@ -95,7 +96,7 @@ namespace CRUD_asp.netMVC.Data.Seed
 
                  new Roles { Id = 1, Name = "Admin", NormalizedName = "ADMIN" },
                  new Roles { Id = 2, Name = "Customer", NormalizedName = "CUSTOMER" }
-                 );
+            );
         }
 
         public static void SeedGenders(this ModelBuilder modelBuilder)

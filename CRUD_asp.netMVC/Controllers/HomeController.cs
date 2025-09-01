@@ -120,11 +120,14 @@ public class HomeController : Controller
                 return Json(new { success = false, message = "Vui lòng đăng nhập tài khoản trước khi gửi yêu cầu của bạn" });
             }
 
-            var FindUser = await userManager.FindByIdAsync(userCurrent.ToString());
-
-            if (FindUser?.Email == null || string.IsNullOrWhiteSpace(FindUser.Email))
+            var ClaimCurrentEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (string.IsNullOrWhiteSpace(ClaimCurrentEmail))
             {
-                return Json(new { success = false, message = "Bạn cần sử dụng email của tài khoản mà bạn đã đăng nhập !!!" });
+                var FindUser = await userManager.FindByIdAsync(userCurrent.ToString());
+                if (FindUser?.Email == null || string.IsNullOrWhiteSpace(FindUser.Email))
+                {
+                    return Json(new { success = false, message = "Bạn cần sử dụng email của tài khoản mà bạn đã đăng nhập !!!" });
+                }
             }
 
             string subject = $"[Liên hệ hỗ trợ] - {HttpUtility.HtmlEncode(mail.Subject)}";
@@ -141,9 +144,15 @@ public class HomeController : Controller
             <p><strong>Thời gian gửi:</strong> {DateTime.Now:dd/MM/yyyy HH:mm}</p>
             <p><strong>Liên hệ hỗ trợ:</strong> nguyenthanhtuankrp1@gmail.com | 1900 1234</p>";
 
+            string htmlBodyUser = $@"<p>Xin chào {HttpUtility.HtmlEncode(mail.FirstName)},</p>
+            <p>Cảm ơn bạn đã liên hệ với chúng tôi. Yêu cầu của bạn với tiêu đề '<strong>{HttpUtility.HtmlEncode(mail.Subject)}</strong>' đã được ghi nhận.</p>
+            <p>Chúng tôi sẽ phản hồi trong vòng 24 giờ. Nếu cần hỗ trợ ngay, vui lòng liên hệ: nguyenthanhtuankrp1@gmail.com hoặc một chín không không một không không có.</p>
+            <p>Trân trọng,<br>E-commerce</p>";
+
+            #region Tối ưu code bằng hangfire (Gửi email nhanh hơn với queue (FIFO))
             // Gui email den dia chi ho tro
             await emailSender.SendEmailAsync(
-                email: "nguyenthanhtuankrp1@gmail.com",
+                email: "dieuhuong707@gmail.com",
                 subject: subject,
                 message: htmlBody
             );
@@ -152,12 +161,9 @@ public class HomeController : Controller
             await emailSender.SendEmailAsync(
                 email: mail.Email,
                 subject: "Xác nhận yêu cầu hỗ trợ - E-commerce",
-                message: $@"
-            <p>Xin chào {HttpUtility.HtmlEncode(mail.FirstName)},</p>
-            <p>Cảm ơn bạn đã liên hệ với chúng tôi. Yêu cầu của bạn với tiêu đề '<strong>{HttpUtility.HtmlEncode(mail.Subject)}</strong>' đã được ghi nhận.</p>
-            <p>Chúng tôi sẽ phản hồi trong vòng 24 giờ. Nếu cần hỗ trợ ngay, vui lòng liên hệ: nguyenthanhtuankrp1@gmail.com hoặc một chín không không một không không có.</p>
-            <p>Trân trọng,<br>E-commerce</p>"
+                message: htmlBodyUser
             );
+            #endregion 
 
             return Json(new { success = true, message = "Yêu cầu của bạn đã được gửi thành công! Vui lòng kiểm tra email để xem xác nhận." });
         }
@@ -180,6 +186,11 @@ public class HomeController : Controller
             _logger.LogError(ex, "Lỗi load dữ liệu chung: featured");
             return View("Error");
         }
+    }
+
+    public string? TestClaimEmail()
+    {
+        return User.FindFirst(ClaimTypes.Email)?.Value;
     }
 
 }

@@ -2,16 +2,7 @@
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.ViewModels.Cart;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration.EnvironmentVariables;
-using Microsoft.Identity.Client;
-using NuGet.Protocol;
-using NuGet.Protocol.Plugins;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -26,13 +17,14 @@ namespace CRUD_asp.netMVC.Controllers
             context = _context;
         }
 
-        // GET: Cart
         [HttpGet, Route("Cart")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string[]? arrID = null)
         {
             try
             {
                 var cartItems = new List<AddToCart>();
+                var cartItemByIDs = new List<AddToCart>();
+
                 var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
 
                 if (userID > 0)
@@ -46,6 +38,11 @@ namespace CRUD_asp.netMVC.Controllers
                         .Include(c => c.Users)
                         .Where(c => c.UserID == userID)
                         .ToListAsync();
+
+                    var arrIDSet = arrID?.Select(int.Parse).ToHashSet() ?? new HashSet<int>();
+
+                    cartItemByIDs = cartItems.Where(p => arrIDSet.Contains(p.ID)).ToList();
+                    Console.WriteLine("so luong items: " + cartItemByIDs.Count);
                 }
                 else
                 {
@@ -71,15 +68,23 @@ namespace CRUD_asp.netMVC.Controllers
                 CartViewModel viewModel = new()
                 {
                     CartItems = cartItems,
+                    CartItemByIDs = cartItemByIDs,
                     TotalPrice = cartItems.Sum(p => p.Product != null ? p.Product.NewPrice * p.Quantity : 0)
                 };
 
-                return View(viewModel);
+                if (cartItemByIDs.Count > 0)
+                {
+                    // can tao partial rieng de hien thi danh sach ben trong modal, co the thu xoa partial de kiem tra
+                    return PartialView("_CartItemByIDsPartial", viewModel);
+                }
+                else
+                {
+                    return View(viewModel);
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ModelState.AddModelError("Cart", "Lỗi hiển thị giỏ hàng: " + ex.Message);
-                return View(new CartViewModel());
+                return PartialView("_CartItemByIDsPartial", new CartViewModel());
             }
         }
 

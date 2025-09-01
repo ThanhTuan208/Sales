@@ -1,0 +1,32 @@
+﻿@using CRUD_asp.netMVC.Models.ViewModels.Cart;
+@using System.Globalization
+@model CartViewModel
+
+@{
+    Layout = null;
+}
+
+@if (!Model.CartItemByIDs.Any())
+{
+    <tr>
+        <td class="text-center" colspan="6">Chưa có sản phẩm nào được chọn.</td>
+    </tr>
+}
+else
+{
+    @foreach (var item in Model.CartItemByIDs)
+    {
+        <tr class="product-item" data-id="@item.ID" data-price="@(item.Product?.NewPrice ?? 0)">
+            <td>
+                <img src="@Url.Content($"~/images/products/{(item.Product?.ProductImages.FirstOrDefault()?.PathNameImage)}")"
+                     alt="@(item.Product?.Name ?? "N/A")"
+                     class="product-img" />
+            </td>
+            <td>@(item.Product?.Name ?? "N/A")</td>
+            <td>@item.SelectColor</td>
+            <td>@item.SelectSize</td>
+            <td class="quantity">@item.Quantity</td>
+            <td class="total-price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", (item.Product?.NewPrice ?? 0) * item.Quantity)</td>
+        </tr>
+    }
+}

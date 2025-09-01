@@ -13,7 +13,7 @@ namespace CRUD_asp.netMVC.Models.Product
         public int ID { get; set; }
 
         [Required]
-        public int OrderID { get; set; }
+        public string OrderID { get; set; }
         public Orders? Order { get; set; }
 
         public string paymentMethod { get; set; } = "Transfer"; // or Cash, credit card

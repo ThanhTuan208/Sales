@@ -9,9 +9,13 @@
 
 	<ItemGroup>
 		<Compile Remove="wwwroot\images\logo\logo_adidas1.png\**" />
+		<Compile Remove="wwwroot\images\NewFolder\**" />
 		<Content Remove="wwwroot\images\logo\logo_adidas1.png\**" />
+		<Content Remove="wwwroot\images\NewFolder\**" />
 		<EmbeddedResource Remove="wwwroot\images\logo\logo_adidas1.png\**" />
+		<EmbeddedResource Remove="wwwroot\images\NewFolder\**" />
 		<None Remove="wwwroot\images\logo\logo_adidas1.png\**" />
+		<None Remove="wwwroot\images\NewFolder\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -30,10 +34,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Migrations\" />
 		<Folder Include="Models\Auth\ActionViewModel\" />
 		<Folder Include="wwwroot\assets\" />
-		<Folder Include="wwwroot\images\NewFolder\" />
 	</ItemGroup>
 
 </Project>

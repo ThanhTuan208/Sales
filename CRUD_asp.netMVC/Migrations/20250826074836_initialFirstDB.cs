@@ -1,10 +1,14 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace CRUD_asp.netMVC.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreateDB : Migration
+    public partial class initialFirstDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,7 +36,7 @@ namespace CRUD_asp.netMVC.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PicturePath = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PicturePath = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -436,8 +440,7 @@ namespace CRUD_asp.netMVC.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserID = table.Column<int>(type: "int", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -711,7 +714,7 @@ namespace CRUD_asp.netMVC.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderID = table.Column<int>(type: "int", nullable: false),
+                    OrderID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProductID = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false)
@@ -739,7 +742,7 @@ namespace CRUD_asp.netMVC.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderID = table.Column<int>(type: "int", nullable: false),
+                    OrderID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     paymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     paidAmount = table.Column<double>(type: "float", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false)

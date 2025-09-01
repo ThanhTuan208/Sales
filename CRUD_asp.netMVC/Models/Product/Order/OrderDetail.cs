@@ -1,8 +1,7 @@
-﻿using CRUD_asp.netMVC.Models.Product.Order;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CRUD_asp.netMVC.Models.Product
+namespace CRUD_asp.netMVC.Models.Product.Order
 {
     public class OrderDetail
     {
@@ -10,7 +9,7 @@ namespace CRUD_asp.netMVC.Models.Product
         public int ID { get; set; }
 
         [Required]
-        public int OrderID { get; set; }
+        public string OrderID { get; set; }
         public Orders? Orders { get; set; }
 
         [Required]

@@ -42,6 +42,9 @@
     box-sizing: border-box;
 }
 
+.product-table tr {
+    border-radius: 10px;
+}
 
 html {
     font-family: sans-serif;
@@ -49,6 +52,234 @@ html {
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
+/*modal paymentMethod Cart*/
+/* Overlay */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.modal {
+    background: #f2f2f2;
+    width: 1250px;
+    max-width: 98vw;
+    border-radius: 16px;
+    display: none; /* Ẩn mặc định */
+    flex-direction: row;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(255, 193, 7, 0.4);
+    animation: slideUp 0.4s ease forwards;
+    transform: scale(0.95); /* Thêm transform để kiểm tra hiển thị */
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+    .modal.active {
+        display: flex; /* Hiển thị khi có class 'active' */
+        transform: scale(1); /* Quay lại kích thước ban đầu khi active */
+    }
+
+.modal-left {
+    flex: 3;
+    background: #fff;
+    padding: 20px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    color: #333;
+}
+
+    .product-table thead {
+        background-color: #fff9c4;
+        color: #5a4d00;
+    }
+
+    .product-table th,
+    .product-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .product-table tbody tr:hover {
+        background-color: #fffde7;
+    }
+
+.product-img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.quantity {
+    font-weight: 600;
+    text-align: center;
+}
+
+.total-price {
+    font-weight: 700;
+    color: #b28704;
+}
+
+.summary {
+    background: #fff9c4;
+    border-radius: 12px;
+    padding: 15px 20px;
+    box-shadow: inset 0 0 10px #d4af37aa;
+    font-weight: 700;
+    color: #6b5500;
+    font-size: 16px;
+}
+
+.modal-right {
+    flex: 2;
+    background: linear-gradient(135deg, #fff9c4, #fff176);
+    padding: 20px 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.qr-wrapper {
+    background: #fff;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(255, 193, 7, 0.4);
+}
+
+.qr-code {
+    width: 180px;
+    height: 180px;
+    display: block;
+}
+
+.account-info {
+    text-align: center;
+    color: #5a4d00;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+.account-name {
+    font-size: 22px;
+    margin-bottom: 4px;
+}
+
+.account-date,
+.account-id {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.btn-close {
+    margin-top: 15px;
+    background: #b28704;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 40px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(178, 135, 4, 0.6);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .btn-close:hover {
+        background: #d4af37;
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.8);
+    }
+
+@keyframes fadeIn {
+    from {
+        background: rgba(0,0,0,0);
+    }
+
+    to {
+        background: rgba(0,0,0,0.5);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+    .modal {
+        flex-direction: column;
+        width: 90vw;
+    }
+
+    .modal-left, .modal-right {
+        flex: none;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .product-table th, .product-table td {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    .product-img {
+        width: 60px;
+        height: 45px;
+    }
+
+    .qr-code {
+        width: 140px;
+        height: 140px;
+    }
+
+    .modal-right {
+        gap: 8px;
+    }
+
+    .account-info {
+        font-size: 16px;
+        line-height: 1.1;
+    }
+
+    .account-name {
+        font-size: 18px;
+        margin-bottom: 2px;
+    }
+
+    .account-date,
+    .account-id {
+        font-size: 14px;
+    }
+}
+/*modal paymentMethod Cart*/
 
 /*button buy cart */
 .bn54 {
@@ -6485,7 +6716,7 @@ a.close.disabled {
         overflow-y: auto;
     }
 
-.modal {
+/*.modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -6495,7 +6726,7 @@ a.close.disabled {
     height: 100%;
     overflow: hidden;
     outline: 0;
-}
+}*/
 
 .modal-dialog {
     position: relative;

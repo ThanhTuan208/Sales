@@ -25,6 +25,13 @@
                     <i class="bi bi-people"></i><span>Người dùng</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <form id="logoutForm" asp-action="Logout" asp-controller="Auth" method="post" class="nav-link">
+                    <a href="javascript:void(0);" onclick="document.getElementById('logoutForm').submit();">
+                        <i class="bi bi-tags"></i><span>Đăng xuất</span>
+                    </a>
+                </form>
+            </li>
             <!-- Uncomment nếu cần dropdown -->
             <!--
             <li class="nav-item dropdown">

@@ -2,14 +2,13 @@
 @using System.Globalization
 @model CartViewModel
 @{
+    var count = Model.CartItemByIDs.Count;
     ViewData["Title"] = "Cart Page";
     Layout = "";
 }
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-
 <link rel="stylesheet" href="~/css/styleCart.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/productDetail.css" asp-append-version="true" />
 
 <section class="ftco-section">
     <div class="container">
@@ -25,11 +24,11 @@
                                 <th>Check</th>
                                 <th>&nbsp;</th>
                                 <th>Sản phẩm</th>
-                                <th>Loại màu</th>
+                                <th colspan="1">Loại màu</th>
                                 <th>kích thước</th>
                                 <th>Giá</th>
                                 <th>Số lượng</th>
-                                <th>Tổng giá</th>
+                                @* <th>Tổng giá</th> *@
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
@@ -42,7 +41,7 @@
                                         @*    <td name="id" value="@item.ID">@item.ID</td> *@
                                         <td>
                                             <label class="checkbox-wrap checkbox-primary">
-                                                <input type="checkbox" class="checkbox" />
+                                                <input type="checkbox" class="checkbox" value="@item.ID" />
                                                 <span class="checkmark"></span>
                                             </label>
                                         </td>
@@ -81,10 +80,11 @@
                                                 <button type="button" class="quantity-btn increase" data-id="@item.ID" data-opera="+">+</button>
                                             </div>
                                         </td>
-                                        @{
-                                            TempData["totalPrice"] = item.Product.NewPrice * item.Quantity;
-                                        }
-                                        <td class="priceTotal">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", TempData["totalPrice"])</td>
+                                        
+                                        
+                                        @* co xai thi mo lai js line 619
+                                        <td class="priceTotal">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", TempData["totalPrice"])</td>*@
+                                        
 
                                         <td class="deleteCartItem" style="vertical-align:middle; text-align:center">
                                             @* Thieu token nen khi truyen du lieu qua ben ajax se chay xuong error *@
@@ -109,21 +109,21 @@
             <div class="col-md-4">
                 <div class="card shadow-2-strong mb-5 mb-lg-0" style="border-radius: 16px">
                     <div class="card-body p-4">
-                        <h3 class="mb-4 text-center">Thanh toán</h3>
+                        <h3 class="mb-4 text-center shadow font-weight-bold">Thanh toán</h3>
 
                         <!-- Payment Methods -->
                         <div class="mb-4">
                             <h5>Phương thức thanh toán</h5>
                             <div class="form-check mb-2">
-                                <input class="form-check-input PaymentMethod" type="radio" data-method="momo" id="momo" />
-                                <label class="form-check-label" for="momo">
+                                <input class="form-check-input PaymentMethod" type="radio" name="payment" value="qr" data-method="qr" id="qr" />
+                                <label class="form-check-label" for="qr">
                                     <i class="fa-lg me-2">
-                                        <img src="~/images/icon/Momo.png" alt="" style="width: 40px; height: 40px" />
-                                    </i>QR Momo
+                                        <img src="~/images/icon/qr.png" alt="" style="width: 40px; height: 40px" />
+                                    </i>Quét mã QR
                                 </label>
                             </div>
                             <div class="form-check mb-2">
-                                <input class="form-check-input PaymentMethod" type="radio" data-method="cash" id="cash" />
+                                <input class="form-check-input PaymentMethod" type="radio" name="payment" value="cash" data-method="cash" id="cash" />
                                 <label class="form-check-label" for="cash">
 
                                     <i class=" fa-lg me-2">
@@ -133,36 +133,6 @@
                             </div>
                         </div>
 
-                        @* <!-- Card Info -->
-                        <div class="mb-4">
-                            <h5>Thông tin thẻ</h5>
-                            <div class="row">
-                                <div class="col-12 mb-3">
-                                    <div class="form-outline">
-                                        <input type="text" class="form-control form-control-lg" name="CardName" placeholder="Tên trên thẻ" required />
-                                        <label class="form-label">Tên trên thẻ</label>
-                                    </div>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <div class="form-outline">
-                                        <input type="text" class="form-control form-control-lg" name="CardNumber" placeholder="Số thẻ" required pattern="\d{16}" />
-                                        <label class="form-label">Số thẻ</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <div class="form-outline">
-                                        <input type="text" class="form-control form-control-lg" name="Expiration" placeholder="MM/YY" required pattern="\d{2}/\d{2}" />
-                                        <label class="form-label">Hết hạn</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <div class="form-outline">
-                                        <input type="password" class="form-control form-control-lg" name="CVV" placeholder="CVV" required pattern="\d{3}" />
-                                        <label class="form-label">CVV</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> *@
 
                         <!-- Total -->
                         <div class="payment">
@@ -179,16 +149,71 @@
                                 <span class="countItem">x 0</span>
                             </div>
                             <hr class="my-4" />
-                            <div class="d-flex justify-content-between fw-semibold mb-4">
+                            @* <div class="d-flex justify-content-between fw-semibold mb-4">
                                 <span>Tổng cộng (bao gồm thuế): </span>
-                                <span class="price-totalVAT">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", 0) * 0.5%</span>
-                            </div>
-                            <button type="submit" class="buy bn54 btn-block btn-lg">
+                                <span class="price-totalVAT">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", 0)</span>
+                            </div> *@
+
+                            <button type="button" class="buy bn54 btn-block btn-lg">
                                 <div class="d-flex justify-content-between">
                                     <span class="btnPrice bn54span">Thanh toán:</span>
-                                    <span class="price-complete bn54span">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", 0)</span>
+                                    <span class="price-complete bn54span">0 ₫</span>
                                 </div>
                             </button>
+
+                            <div class="modal-overlay" style="display: none">
+                                <div class="modal"
+                                     role="dialog"
+                                     aria-modal="true"
+                                     aria-labelledby="modalTitle">
+                                    <section class="modal-left">
+                                        <h2 id="modalTitle">Sản phẩm đã chọn</h2>
+                                        <table class="product-table" aria-label="Danh sách sản phẩm đã chọn">
+                                            <thead>
+                                                <tr>
+                                                    <th>Hình ảnh</th>
+                                                    <th>Tên sản phẩm</th>
+                                                    <th>Màu</th>
+                                                    <th>Kiểu</th>
+                                                    <th>Số lượng</th>
+                                                    <th>Giá (₫)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="product-list">
+                                                @Html.Partial("_CartItemByIDsPartial", Model)
+                                            </tbody>
+                                        </table>
+                                        @* <div class="summary">
+                                            @if (Model.CartItemByIDs.Any())
+                                            {
+                                                <p>Tổng số lượng: <span id="total-quantity">@Model.CartItemByIDs.Sum(item => item.Quantity)</span></p>
+                                                <p>Tổng giá: <span id="total-price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.CartItemByIDs.Sum(item => (item.Product?.NewPrice ?? 0) * item.Quantity))</span> ₫</p>
+                                            }
+                                            else
+                                            {
+                                                <p>Tổng số lượng: <span id="total-quantity">0</span></p>
+                                                <p>Tổng giá: <span id="total-price">0 ₫</span></p>
+                                            }
+                                        </div> *@
+                                    </section>
+
+                                    <section class="modal-right">
+                                        <div class="qr-wrapper">
+                                            <img src="https://placehold.co/180x180?text=QR+Code"
+                                                 alt="Mã QR code"
+                                                 class="qr-code" />
+                                        </div>
+                                        <div class="account-info">
+                                            <p class="account-name">Nguyễn Văn A</p>
+                                            <p class="account-date">Ngày tạo: 20/06/2024</p>
+                                            <p class="account-id">Tài khoản: NVAN12345</p>
+                                        </div>
+                                        <button class="btn-close" aria-label="Đóng modal">Đóng</button>
+                                    </section>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -202,3 +227,6 @@
 <script src="~/js/jquery.min.js" asp-append-version="true"></script>
 <script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
 <script src="~/lib/bootstrap/js/bootstrap.bundle.js" asp-append-version="true"></script>
+<script>
+
+</script>

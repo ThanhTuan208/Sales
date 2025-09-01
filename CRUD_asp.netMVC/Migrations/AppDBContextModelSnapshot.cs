@@ -431,7 +431,6 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PicturePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
@@ -737,7 +736,7 @@ namespace CRUD_asp.netMVC.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.OrderDetail", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Order.OrderDetail", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -745,8 +744,9 @@ namespace CRUD_asp.netMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int>("OrderID")
-                        .HasColumnType("int");
+                    b.Property<string>("OrderID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -766,13 +766,10 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("OrderDetail");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Orders", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Order.Orders", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -801,8 +798,9 @@ namespace CRUD_asp.netMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int>("OrderID")
-                        .HasColumnType("int");
+                    b.Property<string>("OrderID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
@@ -7117,9 +7115,9 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.OrderDetail", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Order.OrderDetail", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Product.Orders", "Orders")
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Order.Orders", "Orders")
                         .WithMany("OrderDetail")
                         .HasForeignKey("OrderID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -7136,7 +7134,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Orders", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Order.Orders", b =>
                 {
                     b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
                         .WithMany("Orders")
@@ -7149,7 +7147,7 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Payment", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Product.Orders", "Order")
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Order.Orders", "Order")
                         .WithOne("Payment")
                         .HasForeignKey("CRUD_asp.netMVC.Models.Product.Payment", "OrderID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -7433,7 +7431,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Navigation("ProductMaterial");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Orders", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Order.Orders", b =>
                 {
                     b.Navigation("OrderDetail");
 

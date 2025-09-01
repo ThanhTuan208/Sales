@@ -27,6 +27,62 @@ $(document).ready(function () {
         }
     });
 
+
+    $('.buy.bn54').on('click', function (e) {
+        e.preventDefault(); // ngan button type submit
+
+        const productChecked = $('.checkbox:checked');
+        const paymentMethod = $('input[name="payment"]:checked').data('method');
+
+        let ids = [];
+        if (paymentMethod === "qr" && productChecked.length > 0) {
+
+            // Hien thi modal cho paymentMethod Cart, chon radio qr moi mo modal paymentQR
+            //$(".modal-overlay").fadeIn(300);
+            //$(".modal").addClass("active").fadeIn(300); // Thêm class 'active' và hiển thị modal
+
+            $('.checkbox:checked').each(function () {
+
+                ids.push($(this).val());
+            });
+        }
+        else return;
+
+        console.log(ids);
+        $.ajax({
+            url: "/Cart",
+            type: "GET",
+            data: { arrID: ids, },
+            traditional: true, // quan trọng để bind mảng
+            success: function (response) {
+                $(".product-list").html(response); // render vào modal
+                $(".modal-overlay").fadeIn(300);
+                $(".modal").addClass("active").fadeIn(300);
+            },
+            error: function () {
+                alert("Lỗi load sản phẩm lên modal");
+            }
+        });
+
+    });
+
+
+
+    // Đóng modal khi click nút đóng
+    $(".btn-close").on("click", function () {
+        $(".modal").removeClass("active").fadeOut(300);
+        $(".modal-overlay").fadeOut(300);
+    });
+
+    // Đóng modal khi click bên ngoài modal
+    $(".modal-overlay").on("click", function (e) {
+        if ($(e.target).hasClass("modal-overlay")) {
+            $(".modal").removeClass("active").fadeOut(300);
+            $(this).fadeOut(300);
+        }
+    });
+
+
     // Cap nhat brand
     $('#btnBrandEdit').on('click', function () {
 
@@ -154,26 +210,6 @@ $(document).ready(function () {
             isCollapsed = !isCollapsed;
         });
     });
-
-    // Thêm animation khi tải trang
-    document.addEventListener("DOMContentLoaded", function () {
-        const cards = document.querySelectorAll('.product-card');
-        cards.forEach(card => {
-            card.classList.add('animate-fade-in');
-        });
-    });
-
-    // Hiệu ứng hover cho nút
-    const buttons = document.querySelectorAll('.btn-custom');
-    buttons.forEach(button => {
-        button.addEventListener('mouseover', () => {
-            button.style.transform = 'scale(1.05)';
-        });
-        button.addEventListener('mouseout', () => {
-            button.style.transform = 'scale(1)';
-        });
-    });
-
 
     // Truyen du lieu san pham, ktra dkien them hoac sua
     //$('#btnAdminProduct').on('click', function () {
@@ -580,7 +616,7 @@ $(document).ready(function () {
                     quantityInput.val(NewQty);
                     let price = parseFloat($btn.closest('tr').find('.price').text().replace(/[^0-9]+/g, ''));
                     var totalPrice = price * NewQty;
-                    $btn.closest('tr').find('.priceTotal').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice));
+                    //$btn.closest('tr').find('.priceTotal').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice));
                     /*$('.payment').find('.priceTotal').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice));*/
                     updateQtyAfterCheck();
                 }
@@ -758,16 +794,34 @@ $(document).ready(function () {
         }
     });
 
-});
+    // Thêm animation khi tải trang
+    document.addEventListener("DOMContentLoaded", function () {
+        const cards = document.querySelectorAll('.product-card');
+        cards.forEach(card => {
+            card.classList.add('animate-fade-in');
+        });
+    });
 
-// dung cho hieu ung hinh anh qua lai (product detail)
-var owl;
-$(document).ready(function () {
-    owl = $('.owl-carousel-fullwidth').owlCarousel({
-        items: 1,
-        loop: true,
-        dots: false,
-        nav: true
+    // Hiệu ứng hover cho nút
+    const buttons = document.querySelectorAll('.btn-custom');
+    buttons.forEach(button => {
+        button.addEventListener('mouseover', () => {
+            button.style.transform = 'scale(1.05)';
+        });
+        button.addEventListener('mouseout', () => {
+            button.style.transform = 'scale(1)';
+        });
+    });
+
+    // dung cho hieu ung hinh anh qua lai (product detail)
+    var owl;
+    $(document).ready(function () {
+        owl = $('.owl-carousel-fullwidth').owlCarousel({
+            items: 1,
+            loop: true,
+            dots: false,
+            nav: true
+        });
     });
 });
 
@@ -780,11 +834,11 @@ function changeImage(el) {
 }
 
 // Thoi gian thong bao them thanh cong hoac that bai
-$(document).ready(function () {
-    setTimeout(() => {
-        $('.alert').alert('close')
-    }, 5000);
-})
+//$(document).ready(function () {
+//    setTimeout(() => {
+//        $('.alert').alert('close')
+//    }, 5000);
+//})
 
 /* Lay gia tri color -> product detail*/
 function selectColor(el) {
@@ -798,6 +852,7 @@ function selectSize(el) {
     $('#selectSize').val(size);
 }
 /*product-detail*/
+
 
 // cap nhat so luong va gia san pham sau khi check va tang giam so luong cho gia sp
 function updateQtyAfterCheck() {
@@ -818,14 +873,18 @@ function updateQtyAfterCheck() {
 
     if ($('.checkbox').hasClass('active')) {
 
-        ship = 50000;
+        ship = 30000;
     }
-    let vat = total * 0.005;
+
+    let vat = 0;
+    //if (total > 50000000) {
+    //    vat = total * 0.005;
+    //}
     totalVAT += total + ship + vat;
 
     $('.countItem').text(`x ` + countItem);
     $('.price-provisional').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total));
     $('.price-ship').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(ship));
-    $('.price-totalVAT').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total) + ' * 0.5%');
+    $('.price-totalVAT').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total) + `* 0.5%`);
     $('.price-complete').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalVAT));
 }
