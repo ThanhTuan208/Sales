@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CRUD_asp.netMVC.Models.Product;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CRUD_asp.netMVC.Models.Product.Order
+namespace CRUD_asp.netMVC.Models.Order
 {
     public class OrderDetail
     {

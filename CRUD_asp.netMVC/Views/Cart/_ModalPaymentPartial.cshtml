@@ -1,0 +1,86 @@
+﻿@using CRUD_asp.netMVC.Models.ViewModels.Cart;
+@using System.Globalization
+@model CartViewModel
+@{
+    var IsAddress = ViewBag.IsAddress;
+}
+
+<section class="modal-left">
+    <div class="row justify-content-around align-items-center">
+        <h3 id="modalTitle">Sản phẩm đã chọn</h3>
+            <a href="#" class="edit-address">Thêm địa chỉ</a>
+    </div>
+    <table class="product-table" aria-label="Danh sách sản phẩm đã chọn">
+        <thead>
+            <tr>
+                <th>Hình ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Màu</th>
+                <th>Kiểu</th>
+                <th>Số lượng</th>
+                <th>Giá (₫)</th>
+            </tr>
+        </thead>
+        <tbody class="product-list">
+            @{
+                Layout = null;
+            }
+
+            @if (!Model.CartItemByIDs.Any())
+            {
+                <tr>
+                    <td class="text-center" colspan="6">Chưa có sản phẩm nào được chọn.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model.CartItemByIDs)
+                {
+                    <tr class="product-item" data-id="@item.ID" data-price="@(item.Product?.NewPrice ?? 0)">
+                        <td>
+                            <img src="@Url.Content($"~/images/products/{(item.Product?.ProductImages.FirstOrDefault()?.PathNameImage)}")"
+                                 alt="@(item.Product?.Name ?? "N/A")"
+                                 class="product-img" />
+                        </td>
+                        <td>@(item.Product?.Name ?? "N/A")</td>
+                        <td>@item.SelectColor</td>
+                        <td>@item.SelectSize</td>
+                        <td class="quantity">@item.Quantity</td>
+                        <td class="total-price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", (item.Product?.NewPrice ?? 0) * item.Quantity)</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <div class="summary">
+        @if (Model.CartItemByIDs.Any())
+        {
+            <p class="font-weight-bold">Số lượng: <span id="total-quantity">@Model.CartItemByIDs.Sum(item => item.Quantity)</span></p>
+            <p class="font-weight-bold">Tổng giá: <span class="price-complete">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", 0)</span></p>
+            @* <p class="font-weight-bold">Địa chỉ: <span class="address">@(Model.CartItems.Select(p => p.Users.Address).FirstOrDefault() ?? "Cập nhật địa chỉ của bạn !!!") </span></p> *@
+        }
+        else
+        {
+            <p>số lượng: <span id="total-quantity">0</span></p>
+            <p>Tổng giá: <span id="total-price">0 ₫</span></p>
+            <p>Địa chỉ: <span id="address">Thêm địa chỉ của bạn !</span></p>
+        }
+    </div>
+</section>
+
+<section class="modal-right">
+    <div class="qr-wrapper">
+        <img src="https://placehold.co/180x180?text=QR+Code"
+             alt="Mã QR code"
+             class="qr-code" />
+    </div>
+    <div class="account-info">
+        <p class="account-name">Nguyễn Thành Tuấn</p>
+        <p class="account-id">Tài khoản: 0001335756540</p>
+        <p class="account-id">Ngân hàng: MB Bank</p>
+        <p class="account-id">Thông báo: Mời bạn </p>
+        <p class="account-date">Ngày tạo: @(DateTime.Now.ToString("dd/MM/yyyy HH:mm"))</p>
+    </div>
+
+    <button class="btn-close" aria-label="Đóng modal">Đóng</button>
+</section>

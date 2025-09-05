@@ -1,5 +1,5 @@
 ﻿using CRUD_asp.netMVC.Models.Cart;
-using CRUD_asp.netMVC.Models.Product.Order;
+using CRUD_asp.netMVC.Models.Order;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

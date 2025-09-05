@@ -8,7 +8,7 @@
             {
                 BankName = "MBBank", // Thay bằng ngân hàng của bạn
                 AccountNumber = bankAccount, // Ví dụ: "1234567890"
-                AccountName = "Công ty TNHH một thành viên",
+                AccountName = "NGUYEN THANH TUAN",
                 Content = $"Don hang {orderId}",
                 Amount = amount.ToString("N0")
             };

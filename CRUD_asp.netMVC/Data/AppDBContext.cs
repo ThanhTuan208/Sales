@@ -1,8 +1,8 @@
 ﻿using CRUD_asp.netMVC.Data.Seed;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Cart;
+using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
-using CRUD_asp.netMVC.Models.Product.Order;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

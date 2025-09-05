@@ -27,14 +27,63 @@ $(document).ready(function () {
         }
     });
 
+    $(document).off('click', '.edit-address').on('click', '.edit-address', function (e) {
+        e.preventDefault();
+
+        let ids = [];
+        GetArrIDChecked(ids);
+        const isAddress = true;
+
+        $.ajax({
+            url: "/Cart",
+            type: "GET",
+            data: { arrID: ids, IsAddress: isAddress },
+            traditional: true, // bind mảng
+            success: function (response) {
+                $(".modal-left").html(response); // render vào modal
+                console.log("Mở modal địa chỉ thành công. ");
+            },
+            error: function () {
+                alert("Lỗi không hiển thị modal địa chỉ !");
+            }
+        });
+    });
 
     $('.buy.bn54').on('click', function (e) {
         e.preventDefault(); // ngan button type submit
 
+        let ids = [];
+        const IsGetArr = GetArrIDChecked(ids);
+
+        if (!IsGetArr || ids === null) {
+            return;
+        }
+
+        console.log(ids);
+        $.ajax({
+            url: "/Cart",
+            type: "GET",
+            data: { arrID: ids, },
+            traditional: true, // quan trọng để bind mảng
+            success: function (response) {
+                $(".modal").html(response); // render vào modal Index
+
+                // Cap nhat gia tong
+                updateQtyAfterCheck();
+
+                $(".modal-overlay").fadeIn(300);
+                $(".modal").addClass("active").fadeIn(300);
+            },
+            error: function () {
+                alert("Lỗi load sản phẩm lên modal");
+            }
+        });
+    });
+
+    function GetArrIDChecked(ids) {
         const productChecked = $('.checkbox:checked');
         const paymentMethod = $('input[name="payment"]:checked').data('method');
 
-        let ids = [];
         if (paymentMethod === "qr" && productChecked.length > 0) {
 
             // Hien thi modal cho paymentMethod Cart, chon radio qr moi mo modal paymentQR
@@ -46,42 +95,24 @@ $(document).ready(function () {
                 ids.push($(this).val());
             });
         }
-        else return;
+        else return false;
 
-        console.log(ids);
-        $.ajax({
-            url: "/Cart",
-            type: "GET",
-            data: { arrID: ids, },
-            traditional: true, // quan trọng để bind mảng
-            success: function (response) {
-                $(".product-list").html(response); // render vào modal
-                $(".modal-overlay").fadeIn(300);
-                $(".modal").addClass("active").fadeIn(300);
-            },
-            error: function () {
-                alert("Lỗi load sản phẩm lên modal");
-            }
-        });
+        return true;
+    }
 
+    // Đóng modal khi click nút đóng / dung off, on de tranh luu tru connsole vao DOM
+    $(document).off('click', '.btn-close').on('click', '.btn-close', function () {
+        $(".modal").removeClass("active").fadeOut(200);
+        $(".modal-overlay").fadeOut(200);
     });
 
-
-
-    // Đóng modal khi click nút đóng
-    $(".btn-close").on("click", function () {
-        $(".modal").removeClass("active").fadeOut(300);
-        $(".modal-overlay").fadeOut(300);
-    });
-
-    // Đóng modal khi click bên ngoài modal
-    $(".modal-overlay").on("click", function (e) {
-        if ($(e.target).hasClass("modal-overlay")) {
-            $(".modal").removeClass("active").fadeOut(300);
-            $(this).fadeOut(300);
-        }
-    });
-
+    //// Đóng modal khi click bên ngoài modal
+    //$(".modal-overlay").on("click", function (e) {
+    //    if ($(e.target).hasClass("modal-overlay")) {
+    //        $(".modal").removeClass("active").fadeOut(300);
+    //        $(this).fadeOut(300);
+    //    }
+    //});
 
     // Cap nhat brand
     $('#btnBrandEdit').on('click', function () {
@@ -502,7 +533,6 @@ $(document).ready(function () {
                     });
                 }
                 else {
-
                     console.log("Thông báo lỗi: " + response.message);
 
                     $('.text-danger').text('');
@@ -514,8 +544,6 @@ $(document).ready(function () {
                                 .text(messages)
                                 .removeClass('text-success')
                                 .addClass('text-danger');
-                            //console.log(correctField);
-                            //console.log(messages);
                         });
                     else {
                         alert('Lỗi đăng ký trả về không xác định: ' + response.message);
@@ -823,7 +851,13 @@ $(document).ready(function () {
             nav: true
         });
     });
+
 });
+
+//Logic cho rut gon du lieu khi search dia chi -> _EditAddressPartial.cshtml
+
+//Logic cho rut gon du lieu khi search dia chi -> _EditAddressPartial.cshtml
+
 
 function changeImage(el) {
     const index = $(el).index();

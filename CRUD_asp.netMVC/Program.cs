@@ -2,9 +2,11 @@
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.ViewModels.Product;
 using CRUD_asp.netMVC.Service.EmailSender;
+using CRUD_asp.netMVC.Service.Payment;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using NuGet.Protocol.Resources;
 using System;
 
 namespace CRUD_asp.netMVC
@@ -22,6 +24,10 @@ namespace CRUD_asp.netMVC
             builder.Services.AddDbContext<AppDBContext>(option =>
                 option.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext")) // appsettings.json
             );
+
+            // Dang ky service QrCode
+            builder.Services.AddScoped<QrCodeService>();
+            builder.Services.AddScoped<ISmsPaymentVerificationService, SmsPaymentVerificationService>();
 
             // Dabg ky Session
             builder.Services.AddSession(options =>

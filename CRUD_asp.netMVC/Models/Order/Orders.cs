@@ -1,11 +1,8 @@
 ﻿using CRUD_asp.netMVC.Models.Auth;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using CRUD_asp.netMVC.Models.Product;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing;
-using System.Net;
 
-namespace CRUD_asp.netMVC.Models.Product.Order
+namespace CRUD_asp.netMVC.Models.Order
 {
     public class Orders
     {
@@ -15,6 +12,14 @@ namespace CRUD_asp.netMVC.Models.Product.Order
         [Required]
         public int UserID { get; set; }
         public Users? Users { get; set; }
+
+        [Required]
+        public int PaymentID { get; set; }
+        public Payment? Payment { get; set; }
+
+        [Required]
+        public int AddressID { get; set; }
+        public Address? Address { get; set; }
 
         [DataType(DataType.Currency)]
         public decimal Amount { get; set; }
@@ -33,6 +38,5 @@ namespace CRUD_asp.netMVC.Models.Product.Order
         public DateTime? PaidAt { get; set; }
 
         public List<OrderDetail>? OrderDetail { get; set; }
-        public Payment? Payment { get; set; }
     }
 }

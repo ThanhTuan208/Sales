@@ -2,18 +2,19 @@
 @using System.Globalization
 @model CartViewModel
 @{
-    var count = Model.CartItemByIDs.Count;
+    var IsAddress = ViewBag.IsAddress;
     ViewData["Title"] = "Cart Page";
     Layout = "";
 }
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="~/css/tom-select.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/styleCart.css" asp-append-version="true" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 
 <section class="ftco-section">
     <div class="container">
         <div class="row">
-            <div class="col-md-8  mb-5">
+            <div class="col-md-8 mb-5">
                 <div class="col-md-12 text-center mb-4">
                     <h1 style="font-weight: 600; text-shadow: 2px 3px 10px; font-size: 3rem">GIỎ HÀNG</h1>
                 </div>
@@ -34,71 +35,79 @@
                         </thead>
                         <tbody>
                             @{
-                                foreach (var item in Model.CartItems)
+                                if (Model.CartItems.Count < 0)
                                 {
-
-                                    <tr class="alert1" role="alert">
-                                        @*    <td name="id" value="@item.ID">@item.ID</td> *@
-                                        <td>
-                                            <label class="checkbox-wrap checkbox-primary">
-                                                <input type="checkbox" class="checkbox" value="@item.ID" />
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </td>
-
-                                        <td>
-                                            <div class="img"
-                                                 style="background-image: url(@Url.Content($"~/images/products/{item.Product.ProductImages.FirstOrDefault()?.PathNameImage}"))"></div>
-                                        </td>
-
-                                        <td>
-                                            <div class="email" style="text-align: left">
-                                                <p class="">@item.Product.Name</p>
-
-                                            </div>
-                                        </td>
-
-                                        <td>
-                                            <div class="color" style="text-align: center">
-                                                <span>@item.SelectColor</span>
-                                            </div>
-                                        </td>
-
-                                        <td>
-                                            <div class="size" style="text-align: center">
-                                                <span>@item.SelectSize</span>
-                                            </div>
-                                        </td>
-
-                                        <td class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Product.NewPrice)</td>
-
-                                        @* xu li qua ajax (js.js) *@
-                                        <td class="quantity">
-                                            <div class="quantity-container" data-id="@item.ID">
-                                                <button type="button" class="quantity-btn decrease" data-id="@item.ID" data-opera="-">-</button>
-                                                <input type="text" name="qty" class="quantity-input" value="@item.Quantity" min="1" max="100" readonly>
-                                                <button type="button" class="quantity-btn increase" data-id="@item.ID" data-opera="+">+</button>
-                                            </div>
-                                        </td>
-                                        
-                                        
-                                        @* co xai thi mo lai js line 619
-                                        <td class="priceTotal">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", TempData["totalPrice"])</td>*@
-                                        
-
-                                        <td class="deleteCartItem" style="vertical-align:middle; text-align:center">
-                                            @* Thieu token nen khi truyen du lieu qua ben ajax se chay xuong error *@
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit"
-                                                    class="close"
-                                                    aria-label="Close"
-                                                    data-id="@item.ID">
-                                                <span aria-hidden="true">
-                                                    <i class="fa fa-close" style="font-size: 3rem;"></i>
-                                                </span>
-                                            </button>
-                                        </td>
+                                    <tr>
+                                        <td class="text-center" colspan="6">Hãy thêm sản phẩm của bạn nhé.</td>
                                     </tr>
+                                }
+                                else
+                                {
+                                    foreach (var item in Model.CartItems)
+                                    {
+
+                                        <tr class="alert1" role="alert">
+                                            @*    <td name="id" value="@item.ID">@item.ID</td> *@
+                                            <td>
+                                                <label class="checkbox-wrap checkbox-primary">
+                                                    <input type="checkbox" class="checkbox" value="@item.ID" />
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </td>
+
+                                            <td>
+                                                <div class="img"
+                                                     style="background-image: url(@Url.Content($"~/images/products/{item.Product.ProductImages.FirstOrDefault()?.PathNameImage}"))"></div>
+                                            </td>
+
+                                            <td>
+                                                <div class="email" style="text-align: left">
+                                                    <p class="">@item.Product.Name</p>
+
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <div class="color" style="text-align: center">
+                                                    <span>@item.SelectColor</span>
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <div class="size" style="text-align: center">
+                                                    <span>@item.SelectSize</span>
+                                                </div>
+                                            </td>
+
+                                            <td class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Product.NewPrice)</td>
+
+                                            @* xu li qua ajax (js.js) *@
+                                            <td class="quantity">
+                                                <div class="quantity-container" data-id="@item.ID">
+                                                    <button type="button" class="quantity-btn decrease" data-id="@item.ID" data-opera="-">-</button>
+                                                    <input type="text" name="qty" class="quantity-input" value="@item.Quantity" min="1" max="100" readonly>
+                                                    <button type="button" class="quantity-btn increase" data-id="@item.ID" data-opera="+">+</button>
+                                                </div>
+                                            </td>
+
+
+                                            @* co xai thi mo lai js line 619
+                                        <td class="priceTotal">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", TempData["totalPrice"])</td>*@
+
+                                            <td class="deleteCartItem" style="vertical-align:middle; text-align:center">
+                                                @* Thieu token nen khi truyen du lieu qua ben ajax se chay xuong error *@
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit"
+                                                        class="close"
+                                                        aria-label="Close"
+                                                        data-id="@item.ID">
+                                                    <span aria-hidden="true">
+                                                        <i class="fa fa-close" style="font-size: 3rem;"></i>
+                                                    </span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
                                 }
                             }
                         </tbody>
@@ -133,19 +142,18 @@
                             </div>
                         </div>
 
-
                         <!-- Total -->
                         <div class="payment">
                             <div class="d-flex justify-content-between fw-semibold mb-2">
-                                <span>Tạm tính: </span>
+                                <span class="font-weight-bold">Tạm tính: </span>
                                 <span class="price-provisional">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", 0)</span>
                             </div>
                             <div class="d-flex justify-content-between fw-semibold mb-2">
-                                <span>Phí vận chuyển: </span>
+                                <span class="font-weight-bold">Phí vận chuyển: </span>
                                 <span class="price-ship">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", 0)</span>
                             </div>
                             <div class="d-flex justify-content-between fw-semibold mb-2">
-                                <span>Số lượng sản phẩm: </span>
+                                <span class="font-weight-bold">Số lượng sản phẩm: </span>
                                 <span class="countItem">x 0</span>
                             </div>
                             <hr class="my-4" />
@@ -166,54 +174,10 @@
                                      role="dialog"
                                      aria-modal="true"
                                      aria-labelledby="modalTitle">
-                                    <section class="modal-left">
-                                        <h2 id="modalTitle">Sản phẩm đã chọn</h2>
-                                        <table class="product-table" aria-label="Danh sách sản phẩm đã chọn">
-                                            <thead>
-                                                <tr>
-                                                    <th>Hình ảnh</th>
-                                                    <th>Tên sản phẩm</th>
-                                                    <th>Màu</th>
-                                                    <th>Kiểu</th>
-                                                    <th>Số lượng</th>
-                                                    <th>Giá (₫)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="product-list">
-                                                @Html.Partial("_CartItemByIDsPartial", Model)
-                                            </tbody>
-                                        </table>
-                                        @* <div class="summary">
-                                            @if (Model.CartItemByIDs.Any())
-                                            {
-                                                <p>Tổng số lượng: <span id="total-quantity">@Model.CartItemByIDs.Sum(item => item.Quantity)</span></p>
-                                                <p>Tổng giá: <span id="total-price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.CartItemByIDs.Sum(item => (item.Product?.NewPrice ?? 0) * item.Quantity))</span> ₫</p>
-                                            }
-                                            else
-                                            {
-                                                <p>Tổng số lượng: <span id="total-quantity">0</span></p>
-                                                <p>Tổng giá: <span id="total-price">0 ₫</span></p>
-                                            }
-                                        </div> *@
-                                    </section>
 
-                                    <section class="modal-right">
-                                        <div class="qr-wrapper">
-                                            <img src="https://placehold.co/180x180?text=QR+Code"
-                                                 alt="Mã QR code"
-                                                 class="qr-code" />
-                                        </div>
-                                        <div class="account-info">
-                                            <p class="account-name">Nguyễn Văn A</p>
-                                            <p class="account-date">Ngày tạo: 20/06/2024</p>
-                                            <p class="account-id">Tài khoản: NVAN12345</p>
-                                        </div>
-                                        <button class="btn-close" aria-label="Đóng modal">Đóng</button>
-                                    </section>
+                                    @Html.Partial("_ModalPaymentPartial", Model)
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -223,10 +187,14 @@
 </section>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="~/js/js.js" asp-append-version="true"></script>
-<script src="~/js/jquery.min.js" asp-append-version="true"></script>
+@* <script src="~/js/jquery.min.js" asp-append-version="true"></script> *@
+@* <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script> *@
+ <script src="~/js/tom-select.complete.min.js" asp-append-version="true"></script> @* Rut gon search address modal (province, ward)*@  
 <script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
 <script src="~/lib/bootstrap/js/bootstrap.bundle.js" asp-append-version="true"></script>
 <script>
-
+    window.addressDataUrl = "@Url.Content("~/full_json_generated_data_vn_units.json")";
 </script>
+
+<script src="~/js/js.js" asp-append-version="true"></script>
+

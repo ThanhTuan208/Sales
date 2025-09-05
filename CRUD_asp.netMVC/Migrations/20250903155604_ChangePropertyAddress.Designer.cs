@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUD_asp.netMVC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20250826074836_initialFirstDB")]
-    partial class initialFirstDB
+    [Migration("20250903155604_ChangePropertyAddress")]
+    partial class ChangePropertyAddress
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,63 +25,50 @@ namespace CRUD_asp.netMVC.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CRUD_asp.netMVC.DTO.Auth.Login", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Address", b =>
                 {
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("RememberMe")
-                        .HasColumnType("bit");
-
-                    b.ToTable("Login");
-                });
-
-            modelBuilder.Entity("CRUD_asp.netMVC.DTO.Auth.Register", b =>
-                {
-                    b.Property<string>("ConfirmPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoleID")
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("FullLocation")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.ToTable("Register");
+                    b.Property<string>("RecipientName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Address");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Customer", b =>
@@ -228,65 +215,6 @@ namespace CRUD_asp.netMVC.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Staff", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Address")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("DayOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("UserID")
-                        .IsUnique()
-                        .HasFilter("[UserID] IS NOT NULL");
-
-                    b.ToTable("Staff");
-                });
-
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Users", b =>
                 {
                     b.Property<int>("Id")
@@ -414,6 +342,80 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Order.OrderDetail", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("OrderID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("OrderID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("OrderDetail");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Order.Orders", b =>
+                {
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AddressID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PaymentID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AddressID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Brand", b =>
@@ -737,60 +739,6 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 5,
                             Name = "Wool"
                         });
-                });
-
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Order.OrderDetail", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("OrderID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("OrderID");
-
-                    b.HasIndex("ProductID");
-
-                    b.ToTable("OrderDetail");
-                });
-
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Order.Orders", b =>
-                {
-                    b.Property<string>("ID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("TotalPrice")
-                        .HasColumnType("float");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Payment", b =>
@@ -7060,6 +7008,17 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Address", b =>
+                {
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "User")
+                        .WithMany("Addresses")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Customer", b =>
                 {
                     b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
@@ -7075,16 +7034,6 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
                         .WithOne("Manager")
                         .HasForeignKey("CRUD_asp.netMVC.Models.Auth.Manager", "UserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Staff", b =>
-                {
-                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
-                        .WithOne("Staff")
-                        .HasForeignKey("CRUD_asp.netMVC.Models.Auth.Staff", "UserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Users");
@@ -7118,9 +7067,9 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Order.OrderDetail", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Order.OrderDetail", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Product.Order.Orders", "Orders")
+                    b.HasOne("CRUD_asp.netMVC.Models.Order.Orders", "Orders")
                         .WithMany("OrderDetail")
                         .HasForeignKey("OrderID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -7137,23 +7086,31 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Order.Orders", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Order.Orders", b =>
                 {
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Address", "Address")
+                        .WithMany("Orders")
+                        .HasForeignKey("AddressID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
                         .WithMany("Orders")
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Address");
 
                     b.Navigation("Users");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Payment", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Product.Order.Orders", "Order")
+                    b.HasOne("CRUD_asp.netMVC.Models.Order.Orders", "Order")
                         .WithOne("Payment")
                         .HasForeignKey("CRUD_asp.netMVC.Models.Product.Payment", "OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -7389,8 +7346,15 @@ namespace CRUD_asp.netMVC.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Address", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Users", b =>
                 {
+                    b.Navigation("Addresses");
+
                     b.Navigation("Carts");
 
                     b.Navigation("Customer");
@@ -7400,8 +7364,13 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Reviews");
+                });
 
-                    b.Navigation("Staff");
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Order.Orders", b =>
+                {
+                    b.Navigation("OrderDetail");
+
+                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Brand", b =>
@@ -7432,13 +7401,6 @@ namespace CRUD_asp.netMVC.Migrations
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Material", b =>
                 {
                     b.Navigation("ProductMaterial");
-                });
-
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Order.Orders", b =>
-                {
-                    b.Navigation("OrderDetail");
-
-                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Products", b =>

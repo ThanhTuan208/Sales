@@ -1,0 +1,157 @@
+﻿.address-form {
+    max-width: 700px;
+    width: 100%;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    animation: scaleIn 0.5s ease-out;
+}
+
+h1 {
+    font-weight: 600;
+    color: #1a252f;
+    text-align: center;
+    margin-bottom: 1.2rem;
+    font-size: 22px;
+    animation: slideDown 0.5s ease-out;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 0;
+}
+
+label {
+    font-weight: 500;
+    color: #2c3e50;
+    margin-bottom: 0.4rem;
+    font-size: 14px;
+}
+
+.form-control, textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+    .form-control:focus, textarea:focus {
+        border-color: #5e52ff;
+        background: #fff;
+        box-shadow: 0 0 8px rgba(94, 82, 255, 0.2);
+    }
+
+textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+#btnAddressEdit {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #5e52ff, #6c63ff);
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    #btnAddressEdit:hover {
+        background: linear-gradient(90deg, #4d42cc, #5e52ff);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(94, 82, 255, 0.3);
+    }
+/* Tùy chỉnh TomSelect */
+.ts-wrapper {
+    margin: 0;
+}
+
+    .ts-wrapper .ts-control {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fafafa;
+        padding: 8px 12px;
+        min-height: 38px;
+        transition: all 0.3s ease;
+    }
+
+        .ts-wrapper .ts-control:focus-within {
+            border-color: #5e52ff;
+            box-shadow: 0 0 8px rgba(94, 82, 255, 0.2);
+            background: #fff;
+        }
+
+    .ts-wrapper .option {
+        padding: 8px;
+        color: #2c3e50;
+        font-size: 15px;
+    }
+
+        .ts-wrapper .option:hover,
+        .ts-wrapper .option.focus {
+            background: #eef2f7;
+            color: #1a252f;
+        }
+
+    .ts-wrapper .dropdown {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background: #fff;
+    }
+
+        .ts-wrapper .dropdown .option {
+            padding: 10px;
+        }
+
+    .ts-wrapper .ts-input {
+        color: #2c3e50;
+    }
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+}

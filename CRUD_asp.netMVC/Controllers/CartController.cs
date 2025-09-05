@@ -1,8 +1,13 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Cart;
+using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.ViewModels.Cart;
+using CRUD_asp.netMVC.Service.Payment;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using NuGet.Protocol.Resources;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -11,14 +16,16 @@ namespace CRUD_asp.netMVC.Controllers
     public class CartController : Controller
     {
         public readonly AppDBContext context;
+        public readonly QrCodeService _qrCode;
 
-        public CartController(AppDBContext _context)
+        public CartController(AppDBContext _context, QrCodeService qrCode)
         {
             context = _context;
+            _qrCode = qrCode;
         }
 
-        [HttpGet, Route("Cart")]
-        public async Task<IActionResult> Index(string[]? arrID = null)
+        // Su dung method chung cho Index (get, post)
+        public async Task<CartViewModel> GeneralIndex(string[]? arrID)
         {
             try
             {
@@ -35,14 +42,13 @@ namespace CRUD_asp.netMVC.Controllers
                         .Include(c => c.Product).ThenInclude(p => p.ProductColor)
                         .Include(c => c.Product).ThenInclude(p => p.ProductSize)
                         .Include(c => c.Product).ThenInclude(p => p.ProductImages)
-                        .Include(c => c.Users)
+                        .Include(c => c.Users).ThenInclude(p => p.Addresses)
                         .Where(c => c.UserID == userID)
                         .ToListAsync();
 
                     var arrIDSet = arrID?.Select(int.Parse).ToHashSet() ?? new HashSet<int>();
 
                     cartItemByIDs = cartItems.Where(p => arrIDSet.Contains(p.ID)).ToList();
-                    Console.WriteLine("so luong items: " + cartItemByIDs.Count);
                 }
                 else
                 {
@@ -68,14 +74,94 @@ namespace CRUD_asp.netMVC.Controllers
                 CartViewModel viewModel = new()
                 {
                     CartItems = cartItems,
+                    QrPayment = { },
                     CartItemByIDs = cartItemByIDs,
                     TotalPrice = cartItems.Sum(p => p.Product != null ? p.Product.NewPrice * p.Quantity : 0)
                 };
 
-                if (cartItemByIDs.Count > 0)
+                return viewModel;
+            }
+            catch (Exception)
+            {
+                return new CartViewModel();
+            }
+        }
+
+        [HttpGet, Route("Cart")] // Show Cart
+        public async Task<IActionResult> Index(string[]? arrID, bool IsAddress = false)
+        {
+            try
+            {
+                ViewBag.IsAddress = IsAddress;
+
+                var viewModel = await GeneralIndex(arrID);
+
+                if (viewModel.CartItemByIDs.Count > 0)
                 {
-                    // can tao partial rieng de hien thi danh sach ben trong modal, co the thu xoa partial de kiem tra
-                    return PartialView("_CartItemByIDsPartial", viewModel);
+                    if (IsAddress)
+                    {
+                        // Tra ve partial dia chi form modal
+                        return PartialView("_EditAddressPartial", viewModel);
+                    }
+                    else
+                    {
+                        // Tra ve partial thanh toan qr
+                        return PartialView("_ModalPaymentPartial", viewModel);
+                    }
+                }
+                else
+                {
+                    return View(viewModel);
+                }
+
+            }
+            catch (Exception)
+            {
+                return View();
+            }
+        }
+
+        [HttpPost, ValidateAntiForgeryToken] // Hien thi QR Modal gio hang
+        public async Task<IActionResult> ShowQrModalCart(string[]? arrID)
+        {
+            try
+            {
+                var viewModel = await GeneralIndex(arrID);
+
+                if (viewModel.CartItemByIDs.Count > 0)
+                {
+                    if (decimal.TryParse(viewModel.TotalPrice.ToString(), out decimal amount))
+                    {
+                        var order = new Orders()
+                        {
+                            ID = Guid.NewGuid().ToString(),
+                            Amount = amount,
+                            Status = "Pending",
+                            OrderDate = DateTime.Now
+                        };
+
+                        // Tao ma QR
+                        string bankAcc = "0001335756540";
+                        var qrPaymentService = _qrCode.GenerateBankQrCode(order.ID, order.Amount, bankAcc);
+
+                        var qrPaymentModel = new QrPaymentViewModel
+                        {
+                            OrderId = order.ID,
+                            Amount = order.Amount,
+                            QrCodeUrl = qrPaymentService,
+                            BankAccount = bankAcc,
+                            PollingUrl = Url.Action("CheckPaymentStatus", "Payment", new { orderId = order.ID }, Request.Scheme)
+                        };
+
+                        viewModel.QrPayment = qrPaymentModel;
+
+                        // can tao partial rieng de hien thi danh sach ben trong modal, co the thu xoa partial de kiem tra
+                        return PartialView("_ModalPaymentPartial", viewModel);
+                    }
+                    else
+                    {
+                        return View(nameof(Index), viewModel);
+                    }
                 }
                 else
                 {
@@ -84,10 +170,11 @@ namespace CRUD_asp.netMVC.Controllers
             }
             catch (Exception)
             {
-                return PartialView("_CartItemByIDsPartial", new CartViewModel());
+                return PartialView("_ModalPaymentPartial", new CartViewModel());
             }
         }
 
+        //public async Task<IActionResult> 
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(int productID, int qty, string color, string size)

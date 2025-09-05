@@ -1,6 +1,6 @@
 ﻿using CRUD_asp.netMVC.Models.Cart;
+using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
-using CRUD_asp.netMVC.Models.Product.Order;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualBasic;
 using System.ComponentModel.DataAnnotations;
@@ -25,9 +25,10 @@ namespace CRUD_asp.netMVC.Models.Auth
         public Roles? Roles { get; set; }
 
         public Manager? Manager { get; set; }
-        public Staff? Staff { get; set; }
         public Customer? Customer { get; set; }
+        //public Staff? Staff { get; set; }
 
+        public List<Address>? Addresses { get; set; }
         public List<AddToCart>? Carts { get; set; }
         public List<Orders>? Orders { get; set; }
         public List<Reviews>? Reviews { get; set; }

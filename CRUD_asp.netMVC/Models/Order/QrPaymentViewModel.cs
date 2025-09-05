@@ -1,4 +1,4 @@
-﻿namespace CRUD_asp.netMVC.Models.Product.Order
+﻿namespace CRUD_asp.netMVC.Models.Order
 {
     public class QrPaymentViewModel
     {

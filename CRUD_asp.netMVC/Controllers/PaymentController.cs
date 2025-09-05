@@ -1,6 +1,6 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Payment;
-using CRUD_asp.netMVC.Models.Product.Order;
+using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Service.Payment;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
