@@ -8,6 +8,7 @@
 }
 
 <link rel="stylesheet" href="~/css/tom-select.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/load_address.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/styleCart.css" asp-append-version="true" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 
@@ -175,7 +176,7 @@
                                      aria-modal="true"
                                      aria-labelledby="modalTitle">
 
-                                    @Html.Partial("_ModalPaymentPartial", Model)
+                                    @* @Html.Partial("_ModalPaymentPartial", Model) *@
                                 </div>
                             </div>
                         </div>
@@ -186,15 +187,9 @@
     </div>
 </section>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-@* <script src="~/js/jquery.min.js" asp-append-version="true"></script> *@
-@* <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script> *@
- <script src="~/js/tom-select.complete.min.js" asp-append-version="true"></script> @* Rut gon search address modal (province, ward)*@  
-<script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
+ <script src="~/js/jquery-3.7.1.min.js" asp-append-version="true"></script>
+ <script src="~/js/tom-select.complete.min.js" asp-append-version="true"></script>
+<script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>  
 <script src="~/lib/bootstrap/js/bootstrap.bundle.js" asp-append-version="true"></script>
-<script>
-    window.addressDataUrl = "@Url.Content("~/full_json_generated_data_vn_units.json")";
-</script>
-
-<script src="~/js/js.js" asp-append-version="true"></script>
+<script type="module" src="~/js/js.js" asp-append-version="true"></script>
 

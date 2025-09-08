@@ -50,7 +50,7 @@
                     {
                         var item = Model.Product.ProductImages[i];
 
-                        <img src="@Url.Content($"~/images/products/{item.PathNameImage}")" class="thumbnail-img @(i == 0 ? "image-active" : "")" onclick="changeImage(this)">
+                        <img src="@Url.Content($"~/images/products/{item.PathNameImage}")" class="thumbnail-img @(i == 0 ? "image-active" : "")" >
                     }
                 </div>
             </div>
@@ -120,7 +120,7 @@
                                     <input type="hidden" id="selectColor" name="color" class="color" />
                                     @foreach (var item in Model.Product.ProductColor)
                                     {
-                                        <div class="border p-2 px-3 color-option" data-color="@item.Color.Name" onclick="selectColor(this)">@item.Color.Name</div>
+                                        <div class="border p-2 px-3 color-option" data-color="@item.Color.Name" >@item.Color.Name</div>
                                     }
                                 </div>
                             </div>
@@ -134,7 +134,7 @@
                                     <input type="hidden" id="selectSize" name="size" class="size" />
                                     @foreach (var item in Model.Product.ProductSize)
                                     {
-                                        <div class="border p-2 px-3 size-option" data-size="@item.size.Name" onclick="selectSize(this)">@item.size.Name</div>
+                                        <div class="border p-2 px-3 size-option" data-size="@item.size.Name">@item.size.Name</div>
                                     }
                                 </div>
                             </div>

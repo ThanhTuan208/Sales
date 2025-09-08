@@ -1,0 +1,58 @@
+﻿@using CRUD_asp.netMVC.Models.ViewModels.Cart;
+@using System.Globalization
+@model CartViewModel
+@{
+    var typeCss = "";
+}
+
+<link rel="stylesheet" href="~/css/load_address.css" asp-append-version="true" />
+
+<div class="address-container">
+    <div class="header-container">
+        <h2>Danh sách địa chỉ 📍</h2>
+        <button type="button" id="btnClose" class="btn-close-address">×</button>
+    </div>
+
+    <table class="address-table">
+        <thead>
+            <tr>
+                <th>Chọn</th>
+                <th>Người nhận</th>
+                <th>SDT</th>
+                <th>Địa chỉ</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.AddressUser.OrderByDescending(p => p.ID))
+            {
+                <tr>
+                    <td data-label="Chọn">
+                        <div class="checkbox-wrap">
+                            <input class="select-default" type="checkbox" name="defaultAddress" value="true">
+                            <span class="default-label" style="display: @(item.IsDefault ? "inline" : "none" )">Mặc định</span>
+                        </div> 
+                    </td>
+
+                    <input type="hidden" value="@item.ID" class="id" />
+                    <input type="hidden" value="@item.Province" class="province" />
+                    <input type="hidden" value="@item.Ward" class="ward" />
+                    <input type="hidden" value="@item.Street" class="street" />
+
+                    <td class="recipientname" data-label="Tên người nhận">@item.RecipientName</td>
+                    <td class="phonenumber" data-label="Số điện thoại">@item.PhoneNumber</td>
+                    <td class="address" data-label="Địa chỉ">@item.Street <br> @item.Ward, @item.Province</td>
+                    <td data-label="Hành động"><button class="btn edit-address-exists">Sửa</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="add-address-card">
+        <div class="add-card-content" id="btnAddAddress">
+            <span class="plus-icon">+</span>
+            <span class="add-text">Thêm địa chỉ</span>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="~/js/load_address.js" asp-append-version="true"></script>

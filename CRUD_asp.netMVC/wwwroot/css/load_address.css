@@ -1,4 +1,211 @@
-﻿.address-form {
+﻿/*hieu ung css cho checked default add-address-form*/
+.add-address-card {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.add-card-content {
+    width: 180px;
+    height: 80px;
+    border: 2px dashed #6a11cb;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafafa;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+}
+
+    .add-card-content:hover {
+        background: linear-gradient(135deg, #6a11cb22, #2575fc22);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+
+.plus-icon {
+    font-size: 32px;
+    font-weight: bold;
+    color: #6a11cb;
+    margin-bottom: 1px;
+}
+
+.add-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+/*hieu ung css cho checked default add-address-form*/
+
+/*Giao dien cho list address*/
+.address-container {
+    width: 100%;
+    max-width: 800px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1); /* giữ shadow mạnh hơn */
+    margin: auto;
+    width: 95%;
+    /* Hiệu ứng animation */
+    transform: translateY(-30px);
+    opacity: 0;
+    transition: all 0.4s ease;
+    animation: fadeInScale 0.4s ease forwards;
+}
+
+/* Animation scale + fade-in */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+    .header-container h2 {
+        margin: 0;
+        font-size: 26px;
+        color: #2c3e50;
+        font-weight: 600;
+        text-align: center;
+        flex: 1;
+    }
+
+.address-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 26px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.address-container .address-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+}
+
+    .address-container .address-table thead {
+        background: none;
+        color: #555;
+    }
+
+    .address-container .address-table th, td {
+        text-align: center;
+        font-size: 14px;
+/*        font-weight: 600;*/
+        padding: 10px 14px;
+    }
+
+    .address-container .address-table tbody tr {
+        background: #fafafa;
+        border-radius: 12px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+
+.address-container tbody tr:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+    background: #fdfdfd;
+}
+
+.address-container .btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    color: white;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+    display: block;
+    margin: auto;
+}
+
+    .address-container .btn:hover {
+        background: linear-gradient(45deg, #2575fc, #6a11cb);
+        transform: scale(1.05);
+    }
+
+.address-container .checkbox-wrap {
+    display: flex;
+    flex-direction: column; /* xếp dọc */
+    align-items: center; /* căn giữa theo chiều ngang */
+    gap: 4px;
+}
+
+    /* chắc chắn checkbox hiển thị to và rõ */
+    .address-container .checkbox-wrap input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        accent-color: #2575fc;
+    }
+
+
+.address-container .default-label {
+    display: none; /* chỉ ẩn chữ mặc định */
+    padding: 3px 8px;
+    background: #ffeb3b;
+    color: #444;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.back-btn-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.address-container #btnClose {
+    position: absolute;
+    right: 2%;
+    top: 40%;
+    transform: translateY(-50%);
+    background: none;
+    background-color: lemonchiffon;
+    border: none;
+    font-size: 28px;
+    font-weight: bold;
+    color: #d9534f;
+    cursor: pointer;
+    padding: 5px 10px;
+    line-height: 1;
+    border-radius: 50%;
+    transition: background 0.3s, color 0.3s;
+}
+
+#btnClose:hover {
+    background: rgba(217, 83, 79, 0.1);
+    color: #c9302c;
+}
+
+/*Giao dien cho modal address*/
+/* Overlay mờ nền */
+
+/* Container hiển thị modal */
+.address-form {
     max-width: 700px;
     width: 100%;
     background: #fff;
@@ -6,9 +213,10 @@
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     animation: scaleIn 0.5s ease-out;
+    margin: 0 auto; /* căn giữa ngang */
 }
 
-h1 {
+.address-container h1 {
     font-weight: 600;
     color: #1a252f;
     text-align: center;
@@ -17,18 +225,18 @@ h1 {
     animation: slideDown 0.5s ease-out;
 }
 
-.form-row {
+.address-container .form-row {
     display: flex;
     gap: 20px;
     margin-bottom: 1rem;
 }
 
-.form-group {
+.address-container .form-group {
     flex: 1;
     min-width: 0;
 }
 
-label {
+.address-container label {
     font-weight: 500;
     color: #2c3e50;
     margin-bottom: 0.4rem;
@@ -52,6 +260,21 @@ label {
         box-shadow: 0 0 8px rgba(94, 82, 255, 0.2);
     }
 
+    /*Noi vien bao*/ 
+    .form-control.error,
+    .ts-wrapper.error .ts-control {
+        border-color: #ff4d4f !important;
+        box-shadow: 0 0 8px rgba(255, 77, 79, 0.3) !important;
+        background: #fff1f1 !important;
+    }
+
+/* Tùy chỉnh thông điệp lỗi */
+.error-message {
+    color: #ff4d4f;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
 textarea {
     resize: vertical;
     min-height: 60px;

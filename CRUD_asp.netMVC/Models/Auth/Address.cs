@@ -13,13 +13,13 @@ namespace CRUD_asp.netMVC.Models.Auth
         public int UserID { get; set; }
         public Users? User { get; set; }
 
-        [Required(ErrorMessage = "Tên người nhận không được để trống")]
         [StringLength(100)]
+        [Required(ErrorMessage = "Tên người nhận không được để trống")]
         public string RecipientName { get; set; }
 
-        [Required(ErrorMessage = "Số điện thoại không được để trống")]
         [Phone]
         [StringLength(15)]
+        [Required(ErrorMessage = "Số điện thoại không được để trống")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Địa chỉ chi tiết không được để trống")]
@@ -28,10 +28,14 @@ namespace CRUD_asp.netMVC.Models.Auth
 
         [Required]
         [StringLength(100)]
-        public string FullLocation { get; set; } // chứa City + District + Ward
+        public string Province { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Ward { get; set; }
 
         [StringLength(50)]
-        public string PostalCode { get; set; } // Ma buu chinh
+        public string? PostalCode { get; set; }  // Ma buu chinh
 
         public bool IsDefault { get; set; } = false; // Địa chỉ mặc định
 

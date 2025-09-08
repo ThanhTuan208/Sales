@@ -18,7 +18,7 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    
+
     <!-- Animate.css -->
     <link rel="stylesheet" href="~/css/animate.css" asp-append-version="true">
     <!-- Icomoon Icon Fonts-->
@@ -99,7 +99,7 @@
                             @{
                                 var countCart = ViewData["cart"] as int?;
                                 if (countCart == null)
-                                {       
+                                {
                                     countCart = 0;
                                 }
                             }
@@ -123,7 +123,7 @@
                                 {
                                     <form id="logoutForm" asp-controller="Auth" asp-action="Logout" method="post" style="display: none;">
                                         @* @Html.AntiForgeryToken(): Khi dung attribute ValidateAntiForgeryToken thi phai su dung hepler html nay nhung khi check devtool kiem tra thi da co phat sinh doan ma nen ko can them  *@ 
-                                    </form>
+                                        </form>
 
                                     <a class="cart">
                                         <span><i class="icon-user fs-4"></i><small>&check;</small></span>
@@ -179,7 +179,7 @@
                         <div class="d-block"><span class="fw-bold">SDT</span>: <a href="tel:0358986823" class="text-secondary"> 0358986823 </a></div>
                         <div class="d-block"><span class="fw-bold">Email</span>:<a href="mailto:nguyenthanhtuankrp1@gmail.com" class="text-secondary"> nguyenthanhtuankrp1@gmail.com</a> </div>
                         <div class="d-block"><span class="fw-bold">Address</span>: Số 219/4 Lê Văn Chí, P. Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh</div>
-                        
+
                     </div>
                 </div>
 
@@ -247,9 +247,7 @@
         <a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script src="~/js/js.js" asp-append-version="true"></script>
+    <script src="~/js/jquery-3.7.1.min.js" asp-append-version="true"></script>
     <!-- jQuery -->
     <script src="~/js/jquery.min.js" asp-append-version="true"></script>
     <!-- jQuery Easing -->
@@ -269,6 +267,7 @@
 
     <script src="~/lib/bootstrap/js/bootstrap.bundle.js" asp-append-version="true"></script>
 
+    <script type="module" src="~/js/js.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

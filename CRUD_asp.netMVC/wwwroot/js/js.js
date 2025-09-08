@@ -27,7 +27,7 @@ $(document).ready(function () {
         }
     });
 
-    $(document).off('click', '.edit-address').on('click', '.edit-address', function (e) {
+    $(document).off('click', '.select-address').on('click', '.select-address', function (e) {
         e.preventDefault();
 
         let ids = [];
@@ -40,7 +40,8 @@ $(document).ready(function () {
             data: { arrID: ids, IsAddress: isAddress },
             traditional: true, // bind mảng
             success: function (response) {
-                $(".modal-left").html(response); // render vào modal
+                $(".modal-left").html(response); // render vào modal// Cập nhật hiển thị của <span class="default-label">
+
                 console.log("Mở modal địa chỉ thành công. ");
             },
             error: function () {
@@ -48,6 +49,7 @@ $(document).ready(function () {
             }
         });
     });
+
 
     $('.buy.bn54').on('click', function (e) {
         e.preventDefault(); // ngan button type submit
@@ -59,7 +61,6 @@ $(document).ready(function () {
             return;
         }
 
-        console.log(ids);
         $.ajax({
             url: "/Cart",
             type: "GET",
@@ -80,25 +81,7 @@ $(document).ready(function () {
         });
     });
 
-    function GetArrIDChecked(ids) {
-        const productChecked = $('.checkbox:checked');
-        const paymentMethod = $('input[name="payment"]:checked').data('method');
 
-        if (paymentMethod === "qr" && productChecked.length > 0) {
-
-            // Hien thi modal cho paymentMethod Cart, chon radio qr moi mo modal paymentQR
-            //$(".modal-overlay").fadeIn(300);
-            //$(".modal").addClass("active").fadeIn(300); // Thêm class 'active' và hiển thị modal
-
-            $('.checkbox:checked').each(function () {
-
-                ids.push($(this).val());
-            });
-        }
-        else return false;
-
-        return true;
-    }
 
     // Đóng modal khi click nút đóng / dung off, on de tranh luu tru connsole vao DOM
     $(document).off('click', '.btn-close').on('click', '.btn-close', function () {
@@ -842,54 +825,80 @@ $(document).ready(function () {
     });
 
     // dung cho hieu ung hinh anh qua lai (product detail)
-    var owl;
-    $(document).ready(function () {
-        owl = $('.owl-carousel-fullwidth').owlCarousel({
-            items: 1,
-            loop: true,
-            dots: false,
-            nav: true
-        });
-    });
 
 });
 
-//Logic cho rut gon du lieu khi search dia chi -> _EditAddressPartial.cshtml
+var owl;
+$(document).ready(function () {
+    owl = $('.owl-carousel-fullwidth').owlCarousel({
+        items: 1,
+        loop: true,
+        dots: false,
+        nav: true
+    });
+});
 
-//Logic cho rut gon du lieu khi search dia chi -> _EditAddressPartial.cshtml
-
-
-function changeImage(el) {
-    const index = $(el).index();
+$('.thumbnail-img').on('click', function () {
+    const index = $(this).index();
     owl.trigger('to.owl.carousel', [index, 700]);
 
     $('.thumbnail-img').removeClass('image-active');
-    $(el).addClass('image-active');
-}
+    $(this).addClass('image-active');
+});
 
 // Thoi gian thong bao them thanh cong hoac that bai
-//$(document).ready(function () {
+//$ (document).ready(function () {
 //    setTimeout(() => {
 //        $('.alert').alert('close')
 //    }, 5000);
 //})
 
 /* Lay gia tri color -> product detail*/
-function selectColor(el) {
-    const color = $(el).data('color');
+$('.color-option').on('click', function () {
+
+    const color = $(this).data('color');
     $('#selectColor').val(color);
-}
+});
+
 
 /*Lay gia tri size -> product detail*/
-function selectSize(el) {
-    const size = $(el).data('size');
+$('.size-option').on('click', function () {
+    const size = $(this).data('size');
     $('#selectSize').val(size);
-}
-/*product-detail*/
+});
 
+// lay mang id san pham da chon trong gio hang
+export function GetArrIDChecked(ids) {
+    const productChecked = $('.checkbox:checked');
+    const paymentMethod = $('input[name="payment"]:checked').data('method');
+
+    if (paymentMethod === "qr" && productChecked.length > 0) {
+
+        $('.checkbox:checked').each(function () {
+
+            ids.push($(this).val());
+        });
+    }
+    else return false;
+
+    return true;
+}
+
+LoadView();
+// Xu li khi go back va return lai, o check van checked nhung gia ko hien thi 
+export function LoadView() {
+    // Su dung pageshow de load lai trang (ke ca khi go back va return view)
+    $(window).on('pageshow', function () {
+
+        $('.checkbox:checked').each(function () {
+            $(this).addClass('active');
+        });
+        updateQtyAfterCheck();
+    });
+}
 
 // cap nhat so luong va gia san pham sau khi check va tang giam so luong cho gia sp
-function updateQtyAfterCheck() {
+export function updateQtyAfterCheck() {
 
     let total = 0;
     let qty = 0;

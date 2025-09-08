@@ -1,4 +1,6 @@
-﻿using CRUD_asp.netMVC.Data;
+﻿using AspNetCoreGeneratedDocument;
+using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.ViewModels.Cart;
@@ -31,6 +33,7 @@ namespace CRUD_asp.netMVC.Controllers
             {
                 var cartItems = new List<AddToCart>();
                 var cartItemByIDs = new List<AddToCart>();
+                var addressUser = new List<Address>();
 
                 var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
 
@@ -47,8 +50,9 @@ namespace CRUD_asp.netMVC.Controllers
                         .ToListAsync();
 
                     var arrIDSet = arrID?.Select(int.Parse).ToHashSet() ?? new HashSet<int>();
-
                     cartItemByIDs = cartItems.Where(p => arrIDSet.Contains(p.ID)).ToList();
+
+                    addressUser = await context.Addresses.ToListAsync();
                 }
                 else
                 {
@@ -74,6 +78,7 @@ namespace CRUD_asp.netMVC.Controllers
                 CartViewModel viewModel = new()
                 {
                     CartItems = cartItems,
+                    AddressUser = addressUser,
                     QrPayment = { },
                     CartItemByIDs = cartItemByIDs,
                     TotalPrice = cartItems.Sum(p => p.Product != null ? p.Product.NewPrice * p.Quantity : 0)
@@ -88,12 +93,10 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpGet, Route("Cart")] // Show Cart
-        public async Task<IActionResult> Index(string[]? arrID, bool IsAddress = false)
+        public async Task<IActionResult> Index(string[]? arrID, bool IsAddress = false, bool UpdateAddress = false)
         {
             try
             {
-                ViewBag.IsAddress = IsAddress;
-
                 var viewModel = await GeneralIndex(arrID);
 
                 if (viewModel.CartItemByIDs.Count > 0)
@@ -101,7 +104,13 @@ namespace CRUD_asp.netMVC.Controllers
                     if (IsAddress)
                     {
                         // Tra ve partial dia chi form modal
-                        return PartialView("_EditAddressPartial", viewModel);
+                        if (UpdateAddress)
+                        {
+                            return PartialView("_EditAddressPartial", viewModel);
+                                
+                        }
+                        else return PartialView("_ListAddressPartial", viewModel);
+
                     }
                     else
                     {
@@ -113,11 +122,10 @@ namespace CRUD_asp.netMVC.Controllers
                 {
                     return View(viewModel);
                 }
-
             }
             catch (Exception)
             {
-                return View();
+                return View(new CartViewModel());
             }
         }
 
@@ -173,8 +181,6 @@ namespace CRUD_asp.netMVC.Controllers
                 return PartialView("_ModalPaymentPartial", new CartViewModel());
             }
         }
-
-        //public async Task<IActionResult> 
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(int productID, int qty, string color, string size)
