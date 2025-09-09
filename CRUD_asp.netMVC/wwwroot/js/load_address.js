@@ -6,7 +6,35 @@ $(document).ready(function () {
 
     $(document).off('click', '.deleteAddress').on('click', '.deleteAddress', function () {
 
+        const id = $('#id').val();
+        if (!id || id === "undefined") {
+            console.log(1);
+            return;
+        }
 
+        let formData = new FormData();
+        formData.append("addressId", id);
+        formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+
+        $.ajax({
+            url: "/Address/DeleteAddress",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+
+            success: function (response) {
+                if (response.success) {
+                    console.log("True: " + response.message);
+                    GeneralAjaxResponse(true, false);
+                }
+                else console.log("False: " + response.message);
+            },
+
+            error: function (response) {
+                alert(`Loi xoa dia chi ${response.message}!!!`);
+            }
+        });
     });
 
     // Hien thi cap nhat dia chi
@@ -421,42 +449,43 @@ function LoadDataAddress(provinceName, wardName, callback) {
 }
 
 //Xu ly su kien cho danh sach dia chi
-$(function () {
+//$(function () {
 
-    // Khi trang load: hiện nhãn cho checkbox đang checked (nếu có)
-    $('input[name="defaultAddress"]').each(function () {
-        if ($(this).is(':checked')) {
-            $(this).closest('.checkbox-wrap').find('.default-label').show();
-        } else {
-            $(this).closest('.checkbox-wrap').find('.default-label').hide();
-        }
-    });
+//    // Khi trang load: hiện nhãn cho checkbox đang checked (nếu có)
+//    $('input[name="defaultAddress"]').each(function () {
+//        if ($(this).is(':checked')) {
+//            $(this).closest('.checkbox-wrap').find('.default-label').show();
+//        } else {
+//            $(this).closest('.checkbox-wrap').find('.default-label').hide();
+//        }
+//    });
 
-    // Click vào row: set checkbox = true (không dùng trigger click)
-    $(document).on('click', 'tbody tr', function (e) {
-        // Nếu click vào checkbox hoặc button thì bỏ qua (để tránh double)
-        if ($(e.target).is("input[type='checkbox'], .btn, .btn *")) return;
+//    // Click vào row: set checkbox = true (không dùng trigger click)
+//    $(document).on('click', 'tbody tr', function (e) {
+//        // Nếu click vào checkbox hoặc button thì bỏ qua (để tránh double)
+//        if ($(e.target).is("input[type='checkbox'], .btn, .btn *")) return;
 
-        const $input = $(this).find('input[name="defaultAddress"]');
-        // nếu đã checked thì không làm gì
-        if ($input.prop('checked')) return;
+//        const $input = $(this).find('input[name="defaultAddress"]');
+//        // nếu đã checked thì không làm gì
+//        if ($input.prop('checked')) return;
 
-        $input.prop('checked', true).trigger('change');
-    });
+//        $input.prop('checked', true).trigger('change');
+//    });
 
-    // Khi checkbox thay đổi
-    //$(document).on('change', 'input[name="defaultAddress"]', function () {
-    //    // bỏ chọn và ẩn nhãn mọi checkbox khác
-    //    $('input[name="defaultAddress"]').not(this).prop('checked', false)
-    //        .closest('.checkbox-wrap').find('.default-label').hide();
+//     Khi checkbox thay đổi
+//    $(document).on('change', 'input[name="defaultAddress"]', function () {
+//        // bỏ chọn và ẩn nhãn mọi checkbox khác
+//        $('input[name="defaultAddress"]').not(this).prop('checked', false)
+//            .closest('.checkbox-wrap').find('.default-label').hide();
 
-    //    // hiện nhãn cho checkbox đang checked (nếu checked)
-    //    if ($(this).is(':checked')) {
-    //        $(this).closest('.checkbox-wrap').find('.default-label').show();
-    //    } else {
-    //        $(this).closest('.checkbox-wrap').find('.default-label').hide();
-    //    }
-    //});
+//        // hiện nhãn cho checkbox đang checked (nếu checked)
+//        if ($(this).is(':checked')) {
+//            $(this).closest('.checkbox-wrap').find('.default-label').show();
+//        } else {
+//            $(this).closest('.checkbox-wrap').find('.default-label').hide();
+//        }
+//    });
 
-});
+//});
+
 //Xu ly su kien cho danh sach dia chi

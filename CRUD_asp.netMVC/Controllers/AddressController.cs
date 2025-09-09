@@ -4,6 +4,7 @@ using CRUD_asp.netMVC.Models.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.View;
+using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Tls;
 using System.Security.Claims;
 
@@ -182,6 +183,54 @@ namespace CRUD_asp.netMVC.Controllers
                     success = false,
                     message = "Lỗi hệ thống, vui lòng thử lại !!!",
 
+                });
+            }
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAddress(int addressId)
+        {
+            try
+            {
+                if (addressId < 1)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = $"Không tìm thấy id = {addressId} !!!",
+
+                    });
+                }
+
+                var address = await _dbContext.Addresses.FindAsync(addressId);
+
+                if (address == null)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = $"Không tìm thấy id = {addressId} trong dữ liệu !!!",
+
+                    });
+                }
+
+                _dbContext.Addresses.Remove(address);
+                await _dbContext.SaveChangesAsync();
+
+                return Json(new
+                {
+                    success = true,
+                    message = $"Xóa địa chỉ thành công. ",
+
+                });
+            }
+            catch (Exception ex)
+            {
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Server: " + ex.Message,
                 });
             }
         }

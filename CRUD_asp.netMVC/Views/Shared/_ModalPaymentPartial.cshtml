@@ -4,7 +4,7 @@
 @{
     var address = Model.AddressUser.Where(p => p.IsDefault).FirstOrDefault();
 }
-
+@Html.AntiForgeryToken()
 <section class="modal-left">
     <div class="row justify-content-around align-items-center">
         <h3 id="modalTitle">Sản phẩm đã chọn</h3>
@@ -57,7 +57,7 @@
         {
             <p class="font-weight-bold">Số lượng: <span id="total-quantity">@Model.CartItemByIDs.Sum(item => item.Quantity)</span></p>
             <p class="font-weight-bold">Tổng giá: <span class="price-complete">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", 0)</span></p>
-            <p class="font-weight-bold">Địa chỉ: <span class="address">@address.Street, @address.Ward, @address.Province </span></p>
+            <p class="font-weight-bold">Địa chỉ: <span class="address">@(address.Street + ", " + address.Ward + ", " + address.Province ?? "Hãy cập nhật địa chỉ của bạn. ")  </span></p>
         }
         else
         {
