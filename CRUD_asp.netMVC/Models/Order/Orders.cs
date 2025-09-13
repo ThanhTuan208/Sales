@@ -14,10 +14,6 @@ namespace CRUD_asp.netMVC.Models.Order
         public Users? Users { get; set; }
 
         [Required]
-        public int PaymentID { get; set; }
-        public Payment? Payment { get; set; }
-
-        [Required]
         public int AddressID { get; set; }
         public Address? Address { get; set; }
 
@@ -37,6 +33,7 @@ namespace CRUD_asp.netMVC.Models.Order
 
         public DateTime? PaidAt { get; set; }
 
+        public Payment? Payment { get; set; }
         public List<OrderDetail>? OrderDetail { get; set; }
     }
 }

@@ -1,26 +1,18 @@
-﻿namespace CRUD_asp.netMVC.Service.Payment
+﻿using System.Drawing.Imaging;
+
+namespace CRUD_asp.netMVC.Service.Payment
 {
     public class QrCodeService
     {
-        public string GenerateBankQrCode(string orderId, decimal amount, string bankAccount)
+        public string GenerateBankQrCode(string accountNo, decimal amount, string description, string accountName)
         {
-            var bankInfo = new
-            {
-                BankName = "MBBank", // Thay bằng ngân hàng của bạn
-                AccountNumber = bankAccount, // Ví dụ: "1234567890"
-                AccountName = "NGUYEN THANH TUAN",
-                Content = $"Don hang {orderId}",
-                Amount = amount.ToString("N0")
-            };
+            // Su dung vietQR 
+            var bankBin = "970422"; // Mã bin MB Bank
 
-            var qrContent = $"Bank: {bankInfo.BankName}\n" +
-                           $"Account: {bankInfo.AccountNumber}\n" +
-                           $"Name: {bankInfo.AccountName}\n" +
-                           $"Content: {bankInfo.Content}";
-
-            // Sử dụng Google Chart API để tạo QR code
-            var qrUrl = $"https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl={Uri.EscapeDataString(qrContent)}&choe=UTF-8";
-            return qrUrl;
+            string url = $"https://img.vietqr.io/image/{bankBin}-{accountNo}-compact.png" +
+                         $"?amount={amount}&addInfo={Uri.EscapeDataString(description)}&accountName={Uri.EscapeDataString(accountName)}";
+            return url;
         }
+
     }
 }

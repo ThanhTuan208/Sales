@@ -8,7 +8,7 @@ $(document).ready(function () {
 
         const id = $('#id').val();
         if (!id || id === "undefined") {
-            console.log(1);
+            console.log("Gía trị id không hợp lệ !");
             return;
         }
 
@@ -25,7 +25,7 @@ $(document).ready(function () {
 
             success: function (response) {
                 if (response.success) {
-                    console.log("True: " + response.message);
+
                     GeneralAjaxResponse(true, false);
                 }
                 else console.log("False: " + response.message);
@@ -259,7 +259,9 @@ $(document).ready(function () {
     //$(document).on('click', '.btn-close-address, .returnAddress', function () {
     $(document).on('click', '.btn-close-address', function () {
 
-        $(".address-form").fadeOut(300);  // an form dia chi
+        //$(".address-form").fadeOut(300);  // an form dia chi
+        //const qrCode = $(".qrCodeString").val();
+        //console.log(qrCode);
 
         let ids = [];
         let ArrChecked = GetArrIDChecked(ids);
@@ -268,18 +270,10 @@ $(document).ready(function () {
             return;
         }
 
-        // tra ve lai modalPaymentPatial
-        const isAddress = false;
-        const updateAddress = false;
-
         $.ajax({
-            url: "/Cart",
+            url: "/Cart/ShowQrModalCart",
             type: "GET",
-            data: {
-                arrID: ids,
-                IsAddress: isAddress,
-                UpdateAddress: updateAddress
-            },
+            data: { arrID: ids },
             traditional: true, // bind mảng
             success: function (response) {
                 $(".modal").html(response); // render vào modal
@@ -447,45 +441,3 @@ function LoadDataAddress(provinceName, wardName, callback) {
         );
     }
 }
-
-//Xu ly su kien cho danh sach dia chi
-//$(function () {
-
-//    // Khi trang load: hiện nhãn cho checkbox đang checked (nếu có)
-//    $('input[name="defaultAddress"]').each(function () {
-//        if ($(this).is(':checked')) {
-//            $(this).closest('.checkbox-wrap').find('.default-label').show();
-//        } else {
-//            $(this).closest('.checkbox-wrap').find('.default-label').hide();
-//        }
-//    });
-
-//    // Click vào row: set checkbox = true (không dùng trigger click)
-//    $(document).on('click', 'tbody tr', function (e) {
-//        // Nếu click vào checkbox hoặc button thì bỏ qua (để tránh double)
-//        if ($(e.target).is("input[type='checkbox'], .btn, .btn *")) return;
-
-//        const $input = $(this).find('input[name="defaultAddress"]');
-//        // nếu đã checked thì không làm gì
-//        if ($input.prop('checked')) return;
-
-//        $input.prop('checked', true).trigger('change');
-//    });
-
-//     Khi checkbox thay đổi
-//    $(document).on('change', 'input[name="defaultAddress"]', function () {
-//        // bỏ chọn và ẩn nhãn mọi checkbox khác
-//        $('input[name="defaultAddress"]').not(this).prop('checked', false)
-//            .closest('.checkbox-wrap').find('.default-label').hide();
-
-//        // hiện nhãn cho checkbox đang checked (nếu checked)
-//        if ($(this).is(':checked')) {
-//            $(this).closest('.checkbox-wrap').find('.default-label').show();
-//        } else {
-//            $(this).closest('.checkbox-wrap').find('.default-label').hide();
-//        }
-//    });
-
-//});
-
-//Xu ly su kien cho danh sach dia chi

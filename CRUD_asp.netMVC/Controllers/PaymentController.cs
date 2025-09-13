@@ -1,17 +1,24 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Payment;
 using CRUD_asp.netMVC.Models.Order;
+using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Service.Payment;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Storage;
 using NuGet.Protocol;
+using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace CRUD_asp.netMVC.Controllers
 {
     public class PaymentController : Controller
     {
+        private readonly AppDBContext _dbContext;
         private readonly QrCodeService _qrCodeService;
         private readonly ISmsPaymentVerificationService _smsPaymentVerificationService;
-        private readonly AppDBContext _dbContext;
 
         public PaymentController(QrCodeService qrCodeService, ISmsPaymentVerificationService smsPaymentVerificationService, AppDBContext dbContext)
         {
@@ -19,6 +26,50 @@ namespace CRUD_asp.netMVC.Controllers
             _smsPaymentVerificationService = smsPaymentVerificationService;
             _dbContext = dbContext;
         }
+
+        [HttpPost] // Nhan sms tu dien thoai
+        public async Task<IActionResult> SmsReceive([FromBody] SmsMessage sms)
+        {
+            try
+            {
+                var NDMessage = sms.Message.Split("ND:")[1].Trim(); 
+                var transactionCode = NDMessage.Split('-')[1]; // lay ma giao dich
+
+                if (transactionCode.Contains("ORD"))
+                {
+                    var formartTransaction = transactionCode.Split("ORD")[1];
+
+                    var order = await _dbContext.Orders.FirstOrDefaultAsync(p => p.TransactionId == formartTransaction);
+
+                    if (order == null) return NotFound();
+
+                    var payment = new Payment()
+                    {
+                        OrderID = order.ID,
+                        paidAmount = (double)order.Amount,
+                        PaymentDate = DateTime.Now,
+                        paymentMethod = order.PaymentMethod
+                    };
+
+                    order.Payment = payment;
+                    order.Status = "Paid"; // cap nhat lai trang thai sau khi chuyen khoan thanh cong
+                    order.PaidAt = DateTime.Now; 
+
+                    _dbContext.Orders.Update(order);
+
+                    await _dbContext.SaveChangesAsync();
+
+                }
+                return Ok();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
         [HttpPost, ValidateAntiForgeryToken] // Tao phuong thuc thanh toan luu vao db Order
         public async Task<IActionResult> CreatePayment([FromBody] PaymentRequest request)
@@ -50,27 +101,27 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-        [HttpGet] // Hien thi QR len giao dien qua truy van orderID
-        public async Task<IActionResult> ShowQRCode(string orderID)
-        {
-            var order = await _dbContext.Orders.FindAsync(orderID);
-            if (order == null) return NotFound();
+        //[HttpGet] // Hien thi QR len giao dien qua truy van orderID
+        //public async Task<IActionResult> ShowQRCode(string orderID)
+        //{
+        //    var order = await _dbContext.Orders.FindAsync(orderID);
+        //    if (order == null) return NotFound();
 
-            string bankAccount = "0001335756540";
-            // goi method generator QR ben class QrCodeService
-            var qrUrl = _qrCodeService.GenerateBankQrCode(orderID, order.Amount, bankAccount);
+        //    string bankAccount = "0001335756540";
+        //    // goi method generator QR ben class QrCodeService
+        //    var qrUrl = _qrCodeService.GenerateBankQrCode(orderID, order.Amount, bankAccount);
 
-            var model = new QrPaymentViewModel()
-            {
-                OrderId = orderID,
-                Amount = order.Amount,
-                QrCodeUrl = qrUrl,
-                BankAccount = bankAccount,
-                PollingUrl = Url.Action("CheckPaymentStatus", "Payment", new { orderId = orderID }, Request.Scheme)
-            };
+        //    var model = new QrPaymentViewModel()
+        //    {
+        //        OrderId = orderID,
+        //        Amount = order.Amount,
+        //        QrCodeUrl = qrUrl,
+        //        BankAccount = bankAccount,
+        //        PollingUrl = Url.Action("CheckPaymentStatus", "Payment", new { orderId = orderID }, Request.Scheme)
+        //    };
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
         [HttpGet("check-status/{orderId}")] // kiem tra 
         public async Task<IActionResult> CheckPaymentStatus(string orderId)

@@ -5,20 +5,24 @@ using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.ViewModels.Cart;
 using CRUD_asp.netMVC.Service.Payment;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using NuGet.Protocol.Resources;
+using Org.BouncyCastle.Crypto;
+using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace CRUD_asp.netMVC.Controllers
 {
     public class CartController : Controller
     {
-        public readonly AppDBContext context;
-        public readonly QrCodeService _qrCode;
+        private readonly AppDBContext context;
+        private readonly QrCodeService _qrCode;
 
         public CartController(AppDBContext _context, QrCodeService qrCode)
         {
@@ -45,6 +49,7 @@ namespace CRUD_asp.netMVC.Controllers
                         .Include(c => c.Product).ThenInclude(p => p.ProductColor)
                         .Include(c => c.Product).ThenInclude(p => p.ProductSize)
                         .Include(c => c.Product).ThenInclude(p => p.ProductImages)
+                        .Include(c => c.Product).ThenInclude(p => p.Cate)
                         .Include(c => c.Users).ThenInclude(p => p.Addresses)
                         .Where(c => c.UserID == userID)
                         .ToListAsync();
@@ -92,7 +97,7 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-        [HttpGet, Route("Cart")] // Show Cart
+        [HttpGet, Route("Cart")] // Hien thi gio hang
         public async Task<IActionResult> Index(string[]? arrID, bool IsAddress = false, bool UpdateAddress = false)
         {
             try
@@ -103,18 +108,17 @@ namespace CRUD_asp.netMVC.Controllers
                 {
                     if (IsAddress)
                     {
-                        // Tra ve partial dia chi form modal
                         if (UpdateAddress)
                         {
                             return PartialView("_EditAddressPartial", viewModel);
-                                
+
                         }
                         else return PartialView("_ListAddressPartial", viewModel);
 
                     }
                     else
                     {
-                        // Tra ve partial thanh toan qr
+                        // Tra ve partial dia chi form modal
                         return PartialView("_ModalPaymentPartial", viewModel);
                     }
                 }
@@ -129,8 +133,8 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-        [HttpPost, ValidateAntiForgeryToken] // Hien thi QR Modal gio hang
-        public async Task<IActionResult> ShowQrModalCart(string[]? arrID)
+        [HttpGet] // Hien thi QR Modal gio hang
+        public async Task<IActionResult> ShowQrModalCart(string[]? arrID, string PaymentMethod)
         {
             try
             {
@@ -138,38 +142,55 @@ namespace CRUD_asp.netMVC.Controllers
 
                 if (viewModel.CartItemByIDs.Count > 0)
                 {
-                    if (decimal.TryParse(viewModel.TotalPrice.ToString(), out decimal amount))
+                    var selectList = viewModel.CartItemByIDs.Where(p => arrID.Contains(p.ID.ToString())).ToList();
+                    var totalList = selectList.Select(p => p.Product.NewPrice).ToList().Sum();
+
+                    var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
+                    if (userID > 0)
                     {
-                        var order = new Orders()
+                        var address = await context.Addresses.FirstOrDefaultAsync(p => p.UserID == userID && p.IsDefault);
+
+                        string timeID = Regex.Replace(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), @"[/:\s]", "") + "VN_NTT";
+
+                        var order = new Orders
                         {
-                            ID = Guid.NewGuid().ToString(),
-                            Amount = amount,
+                            ID = timeID,
+                            UserID = userID,
+                            AddressID = address.ID,
+                            Amount = (decimal)totalList,
                             Status = "Pending",
-                            OrderDate = DateTime.Now
+                            PaymentMethod = PaymentMethod ?? string.Empty,
+                            OrderDate = DateTime.Now,
+                            TransactionId = Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper()
                         };
+
+                        await context.Orders.AddAsync(order);
+                        await context.SaveChangesAsync();
+                        // Xu ly xoa don hang khi nguoi dung khong thanh toan sau 10p (Service/OrderCleanupService.cs)
 
                         // Tao ma QR
                         string bankAcc = "0001335756540";
-                        var qrPaymentService = _qrCode.GenerateBankQrCode(order.ID, order.Amount, bankAcc);
+                        string qrUrl = _qrCode.GenerateBankQrCode(
+                            bankAcc,
+                            order.Amount,
+                            $"ORD{order.TransactionId}",
+                            "NGUYEN THANH TUAN");
 
                         var qrPaymentModel = new QrPaymentViewModel
                         {
                             OrderId = order.ID,
                             Amount = order.Amount,
-                            QrCodeUrl = qrPaymentService,
+                            QrCodeUrl = qrUrl,
                             BankAccount = bankAcc,
-                            PollingUrl = Url.Action("CheckPaymentStatus", "Payment", new { orderId = order.ID }, Request.Scheme)
+                            //PollingUrl = Url.Action("CheckPaymentStatus", "Payment", new { orderId = order.ID }, Request.Scheme)
                         };
 
                         viewModel.QrPayment = qrPaymentModel;
 
-                        // can tao partial rieng de hien thi danh sach ben trong modal, co the thu xoa partial de kiem tra
                         return PartialView("_ModalPaymentPartial", viewModel);
                     }
-                    else
-                    {
-                        return View(nameof(Index), viewModel);
-                    }
+
+                    return PartialView("_ModalPaymentPartial", viewModel);
                 }
                 else
                 {
@@ -182,7 +203,7 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken] // Them san pham vao gio hang
         public async Task<IActionResult> AddToCart(int productID, int qty, string color, string size)
         {
             try
@@ -260,12 +281,11 @@ namespace CRUD_asp.netMVC.Controllers
             }
             catch (Exception)
             {
-                //TempData["ErrorMessage"] = "Thêm sản phẩm vào giỏ hàng không thành công";
                 return Json(new { success = false, message = "Thêm sản phẩm vào giỏ hàng không thành công. " });
             }
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken] // Cap nhat so luong gio hang
         public async Task<IActionResult> UpdateToCart(int id, int qty, string opera, string accept)
         {
             try

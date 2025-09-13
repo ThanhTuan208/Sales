@@ -74,29 +74,15 @@ namespace CRUD_asp.netMVC.Controllers
                 }
                 else
                 {
-                    Json(new
-                    {
-                        success = false,
-                        message = "Vui lòng đăng nhập để thêm địa chỉ !!!",
-                    });
+                    Json(new { success = false, message = "Vui lòng đăng nhập để thêm địa chỉ !!!", });
                 }
 
-                return Json(new
-                {
-                    success = true,
-                    message = "Thêm địa chỉ thành công !!!",
-                    //data = address
-                });
+                return Json(new { success = true, message = "Thêm địa chỉ thành công !!!" });
 
             }
             catch (Exception)
             {
-                return Json(new
-                {
-                    success = false,
-                    message = "Lỗi hệ thống, vui lòng thử lại sau !!!",
-
-                });
+                return Json(new { success = false, message = "Lỗi hệ thống, vui lòng thử lại sau !!!" });
             }
         }
 
@@ -129,11 +115,7 @@ namespace CRUD_asp.netMVC.Controllers
 
                     if (AddressExists == null)
                     {
-                        Json(new
-                        {
-                            success = false,
-                            message = "Không tìm thấy địa chỉ của bạn !!!",
-                        });
+                        Json(new { success = false, message = "Không tìm thấy địa chỉ của bạn !!!" });
                     }
 
                     AddressExists.RecipientName = addressDTO.RecipientName;
@@ -161,29 +143,15 @@ namespace CRUD_asp.netMVC.Controllers
                 }
                 else
                 {
-                    Json(new
-                    {
-                        success = false,
-                        message = "Vui lòng đăng nhập để thêm địa chỉ !!!",
-                    });
+                    Json(new { success = false, message = "Vui lòng đăng nhập để thêm địa chỉ !!!" });
                 }
 
-                return Json(new
-                {
-                    success = true,
-                    message = "Cập nhật địa chỉ thành công !!!",
-
-                });
+                return Json(new { success = true, message = "Cập nhật địa chỉ thành công !!!" });
 
             }
             catch (Exception)
             {
-                return Json(new
-                {
-                    success = false,
-                    message = "Lỗi hệ thống, vui lòng thử lại !!!",
-
-                });
+                return Json(new { success = false, message = "Lỗi hệ thống, vui lòng thử lại !!!" });
             }
         }
 
@@ -194,44 +162,25 @@ namespace CRUD_asp.netMVC.Controllers
             {
                 if (addressId < 1)
                 {
-                    return Json(new
-                    {
-                        success = false,
-                        message = $"Không tìm thấy id = {addressId} !!!",
-
-                    });
+                    return Json(new { success = false, message = $"Không tìm thấy id = {addressId} !!!" });
                 }
 
                 var address = await _dbContext.Addresses.FindAsync(addressId);
 
                 if (address == null)
                 {
-                    return Json(new
-                    {
-                        success = false,
-                        message = $"Không tìm thấy id = {addressId} trong dữ liệu !!!",
-
-                    });
+                    return Json(new { success = false, message = $"Không tìm thấy id = {addressId} trong dữ liệu !!!" });
                 }
 
                 _dbContext.Addresses.Remove(address);
                 await _dbContext.SaveChangesAsync();
 
-                return Json(new
-                {
-                    success = true,
-                    message = $"Xóa địa chỉ thành công. ",
-
-                });
+                return Json(new { success = true, message = $"Xóa địa chỉ thành công. " });
             }
             catch (Exception ex)
             {
 
-                return Json(new
-                {
-                    success = false,
-                    message = "Server: " + ex.Message,
-                });
+                return Json(new { success = false, message = "Server: " + ex.Message });
             }
         }
     }

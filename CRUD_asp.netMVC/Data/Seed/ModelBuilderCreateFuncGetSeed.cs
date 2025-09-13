@@ -35,10 +35,10 @@ namespace CRUD_asp.netMVC.Data.Seed
 
             // Mockup du lieu mqh 1 - 1
             modelBuilder.Entity<Payment>().HasOne(o => o.Order).WithOne(p => p.Payment).HasForeignKey<Payment>(o => o.OrderID).OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Orders>().HasOne(o => o.Payment).WithOne(p => p.Order).HasForeignKey<Orders>(o => o.PaymentID).OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Users>().HasOne(r => r.Manager).WithOne(u => u.Users).HasForeignKey<Manager>(mi => mi.UserID).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Users>().HasOne(r => r.Customer).WithOne(u => u.Users).HasForeignKey<Customer>(mi => mi.UserID).OnDelete(DeleteBehavior.Restrict);
-            //modelBuilder.Entity<Users>().HasOne(r => r.Staff).WithOne(u => u.Users).HasForeignKey<Staff>(mi => mi.UserID).OnDelete(DeleteBehavior.Restrict);
 
             // Mockup du lieu mqh n - n
             modelBuilder.Entity<ProductSeason>().HasKey(p => new { p.SeasonID, p.ProductID });

@@ -25,6 +25,9 @@ namespace CRUD_asp.netMVC
                 option.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext")) // appsettings.json
             );
 
+            // Dang ky backgroud service (Xoa order.status = spending)
+            builder.Services.AddHostedService<OrderCleanupService>();
+
             // Dang ky service QrCode
             builder.Services.AddScoped<QrCodeService>();
             builder.Services.AddScoped<ISmsPaymentVerificationService, SmsPaymentVerificationService>();

@@ -57,23 +57,26 @@ $(document).ready(function () {
         let ids = [];
         const IsGetArr = GetArrIDChecked(ids);
 
-        if (!IsGetArr || ids === null) {
+        if (!IsGetArr.success || ids === null) {
             return;
         }
 
         $.ajax({
-            url: "/Cart",
+            url: "/Cart/ShowQrModalCart",
             type: "GET",
-            data: { arrID: ids, },
+            data: {
+                arrID: ids,
+                PaymentMethod: IsGetArr.paymentMethod,
+            },
             traditional: true, // quan trọng để bind mảng
             success: function (response) {
-                $(".modal").html(response); // render vào modal Index
 
                 // Cap nhat gia tong
-                updateQtyAfterCheck();
-
                 $(".modal-overlay").fadeIn(300);
                 $(".modal").addClass("active").fadeIn(300);
+
+                $(".modal").html(response); // render vào modal Index
+                updateQtyAfterCheck();
             },
             error: function () {
                 alert("Lỗi load sản phẩm lên modal");
@@ -870,18 +873,19 @@ $('.size-option').on('click', function () {
 // lay mang id san pham da chon trong gio hang
 export function GetArrIDChecked(ids) {
     const productChecked = $('.checkbox:checked');
-    const paymentMethod = $('input[name="payment"]:checked').data('method');
+    const paymentMethodChecked = $('input[name="payment"]:checked').data('method');
 
-    if (paymentMethod === "qr" && productChecked.length > 0) {
+    if (paymentMethodChecked === "qr" && productChecked.length > 0) {
 
         $('.checkbox:checked').each(function () {
 
             ids.push($(this).val());
         });
-    }
-    else return false;
 
-    return true;
+    }
+    else return { success: false, paymentMethod: null };
+
+    return { success: true, paymentMethod: "transfer" };
 }
 
 LoadView();

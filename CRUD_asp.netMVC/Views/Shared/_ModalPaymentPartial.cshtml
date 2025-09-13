@@ -8,7 +8,7 @@
 <section class="modal-left">
     <div class="row justify-content-around align-items-center">
         <h3 id="modalTitle">Sản phẩm đã chọn</h3>
-            <a href="#" class="select-address">Chọn địa chỉ</a>
+        <a href="#" class="select-address">Chọn địa chỉ</a>
     </div>
     <table class="product-table" aria-label="Danh sách sản phẩm đã chọn">
         <thead>
@@ -70,15 +70,21 @@
 
 <section class="modal-right">
     <div class="qr-wrapper">
-        <img src="https://placehold.co/180x180?text=QR+Code"
-             alt="Mã QR code"
-             class="qr-code" />
+        @if (Model.QrPayment != null && !string.IsNullOrEmpty(Model.QrPayment.QrCodeUrl))
+        {
+            <input type="hidden" value="@Html.Raw(Model.QrPayment.QrCodeUrl)" class="qrCodeString" />
+            <img src="@Html.Raw(Model.QrPayment.QrCodeUrl)" alt="Mã QR code" class="qr-code" />
+        }
+        else
+        {
+            <img src="" alt="Lỗi mã QR " class="qr-code" />
+        }
     </div>
     <div class="account-info">
-        <p class="account-name">Nguyễn Thành Tuấn</p>
-        <p class="account-id">Tài khoản: 0001335756540</p>
+        <p class="account-name">Nguyễn Thành Tuấn </p>
+        <p class="account-id">Tài khoản: <span>0001335756540</span> </p>
         <p class="account-id">Ngân hàng: MB Bank</p>
-        <p class="account-id">Thông báo: Mời bạn </p>
+        @* <p class="account-id">Thông báo: Mời bạn </p> *@
         <p class="account-date">Ngày tạo: @(DateTime.Now.ToString("dd/MM/yyyy HH:mm"))</p>
     </div>
 
