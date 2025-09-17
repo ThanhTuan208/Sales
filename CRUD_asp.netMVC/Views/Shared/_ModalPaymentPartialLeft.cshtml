@@ -1,0 +1,68 @@
+﻿@using CRUD_asp.netMVC.ViewModels.Cart;
+@using System.Globalization
+@model CartViewModel
+@{
+    var address = Model.AddressUser.Where(p => p.IsDefault).FirstOrDefault();
+}
+
+
+<div class="row justify-content-around align-items-center">
+    <h3 id="modalTitle">Sản phẩm đã chọn</h3>
+    <a href="#" class="select-address">Chọn địa chỉ</a>
+</div>
+<table class="product-table" aria-label="Danh sách sản phẩm đã chọn">
+    <thead>
+        <tr>
+            <th>Hình ảnh</th>
+            <th>Tên sản phẩm</th>
+            <th>Màu</th>
+            <th>Kiểu</th>
+            <th>Số lượng</th>
+            <th>Giá (₫)</th>
+        </tr>
+    </thead>
+    <tbody class="product-list">
+        @{
+            Layout = null;
+        }
+
+        @if (!Model.CartItemByIDs.Any())
+        {
+            <tr>
+                <td class="text-center" colspan="6">Chưa có sản phẩm nào được chọn.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in Model.CartItemByIDs)
+            {
+                <tr class="product-item" data-id="@item.ID" data-price="@(item.Product?.NewPrice ?? 0)">
+                    <td>
+                        <img src="@Url.Content($"~/images/products/{(item.Product?.ProductImages.FirstOrDefault()?.PathNameImage)}")"
+                             alt="@(item.Product?.Name ?? "N/A")"
+                             class="product-img" />
+                    </td>
+                    <td>@(item.Product?.Name ?? "N/A")</td>
+                    <td>@item.SelectColor</td>
+                    <td>@item.SelectSize</td>
+                    <td class="quantity">@item.Quantity</td>
+                    <td class="total-price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", (item.Product?.NewPrice ?? 0) * item.Quantity)</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div class="summary">
+    @if (Model.CartItemByIDs.Any())
+    {
+        <p class="font-weight-bold">Số lượng: <span id="total-quantity">@Model.CartItemByIDs.Sum(item => item.Quantity)</span></p>
+        <p class="font-weight-bold">Tổng giá: <span class="price-complete">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", 0)</span></p>
+        <p class="font-weight-bold">Địa chỉ: <span class="address">@(address.Street + ", " + address.Ward + ", " + address.Province ?? "Hãy cập nhật địa chỉ của bạn. ")  </span></p>
+    }
+    else
+    {
+        <p>số lượng: <span id="total-quantity">0</span></p>
+        <p>Tổng giá: <span id="total-price">0 ₫</span></p>
+        <p>Địa chỉ: <span id="address">Thêm địa chỉ của bạn !</span></p>
+    }
+</div>

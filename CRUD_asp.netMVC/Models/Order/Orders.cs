@@ -1,6 +1,7 @@
 ﻿using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Product;
 using System.ComponentModel.DataAnnotations;
+using System.Net.NetworkInformation;
 
 namespace CRUD_asp.netMVC.Models.Order
 {
@@ -18,7 +19,7 @@ namespace CRUD_asp.netMVC.Models.Order
         public Address? Address { get; set; }
 
         [DataType(DataType.Currency)]
-        public decimal Amount { get; set; }
+        public double Amount { get; set; }
 
         [Required]
         public string? Status { get; set; } = "Pending"; // Paid, failed, shipped, completed
@@ -32,8 +33,8 @@ namespace CRUD_asp.netMVC.Models.Order
         public DateTime OrderDate { get; set; }
 
         public DateTime? PaidAt { get; set; }
-
         public Payment? Payment { get; set; }
+
         public List<OrderDetail>? OrderDetail { get; set; }
     }
 }

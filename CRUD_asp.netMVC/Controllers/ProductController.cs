@@ -1,6 +1,6 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Product;
-using CRUD_asp.netMVC.Models.ViewModels.Home;
+using CRUD_asp.netMVC.ViewModels.Home;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;

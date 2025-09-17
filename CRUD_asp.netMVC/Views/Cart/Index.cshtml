@@ -1,4 +1,4 @@
-﻿@using CRUD_asp.netMVC.Models.ViewModels.Cart;
+﻿@using CRUD_asp.netMVC.ViewModels.Cart;
 @using System.Globalization
 @model CartViewModel
 @{
@@ -36,10 +36,12 @@
                         </thead>
                         <tbody>
                             @{
-                                if (Model.CartItems.Count < 0)
+                                if (Model.CartItems.Count == 0)
                                 {
                                     <tr>
-                                        <td class="text-center" colspan="6">Hãy thêm sản phẩm của bạn nhé.</td>
+                                        <td class="text-center" colspan="12">
+                                            <a asp-controller="Product" asp-action="Index">Hãy thêm sản phẩm của bạn.</a>
+                                        </td>
                                     </tr>
                                 }
                                 else
@@ -175,8 +177,7 @@
                                      role="dialog"
                                      aria-modal="true"
                                      aria-labelledby="modalTitle">
-
-                                    @* @Html.Partial("_ModalPaymentPartial", Model) *@
+                                    
                                 </div>
                             </div>
                         </div>
@@ -187,9 +188,9 @@
     </div>
 </section>
 
- <script src="~/js/jquery-3.7.1.min.js" asp-append-version="true"></script>
- <script src="~/js/tom-select.complete.min.js" asp-append-version="true"></script>
-<script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>  
+<script src="~/js/jquery-3.7.1.min.js" asp-append-version="true"></script>
+<script src="~/js/tom-select.complete.min.js" asp-append-version="true"></script>
+<script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
 <script src="~/lib/bootstrap/js/bootstrap.bundle.js" asp-append-version="true"></script>
 <script type="module" src="~/js/js.js" asp-append-version="true"></script>
 

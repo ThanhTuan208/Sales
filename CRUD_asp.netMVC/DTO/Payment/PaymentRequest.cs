@@ -4,6 +4,6 @@ namespace CRUD_asp.netMVC.DTO.Payment
 {
     public class PaymentRequest
     {
-        public decimal Amount { get; set; }
+        public double Amount { get; set; }
     }
 }

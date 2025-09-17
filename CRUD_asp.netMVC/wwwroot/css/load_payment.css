@@ -1,0 +1,212 @@
+﻿/*hieu ung khi thanh toan thanh cong*/
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Inter", system-ui, Arial;
+    background: linear-gradient(135deg, #f0f4ff, #e2e8ff);
+    min-height: 100vh;
+    color: #111;
+}
+
+html,
+body {    
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Modal fixed (center then slide to top) */
+.payment-section {
+    opacity: 0;
+    position: fixed;
+    left: -120%; /* bắt đầu ngoài màn hình bên trái */
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 90%;
+    max-width: 900px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 48px 40px;
+    box-shadow: 0 20px 50px rgba(17, 24, 39, 0.12);
+    transition: all 1s cubic-bezier(0.2, 0.9, 0.2, 1);
+    animation: slideInFromLeft 2s ease forwards;
+    z-index: 1000;
+    margin-top: 50px;
+}
+
+    /* khi đẩy lên top */
+    .payment-section.at-top {
+        top: 24px;
+        transform: translateX(-50%);
+        width: 95%;
+        max-width: 1100px;
+        padding: 20px 24px;
+        border-radius: 10px;
+    }
+
+.success-icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #34c759, #28a745);
+    color: #fff;
+    font-size: 34px;
+}
+
+h1 {
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+p.lead {
+    color: #555;
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.order-details {
+    background: #f8fafc;
+    border: 1px solid #e6e9ef;
+    padding: 16px;
+    border-radius: 10px;
+    margin: 18px 0;
+}
+
+    .order-details p {
+        display: flex;
+        justify-content: space-between;
+        color: #444;
+        margin: 8px 0;
+        font-size: 15px;
+    }
+
+.btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 40px;
+    background: linear-gradient(135deg, #6e8efb, #5a78e0);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    margin-right: 10px
+}
+
+/* products area: hidden by default */
+.extra-content {
+    display: none; /* Ẩn ban đầu */
+    width: 95%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 20px 80px;
+    /* We'll set margin-top dynamically in JS so it always sits below modal */
+}
+
+    .extra-content h2 {
+        font-size: 22px;
+        margin-bottom: 18px;
+        text-align: center;
+    }
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.product-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 6px 18px rgba(11, 22, 45, 0.06);
+    text-align: center;
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+    .product-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(11, 22, 45, 0.09);
+    }
+
+    .product-card img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 8px;
+    }
+
+    .product-card h3 {
+        font-size: 15px;
+        margin-bottom: 6px;
+    }
+
+    .product-card p {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+@keyframes slideInFromLeft {
+    to {
+        left: 50%;
+        opacity: 1;
+    }
+}
+
+/* responsive tweaks */
+@media (max-width: 600px) {
+    .payment-section {
+        padding: 28px 18px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    .success-icon {
+        width: 72px;
+        height: 72px;
+        font-size: 22px;
+    }
+}
+/* --- thêm hiệu ứng xuất hiện cho modal --- */
+
+/* --- hiệu ứng sản phẩm khi hiện --- */
+.product-card {
+    opacity: 0;
+    transform: translateY(40px) scale(0.9);
+    animation: fadeUp 0.6s ease forwards;
+}
+
+    .product-card:nth-child(1) {
+        animation-delay: 0.5s;
+    }
+
+    .product-card:nth-child(2) {
+        animation-delay: 0.7s;
+    }
+
+    .product-card:nth-child(3) {
+        animation-delay: 0.5s;
+    }
+
+    .product-card:nth-child(4) {
+        animation-delay: 0.8s;
+    }
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/*hieu ung khi thanh toan thanh cong*/
+

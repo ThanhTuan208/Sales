@@ -4,7 +4,7 @@ namespace CRUD_asp.netMVC.Service.Payment
 {
     public class QrCodeService
     {
-        public string GenerateBankQrCode(string accountNo, decimal amount, string description, string accountName)
+        public string GenerateBankQrCode(string accountNo, double amount, string description, string accountName)
         {
             // Su dung vietQR 
             var bankBin = "970422"; // Mã bin MB Bank

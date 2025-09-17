@@ -2,7 +2,7 @@
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
 
-namespace CRUD_asp.netMVC.Models.ViewModels.Cart
+namespace CRUD_asp.netMVC.ViewModels.Cart
 {
     public class CartViewModel
     {

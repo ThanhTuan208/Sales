@@ -1,6 +1,6 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Product;
-using CRUD_asp.netMVC.Models.ViewModels.Product;
+using CRUD_asp.netMVC.ViewModels.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

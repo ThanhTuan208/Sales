@@ -51,7 +51,7 @@ $(document).ready(function () {
     });
 
 
-    $('.buy.bn54').on('click', function (e) {
+    $(document).off('click', '.buy.bn54').on('click', '.buy.bn54', function (e) {
         e.preventDefault(); // ngan button type submit
 
         let ids = [];
@@ -60,6 +60,7 @@ $(document).ready(function () {
         if (!IsGetArr.success || ids === null) {
             return;
         }
+        console.log(ids);
 
         $.ajax({
             url: "/Cart/ShowQrModalCart",
@@ -70,35 +71,25 @@ $(document).ready(function () {
             },
             traditional: true, // quan trọng để bind mảng
             success: function (response) {
+                $(".modal").html(response); // render vào modal Index
 
                 // Cap nhat gia tong
                 $(".modal-overlay").fadeIn(300);
                 $(".modal").addClass("active").fadeIn(300);
 
-                $(".modal").html(response); // render vào modal Index
                 updateQtyAfterCheck();
             },
-            error: function () {
-                alert("Lỗi load sản phẩm lên modal");
+            error: function (response) {
+                alert("Lỗi load sản phẩm lên modal: " + response.message || "khong xac dinh");
             }
         });
     });
-
-
 
     // Đóng modal khi click nút đóng / dung off, on de tranh luu tru connsole vao DOM
     $(document).off('click', '.btn-close').on('click', '.btn-close', function () {
         $(".modal").removeClass("active").fadeOut(200);
         $(".modal-overlay").fadeOut(200);
     });
-
-    //// Đóng modal khi click bên ngoài modal
-    //$(".modal-overlay").on("click", function (e) {
-    //    if ($(e.target).hasClass("modal-overlay")) {
-    //        $(".modal").removeClass("active").fadeOut(300);
-    //        $(this).fadeOut(300);
-    //    }
-    //});
 
     // Cap nhat brand
     $('#btnBrandEdit').on('click', function () {
@@ -147,7 +138,6 @@ $(document).ready(function () {
                 alert("Lỗi thương hiệu: " + response.message || "Khong xac dinh")
             }
         });
-
     });
 
     // Them thuong hieu cho brand
@@ -602,9 +592,10 @@ $(document).ready(function () {
 
     // Tang giam so luong trong gio hang (tranh bi luu lich su trang web khong nhu su dung method post)
     $('.quantity-btn').on('click', function () {
-        const itemID = $(this).data('id');
-        let operation = $(this).data('opera');
-        let quantityInput = $(this).siblings('.quantity-input');
+        var $btn = $(this);
+        const itemID = $btn.data('id');
+        let operation = $btn.data('opera');
+        let quantityInput = $btn.siblings('.quantity-input');
         let CurrentQty = parseInt(quantityInput.val());
         let NewQty = operation === '+' ? CurrentQty + 1 : CurrentQty - 1;
 
@@ -612,9 +603,6 @@ $(document).ready(function () {
             NewQty = 1;
         }
 
-        /*gan bien cho $(this) ben ngoai ajax vi ko con la pham tu DOM($('.quantity-btn') <=> $(this)) ma chuyen sang thanh ngu canh khac*/
-        /*day la this cu truoc khi truyen vao ajax, neu su dung trong ajax thi no la 1 this khac nen ko gan truc tiep se lam thay doi du lieu this truoc va sau no*/
-        var $btn = $(this);
         $.ajax({
             url: 'Cart/UpdateToCart',
             type: 'POST',
@@ -635,7 +623,7 @@ $(document).ready(function () {
                     updateQtyAfterCheck();
                 }
                 else {
-                    alert('Cập nhật số lượng không thành công.' + response.message);
+                    //alert('Cập nhật số lượng không thành công.' + response.message);
                 }
             },
             error: function (response) {
@@ -763,7 +751,7 @@ $(document).ready(function () {
         });
     });
 
-    $('.checkbox').on('click', function () {
+    $(document).off('click', '.checkbox').on('click', '.checkbox', function () {
 
         if ($(this).hasClass('active')) {
 
@@ -777,7 +765,7 @@ $(document).ready(function () {
     });
 
     // Tinh phan thanh toan san pham da chon (Cart/index)
-    $('.buy').on('click', function () {
+    $(document).off('click', '.buy').on('click', '.buy', function () {
         const btn = $(this);
         let priceTotal = parseFloat(btn.closest('.payment').find('.price-complete').text().replace(/[^0-9]/g, ''));
 
@@ -927,8 +915,11 @@ export function updateQtyAfterCheck() {
     //if (total > 50000000) {
     //    vat = total * 0.005;
     //}
+    if (total > 1000000) {
+        ship = 0;
+    }
     totalVAT += total + ship + vat;
-
+    console.log(totalVAT);
     $('.countItem').text(`x ` + countItem);
     $('.price-provisional').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total));
     $('.price-ship').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(ship));

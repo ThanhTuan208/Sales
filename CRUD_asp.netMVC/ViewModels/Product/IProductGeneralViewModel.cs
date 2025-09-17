@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace CRUD_asp.netMVC.Models.ViewModels.Product
+namespace CRUD_asp.netMVC.ViewModels.Product
 {
     public interface IProductGeneralViewModel
     {

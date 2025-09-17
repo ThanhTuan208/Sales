@@ -1,16 +1,19 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Payment;
+using CRUD_asp.netMVC.HubRealTime;
+using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Service.Payment;
+using CRUD_asp.netMVC.ViewModels.Order;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using Microsoft.EntityFrameworkCore.Storage;
-using NuGet.Protocol;
+using Microsoft.Extensions.Http.Logging;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -28,48 +31,86 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpPost] // Nhan sms tu dien thoai
-        public async Task<IActionResult> SmsReceive([FromBody] SmsMessage sms)
+        public async Task<IActionResult> SmsReceive([FromBody] SmsMessage sms, [FromServices] IHubContext<PaymentHub> hub)
         {
             try
             {
-                var NDMessage = sms.Message.Split("ND:")[1].Trim(); 
-                var transactionCode = NDMessage.Split('-')[1]; // lay ma giao dich
+                var NDMessage = sms.Message.Split("ND:")[1].Trim();
+                var transactionCode = NDMessage.Split('-')[1];
 
-                if (transactionCode.Contains("ORD"))
+                if (!transactionCode.Contains("ORD")) return BadRequest();
+
+                // lay ma giao dich
+                var formartTransaction = transactionCode.Split("ORD")[1];
+
+                var order = await _dbContext.Orders
+                    .AsNoTracking()
+                    .Include(p => p.OrderDetail)
+                    .FirstOrDefaultAsync(p => p.TransactionId == formartTransaction);
+
+                if (order == null) return NotFound();
+
+                var payment = new Payment()
                 {
-                    var formartTransaction = transactionCode.Split("ORD")[1];
+                    OrderID = order.ID,
+                    paidAmount = order.Amount,
+                    PaymentDate = DateTime.Now,
+                    paymentMethod = order.PaymentMethod
+                };
 
-                    var order = await _dbContext.Orders.FirstOrDefaultAsync(p => p.TransactionId == formartTransaction);
+                order.Payment = payment;
+                order.Status = "Paid"; // cap nhat lai trang thai sau khi chuyen khoan thanh cong
+                order.PaidAt = DateTime.Now;
 
-                    if (order == null) return NotFound();
+                var cart = await _dbContext.Carts.FirstOrDefaultAsync(p => p.ProductID == order.OrderDetail.FirstOrDefault().ProductID);
 
-                    var payment = new Payment()
-                    {
-                        OrderID = order.ID,
-                        paidAmount = (double)order.Amount,
-                        PaymentDate = DateTime.Now,
-                        paymentMethod = order.PaymentMethod
-                    };
-
-                    order.Payment = payment;
-                    order.Status = "Paid"; // cap nhat lai trang thai sau khi chuyen khoan thanh cong
-                    order.PaidAt = DateTime.Now; 
-
-                    _dbContext.Orders.Update(order);
-
-                    await _dbContext.SaveChangesAsync();
-
+                if (cart != null)
+                {
+                    _dbContext.Carts.Remove(cart);
                 }
-                return Ok();
 
+                _dbContext.Orders.Update(order);
+
+                await _dbContext.SaveChangesAsync();
+
+                // phat real time sau khi cap nhat db
+                await hub.Clients.All.SendAsync("ReceivePaymentStatus", order.ID, formartTransaction);
+
+                return Json(new { sucess = true, message = "Thanh toán thành công." });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                return Json(new { sucess = false, message = "Thanh toán thất bại: " + ex.Message });
             }
         }
 
+        [HttpGet] // Goi trang thanh toan thanh cong
+        public async Task<IActionResult> PaymentSuccess(string orderID, string transactionCode)
+        {
+            if (string.IsNullOrEmpty(orderID) || string.IsNullOrEmpty(transactionCode))
+            {
+                return BadRequest();
+            }
+
+            var order = await _dbContext.Orders
+                .AsNoTracking()
+                .Include(p => p.OrderDetail).ThenInclude(p => p.Product)
+                .FirstOrDefaultAsync(p => p.ID == orderID && p.TransactionId == transactionCode && p.Status == "Paid");
+
+            var cateID = await _dbContext.OrderDetail.Where(p => p.OrderID == order.ID).Select(p => p.Product.CateID).FirstOrDefaultAsync();
+
+            var product = await _dbContext.Products.Where(p => p.CateID == cateID).Take(4).ToListAsync();
+    
+            var viewModel = new GeneralOrderViewModel()
+            {
+                Product = product,
+                Order = order
+            };
+
+            if (viewModel == null) return BadRequest();
+
+            return View(viewModel);
+        }
 
         [HttpPost, ValidateAntiForgeryToken] // Tao phuong thuc thanh toan luu vao db Order
         public async Task<IActionResult> CreatePayment([FromBody] PaymentRequest request)
@@ -100,28 +141,6 @@ namespace CRUD_asp.netMVC.Controllers
 
             }
         }
-
-        //[HttpGet] // Hien thi QR len giao dien qua truy van orderID
-        //public async Task<IActionResult> ShowQRCode(string orderID)
-        //{
-        //    var order = await _dbContext.Orders.FindAsync(orderID);
-        //    if (order == null) return NotFound();
-
-        //    string bankAccount = "0001335756540";
-        //    // goi method generator QR ben class QrCodeService
-        //    var qrUrl = _qrCodeService.GenerateBankQrCode(orderID, order.Amount, bankAccount);
-
-        //    var model = new QrPaymentViewModel()
-        //    {
-        //        OrderId = orderID,
-        //        Amount = order.Amount,
-        //        QrCodeUrl = qrUrl,
-        //        BankAccount = bankAccount,
-        //        PollingUrl = Url.Action("CheckPaymentStatus", "Payment", new { orderId = orderID }, Request.Scheme)
-        //    };
-
-        //    return View(model);
-        //}
 
         [HttpGet("check-status/{orderId}")] // kiem tra 
         public async Task<IActionResult> CheckPaymentStatus(string orderId)

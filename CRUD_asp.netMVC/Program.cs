@@ -1,6 +1,7 @@
 ﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.HubRealTime;
 using CRUD_asp.netMVC.Models.Auth;
-using CRUD_asp.netMVC.Models.ViewModels.Product;
+using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Service.EmailSender;
 using CRUD_asp.netMVC.Service.Payment;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +20,7 @@ namespace CRUD_asp.netMVC
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+            builder.Services.AddSignalR(); // Cau hinh SignalR real time
 
             // Dky AppDBContext 
             builder.Services.AddDbContext<AppDBContext>(option =>
@@ -67,6 +69,9 @@ namespace CRUD_asp.netMVC
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
             var app = builder.Build();
+
+            // Cau hinh endpoint hub
+            app.MapHub<PaymentHub>("/paymentHub");
 
             if (!app.Environment.IsDevelopment())
             {

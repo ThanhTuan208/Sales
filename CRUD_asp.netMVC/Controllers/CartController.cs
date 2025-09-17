@@ -3,8 +3,8 @@ using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
-using CRUD_asp.netMVC.Models.ViewModels.Cart;
 using CRUD_asp.netMVC.Service.Payment;
+using CRUD_asp.netMVC.ViewModels.Cart;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -140,6 +140,8 @@ namespace CRUD_asp.netMVC.Controllers
             {
                 var viewModel = await GeneralIndex(arrID);
 
+                if (PaymentMethod == null) return PartialView("_ModalPaymentPartialLeft", viewModel);
+
                 if (viewModel.CartItemByIDs.Count > 0)
                 {
                     var selectList = viewModel.CartItemByIDs.Where(p => arrID.Contains(p.ID.ToString())).ToList();
@@ -157,12 +159,25 @@ namespace CRUD_asp.netMVC.Controllers
                             ID = timeID,
                             UserID = userID,
                             AddressID = address.ID,
-                            Amount = (decimal)totalList,
+                            Amount = totalList > 1000000 ? totalList : totalList + 30000,
                             Status = "Pending",
                             PaymentMethod = PaymentMethod ?? string.Empty,
                             OrderDate = DateTime.Now,
                             TransactionId = Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper()
                         };
+
+                        selectList.ForEach(async p =>
+                        {
+                            var orderDetail = new OrderDetail()
+                            {
+                                OrderID = order.ID,
+                                ProductID = p.ProductID,
+                                Quantity = p.Quantity,
+                                Price = p.Product.NewPrice
+                            };
+
+                            await context.OrderDetail.AddAsync(orderDetail);
+                        });
 
                         await context.Orders.AddAsync(order);
                         await context.SaveChangesAsync();
@@ -182,7 +197,6 @@ namespace CRUD_asp.netMVC.Controllers
                             Amount = order.Amount,
                             QrCodeUrl = qrUrl,
                             BankAccount = bankAcc,
-                            //PollingUrl = Url.Action("CheckPaymentStatus", "Payment", new { orderId = order.ID }, Request.Scheme)
                         };
 
                         viewModel.QrPayment = qrPaymentModel;
@@ -194,12 +208,12 @@ namespace CRUD_asp.netMVC.Controllers
                 }
                 else
                 {
-                    return View(viewModel);
+                    return PartialView("_ModalPaymentPartial", viewModel);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return PartialView("_ModalPaymentPartial", new CartViewModel());
+                return Json(new { success = false, message = ex.Message });
             }
         }
 
@@ -217,15 +231,15 @@ namespace CRUD_asp.netMVC.Controllers
 
                 if (color == null && size == null)
                 {
-                    return Json(new { success = false, authenticated = 1, message = "Vui lòng chọn phân loại sản phẩm", productID = productID, });
+                    return Json(new { success = false, authenticated = 1, message = "Vui lòng chọn phân loại sản phẩm", productID = productID });
                 }
                 else if (color == null)
                 {
-                    return Json(new { success = false, authenticated = 1, message = "Bạn cần chọn màu của sản phẩm", productID = productID, });
+                    return Json(new { success = false, authenticated = 1, message = "Bạn cần chọn màu của sản phẩm", productID = productID });
                 }
                 else if (size == null)
                 {
-                    return Json(new { success = false, authenticated = 1, message = "Bạn cần chọn kích thước của sản phẩm", productID = productID, });
+                    return Json(new { success = false, authenticated = 1, message = "Bạn cần chọn kích thước của sản phẩm", productID = productID });
                 }
                 else
                 {

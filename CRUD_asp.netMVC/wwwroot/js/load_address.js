@@ -4,6 +4,102 @@ $(document).ready(function () {
 
     LoadView();
 
+    // Goi alert realtime khi thanh toan thanh cong //
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/paymentHub")
+        .build();
+
+    connection.start()
+        .catch(err => console.error(err));
+
+    connection.on("ReceivePaymentStatus", (orderId, transactionCode) => {
+        const overlay = $("#overlayStatus");
+        const spinner = overlay.find(".spinner");
+        const successIcon = overlay.find(".success-icon");
+        const successText = overlay.find(".success-text");
+
+        overlay.show();   // bật overlay phủ hết màn hình
+        spinner.show();
+        successIcon.hide();
+        successText.hide();
+
+        setTimeout(() => {
+            spinner.fadeOut(300, function () {
+                successIcon.fadeIn(300);
+                successText.fadeIn(300);
+            });
+
+            // Ẩn modal và overlay sau 3s
+            setTimeout(() => {
+
+                overlay.fadeOut();
+                $(".modal-overlay").fadeOut(200);
+                $(".modal").removeClass("active").fadeOut(200);
+
+                window.location.replace(`/Payment/PaymentSuccess?orderID=${encodeURIComponent(orderId)}&transactionCode=${encodeURIComponent(transactionCode)}`);
+            }, 3000);
+
+        }, 2000);
+    });
+
+
+    // Xu ly chuc nang, giao dien trang thai thanh toan //
+    const $modal = $("#paymentSection");
+    const $extra = $("#extraContent");
+    const $order = $("#orderDetails");
+
+    function showProductsUnderModal() {
+        // add class to slide modal up
+        $modal.addClass("at-top");
+
+        setTimeout(() => {
+            const modalHeight = $modal.outerHeight(true); // include margin/padding
+            $extra.css("margin-top", modalHeight + 20 + "px");
+
+            // reveal extra content with slideDown-like animation
+            $extra.attr("aria-hidden", "false").hide().slideDown(450);
+            $("html,body").animate({ scrollTop: 0 }, 450);
+        }, 250); // 250ms after class add (tunable)
+    }
+
+    setTimeout(showProductsUnderModal, 1500);
+
+    $modal.on("click", function (e) {
+        if ($(e.target).closest("a,button").length) return;
+        if (!$modal.hasClass("at-top")) showProductsUnderModal();
+    });
+
+    // Recompute margin-top on window resize if products visible
+    $(window).on("resize", function () {
+        if ($modal.hasClass("at-top") && $extra.is(":visible")) {
+            const modalHeight = $modal.outerHeight(true);
+            $extra.css("margin-top", modalHeight + 20 + "px");
+        }
+    });
+
+    $modal.on(
+        "transitionend webkitTransitionEnd oTransitionEnd",
+        function (e) {
+            if ($modal.hasClass("at-top")) {
+                // optionally hide the order details box to keep the header compact:
+                // $order.slideUp(220);
+                // or keep visible — comment/uncomment above
+            }
+        }
+    );
+
+    // Button demo (you'd replace with real links)
+    $("#btnHome").on("click", function (e) {
+        e.preventDefault();
+        // navigate home
+
+        window.history.replaceState(null, "", "/Home/Index");
+        location.href = '/Home/Index';
+        // alert("Redirect to homepage (demo)");
+    });
+
+
+    // Xoa dia chi //
     $(document).off('click', '.deleteAddress').on('click', '.deleteAddress', function () {
 
         const id = $('#id').val();
@@ -37,7 +133,7 @@ $(document).ready(function () {
         });
     });
 
-    // Hien thi cap nhat dia chi
+    // Hien thi cap nhat dia chi //
     $(document).off('click', '.edit-address-exists').on('click', '.edit-address-exists', function () {
 
         $(".address-container").fadeOut(300);  // an form d/s dia chi
@@ -104,7 +200,6 @@ $(document).ready(function () {
 
                 $("#isDefaultAddress").prop('checked', isDefault); // Cập nhật checkbox
 
-                //$("#ward").val(ward);
             },
             error: function () {
                 alert("Lỗi không hiển thị !");
@@ -112,14 +207,14 @@ $(document).ready(function () {
         });
     });
 
-    // Loc ky tu nhap so
+    // Loc ky tu nhap so //
     $(document).on('input paste', '#phonenumber', () => {
         const $input = $(this);
         let value = $input.val().replace(/[^0-9]/g, ''); // Giu lai so
         $input.val(value);
     });
 
-    // Them, cap nhat dia chi cho user (chung button click)
+    // Them, cap nhat dia chi cho user (chung button click) //
     $(document).on('click', '.updateAddress', function () {
         // Xóa các lỗi cũ
         $('.form-control, .ts-wrapper').removeClass('error');
@@ -201,7 +296,7 @@ $(document).ready(function () {
         });
     });
 
-    // Xóa viền đỏ khi người dùng chỉnh sửa hoặc chọn giá trị mới
+    // Xóa viền đỏ khi người dùng chỉnh sửa hoặc chọn giá trị mới //
     $(document).on('change input', '#province, #ward, .form-control', function () {
         const $element = $(this);
         let $wrapper;
@@ -215,9 +310,9 @@ $(document).ready(function () {
             $wrapper.next('.error-message').remove();
         }
     });
-    // Them dia chi cho user
 
-    // Hien thi them address
+
+    // Hien thi them address //
     $(document).off('click', '.add-card-content').on('click', '.add-card-content', function () {
 
         $(".address-container").fadeOut(300);  // an form d/s dia chi
@@ -255,18 +350,13 @@ $(document).ready(function () {
         });
     });
 
-    // Su kien dong list address
-    //$(document).on('click', '.btn-close-address, .returnAddress', function () {
-    $(document).on('click', '.btn-close-address', function () {
 
-        //$(".address-form").fadeOut(300);  // an form dia chi
-        //const qrCode = $(".qrCodeString").val();
-        //console.log(qrCode);
+    // Su kien dong list address //
+    $(document).on('click', '.btn-close-address', function () {
 
         let ids = [];
         let ArrChecked = GetArrIDChecked(ids);
         if (!ArrChecked) {
-            console.log("false. ");
             return;
         }
 
@@ -276,7 +366,7 @@ $(document).ready(function () {
             data: { arrID: ids },
             traditional: true, // bind mảng
             success: function (response) {
-                $(".modal").html(response); // render vào modal
+                $(".modal-left").html(response); // render vào modal
                 updateQtyAfterCheck();
             },
 
@@ -440,4 +530,58 @@ function LoadDataAddress(provinceName, wardName, callback) {
                 : streetValue || "Địa chỉ sẽ hiển thị ở đây"
         );
     }
+
+    $(function () {
+        const $modal = $("#paymentSection");
+        const $extra = $("#extraContent");
+        const $order = $("#orderDetails");
+
+        function showProductsUnderModal() {
+            // add class to slide modal up
+            $modal.addClass("at-top");
+
+            setTimeout(() => {
+                const modalHeight = $modal.outerHeight(true); // include margin/padding
+                $extra.css("margin-top", modalHeight + 20 + "px");
+
+                // reveal extra content with slideDown-like animation
+                $extra.attr("aria-hidden", "false").hide().slideDown(450);
+                $("html,body").animate({ scrollTop: 0 }, 450);
+            }, 250); // 250ms after class add (tunable)
+        }
+
+        setTimeout(showProductsUnderModal, 1500);
+
+        $modal.on("click", function (e) {
+            if ($(e.target).closest("a,button").length) return;
+            if (!$modal.hasClass("at-top")) showProductsUnderModal();
+        });
+
+        // Recompute margin-top on window resize if products visible
+        $(window).on("resize", function () {
+            if ($modal.hasClass("at-top") && $extra.is(":visible")) {
+                const modalHeight = $modal.outerHeight(true);
+                $extra.css("margin-top", modalHeight + 20 + "px");
+            }
+        });
+
+        $modal.on(
+            "transitionend webkitTransitionEnd oTransitionEnd",
+            function (e) {
+                if ($modal.hasClass("at-top")) {
+                    // optionally hide the order details box to keep the header compact:
+                    // $order.slideUp(220);
+                    // or keep visible — comment/uncomment above
+                }
+            }
+        );
+
+        // Button demo (you'd replace with real links)
+        $("#btnHome").on("click", function (e) {
+            e.preventDefault();
+            // navigate home
+            // location.href = '/';
+            alert("Redirect to homepage (demo)");
+        });
+    });
 }

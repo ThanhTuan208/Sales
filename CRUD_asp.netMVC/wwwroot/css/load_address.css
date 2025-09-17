@@ -1,24 +1,111 @@
-﻿/*hieu ung css cho checked default add-address-form*/
-.add-address-card {
-    margin-top: 16px;
+﻿/*Hieu ung load khi thanh toan*/
+/* overlay status phủ toàn màn hình */
+.overlay-status {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7); /* bóng tối */
     display: flex;
     justify-content: center;
+    align-items: center;
+    z-index: 2000; /* cao hơn modal */
 }
 
-.add-card-content {
-    width: 180px;
-    height: 80px;
-    border: 2px dashed #6a11cb;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: #fafafa;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top: 6px solid #4CAF50; /* màu xanh lá */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
 }
+
+/* Icon thành công */
+.success-icon {
+    font-size: 3rem; /* kích thước icon */
+    color: #4CAF50; /* màu xanh lá */
+    display: none; /* ẩn khi chưa cần */
+    text-align: center;
+    /* Thêm border khung */
+    border: 3px solid #4CAF50; /* viền màu xanh */
+    border-radius: 50%; /* bo tròn khung */
+    width: 80px; /* chiều rộng */
+    height: 80px; /* chiều cao */
+    line-height: 80px; /* canh icon giữa theo chiều dọc */
+
+    margin: 20px auto; /* căn giữa */
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.5); /* đổ bóng */
+}
+/* Text thành công */
+.success-text {
+    display: none;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* Animation quay */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Animation nhảy icon */
+@keyframes pop {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Animation text */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+    /*Hieu ung load khi thanh toan*/
+
+    .add-address-card {
+        margin-top: 16px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .add-card-content {
+        width: 180px;
+        height: 80px;
+        border: 2px dashed #6a11cb;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #fafafa;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+    }
 
     .add-card-content:hover {
         background: linear-gradient(135deg, #6a11cb22, #2575fc22);
@@ -26,39 +113,37 @@
         box-shadow: 0 6px 12px rgba(0,0,0,0.1);
     }
 
-.plus-icon {
-    font-size: 32px;
-    font-weight: bold;
-    color: #6a11cb;
-    margin-bottom: 1px;
-}
+    .plus-icon {
+        font-size: 32px;
+        font-weight: bold;
+        color: #6a11cb;
+        margin-bottom: 1px;
+    }
 
-.add-text {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 4px;
-}
-/*hieu ung css cho checked default add-address-form*/
-
-/*Giao dien cho list address*/
-.address-container {
-    width: 100%;
-    max-width: 800px;
-    background: #fff;
-    padding: 15px;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1); /* giữ shadow mạnh hơn */
-    margin: auto;
-    width: 95%;
-    /* Hiệu ứng animation */
-    transform: translateY(-30px);
-    opacity: 0;
-    transition: all 0.4s ease;
-    animation: fadeInScale 0.4s ease forwards;
-}
-
-/* Animation scale + fade-in */
+    .add-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 4px;
+    }
+    /*hieu ung css cho checked default add-address-form*/
+    /*Giao dien cho list address*/
+    .address-container {
+        width: 100%;
+        max-width: 800px;
+        background: #fff;
+        padding: 15px;
+        border-radius: 16px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1); /* giữ shadow mạnh hơn */
+        margin: auto;
+        width: 95%;
+        /* Hiệu ứng animation */
+        transform: translateY(-30px);
+        opacity: 0;
+        transition: all 0.4s ease;
+        animation: fadeInScale 0.4s ease forwards;
+    }
+    /* Animation scale + fade-in */
 @keyframes fadeInScale {
     from {
         opacity: 0;
@@ -110,7 +195,7 @@
     .address-container .address-table th, td {
         text-align: center;
         font-size: 14px;
-/*        font-weight: 600;*/
+        /*        font-weight: 600;*/
         padding: 10px 14px;
     }
 
@@ -260,7 +345,7 @@
         box-shadow: 0 0 8px rgba(94, 82, 255, 0.2);
     }
 
-    /*Noi vien bao*/ 
+    /*Noi vien bao*/
     .form-control.error,
     .ts-wrapper.error .ts-control {
         border-color: #ff4d4f !important;
@@ -275,6 +360,7 @@
     margin-top: 4px;
     display: block;
 }
+
 textarea {
     resize: vertical;
     min-height: 60px;
