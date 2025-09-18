@@ -1,0 +1,86 @@
+﻿@using CRUD_asp.netMVC.ViewModels.Home
+@using System.Globalization
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    var user = Model.User;
+}
+
+<div class="profile-wrapper">
+    <div class="profile-container">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="#">Thông Báo</a></li>
+                    <li><a href="#">Tài Khoản Của Tôi</a></li>
+                    <li><a href="#">Hồ Sơ</a></li>
+                    <li><a href="#">Địa Chỉ</a></li>
+                    <li><a href="#">Đổi Mật Khẩu</a></li>
+                    <li><a href="#">Nhật Ký</a></li>
+                    <li><a href="#">Thông Tin Cá Nhân</a></li>
+                    <li><a href="#">Kho Voucher</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+
+        <main class="profile-content">
+            <h2 style="font-weight: 600">Hồ Sơ Của Tôi</h2>
+
+            <div class="profile-main">
+                <!-- Form -->
+                <section>
+                    <form class="profile-form">
+                        @* <div class="form-group">
+                            <label>Tên đăng nhập:</label>
+                            <input type="text" id="userName" value="" readonly />
+                        </div> *@
+                        <div class="form-group">
+                            <label>Tên người dùng:</label>
+                            <input type="text" id="username" value="@user.UserName" />
+                        </div>
+                        <div class="form-group">
+                            <div class="d-flex gap-2">
+                                <label>Email:</label>
+                                <a href="">Thay đổi</a>
+                            </div>
+                            <input type="email" value="@user.Email" readonly />
+                        </div>
+                        <div class="form-group">
+                            <div class="d-flex gap-2">
+                                <label>Số điện thoại:</label>
+                                <a href="">Thay đổi</a>
+                            </div>
+                            <input type="text" id="phone" value="@user.PhoneNumber" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label>Ngày sinh:</label>
+                            <input type="date" value="@user.DateOfBirth" />
+                        </div>
+                        <div class="form-group gender-group">
+                            <label>Giới tính:</label>
+                            <input type="radio" name="gender" value="Nữ" /> Nữ
+                            <input type="radio" name="gender" value="Nam" /> Nam
+                        </div>
+                        <button type="submit" class="btn-save">Lưu</button>
+                    </form>
+                </section>
+
+                <!-- Avatar -->
+                <section class="avatar-section">
+                    <img id="avatarPreview" src="" alt="" />
+                    <input type="file"
+                           id="avatarInput"
+                           accept="image/*"
+                           style="display: none" />
+
+                    <!-- nút chọn ảnh -->
+                    <button type="button" class="btn-select-image">
+                        Chọn Ảnh
+                    </button>
+                </section>
+            </div>
+        </main>
+    </div>
+</div>

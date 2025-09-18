@@ -1,4 +1,5 @@
-﻿using CRUD_asp.netMVC.Data;
+﻿using AspNetCoreGeneratedDocument;
+using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.ViewModels.Home;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +12,12 @@ namespace CRUD_asp.netMVC.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly AppDBContext context;
+        private readonly AppDBContext _dbContext;
         //private readonly IDbContextFactory<AppDBContext> dbContextFactory;
 
         public ProductController(AppDBContext _context)
         {
-            context = _context;
+            _dbContext = _context;
             //dbContextFactory = _dbContextFactory;
         }
 
@@ -65,7 +66,7 @@ namespace CRUD_asp.netMVC.Controllers
                     return RedirectToAction("Index", "Product");
                 }
 
-                IQueryable<Products> products = context.Products.AsNoTracking()
+                IQueryable<Products> products = _dbContext.Products.AsNoTracking()
                   .Include(p => p.Brands)
                   .Include(p => p.Cate)
                   .Where(p => p.NormalizedName.ToLower().Contains(keywordDiacritics) ||
@@ -114,7 +115,7 @@ namespace CRUD_asp.netMVC.Controllers
         /// Hien thi danh sach phan trang san pham va phan trang thuong hieu
         public async Task<IActionResult> Index(int productPage = 1)
         {
-            IQueryable<Products> products = context.Products.AsNoTracking()
+            IQueryable<Products> products = _dbContext.Products.AsNoTracking()
                 .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)
@@ -139,7 +140,7 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> getProductByBrand(int brandID, int productPage = 1)
         {
-            var brands = await context.Brand.AsNoTracking().FirstOrDefaultAsync(p => p.ID == brandID);
+            var brands = await _dbContext.Brand.AsNoTracking().FirstOrDefaultAsync(p => p.ID == brandID);
 
             ViewData["brandID"] = brandID;
             ViewData["image"] = brands.PicturePath;
@@ -149,7 +150,7 @@ namespace CRUD_asp.netMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            IQueryable<Products> getPagProductByBrand = context.Products.AsNoTracking()
+            IQueryable<Products> getPagProductByBrand = _dbContext.Products.AsNoTracking()
                 .Where(p => p.Brands == brands)
                 .Include(p => p.Brands);
 
@@ -173,9 +174,9 @@ namespace CRUD_asp.netMVC.Controllers
         /// <param name="productPage"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> getProductByCate(int CateID = 1, int productPage = 1)
+        public async Task<IActionResult> getProductByCate(int CateID = 1, int productPage = 1, bool featured = false)
         {
-            var cateID = await context.Category.AsNoTracking().FirstOrDefaultAsync(p => p.ID == CateID);
+            var cateID = await _dbContext.Category.AsNoTracking().FirstOrDefaultAsync(p => p.ID == CateID);
 
             ViewData["cateID"] = CateID;
 
@@ -184,15 +185,29 @@ namespace CRUD_asp.netMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            IQueryable<Products> getPagProductByCate = context.Products.AsNoTracking()
-                .Where(p => p.CateID == CateID)
-                .Include(p => p.Cate);
+            bool isFeatured = true;
+            IQueryable<Products> getPagProductByCate;
+            if (!featured)
+            {
+                getPagProductByCate = _dbContext.Products.AsNoTracking()
+                   .Include(p => p.Cate)
+                   .Where(p => p.CateID == CateID);
+
+                isFeatured = false;
+            }
+            else
+            {
+                getPagProductByCate = _dbContext.Products.AsNoTracking()
+                   .Include(p => p.Cate)
+                   .Where(p => p.CateID == CateID && p.FeaturedID == 1);
+            }
 
             var productCount = await getPagProductByCate.CountAsync();
             ViewBag.ProductCount = productCount;
 
             // Pagination truyen tham so cho product, brand, category, cart
             var ViewModel = await CreatePaginationGeneral(getPagProductByCate, productPage, 6);
+            ViewModel.IsFeatured = isFeatured;
 
             return View(ViewModel);
         }
@@ -207,9 +222,9 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> getProductByCate_Brand(int brandID = 1, int CateID = 1, int productPage = 1)
         {
-            var cates = await context.Category.AsNoTracking().FirstOrDefaultAsync(p => p.ID == CateID);
-            var brands = await context.Brand.AsNoTracking().FirstOrDefaultAsync(p => p.ID == brandID);
-            var cart = await context.Carts.AsNoTracking().ToListAsync();
+            var cates = await _dbContext.Category.AsNoTracking().FirstOrDefaultAsync(p => p.ID == CateID);
+            var brands = await _dbContext.Brand.AsNoTracking().FirstOrDefaultAsync(p => p.ID == brandID);
+            var cart = await _dbContext.Carts.AsNoTracking().ToListAsync();
 
             ViewData["cateID"] = CateID;
             ViewData["brandID"] = brandID;
@@ -220,7 +235,7 @@ namespace CRUD_asp.netMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            IQueryable<Products> getPagProductByCate_Brand = context.Products.AsNoTracking()
+            IQueryable<Products> getPagProductByCate_Brand = _dbContext.Products.AsNoTracking()
                 .Where(p => p.CateID == CateID && p.BrandID == brandID)
                 .Include(p => p.Cate)
                 .Include(p => p.Brands);
@@ -242,7 +257,7 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> ProductDetail(int id)
         {
-            var product = await context.Products.AsNoTracking()
+            var product = await _dbContext.Products.AsNoTracking()
                 .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)
@@ -255,12 +270,12 @@ namespace CRUD_asp.netMVC.Controllers
                 .Include(p => p.ProductTags).ThenInclude(p => p.Tag)
                 .FirstOrDefaultAsync(p => p.ID == id);
 
-            var brandList = await context.Brand.AsNoTracking().ToListAsync();
+            var brandList = await _dbContext.Brand.AsNoTracking().ToListAsync();
 
-            var cateList = await context.Category.AsNoTracking().ToListAsync();
+            var cateList = await _dbContext.Category.AsNoTracking().ToListAsync();
 
             var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
-            var carts = await context.Carts.Where(p => p.UserID == userID).ToListAsync();
+            var carts = await _dbContext.Carts.Where(p => p.UserID == userID).ToListAsync();
 
             ViewData["cart"] = carts.Count;
 
@@ -275,6 +290,27 @@ namespace CRUD_asp.netMVC.Controllers
             return ViewModel != null ? View(ViewModel) : NotFound();
         }
 
+        [HttpGet] // Hien thi danh sach san pham noi bat
+        public async Task<IActionResult> ProductFeatured(int productPage = 1)
+        {
+            IQueryable<Products> products = _dbContext.Products.AsNoTracking()
+                  .Include(p => p.Brands)
+                  .Include(p => p.Cate)
+                  .Include(p => p.Gender)
+                  .Include(p => p.ProductImages)
+                  .Where(p => p.FeaturedID == 1);
+
+            var productCount = await products.CountAsync();
+            ViewBag.ProductCount = productCount;
+
+            var pagProduct = await PaginatedList<Products>.CreatePagAsync(products, productPage, 16);
+
+            // Pagination truyen tham so cho product, brand, category, cart
+            var ViewModel = await CreatePaginationGeneral(products, productPage, 12);
+
+            return View("ProductFeatureList", ViewModel);
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="Iqueryable"></param>
@@ -285,11 +321,11 @@ namespace CRUD_asp.netMVC.Controllers
         public async Task<getPaginationByProductViewModel> CreatePaginationGeneral(IQueryable<Products> Iqueryable, int pageCurrent, int pageCount)
         {
             var product = await PaginatedList<Products>.CreatePagAsync(Iqueryable, pageCurrent, pageCount);
-            var brands = await PaginatedList<Brand>.CreatePagAsync(context.Brand.AsNoTracking(), 1, context.Brand.AsNoTracking().Count());
-            var cates = await PaginatedList<Category>.CreatePagAsync(context.Category.AsNoTracking(), 1, context.Category.AsNoTracking().Count());
+            var brands = await PaginatedList<Brand>.CreatePagAsync(_dbContext.Brand.AsNoTracking(), 1, _dbContext.Brand.AsNoTracking().Count());
+            var cates = await PaginatedList<Category>.CreatePagAsync(_dbContext.Category.AsNoTracking(), 1, _dbContext.Category.AsNoTracking().Count());
 
             var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
-            var carts = await context.Carts.Where(p => p.UserID == userID).ToListAsync();
+            var carts = await _dbContext.Carts.Where(p => p.UserID == userID).ToListAsync();
             ViewData["cart"] = carts.Count;
 
             return new getPaginationByProductViewModel

@@ -21,12 +21,15 @@ namespace CRUD_asp.netMVC.Models.Auth
         public string? ProfileImage { get; set; }
         public DateTime StartDate { get; set; }
 
+        public DateTime DateOfBirth { get; set; }
+
+        public string Gender { get; set; }
+
         public int RoleID { get; set; }
         public Roles? Roles { get; set; }
 
         public Manager? Manager { get; set; }
         public Customer? Customer { get; set; }
-        //public Staff? Staff { get; set; }
 
         public List<Address>? Addresses { get; set; }
         public List<AddToCart>? Carts { get; set; }

@@ -28,7 +28,7 @@
 @Html.AntiForgeryToken()
 
 <div id="fh5co-product">
-    <div class="container animate-box">
+    <div class="container">
         <div class="row">
             @* updated *@
             <div class="col-md-5">
@@ -38,7 +38,7 @@
                         <div class="item">
                             <div class="active text-center">
                                 <figure>
-                                    <img src="@Url.Content($"~/images/products/{item.PathNameImage}")" alt="user" style="object-fit: cover" class="img-fluid p-3" />
+                                    <img src="@Url.Content($"~/images/products/{item.PathNameImage}")" loading="lazy" alt="user" style="object-fit: cover" class="img-fluid p-3" />
                                 </figure>
                             </div>
                         </div>
@@ -59,13 +59,13 @@
             <div class="col-md-7">
                 <div class="product-content" style="font-size: 3rem">
                     <h2 class="product-title text-center mb-5 fw-bold" style="font-size: 4rem">@Model.Product.Name</h2>
-                    <div class="product-general d-flex justify-content-between align-items-center fs-4 my-3">
+                    <div class="product-general d-flex justify-content-between align-items-center fs-3 my-3">
                         <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
+                            <i class="icon-star2"></i>
+                            <i class="icon-star2"></i>
+                            <i class="icon-star2"></i>
+                            <i class="icon-star2"></i>
+                            <i class="icon-star2"></i>
                             <span>4.7(21)</span>
                         </div>|
                         <div class="sold">
@@ -247,32 +247,6 @@
                     </div>
 
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="fh5co-started">
-    <div class="container">
-        <div class="row animate-box">
-            <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-                <h2>Newsletter</h2>
-                <p>Just stay tune for our latest Product. Now you can subscribe</p>
-            </div>
-        </div>
-        <div class="row animate-box">
-            <div class="col-md-8 col-md-offset-2">
-                <form class="form-inline">
-                    <div class="col-md-6 col-sm-6">
-                        <div class="form-group">
-                            <label for="email" class="sr-only">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Email">
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6">
-                        <button type="submit" class="btn btn-default btn-block">Subscribe</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>

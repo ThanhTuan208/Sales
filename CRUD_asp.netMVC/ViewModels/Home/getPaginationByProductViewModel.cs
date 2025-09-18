@@ -9,5 +9,6 @@ namespace CRUD_asp.netMVC.ViewModels.Home
         public PaginatedList<Brand>? Brands { get; set; }
         public PaginatedList<Category>? Categories { get; set; }
         public List<AddToCart>? Carts { get; set; }
+        public bool IsFeatured { get; set; }
     }
 }

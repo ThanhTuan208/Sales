@@ -24,7 +24,7 @@ public class OrderCleanupService : BackgroundService
                 // Tìm các order Pending quá 10 phút
                 var expiredOrders = await db.Orders
                     .Where(o => o.Status == "Pending"
-                             && o.OrderDate.AddMinutes(10) < DateTime.Now)
+                             && o.OrderDate.AddMinutes(5) < DateTime.Now)
                     .ToListAsync();
 
                 if (expiredOrders.Any())

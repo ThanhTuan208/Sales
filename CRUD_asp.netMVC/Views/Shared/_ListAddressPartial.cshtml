@@ -4,7 +4,7 @@
 @{
 }
 
-<link rel="stylesheet" href="~/css/load_address.css" asp-append-version="true" />
+@* <link rel="stylesheet" href="~/css/load_address.css" asp-append-version="true" /> *@
 
 <div class="address-container">
     <div class="header-container">
@@ -28,7 +28,7 @@
                 <tr>
                     <td data-label="Chọn">
                         <div class="checkbox-wrap">
-                            <input class="select-default" type="checkbox" name="defaultAddress" value="true">
+                            <input class="select-default" type="checkbox" name="defaultAddress">
                             <span class="default-label" style="display: @(item.IsDefault ? "inline" : "none" )">Mặc định</span>
                         </div> 
                     </td>

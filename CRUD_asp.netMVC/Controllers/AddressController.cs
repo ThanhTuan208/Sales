@@ -118,6 +118,12 @@ namespace CRUD_asp.netMVC.Controllers
                         Json(new { success = false, message = "Không tìm thấy địa chỉ của bạn !!!" });
                     }
 
+                    //var AllAddressDefault = _dbContext.Addresses.All(p => !p.IsDefault);
+                    //if (AllAddressDefault)
+                    //{
+                    //    Json(new { success = false, message = "Vui lòng chọn địa chỉ mặc định !!!", });
+                    //}
+
                     AddressExists.RecipientName = addressDTO.RecipientName;
                     AddressExists.PhoneNumber = addressDTO.PhoneNumber;
                     AddressExists.Street = addressDTO.Street;

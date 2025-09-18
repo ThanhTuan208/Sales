@@ -134,7 +134,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpGet] // Hien thi QR Modal gio hang
-        public async Task<IActionResult> ShowQrModalCart(string[]? arrID, string PaymentMethod)
+        public async Task<IActionResult> ShowQrModalCart(string[]? arrID, bool resetQR, string PaymentMethod)
         {
             try
             {
@@ -145,7 +145,7 @@ namespace CRUD_asp.netMVC.Controllers
                 if (viewModel.CartItemByIDs.Count > 0)
                 {
                     var selectList = viewModel.CartItemByIDs.Where(p => arrID.Contains(p.ID.ToString())).ToList();
-                    var totalList = selectList.Select(p => p.Product.NewPrice).ToList().Sum();
+                    var totalList = selectList.Sum(p => p.Product != null ? p.Product.NewPrice * p.Quantity : 0);
 
                     var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
                     if (userID > 0)
@@ -188,7 +188,7 @@ namespace CRUD_asp.netMVC.Controllers
                         string qrUrl = _qrCode.GenerateBankQrCode(
                             bankAcc,
                             order.Amount,
-                            $"ORD{order.TransactionId}",
+                            $"Vui lòng không thay đổi: ORD{order.TransactionId}",
                             "NGUYEN THANH TUAN");
 
                         var qrPaymentModel = new QrPaymentViewModel
@@ -201,7 +201,14 @@ namespace CRUD_asp.netMVC.Controllers
 
                         viewModel.QrPayment = qrPaymentModel;
 
-                        return PartialView("_ModalPaymentPartial", viewModel);
+                        if (resetQR)
+                        {
+                            return PartialView("_ModalPaymentPartialRight", viewModel);
+                        }
+                        else
+                        {
+                            return PartialView("_ModalPaymentPartial", viewModel);
+                        }
                     }
 
                     return PartialView("_ModalPaymentPartial", viewModel);
@@ -216,6 +223,7 @@ namespace CRUD_asp.netMVC.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
 
         [HttpPost, ValidateAntiForgeryToken] // Them san pham vao gio hang
         public async Task<IActionResult> AddToCart(int productID, int qty, string color, string size)

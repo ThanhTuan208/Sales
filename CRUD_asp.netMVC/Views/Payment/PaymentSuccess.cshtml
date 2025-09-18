@@ -12,9 +12,7 @@
 <div class="payment-section mt-5" id="paymentSection">
     <div class="success-icon">✔</div>
     <h1>Thanh Toán Thành Công !</h1>
-    <p class="lead">
-        Cảm ơn bạn đã mua hàng. Đơn hàng của bạn đã được xử lý thành công.
-    </p>
+    <p class="lead">Cảm ơn bạn đã mua hàng. Đơn hàng của bạn đã được xử lý thành công.</p>
 
     <div class="order-details" id="orderDetails">
         <p><strong>Mã đơn hàng:</strong> <span>@Model.Order.TransactionId</span></p>
@@ -48,3 +46,6 @@
 <script src="~/js/signalr.min.js" asp-append-version="true"></script>
 <script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
 <script type="module" src="~/js/load_address.js" asp-append-version="true"></script>
+<script>
+    window.history.replaceState(null, "", "/Home/Index");
+</script>

@@ -2,18 +2,15 @@
 @using System.Globalization
 @model getPaginationByProductViewModel
 @{
-    var ActionNameByUrl = ViewBag.ActionNameUrl;
-    var info = Convert.ToString(ViewData["Info"] ?? string.Empty);
+    var info = Convert.ToString(ViewData["Info"]);
     var productCount = ViewBag.ProductCount ?? 0;
-    var keyword = ViewBag.Keyword;
-    var cateID = ViewData["cateID"] as int?; 
-    var brandID = ViewData["brandID"] as int?; 
-    
+    var ActionNameByUrl = ViewBag.ActionNameUrl;
+
     ViewData["Title"] = "Product Page";
     Layout = "_HomeLayout";
 }
 
-<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(images/banner/banner1.jpg);">
+<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(@Url.Content($"~/images/banner/banner1.jpg"));">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
@@ -35,13 +32,11 @@
                 <div class="col-md-2 text-center animate-box">
                     <div class="product">
                         <div class="desc">
-                            
-                            <a asp-action="SearchProduct" asp-controller="Product" asp-route-brandID="@brandID" asp-route-cateID="@item.ID" asp-route-productPage="1" asp-route-keyword="@keyword">
-                                @* duong dan tuyet doi khi truy cap https://localhost:7276/Product -> https://localhost:7276/Product/ *@
+                            <a asp-action="getProductByCate" asp-controller="Product" asp-route-cateID="@item.ID" asp-route-productPage="1" asp-route-featured="true">
                                 <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow cate-image"
                                      alt="Categories">
                             </a>
-                            <h3><a asp-route-brandID="@brandID" asp-route-cateID="@item.ID" asp-route-productPage="1" asp-route-keyword="@keyword" class="btn">@item.Name</a></h3>
+                            <h3><a asp-route-cateID="@item.ID" asp-route-productPage="1" asp-route-featured="true" class="btn">@item.Name</a></h3>
                         </div>
                     </div>
                 </div>
@@ -55,7 +50,7 @@
             }
             else
             {
-                <p class="text-center p-5 fs-1">@productCount sản phẩm được thấy với từ khóa '@keyword'</p>
+                <p class="text-center p-5 fs-1">@productCount sản phẩm được thấy</p>
                 @foreach (var item in Model.Products)
                 {
                     <div class="col-md-3 text-center animate-box">
@@ -79,17 +74,17 @@
                     <div class="pagination d-flex justify-content-center animate-box">
                         @if (Model.Products.PreviousPage)
                         {
-                            <a class="btn btn-outline-warning m-1" asp-action="SearchProduct" asp-route-productPage="@(Model.Products.PageCurrent - 1)" asp-route-keyword="@keyword">Previous</a>
+                            <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-productPage="@(Model.Products.PageCurrent - 1)" asp-route-brandID="@(ViewContext.RouteData.Values["brandID"] != null ? ViewContext.RouteData.Values["brandID"] : "")">Previous</a>
                         }
 
                         @for (int i = 1; i <= Model.Products.TotalPage; i++)
                         {
-                            <a asp-action="SearchProduct" asp-route-productPage="@i" asp-route-keyword="@keyword" class="btn btn-outline-warning m-1 @(i == Model.Products.PageCurrent ? "active" : "")">@i</a>
+                            <a asp-action="Index" asp-route-productPage="@i" asp-route-brandID="@(ViewContext.RouteData.Values["brandID"] != null ? ViewContext.RouteData.Values["brandID"] : "")" class="btn btn-outline-warning m-1 @(i == Model.Products.PageCurrent ? "active" : "")">@i</a>
                         }
 
                         @if (Model.Products.NextPage)
                         {
-                            <a class="btn btn-outline-warning m-1" asp-action="SearchProduct" asp-route-productPage="@(Model.Products.PageCurrent + 1)" asp-route-keyword="@keyword">Next</a>
+                            <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-productPage="@(Model.Products.PageCurrent + 1)" asp-route-brandID="@(ViewContext.RouteData.Values["brandID"] != null ? ViewContext.RouteData.Values["brandID"] : "")">Next</a>
                         }
                     </div>
                 </div>
@@ -106,16 +101,15 @@
                 <div class="owl-clients owl-carousel text-center">
                     @foreach (var item in Model.Brands)
                     {
-                        ViewBag.brandID = @item.ID;
                         <div class="service-item" style="margin:auto;">
                             @* width: 200px;  *@
-                            <a asp-controller="Product" asp-action="getProductByBrand" asp-route-brandID="@item.ID" asp-route-productPage="1" class="services-item-image" style="display: block  ;"> 
+                            <a asp-action="getProductByBrand" asp-route-brandID="@item.ID" asp-route-productPage="1" class="services-item-image" style="display: block;">
 
                                 <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow"
                                      style="width: 100%; max-width: 230px; height: 100px; object-fit: cover; display: block; margin: auto;
-                                filter: contrast(110%) brightness(105%);
-                                border-radius: 15px;
-                                box-shadow: 0 4px 12px rgba(0,0,0,0.2);"
+                                    filter: contrast(110%) brightness(105%);
+                                    border-radius: 15px;
+                                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);"
                                      alt="Brand">
 
                             </a>
@@ -130,5 +124,4 @@
         </div>
     </div>
 </div>
-
-    
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -7,13 +7,12 @@
     var cateID = ViewData["cateID"];
     var index = (int)cateID;
     var cateName = Model.Categories[index - 1].Name;
-    var brandImage = ViewData["image"];
 
     ViewData["Title"] = "Product Page";
     Layout = "_HomeLayout";
 }
 
-<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm animate-box" role="banner" style="background-image:url(@Url.Content($"~/{brandImage}")); ">
+<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm animate-box" role="banner" style="background-image:url(@Url.Content($"~/images/banner/banner1.jpg")); ">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
@@ -44,12 +43,11 @@
                 <div class="col-md-2 text-center animate-box">
                     <div class="product">
                         <div class="desc">
-                            <a asp-action="getProductByCate" asp-controller="Product" asp-route-cateID="@item.ID" asp-route-productPage="1">
-                                @* duong dan tuyet doi khi truy cap https://localhost:7276/Product -> https://localhost:7276/Product/ *@
+                            <a asp-action="getProductByCate" asp-controller="Product" asp-route-cateID="@item.ID" asp-route-productPage="1" asp-route-featured="@Model.IsFeatured">
                                 <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow cate-image"
                                      alt="Categories">
                             </a>
-                            <h3><a asp-route-cateID="@item.ID" asp-route-productPage="1" class="btn">@item.Name</a></h3>
+                            <h3><a asp-route-cateID="@item.ID" asp-route-productPage="1" asp-route-featured="@Model.IsFeatured" class="btn">@item.Name</a></h3>
                         </div>
                     </div>
                 </div>
@@ -57,7 +55,7 @@
         </div>
 
         <div class="row">
-            <p class="text-center p-5 fs-1">@productCount sản phẩm được thấy</p>
+            <p class="text-center p-5 fs-1">@productCount sản phẩm được tìm thấy</p>
             @foreach (var item in Model.Products)
             {
                 <div class="col-md-4 text-center animate-box">
@@ -101,7 +99,7 @@
         <div class="row animate-box mt-5">
             <div class="col-md-12">
                 <div class="section-heading">
-                    <h2 class="text-center my-2 mb-5"><strong>Danh mục</strong></h2>
+                    <h2 class="text-center my-2 mb-5"><strong>THƯƠNG HIỆU NỔI TIẾNG</strong></h2>
                 </div>
             </div>
             <div class="col-md-12">

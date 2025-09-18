@@ -1,19 +1,14 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Payment;
 using CRUD_asp.netMVC.HubRealTime;
-using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Service.Payment;
 using CRUD_asp.netMVC.ViewModels.Order;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Http.Logging;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -99,11 +94,14 @@ namespace CRUD_asp.netMVC.Controllers
 
             var cateID = await _dbContext.OrderDetail.Where(p => p.OrderID == order.ID).Select(p => p.Product.CateID).FirstOrDefaultAsync();
 
-            var product = await _dbContext.Products.Where(p => p.CateID == cateID).Take(4).ToListAsync();
-    
+            var product = await _dbContext.Products.Where(p => p.CateID == cateID).ToListAsync();
+
+            Random rand = new Random();
+            var shuffledProduct = product.OrderBy(p => rand.Next()).Take(4).ToList();
+
             var viewModel = new GeneralOrderViewModel()
             {
-                Product = product,
+                Product = shuffledProduct,
                 Order = order
             };
 
@@ -155,3 +153,4 @@ namespace CRUD_asp.netMVC.Controllers
         }
     }
 }
+

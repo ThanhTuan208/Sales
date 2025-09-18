@@ -23,47 +23,31 @@ namespace CRUD_asp.netMVC.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    public readonly AppDBContext context;
+    public readonly AppDBContext _dbContext;
     public readonly UserManager<Users> userManager;
 
     public HomeController(ILogger<HomeController> logger, AppDBContext _context, UserManager<Users> _userManager)
     {
         _logger = logger;
-        context = _context;
+        _dbContext = _context;
         userManager = _userManager;
     }
 
-    public async Task<HomeViewModel> MethodGeneral()
+    [HttpGet] // Hien thi giao dien trang chu
+    public async Task<IActionResult> MyProfile()
     {
-        var product = await context.Products.AsNoTracking()
-            .Include(p => p.Brands)
-            .Include(p => p.Cate)
-            .Include(p => p.Gender)
-            .Include(p => p.Carts)
-            .Where(p => p.FeaturedID == 1)
-            .Take(6).OrderByDescending(p => p.ID).ToListAsync();
-
-        var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
-
-        var brand = await context.Brand.AsNoTracking().ToListAsync();
-        var categories = await context.Category.AsNoTracking().ToListAsync();
-        var carts = await context.Carts.Where(p => p.UserID == userID).ToListAsync();
-
-        HomeViewModel ViewModel = new HomeViewModel()
+        try
         {
-            Products = product,
-            Brands = brand,
-            Categories = categories,
-            Carts = carts,
-            MailContact = new MailContactDTO()
-        };
-
-        ViewData["cart"] = carts.Count;
-
-        return ViewModel;
+            return View(await MethodGeneral());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Lỗi load dữ liệu chung: Index");
+            return View("Error");
+        }
     }
 
-    // Hien thi san pham noi bat (Featured) tren giao dien chinh
+    [HttpGet] // Hien thi giao dien trang chu
     public async Task<IActionResult> Index()
     {
         try
@@ -77,6 +61,7 @@ public class HomeController : Controller
         }
     }
 
+    [HttpGet] // Hien thi form gioi thieu
     public async Task<IActionResult> About()
     {
         try
@@ -90,7 +75,7 @@ public class HomeController : Controller
         }
     }
 
-    [HttpGet]
+    [HttpGet] // Hien thi form lien he
     public async Task<IActionResult> Contact()
     {
         try
@@ -174,23 +159,37 @@ public class HomeController : Controller
         }
     }
 
-    // note: chua xu li xong
-    public async Task<IActionResult> ProductFeatured()
+    // Phuong thuc load du lieu chung
+    public async Task<HomeViewModel> MethodGeneral()
     {
-        try
-        {
-            return View(await MethodGeneral());
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Lỗi load dữ liệu chung: featured");
-            return View("Error");
-        }
-    }
+        var product = await _dbContext.Products.AsNoTracking()
+            .Include(p => p.Brands)
+            .Include(p => p.Cate)
+            .Include(p => p.Gender)
+            .Include(p => p.Carts)
+            .Where(p => p.FeaturedID == 1)
+            .Take(6).OrderByDescending(p => p.ID).ToListAsync();
 
-    public string? TestClaimEmail()
-    {
-        return User.FindFirst(ClaimTypes.Email)?.Value;
+        var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
+
+        var brand = await _dbContext.Brand.AsNoTracking().ToListAsync();
+        var categories = await _dbContext.Category.AsNoTracking().ToListAsync();
+        var carts = await _dbContext.Carts.Where(p => p.UserID == userID).ToListAsync();
+        var user = await _dbContext.Users.FirstOrDefaultAsync(p => p.Id == userID);
+
+        HomeViewModel ViewModel = new HomeViewModel()
+        {
+            Products = product,
+            Brands = brand,
+            Categories = categories,
+            Carts = carts,
+            User = user,
+            MailContact = null
+        };
+
+        ViewData["cart"] = carts.Count;
+
+        return ViewModel;
     }
 
 }

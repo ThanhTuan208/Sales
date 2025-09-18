@@ -27,6 +27,28 @@ $(document).ready(function () {
         }
     });
 
+    // Them hinh cho profile 
+    $(document).off('click', '.btn-select-image').on('click', '.btn-select-image', function () {
+
+        $('#avatarInput').click(); // lay anh
+
+        
+    });
+
+    $('#avatarInput').on('change', function (event) {
+        const file = event.target.files[0];
+
+        if (file) {
+            const render = new FileReader();
+            render.onload = function (e) {
+                $('#avatarPreview').attr('src', e.target.result);
+            };
+
+            render.readAsDataURL(file);
+        }
+    });
+
+    // Chon dia chi gio hang
     $(document).off('click', '.select-address').on('click', '.select-address', function (e) {
         e.preventDefault();
 
@@ -51,6 +73,7 @@ $(document).ready(function () {
     });
 
 
+    // Xu ly button checkout
     $(document).off('click', '.buy.bn54').on('click', '.buy.bn54', function (e) {
         e.preventDefault(); // ngan button type submit
 
@@ -919,7 +942,7 @@ export function updateQtyAfterCheck() {
         ship = 0;
     }
     totalVAT += total + ship + vat;
-    console.log(totalVAT);
+
     $('.countItem').text(`x ` + countItem);
     $('.price-provisional').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total));
     $('.price-ship').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(ship));

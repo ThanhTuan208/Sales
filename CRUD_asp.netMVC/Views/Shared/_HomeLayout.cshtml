@@ -14,9 +14,9 @@
     <meta name="twitter:card" content="" />
     <title>@ViewData["Title"] - CRUD_asp.netMVC</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+    
 
-    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" asp-append-version="true" />    
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     <!-- Animate.css -->
@@ -34,9 +34,8 @@
     <link rel="stylesheet" href="~/css/owl.carousel.min.css" asp-append-version="true">
     <link rel="stylesheet" href="~/css/owl.theme.default.min.css" asp-append-version="true">
 
-    <!-- Theme style  -->
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" asp-append-version="true">
     <!-- Modernizr JS -->
-    <script src="~/js/modernizr-2.6.2.min.js" asp-append-version="true"></script>
 
 </head>
 <body>
@@ -44,10 +43,10 @@
         <nav class="fh5co-nav fixed-top" role="navigation">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-3 col-xs-2">
+                    <div class="col-md-2 col-xs-2">
                         <div id="fh5co-logo"><a asp-action="Index" asp-controller="Home">E-commerce.</a></div>
                     </div>
-                    <div class="col-md-6 col-xs-6 text-center menu-1">
+                    <div class="col-md-5 col-xs-5 text-center menu-1">
                         <ul>
                             <li class="has-dropdown nav-item">
                                 <a asp-action="Index" asp-controller="Product">Sản phẩm</a>
@@ -81,7 +80,7 @@
                             </li> *@
                         </ul>
                     </div>
-                    <div class="col-md-3 col-xs-4 text-right hidden-xs menu-2">
+                    <div class="col-md-5 col-xs-5 text-right hidden-xs menu-2">
                         <ul>
                             <li class="search nav-item">
                                 <form method="get" asp-controller="Product" asp-action="SearchProduct">
@@ -119,6 +118,20 @@
                             </li>
 
                             <li class="has-dropdown nav-item">
+                                <a class="cart">
+                                    <span><small class="count">0</small><i class="icon-bell2 fs-4"></i></span>
+                                </a>
+
+                                <ul class="dropdown" style="width: 150px">
+                                    <li class="alert-general">
+                                        @* <a asp-controller="Cart" asp-action="Index" class="cart">Cart</a>
+                                        <a asp-controller="Cart" asp-action="Index" class="cart">Favorite order</a>
+                                        <a asp-controller="Cart" asp-action="Index" class="cart">History order</a> *@
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="has-dropdown nav-item">
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     <form id="logoutForm" asp-controller="Auth" asp-action="Logout" method="post" style="display: none;">
@@ -130,6 +143,9 @@
                                     </a>
 
                                     <ul class="dropdown" style="width: 150px">
+                                        <li>
+                                            <a asp-controller="Home" asp-action="MyProfile">Hồ sơ</a>
+                                        </li>
                                         <li>
                                             <a href="javascript:void(0);" onclick="document.getElementById('logoutForm').submit();">Đăng xuất</a>
                                         </li>
@@ -246,6 +262,8 @@
     <div class="gototop js-top">
         <a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
     </div>
+
+    <script src="~/js/modernizr-2.6.2.min.js" asp-append-version="true"></script>
 
     <script src="~/js/jquery-3.7.1.min.js" asp-append-version="true"></script>
     <!-- jQuery -->

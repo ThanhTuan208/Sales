@@ -4,98 +4,164 @@ $(document).ready(function () {
 
     LoadView();
 
-    // Goi alert realtime khi thanh toan thanh cong //
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/paymentHub")
-        .build();
+    $(function () {
+        var expireSeconds = parseInt($(".qr-expire-time").data("expire-seconds")) || 300;
+        var remaining = expireSeconds;
+        var timerInterval;
 
-    connection.start()
-        .catch(err => console.error(err));
+        function startCountdown(seconds) {
+            remaining = seconds;
+            $("#resetQR").hide(); // Ẩn nút reset lúc mới bắt đầu
 
-    connection.on("ReceivePaymentStatus", (orderId, transactionCode) => {
-        const overlay = $("#overlayStatus");
-        const spinner = overlay.find(".spinner");
-        const successIcon = overlay.find(".success-icon");
-        const successText = overlay.find(".success-text");
+            clearInterval(timerInterval);
+            timerInterval = setInterval(function () {
+                remaining--;
 
-        overlay.show();   // bật overlay phủ hết màn hình
-        spinner.show();
-        successIcon.hide();
-        successText.hide();
+                // format mm:ss
+                var minutes = Math.floor(remaining / 60);
+                var secs = remaining % 60;
+                $("#timer").text(
+                    (minutes < 10 ? "0" : "") + minutes + ":" +
+                    (secs < 10 ? "0" : "") + secs
+                );
 
-        setTimeout(() => {
-            spinner.fadeOut(300, function () {
-                successIcon.fadeIn(300);
-                successText.fadeIn(300);
+                if (remaining <= 0) {
+                    clearInterval(timerInterval);
+                    $("#timer").text("QR đã hết hạn");
+                    $("#resetQR").show(); // Hiện nút reset khi hết hạn
+                }
+            }, 1000);
+        }
+
+        // Khởi động countdown lần đầu
+        startCountdown(expireSeconds);
+
+        // Khi bấm Reset thì tạo QR mới
+        $(document).off('click', '#resetQR').on('click', '#resetQR', function () {
+
+            let ids = [];
+            let ArrChecked = GetArrIDChecked(ids);
+            if (!ArrChecked) {
+                return;
+            }
+
+            $.ajax({
+                url: "/Cart/ShowQrModalCart",
+                type: "GET",
+                data: {
+                    arrID: ids,
+                    ResetQR: true,
+                    PaymentMethod: ArrChecked.paymentMethod
+                },
+                traditional: true, // bind mảng
+                success: function (response) {
+                    $(".modal-right").html(response); // render vào modal
+                    updateQtyAfterCheck();
+                },
+                error: function () {
+                    alert("Lỗi không hiển thị !");
+                }
             });
 
-            // Ẩn modal và overlay sau 3s
+            $("#resetQR").hide(); // ẩn nút reset ngay sau khi đổi QR
+            startCountdown(expireSeconds); // chạy lại timer
+        });
+    });
+
+
+    // Goi alert realtime khi thanh toan thanh cong //
+    $(function () {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/paymentHub")
+            .build();
+
+        connection.start()
+            .catch(err => console.error(err));
+
+        connection.on("ReceivePaymentStatus", (orderId, transactionCode) => {
+            const overlay = $("#overlayStatus");
+            const spinner = overlay.find(".spinner");
+            const successIcon = overlay.find(".success-icon");
+            const successText = overlay.find(".success-text");
+
+            overlay.show();   // bật overlay phủ hết màn hình
+            spinner.show();
+            successIcon.hide();
+            successText.hide();
+
             setTimeout(() => {
+                spinner.fadeOut(300, function () {
+                    successIcon.fadeIn(300);
+                    successText.fadeIn(300);
+                });
 
-                overlay.fadeOut();
-                $(".modal-overlay").fadeOut(200);
-                $(".modal").removeClass("active").fadeOut(200);
+                // Ẩn modal và overlay sau 3s
+                setTimeout(() => {
 
-                window.location.replace(`/Payment/PaymentSuccess?orderID=${encodeURIComponent(orderId)}&transactionCode=${encodeURIComponent(transactionCode)}`);
-            }, 3000);
+                    overlay.fadeOut();
+                    $(".modal-overlay").fadeOut(200);
+                    $(".modal").removeClass("active").fadeOut(200);
 
-        }, 2000);
+                    window.location.replace(`/Payment/PaymentSuccess?orderID=${encodeURIComponent(orderId)}&transactionCode=${encodeURIComponent(transactionCode)}`);
+                }, 3000);
+
+            }, 2000);
+        })
     });
 
 
     // Xu ly chuc nang, giao dien trang thai thanh toan //
-    const $modal = $("#paymentSection");
-    const $extra = $("#extraContent");
-    const $order = $("#orderDetails");
+    $(function () {
+        const $modal = $("#paymentSection");
+        const $extra = $("#extraContent");
+        const $order = $("#orderDetails");
 
-    function showProductsUnderModal() {
-        // add class to slide modal up
-        $modal.addClass("at-top");
+        function showProductsUnderModal() {
+            // add class to slide modal up
+            $modal.addClass("at-top");
 
-        setTimeout(() => {
-            const modalHeight = $modal.outerHeight(true); // include margin/padding
-            $extra.css("margin-top", modalHeight + 20 + "px");
+            setTimeout(() => {
+                const modalHeight = $modal.outerHeight(true); // include margin/padding
+                $extra.css("margin-top", modalHeight + 20 + "px");
 
-            // reveal extra content with slideDown-like animation
-            $extra.attr("aria-hidden", "false").hide().slideDown(450);
-            $("html,body").animate({ scrollTop: 0 }, 450);
-        }, 250); // 250ms after class add (tunable)
-    }
-
-    setTimeout(showProductsUnderModal, 1500);
-
-    $modal.on("click", function (e) {
-        if ($(e.target).closest("a,button").length) return;
-        if (!$modal.hasClass("at-top")) showProductsUnderModal();
-    });
-
-    // Recompute margin-top on window resize if products visible
-    $(window).on("resize", function () {
-        if ($modal.hasClass("at-top") && $extra.is(":visible")) {
-            const modalHeight = $modal.outerHeight(true);
-            $extra.css("margin-top", modalHeight + 20 + "px");
+                // reveal extra content with slideDown-like animation
+                $extra.attr("aria-hidden", "false").hide().slideDown(450);
+                $("html,body").animate({ scrollTop: 0 }, 450);
+            }, 250); // 250ms after class add (tunable)
         }
-    });
 
-    $modal.on(
-        "transitionend webkitTransitionEnd oTransitionEnd",
-        function (e) {
-            if ($modal.hasClass("at-top")) {
-                // optionally hide the order details box to keep the header compact:
-                // $order.slideUp(220);
-                // or keep visible — comment/uncomment above
+        setTimeout(showProductsUnderModal, 1500);
+
+        $modal.on("click", function (e) {
+            if ($(e.target).closest("a,button").length) return;
+            if (!$modal.hasClass("at-top")) showProductsUnderModal();
+        });
+
+        // Recompute margin-top on window resize if products visible
+        $(window).on("resize", function () {
+            if ($modal.hasClass("at-top") && $extra.is(":visible")) {
+                const modalHeight = $modal.outerHeight(true);
+                $extra.css("margin-top", modalHeight + 20 + "px");
             }
-        }
-    );
+        });
 
-    // Button demo (you'd replace with real links)
-    $("#btnHome").on("click", function (e) {
-        e.preventDefault();
-        // navigate home
+        $modal.on(
+            "transitionend webkitTransitionEnd oTransitionEnd",
+            function (e) {
+                if ($modal.hasClass("at-top")) {
+                    // optionally hide the order details box to keep the header compact:
+                    // $order.slideUp(220);
+                    // or keep visible — comment/uncomment above
+                }
+            }
+        );
 
-        window.history.replaceState(null, "", "/Home/Index");
-        location.href = '/Home/Index';
-        // alert("Redirect to homepage (demo)");
+        //$("#btnHome").on("click", function (e) {
+        //    e.preventDefault();
+
+        //    window.history.replaceState(null, "", "/Home/Index");
+        //    location.href = '/Home/Index';
+        //})
     });
 
 
@@ -146,7 +212,7 @@ $(document).ready(function () {
         const street = row.find('.street').val();
         const province = row.find('.province').val();
         const ward = row.find('.ward').val();
-        const isDefault = row.find('#sDefaultAddress').val();
+        const isDefault = row.find('.default-label').is(':visible');
 
         let formData = new FormData();
         formData.append('ID', id);
@@ -197,8 +263,9 @@ $(document).ready(function () {
                         console.log("Không thể tải dữ liệu JSON.");
                     }
                 });
-
-                $("#isDefaultAddress").prop('checked', isDefault); // Cập nhật checkbox
+                if (isDefault) {
+                    $("#isdefault").prop('checked', true); // Cập nhật checkbox
+                }
 
             },
             error: function () {
@@ -390,17 +457,14 @@ function GeneralAjaxResponse(isAddress, updateAddress) {
     let ids = [];
     let ArrChecked = GetArrIDChecked(ids);
     if (!ArrChecked) {
-        console.log("false. ");
         return;
     }
-
-    // tra ve lai modalPaymentPatial
 
     $.ajax({
         url: "/Cart",
         type: "GET",
         data: {
-            arrID: ids,
+            arrID: ids ,
             IsAddress: isAddress,
             UpdateAddress: updateAddress
         },
@@ -585,3 +649,4 @@ function LoadDataAddress(provinceName, wardName, callback) {
         });
     });
 }
+
