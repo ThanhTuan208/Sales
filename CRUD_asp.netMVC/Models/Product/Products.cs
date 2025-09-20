@@ -35,7 +35,7 @@ namespace CRUD_asp.netMVC.Models.Product
         public int Quantity { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime Created { get; set; } = DateTime.Now;
+        public DateTime Created { get; set; }
 
         [Required]
         public int? FeaturedID { get; set; }

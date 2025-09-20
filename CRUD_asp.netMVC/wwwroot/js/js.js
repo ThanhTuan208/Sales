@@ -27,12 +27,217 @@ $(document).ready(function () {
         }
     });
 
+    $(function () {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/changeEmailProfile")
+            .build();
+
+        connection.start()
+            .catch(err => console.error(err));
+
+        connection.on("ChangeEmailProfile", () => {
+            const overlay = $("#loadingOverlay");
+            const spinner = overlay.find(".spinner-container");
+
+            overlay.show();   // bật overlay phủ hết màn hình
+            spinner.show();
+
+            // Ẩn modal và overlay sau 3s
+            setTimeout(() => {
+
+                overlay.fadeOut();
+                window.location.href = `/Home/MyProfile`;
+
+            }, 3000);
+
+        })
+    });
+
+    $(function () {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/lazyLoad")
+            .build();
+
+        connection.start()
+            .catch(err => console.error(err));
+
+        connection.on("LazyLoad", () => {
+            const overlay = $("#loadingOverlay");
+            const spinner = overlay.find(".spinner-container");
+
+            overlay.show();   // bật overlay phủ hết màn hình
+            spinner.show();
+
+            // Ẩn modal và overlay sau 3s
+            setTimeout(() => {
+
+                overlay.fadeOut(300);
+                spinner.fadeOut(300);
+
+            }, 3000);
+
+        })
+    });
+
+    $(document).off('click', '.btn-return-profile').on('click', '.btn-return-profile', function (e) {
+
+        e.preventDefault();
+        window.location.href = "/Home/MyProfile";
+    });
+
+
+    function OPTCodeEmail(callback) {
+
+        $("#confirmotpcode").on("input", function () {
+
+            $('.error-message').remove();
+
+            let value = $(this).val();
+
+            // chỉ cho phép số
+            if (!/^\d*$/.test(value)) {
+                $(this).val(value.replace(/\D/g, "")); // loại bỏ ký tự không phải số
+            }
+
+            if (value.length === 4) {
+                callback(value);
+            }
+        });
+    }
+
+    // Cập nhật email trong profile //
+    $(document).off('click', '.btn-auth-profile').on('click', '.btn-auth-profile', function (e) {
+
+        e.preventDefault();
+
+        $('#emailnew').removeClass('error');
+        $('.error-message').remove();
+
+        let email = $('#emailnew').val();
+
+        $.ajax({
+            url: "/Home/UpdateEmailProfile",
+            type: "POST",
+            data: {
+                Email: email,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+
+            success: function (response) {
+
+                // thong bao chung
+                if (response.errors) {
+                    Object.keys(response.errors).forEach(function (field) {
+                        const messages = response.errors[field];
+
+                        let $field = $(`#${field.toLowerCase()}`);
+
+                        //Gan loi de hien thi vien do loi
+
+                        if (response.success) {
+
+                            messages.forEach(message => {
+                                $field.after(`<span class="error-message text-success">${message}</span>`);
+                            });
+
+                            $('.otp').fadeIn(500);
+
+                            // goi OPTCodeEmail duoc gan gia tri trong ham va tra ve otp
+                            OPTCodeEmail(function (otpCode) {
+                                console.log(otpCode);
+                                $.ajax({
+                                    url: "/Home/ConfirmEmail",
+                                    type: "POST",
+                                    data: {
+                                        NewEmail: response.email,
+                                        UserID: response.userid,
+                                        OTPCode: otpCode,
+                                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                                    },
+
+                                    success: function (response) {
+                                        if (response.errors) {
+                                            Object.keys(response.errors).forEach(function (field) {
+                                                const messages = response.errors[field];
+
+                                                let $field = $(`#${field.toLowerCase()}`);
+
+                                                //Gan loi de hien thi vien do loi
+
+                                                if (!response.success) {
+                                                    $field.addClass('error');
+                                                    messages.forEach(message => {
+                                                        $('.otp').after(`<span class="error-message text-danger text-center">${message}</span>`);
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    },
+
+                                    error: function (response) {
+                                        alert("Lỗi không hiển thị 1 !");
+                                    }
+                                });
+                            })
+                        }
+
+                        else {
+                            $field.addClass('error');
+                            messages.forEach(message => {
+                                $field.after(`<span class="error-message text-danger">${message}</span>`);
+                            });
+                        }
+                    });
+                }
+            },
+
+            error: function () {
+                alert("Lỗi không hiển thị 2 !");
+            }
+        });
+    });
+
+
+    // Hien thi modal thay doi email, phone Profile //
+    $(document).off('click', '#changephone').on('click', '#changephone', function (e) {
+
+        e.preventDefault();
+        RedirectToPageProfile('phone');
+    });
+
+    $(document).off('click', '#changeemail').on('click', '#changeemail', function (e) {
+
+        e.preventDefault();
+        RedirectToPageProfile('email');
+    });
+
+    function RedirectToPageProfile(prop) {
+
+        let isProp = prop === 'email' ? true : false;
+
+        $.ajax({
+            url: "/Home/RedirectPropProfile",
+            type: "POST",
+            data: { IsProp: isProp },
+
+            success: function (response) {
+                $(".profile-content").fadeOut(300, function () {
+                    $(this).html(response).fadeIn(700);
+                });
+            },
+
+            error: function () {
+                alert("Lỗi không hiển thị !");
+            }
+        });
+    }
+
     // Them hinh cho profile 
     $(document).off('click', '.btn-select-image').on('click', '.btn-select-image', function () {
 
         $('#avatarInput').click(); // lay anh
 
-        
+
     });
 
     $('#avatarInput').on('change', function (event) {
@@ -71,7 +276,6 @@ $(document).ready(function () {
             }
         });
     });
-
 
     // Xu ly button checkout
     $(document).off('click', '.buy.bn54').on('click', '.buy.bn54', function (e) {
@@ -785,14 +989,6 @@ $(document).ready(function () {
         }
 
         updateQtyAfterCheck();
-    });
-
-    // Tinh phan thanh toan san pham da chon (Cart/index)
-    $(document).off('click', '.buy').on('click', '.buy', function () {
-        const btn = $(this);
-        let priceTotal = parseFloat(btn.closest('.payment').find('.price-complete').text().replace(/[^0-9]/g, ''));
-
-
     });
 
     /*chon active cho size va color*/

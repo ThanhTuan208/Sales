@@ -1,0 +1,68 @@
+﻿@using CRUD_asp.netMVC.ViewModels.Home
+@using System.Globalization
+@model HomeViewModel
+@{
+    Layout = "";
+
+}
+
+<main class="profile-content">
+    <h2 style="font-weight: 600">Thay đổi @ViewBag.NameProp</h2>
+
+    <!-- Form -->
+    <section>
+        <form class="profile-form">
+            @if (ViewBag.IsSelectProp)
+            {
+                <div class="form-group">
+                    <label>Địa chỉ Email mới:</label>
+                    <input type="text" id="emailnew" />
+                    <div class="otp form-group d-flex justify-content-around align-items-center mt-5" style="display:none">
+                        <label class="">Mã OTP:</label>
+                        <input type="text" id="confirmotpcode" style="width: 100px; text-align:center" maxlength="4" />
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <div class="form-group">
+                    <label>Số điện thoại mới:</label>
+                    <input type="text" id="emailnew" />
+                </div>
+            }
+        </form>
+
+        <div class="d-flex justify-content-around">
+            <button type="submit" style="width: 120px; margin-right: 10px" class="btn-auth-profile">Xác thực</button>
+            <button type="submit" style="width: 120px" class="btn-return-profile">Quay về</button>
+        </div>
+
+    </section>
+
+</main>
+<div id="loadingOverlay" style="display: none">
+    <div class="spinner-container">
+        <div class="infinityChrome">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        // Cho spinner quay ít nhất 2 giây rồi mới tắt overlay
+        setTimeout(() => {
+            document.getElementById("loadingOverlay").classList.add("hidden");
+        }, 5000);
+    };
+
+    // Ẩn Infinity Loader nếu không phải Chrome
+    var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    if (!isChrome) {
+        document.getElementsByClassName("infinityChrome")[0].style.display = "none";
+        // Nếu muốn hiển thị Infinity Loader cho trình duyệt khác, bỏ comment dòng dưới
+        // document.getElementsByClassName("infinity")[0].style.display = "block";
+    }
+</script>

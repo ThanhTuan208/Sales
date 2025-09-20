@@ -70,7 +70,7 @@ $(document).ready(function () {
 
 
     // Goi alert realtime khi thanh toan thanh cong //
-    $(function () {
+     $(function () {
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/paymentHub")
             .build();
@@ -263,6 +263,7 @@ $(document).ready(function () {
                         console.log("Không thể tải dữ liệu JSON.");
                     }
                 });
+
                 if (isDefault) {
                     $("#isdefault").prop('checked', true); // Cập nhật checkbox
                 }
@@ -464,7 +465,7 @@ function GeneralAjaxResponse(isAddress, updateAddress) {
         url: "/Cart",
         type: "GET",
         data: {
-            arrID: ids ,
+            arrID: ids,
             IsAddress: isAddress,
             UpdateAddress: updateAddress
         },

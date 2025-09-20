@@ -72,6 +72,8 @@ namespace CRUD_asp.netMVC
 
             // Cau hinh endpoint hub
             app.MapHub<PaymentHub>("/paymentHub");
+            app.MapHub<LoadViewHub>("/changeEmailProfile");
+            app.MapHub<LoadViewHub>("/lazyLoad");
 
             if (!app.Environment.IsDevelopment())
             {

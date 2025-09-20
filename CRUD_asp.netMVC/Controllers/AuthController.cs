@@ -299,7 +299,76 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-        [HttpPost, ValidateAntiForgeryToken] /// Gui ma email de doi mat khau moi
+        [HttpGet] // Xac thuc email khi nguoi dung click vao link xac thuc trong email
+        public async Task<IActionResult> ConfirmEmail(string UserID, string token)
+        {
+            var user = await _userManager.FindByIdAsync(UserID);
+            if (user == null) return View("Không tim thấy người dùng này !!!");
+
+            // kiem tra khi nguoi dung da xac thuc email lan truoc nhung lai xac thuc lan nua
+            if (_context.Manager.Where(p => p.UserID == user.Id).Any() ||
+               _context.Customer.Where(p => p.UserID == user.Id).Any())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                string roleName = "Customer";
+
+                if (user.RoleID == 1)
+                {
+                    roleName = "Admin";
+                }
+
+                if (!await _roleManager.RoleExistsAsync(roleName))
+                {
+                    await _roleManager.CreateAsync(new Roles { Name = roleName });
+                }
+
+                var RoleID = await _context.Roles.FirstOrDefaultAsync(p => p.Name == roleName);
+                user.RoleID = RoleID.Id;
+
+                // Tao db giua nguoi dung co vai tro 
+                await _userManager.AddToRoleAsync(user, roleName);
+
+                switch (roleName)
+                {
+                    case "Admin":
+                        _context.Manager.Add(new Manager
+                        {
+                            UserID = user.Id,
+                            UserName = user.UserName,
+                            Email = user.Email,
+                            StartDate = user.StartDate,
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            PhoneNumber = user.PhoneNumber
+                        });
+
+                        break;
+
+                    case "Customer":
+                        _context.Customer.Add(new Customer
+                        {
+                            UserID = user.Id,
+                            UserName = user.UserName,
+                            Email = user.Email,
+                            JoinDate = user.StartDate,
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            PhoneNumber = user.PhoneNumber
+                        });
+                        break;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Login", "Auth");
+        }
+
+        [HttpPost, ValidateAntiForgeryToken] // Gui ma email de doi mat khau moi
         public async Task<IActionResult> SendOTPCodeMail(ForgotPassword forgot, [FromServices] IEmailSender emailSender)
         {
             try
@@ -505,10 +574,7 @@ namespace CRUD_asp.netMVC.Controllers
             return View("Login", login);
         }
 
-        /// <summary>
-        /// Form dang xuat tai khoan
-        /// </summary>
-        /// <returns></returns>
+        // Form dang xuat tai khoan        
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
@@ -524,79 +590,7 @@ namespace CRUD_asp.netMVC.Controllers
             return RedirectToAction("Login", "Auth");
         }
 
-        /// <summary>
-        /// Xac thuc email khi nguoi dung click vao link xac thuc trong email
-        /// </summary>
-        /// <param name="UserID"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<IActionResult> ConfirmEmail(string UserID, string token)
-        {
-            var user = await _userManager.FindByIdAsync(UserID);
-            if (user == null) return View("Không tim thấy người dùng này !!!");
-
-            // kiem tra khi nguoi dung da xac thuc email lan truoc nhung lai xac thuc lan nua
-            if (_context.Manager.Where(p => p.UserID == user.Id).Any() ||
-               _context.Customer.Where(p => p.UserID == user.Id).Any())
-            {
-                return RedirectToAction("Login", "Auth");
-            }
-
-            var result = await _userManager.ConfirmEmailAsync(user, token);
-            if (result.Succeeded)
-            {
-                string roleName = "Customer";
-
-                if (user.RoleID == 1)
-                {
-                    roleName = "Admin";
-                }
-
-                if (!await _roleManager.RoleExistsAsync(roleName))
-                {
-                    await _roleManager.CreateAsync(new Roles { Name = roleName });
-                }
-
-                var RoleID = await _context.Roles.FirstOrDefaultAsync(p => p.Name == roleName);
-                user.RoleID = RoleID.Id;
-
-                // Tao db giua nguoi dung co vai tro 
-                await _userManager.AddToRoleAsync(user, roleName);
-
-                switch (roleName)
-                {
-                    case "Admin":
-                        _context.Manager.Add(new Manager
-                        {
-                            UserID = user.Id,
-                            UserName = user.UserName,
-                            Email = user.Email,
-                            StartDate = user.StartDate,
-                            FirstName = user.FirstName,
-                            LastName = user.LastName,
-                            PhoneNumber = user.PhoneNumber
-                        });
-
-                        break;
-
-                    case "Customer":
-                        _context.Customer.Add(new Customer
-                        {
-                            UserID = user.Id,
-                            UserName = user.UserName,
-                            Email = user.Email,
-                            JoinDate = user.StartDate,
-                            FirstName = user.FirstName,
-                            LastName = user.LastName,
-                            PhoneNumber = user.PhoneNumber
-                        });
-                        break;
-                }
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Login", "Auth");
-        }
+        
+        
     }
 }
