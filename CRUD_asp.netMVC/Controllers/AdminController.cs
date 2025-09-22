@@ -655,7 +655,7 @@ namespace CRUD_asp.netMVC.Controllers
                         {
                             success = false,
                             message = "Không thể tải lên file này, vui lòng chọn file có đuôi jpg, png, jpeg, webp",
-                            errors = new { PicturePath = new[] { "Không thể tải lên file này, vui lòng chọn file có đuôi jpg, png, jpeg, webp" } }
+                            errors = new { Avatarnput = new[] { "Không thể tải lên file này, vui lòng chọn file có đuôi jpg, png, jpeg, webp" } }
                         });
                     }
 

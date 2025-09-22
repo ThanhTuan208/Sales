@@ -9,13 +9,9 @@
 
 	<ItemGroup>
 		<Compile Remove="wwwroot\images\logo\logo_adidas1.png\**" />
-		<Compile Remove="wwwroot\images\NewFolder\**" />
 		<Content Remove="wwwroot\images\logo\logo_adidas1.png\**" />
-		<Content Remove="wwwroot\images\NewFolder\**" />
 		<EmbeddedResource Remove="wwwroot\images\logo\logo_adidas1.png\**" />
-		<EmbeddedResource Remove="wwwroot\images\NewFolder\**" />
 		<None Remove="wwwroot\images\logo\logo_adidas1.png\**" />
-		<None Remove="wwwroot\images\NewFolder\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -31,6 +27,10 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\images\avatar\" />
 	</ItemGroup>
 
 </Project>

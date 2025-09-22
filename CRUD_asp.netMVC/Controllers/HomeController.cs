@@ -1,4 +1,5 @@
-﻿using CRUD_asp.netMVC.Data;
+﻿using AspNetCoreGeneratedDocument;
+using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Home;
 using CRUD_asp.netMVC.HubRealTime;
 using CRUD_asp.netMVC.Models.Auth;
@@ -8,8 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Identity.Client;
+using System.Globalization;
 using System.Security.Claims;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using IEmailSender = CRUD_asp.netMVC.Service.EmailSender.IEmailSender;
 
@@ -17,20 +20,178 @@ namespace CRUD_asp.netMVC.Controllers;
 
 public class HomeController : Controller
 {
+    private readonly IMemoryCache _cache;
+    private readonly AppDBContext _dbContext;
+    private readonly UserManager<Users> _userManager;
     private readonly ILogger<HomeController> _logger;
-    public readonly AppDBContext _dbContext;
-    public readonly UserManager<Users> _userManager;
-    public readonly IMemoryCache _cache;
-    public readonly IHubContext<LoadViewHub> _hub;
+    private readonly IHubContext<LoadViewHub> _hub;
+    private readonly IWebHostEnvironment _environment;
 
-
-    public HomeController(ILogger<HomeController> logger, AppDBContext _context, UserManager<Users> userManager, IMemoryCache cache, IHubContext<LoadViewHub> hub)
+    public HomeController(ILogger<HomeController> logger, AppDBContext _context, UserManager<Users> userManager, IMemoryCache cache, IHubContext<LoadViewHub> hub, IWebHostEnvironment environment)
     {
         _logger = logger;
         _dbContext = _context;
         _userManager = userManager;
         _cache = cache;
         _hub = hub;
+        _environment = environment;
+    }
+
+    [HttpGet] // Hien thi trang theo doi don hang da dat
+    public async Task<IActionResult> OrderTracking()
+    {
+        try
+        {
+            var orderDetailList = await _dbContext.OrderDetail.AsNoTracking()
+                                                                .Include(p => p.Product).ThenInclude(p => p.Cate)
+                                                                .ToListAsync();
+
+            var paymentOrderList = await _dbContext.Payment.AsNoTracking()
+                                                            .Include(p => p.Order).ThenInclude(p => p.Users)
+                                                            .Include(p => p.Order).ThenInclude(p => p.Address)
+                                                            .ToListAsync();
+
+            foreach (var item in paymentOrderList)
+            {
+                orderDetailList.Where(p => p.OrderID == item.OrderID).ToList();
+            }
+
+            var viewModel = await MethodGeneral();
+            viewModel.OrderPayList = orderDetailList;
+            viewModel.PaymentList = paymentOrderList;
+
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Lỗi load dữ liệu chung: OrderTracking");
+            return BadRequest();
+        }
+    }
+
+    // Kiem tra chuoi co dau
+    public bool HasDiacritics(string text)
+    {
+        string removeDiacritics = RemoveDiacritics(text) ?? string.Empty;
+        return text.Equals(removeDiacritics) ? true : false;
+    }
+
+    /// Thay doi name co cac ki tu co dau thanh khong dau
+    public string RemoveDiacritics(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return text;
+
+        var stringNormal = text.Normalize(NormalizationForm.FormD);
+        StringBuilder builder = new StringBuilder();
+
+        foreach (char c in stringNormal)
+        {
+            var unicodeCate = CharUnicodeInfo.GetUnicodeCategory(c);
+            if (unicodeCate != UnicodeCategory.NonSpacingMark)
+            {
+                builder.Append(c);
+            }
+        }
+
+        return builder.ToString().Normalize(NormalizationForm.FormC).Replace(" ", "");
+    }
+
+    [HttpPost, ValidateAntiForgeryToken] // Cap nhat du lieu ho so
+    public async Task<IActionResult> UpdateProfile(UserProfileDTO userDTO)
+    {
+        try
+        {
+            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
+
+            var user = await _dbContext.Users.FirstOrDefaultAsync(p => p.Id == userID);
+            if (user == null)
+            {
+                return Json(new { success = false, message = "Không tìm thấy người dùng này !" });
+            }
+
+            if (string.IsNullOrWhiteSpace(userDTO.UserName))
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Bạn cần điền tên người dùng !",
+                    errors = new { UserName = new[] { "Bạn cần điền tên người dùng !" } }
+                });
+            }
+
+            if (!HasDiacritics(userDTO.UserName.Trim()))
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Vui lòng đặt tên người dùng không có dấu, khoảng cách. ",
+                    errors = new { UserName = new[] { "Vui lòng đặt tên người dùng không có dấu, khoảng cách. " } }
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(userDTO.PhoneNumber))
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Bạn cần điền số điện thoại !",
+                    errors = new { Phone = new[] { "Bạn cần điền số điện thoại !" } }
+                });
+            }
+
+            if (!Regex.IsMatch(userDTO.PhoneNumber.Trim(), @"^(0|\+84)(3[2-9]|5[689]|7[06-9]|8[1-5]|9[0-46-9])[0-9]{7}$"))
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Số điện thoại không đúng định dạng !",
+                    errors = new { Phone = new[] { "Số điện thoại không đúng định dạng !" } }
+                });
+            }
+
+            if (userDTO.ProfileImage != null && userDTO.ProfileImage.Length > 0)
+            {
+                string nameFile = "";
+                var getPathExtentions = Path.GetExtension(userDTO.ProfileImage.FileName).ToLower();
+                var fileExtentions = new[] { ".jpg", ".png", ".jpeg", ".webp" };
+
+                if (!fileExtentions.Contains(getPathExtentions))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Không thể tải lên file này, vui lòng chọn file có đuôi jpg, png, jpeg, webp",
+                        errors = new { AvatarPreview = new[] { "Không thể tải lên file này, vui lòng chọn file có đuôi jpg, png, jpeg, webp" } }
+                    });
+                }
+
+                nameFile = Guid.NewGuid().ToString() + getPathExtentions;
+                var fileUpLoadPath = Path.Combine(_environment.WebRootPath, "images", "avatar", nameFile).Replace("\\", "/");
+
+                using (var fileStream = new FileStream(fileUpLoadPath, FileMode.Create))
+                {
+                    await userDTO.ProfileImage.CopyToAsync(fileStream);
+                }
+
+                user.ProfileImage = Path.Combine("images", "avatar", nameFile).ToLower().Replace("\\", "/");
+            }
+
+            user.UserName = userDTO.UserName;
+            user.PhoneNumber = userDTO.PhoneNumber;
+            user.DateOfBirth = userDTO.DateOfBirth;
+            user.Gender = userDTO.Gender;
+
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Cập nhật hồ sơ thành công. " });
+        }
+        catch (Exception ex)
+        {
+
+            return Json(new { success = false, message = "Lỗi cập nhật: " + ex.Message });
+        }
     }
 
     [HttpPost, ValidateAntiForgeryToken] // Gui ma email de doi gmail moi
@@ -95,7 +256,6 @@ public class HomeController : Controller
             message: htmlBody
         );
 
-
         return Json(new
         {
             success = true,
@@ -150,38 +310,22 @@ public class HomeController : Controller
 
             return Json(new { success = false, message = "Cập nhật Email lỗi: " + ex.Message });
         }
-      
+
     }
 
-    // Thay doi thuoc tinh Email, sdt cho nguoi dung
-    //public async Task<IActionResult> UpdatePropProfile(string prop, bool IsProp)
-    //{
-    //    // IsProp == true => Email, false => PhoneNumber
-    //    if (IsProp)
-    //    {
-    //        var existEmail = await _userManager.FindByEmailAsync(prop.Trim());
-    //        if (existEmail != null)
-    //        {
-    //            return Json(new
-    //            {
-    //                success = false,
-    //                message = "Email đã tồn tại",
-    //                errors = new { Email = new[] { "Email đã tồn tại, vui lòng kiểm tra lại tải khoản !!!" } }
-    //            });
-    //        }
-    //    }
-    //}
-
     [HttpPost] // Dieu huong den trang cap nhat thuoc tinh (Email, phone)
-    public async Task<IActionResult> RedirectPropProfile(bool IsProp)
+    public async Task<IActionResult> RedirecToEmailProfile()
     {
-        // IsProp == true => Email, false => PhoneNumber
-        var viewModel = await MethodGeneral();
-
-        ViewBag.IsSelectProp = IsProp;
-        ViewBag.NameProp = IsProp ? "địa chỉ Email" : "điện thoại";
-
-        return PartialView("_ModalChangeProfilePartial", viewModel);
+        try
+        {
+            var viewModel = await MethodGeneral();
+            return PartialView("_ModalChangeProfilePartial", viewModel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Lỗi load dữ liệu chung: Profile");
+            return BadRequest();
+        }
     }
 
 
@@ -191,12 +335,14 @@ public class HomeController : Controller
         try
         {
             var viewModel = await MethodGeneral();
+            if (viewModel.User == null) return NotFound();
+
             return View(viewModel);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Lỗi load dữ liệu chung: Profile");
-            return View("Error");
+            return BadRequest();
         }
     }
 
@@ -211,7 +357,7 @@ public class HomeController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "Lỗi load dữ liệu chung: Index");
-            return View("Error");
+            return BadRequest();
         }
     }
 
@@ -226,7 +372,7 @@ public class HomeController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "Lỗi load dữ liệu chung: About");
-            return View("Error");
+            return BadRequest();
         }
     }
 
@@ -241,7 +387,7 @@ public class HomeController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "Lỗi load dữ liệu chung: Contact");
-            return View("Error");
+            return BadRequest();
         }
     }
 
@@ -339,8 +485,7 @@ public class HomeController : Controller
             Brands = brand,
             Categories = categories,
             Carts = carts,
-            User = user,
-            MailContact = null
+            User = user
         };
 
         ViewData["cart"] = carts.Count;

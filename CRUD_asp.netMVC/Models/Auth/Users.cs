@@ -4,6 +4,7 @@ using CRUD_asp.netMVC.Models.Product;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualBasic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CRUD_asp.netMVC.Models.Auth
 {
@@ -19,6 +20,10 @@ namespace CRUD_asp.netMVC.Models.Auth
         public string LastName { get; set; }
 
         public string? ProfileImage { get; set; }
+
+        [DataType(DataType.Upload), NotMapped]
+        public IFormFile? ProfileImageFile { get; set; }
+
         public DateTime StartDate { get; set; }
 
         public DateTime DateOfBirth { get; set; }

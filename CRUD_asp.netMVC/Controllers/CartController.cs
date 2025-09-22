@@ -39,7 +39,7 @@ namespace CRUD_asp.netMVC.Controllers
                 var cartItemByIDs = new List<AddToCart>();
                 var addressUser = new List<Address>();
 
-                var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
+                var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
 
                 if (userID > 0)
                 {

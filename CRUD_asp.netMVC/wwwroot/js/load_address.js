@@ -4,7 +4,8 @@ $(document).ready(function () {
 
     LoadView();
 
-    $(function () {
+    
+    $(function () { // Dem nguoc thoi gian het han QR
         var expireSeconds = parseInt($(".qr-expire-time").data("expire-seconds")) || 300;
         var remaining = expireSeconds;
         var timerInterval;
@@ -276,7 +277,7 @@ $(document).ready(function () {
     });
 
     // Loc ky tu nhap so //
-    $(document).on('input paste', '#phonenumber', () => {
+    $(document).on('input paste', '#phonenumber', function () {
         const $input = $(this);
         let value = $input.val().replace(/[^0-9]/g, ''); // Giu lai so
         $input.val(value);

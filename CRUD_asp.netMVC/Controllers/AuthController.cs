@@ -18,11 +18,11 @@ namespace CRUD_asp.netMVC.Controllers
 {
     public class AuthController : Controller
     {
+        private readonly IMemoryCache _cache;
+        private readonly AppDBContext _context;
         private readonly UserManager<Users> _userManager;
         private readonly SignInManager<Users> _signInManager;
         private readonly RoleManager<Roles> _roleManager;
-        private readonly AppDBContext _context;
-        private readonly IMemoryCache _cache;
 
         public AuthController(UserManager<Users> userManager,
                                 SignInManager<Users> signInManager,
@@ -590,7 +590,7 @@ namespace CRUD_asp.netMVC.Controllers
             return RedirectToAction("Login", "Auth");
         }
 
-        
-        
+
+
     }
 }

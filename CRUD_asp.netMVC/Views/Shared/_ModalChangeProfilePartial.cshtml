@@ -7,30 +7,20 @@
 }
 
 <main class="profile-content">
-    <h2 style="font-weight: 600">Thay đổi @ViewBag.NameProp</h2>
+    <h2 style="font-weight: 600">Thay đổi địa chỉ Email</h2>
 
     <!-- Form -->
     <section>
         <form class="profile-form">
-            @if (ViewBag.IsSelectProp)
-            {
-                <div class="form-group">
-                    <label>Địa chỉ Email mới:</label>
-                    <input type="text" id="emailnew" />
-                    <div class="otp form-group d-flex justify-content-around align-items-center mt-5" style="display:none">
-                        <label class="">Mã OTP:</label>
-                        <input type="text" id="confirmotpcode" style="width: 100px; text-align:center" maxlength="4" />
-                    </div>
-                </div>
 
-            }
-            else
-            {
-                <div class="form-group">
-                    <label>Số điện thoại mới:</label>
-                    <input type="text" id="emailnew" />
+            <div class="form-group">
+                <label>Địa chỉ Email mới:</label>
+                <input type="text" id="emailnew" />
+                <div class="otp form-group d-flex justify-content-around align-items-center mt-5" style="display:none">
+                    <label class="">Mã OTP:</label>
+                    <input type="text" id="confirmotpcode" style="width: 100px; text-align:center" maxlength="4" />
                 </div>
-            }
+            </div>
         </form>
 
         <div class="d-flex justify-content-around">

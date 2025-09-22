@@ -27,7 +27,7 @@ $(document).ready(function () {
         }
     });
 
-    $(function () {
+    $(function () { // Loading screen cho thay doi email ho so
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/changeEmailProfile")
             .build();
@@ -53,7 +53,7 @@ $(document).ready(function () {
         })
     });
 
-    $(function () {
+    $(function () { // Loading screen cho thay doi chung
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/lazyLoad")
             .build();
@@ -79,13 +79,80 @@ $(document).ready(function () {
         })
     });
 
+    // Xóa viền đỏ khi người dùng chỉnh sửa hoặc chọn giá trị mới //
+    $(document).on('change input', '#username, #phone', function () {
+
+        const $field = $(this);
+        $($field).removeClass('error');
+        $($field).siblings('.error-message').remove();
+    });
+
+    // Cap nhat form ho so
+    $(document).off('click', '.btn-save-profile').on('click', '.btn-save-profile', function (e) {
+
+        e.preventDefault();
+        $('input[type=text]').removeClass('error');
+        $('.error-message').remove();
+
+        const username = $('#username').val();
+        const phone = $('#phone').val();
+        const date = $('#date').val();
+        const avatar = $('#avatarInput')[0].files[0];
+        const gender = $('input[name=gender]:checked').val();
+
+        let formData = new FormData();
+        formData.append('UserName', username);
+        formData.append('PhoneNumber', phone);
+        formData.append('DateOfBirth', date);
+        formData.append('ProfileImage', avatar);
+        formData.append('Gender', gender);
+        formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+        console.log(phone);
+        $.ajax({
+            url: "/Home/UpdateProfile",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+
+            success: function (response) {
+                if (response.success) {
+                    window.location.href = `/Home/MyProfile`;
+                }
+                else {
+                    Object.keys(response.errors).forEach(function (field) {
+                        const messages = response.errors[field];
+                        let $field = $(`#${field.toLowerCase()}`);
+                        $field.addClass('error');
+                        messages.forEach(message => {
+                            $field.after(`<span class="error-message text-danger">${message}</span>`);
+                        });
+                    });
+                }
+            },
+
+            error: function () {
+                alert("Lỗi cập nhật hồ sơ !");
+            }
+        });
+    });
+
+
+    // Ngan ky tu khac ngoai ky tu so khi nhap sdt //
+    $(document).on('input paste', '#phone', function () {
+        const $input = $(this);
+        let value = $input.val().replace(/[^0-9]/g, ''); // Giu lai so
+        $input.val(value);
+    });
+
+    // Xu ly quay ve ho so //
     $(document).off('click', '.btn-return-profile').on('click', '.btn-return-profile', function (e) {
 
         e.preventDefault();
         window.location.href = "/Home/MyProfile";
     });
 
-
+    // Kiem tra ma otp cua gmail ho so //
     function OPTCodeEmail(callback) {
 
         $("#confirmotpcode").on("input", function () {
@@ -144,7 +211,7 @@ $(document).ready(function () {
 
                             // goi OPTCodeEmail duoc gan gia tri trong ham va tra ve otp
                             OPTCodeEmail(function (otpCode) {
-                                console.log(otpCode);
+
                                 $.ajax({
                                     url: "/Home/ConfirmEmail",
                                     type: "POST",
@@ -174,8 +241,8 @@ $(document).ready(function () {
                                         }
                                     },
 
-                                    error: function (response) {
-                                        alert("Lỗi không hiển thị 1 !");
+                                    error: function () {
+                                        alert("Lỗi không hiển thị !");
                                     }
                                 });
                             })
@@ -192,33 +259,20 @@ $(document).ready(function () {
             },
 
             error: function () {
-                alert("Lỗi không hiển thị 2 !");
+                alert("Lỗi không hiển thị !");
             }
         });
     });
 
 
-    // Hien thi modal thay doi email, phone Profile //
-    $(document).off('click', '#changephone').on('click', '#changephone', function (e) {
-
-        e.preventDefault();
-        RedirectToPageProfile('phone');
-    });
-
+    // Goi giao dien modal change email profile // 
     $(document).off('click', '#changeemail').on('click', '#changeemail', function (e) {
 
         e.preventDefault();
-        RedirectToPageProfile('email');
-    });
-
-    function RedirectToPageProfile(prop) {
-
-        let isProp = prop === 'email' ? true : false;
 
         $.ajax({
-            url: "/Home/RedirectPropProfile",
+            url: "/Home/RedirecToEmailProfile",
             type: "POST",
-            data: { IsProp: isProp },
 
             success: function (response) {
                 $(".profile-content").fadeOut(300, function () {
@@ -230,30 +284,32 @@ $(document).ready(function () {
                 alert("Lỗi không hiển thị !");
             }
         });
-    }
-
-    // Them hinh cho profile 
-    $(document).off('click', '.btn-select-image').on('click', '.btn-select-image', function () {
-
-        $('#avatarInput').click(); // lay anh
-
-
     });
 
-    $('#avatarInput').on('change', function (event) {
-        const file = event.target.files[0];
 
-        if (file) {
-            const render = new FileReader();
-            render.onload = function (e) {
-                $('#avatarPreview').attr('src', e.target.result);
-            };
+    $(function () { // Them hinh cho profile //
+        $(document).off('click', '.btn-select-image').on('click', '.btn-select-image', function () {
 
-            render.readAsDataURL(file);
-        }
-    });
+            $('#avatarInput').click(); // lay anh
 
-    // Chon dia chi gio hang
+
+        });
+
+        $('#avatarInput').on('change', function (event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const render = new FileReader();
+                render.onload = function (e) {
+                    $('#avatarpreview').attr('src', e.target.result);
+                };
+
+                render.readAsDataURL(file);
+            }
+        });
+    })
+
+    // Chon dia chi gio hang //
     $(document).off('click', '.select-address').on('click', '.select-address', function (e) {
         e.preventDefault();
 
