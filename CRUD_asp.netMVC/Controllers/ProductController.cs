@@ -15,7 +15,7 @@ namespace CRUD_asp.netMVC.Controllers
         private readonly AppDBContext _dbContext;
         //private readonly IDbContextFactory<AppDBContext> dbContextFactory;
 
-        public ProductController(AppDBContext _context)
+        private ProductController(AppDBContext _context)
         {
             _dbContext = _context;
             //dbContextFactory = _dbContextFactory;

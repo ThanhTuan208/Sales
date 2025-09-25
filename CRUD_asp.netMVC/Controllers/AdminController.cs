@@ -19,7 +19,7 @@ namespace CRUD_asp.netMVC.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        public readonly AppDBContext _context;
+        private readonly AppDBContext _context;
         private readonly IWebHostEnvironment environment;
 
         public AdminController(AppDBContext context, IWebHostEnvironment _environment)

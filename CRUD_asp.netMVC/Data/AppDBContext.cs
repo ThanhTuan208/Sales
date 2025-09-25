@@ -70,7 +70,6 @@ namespace CRUD_asp.netMVC.Data
             modelBuilder.SeedProducts_ProductSeason_ProductStyle();
         }
 
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);

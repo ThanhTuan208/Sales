@@ -1,0 +1,72 @@
+﻿@using CRUD_asp.netMVC.Models.Order
+@using CRUD_asp.netMVC.Models.Product
+@using System.Globalization
+@model Payment
+
+@{
+    var payment = Model;
+    var user = payment.Order.Users;
+    var address = payment.Order.Address;
+    var orderPayList = ViewData["OrderPayListPartial"] as List<OrderDetail>;
+
+    <div class="container">
+        <header class="page-header">
+            <h1>Chi tiết đơn hàng</h1>
+            <div class="meta">Ngày: @payment.PaymentDate.ToString("dd/MM/yyyy HH:mm") — Mã đơn: <strong>#@payment.OrderID</strong></div>
+        </header>
+
+        <section class="order-card" aria-labelledby="orderTitle">
+            <div class="order-top">
+                <div>
+                    <div id="orderTitle" class="order-id">Người nhận: @user.UserName — @user.PhoneNumber</div>
+                    <div class="order-id">Địa chỉ: @address.Street, @address.Ward, @address.Province</div>
+                </div>
+                <div class="status" aria-live="polite">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display:block">
+                        <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Giao hàng thành công
+                </div>
+            </div>
+
+            <div class="products" role="list">
+                @foreach (var order in orderPayList)
+                {
+                    var product = order.Product;
+                    if (payment.OrderID == order.OrderID)
+                    {
+                        <div class="product" role="listitem">
+                            <img src="@Url.Content($"~/images/products/{product.PicturePath}")" alt="@product.Name">
+                            <div class="prod-info">
+                                <h3>@product.Name</h3>
+                                <div class="meta">
+                                    <span>Phân loại: @product.Cate.Name</span>
+                                    <span>•</span>
+                                    <span class="prod-sku">SKU: @product.ID.ToString("0000")</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="prod-price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", order.Price)</div>
+                                <div class="prod-qty">x @order.Quantity</div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div class="order-footer">
+                <div class="totals" aria-hidden="false">
+                    <div class="label">Tạm tính</div>
+                    <div class="amount">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", payment.paidAmount)</div>
+                </div>
+
+                <div class="actions" role="group" aria-label="Hành động đơn hàng">
+                    <button class="btn-actions btn-primary-od">Đánh giá</button>
+                    <button class="btn-actions btn-outline-od">Theo dõi</button>
+                    <button class="btn-actions btn-ghost-od">Xem chi tiết</button>
+                </div>
+            </div>
+        </section>
+    </div>
+}
+

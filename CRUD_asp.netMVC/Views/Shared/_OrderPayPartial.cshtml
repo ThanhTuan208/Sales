@@ -1,0 +1,17 @@
+﻿@using CRUD_asp.netMVC.Models.Order
+@using CRUD_asp.netMVC.Models.Product
+@using System.Globalization
+@model List<Payment>
+
+@{
+    var OrderPayList = ViewData["OrderPayList"] as List<OrderDetail>;
+
+    foreach (var payment in Model)
+    {
+        @await Html.PartialAsync("_OrderPayItemPartial", payment, new ViewDataDictionary(ViewData){
+        { "OrderPayListPartial", OrderPayList }
+        });
+    }
+}
+
+    

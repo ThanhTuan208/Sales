@@ -12,7 +12,7 @@ namespace CRUD_asp.netMVC.Controllers
 {
     public class AddressController : Controller
     {
-        public readonly AppDBContext _dbContext;
+        private readonly AppDBContext _dbContext;
 
         public AddressController(AppDBContext dbContext)
         {

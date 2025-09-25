@@ -750,7 +750,7 @@ $(document).ready(function () {
     });
 
     // Truyen du lieu dang ki tai khoan
-    $('.bn5.register').on('click', function () {
+    $(document).off('.bn5.register').on('click', '.bn5.register', function () {
         const fname = $('#fname').val();
         const lname = $('#lname').val();
         const uname = $('#uname').val();

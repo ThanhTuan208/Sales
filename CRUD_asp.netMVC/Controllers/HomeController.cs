@@ -2,10 +2,12 @@
 using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Home;
 using CRUD_asp.netMVC.HubRealTime;
+using CRUD_asp.netMVC.Migrations;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.ViewModels.Home;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -37,18 +39,50 @@ public class HomeController : Controller
         _environment = environment;
     }
 
+    [HttpGet] // Lazy load du lieu cho sp da thanh toan
+    public async Task<IActionResult> LoadMoreOrders(int offset = 0, int limit = 5)
+    {
+        var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
+        if (userID == 0) return NotFound();
+
+        var PaymentList = await _dbContext.Payment.Where(p => p.Order.UserID == userID).AsNoTracking()
+                                                .Include(p => p.Order).ThenInclude(o => o.Users)
+                                                .Include(p => p.Order).ThenInclude(o => o.Address)
+                                                .Include(p => p.Order).ThenInclude(o => o.OrderDetail)
+                                                                        .ThenInclude(od => od.Product)
+                                                                        .ThenInclude(pr => pr.Cate)
+                                                                        .OrderByDescending(p => p.ID)
+                                                                        .Skip(offset)
+                                                                        .Take(limit)
+                                                                        .ToListAsync();
+
+        if (!PaymentList.Any())
+            return Content("");
+
+        var orderPayList = await _dbContext.OrderDetail.AsNoTracking().Include(p => p.Product).ThenInclude(p => p.Cate).ToListAsync();
+        ViewData["OrderPayList"] = orderPayList;
+
+        return PartialView("_OrderPayPartial", PaymentList);
+    }
+
     [HttpGet] // Hien thi trang theo doi don hang da dat
     public async Task<IActionResult> OrderTracking()
     {
         try
         {
+            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value ?? "0") : 0;
+            if (userID == 0) return NotFound();
+
             var orderDetailList = await _dbContext.OrderDetail.AsNoTracking()
                                                                 .Include(p => p.Product).ThenInclude(p => p.Cate)
                                                                 .ToListAsync();
 
             var paymentOrderList = await _dbContext.Payment.AsNoTracking()
-                                                            .Include(p => p.Order).ThenInclude(p => p.Users)
+                                                            .Where(p => p.Order.UserID == userID)
                                                             .Include(p => p.Order).ThenInclude(p => p.Address)
+                                                            .Include(p => p.Order).ThenInclude(p => p.Users)
+                                                            .OrderByDescending(p => p.ID)
+                                                            .Take(2)
                                                             .ToListAsync();
 
             foreach (var item in paymentOrderList)
@@ -197,7 +231,9 @@ public class HomeController : Controller
     [HttpPost, ValidateAntiForgeryToken] // Gui ma email de doi gmail moi
     public async Task<IActionResult> UpdateEmailProfile(string Email, [FromServices] IEmailSender emailSender)
     {
-        var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
+        var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
+        if (userID == 0) return NotFound();
+
         var user = await _dbContext.Users.FirstOrDefaultAsync(p => p.Id == userID);
 
         if (string.IsNullOrWhiteSpace(Email))

@@ -16,6 +16,44 @@ body {
     font-style: normal;
 }
 
+#orderContainer {
+    background: var(--od-bg); /* giữ đồng bộ */
+}
+/*css loading sp lazy load*/
+#loading {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 15px;
+    color: #666;
+    background: var(--od-bg) !important; /* ❗ cùng màu nền */
+}
+
+    #loading .spinner {
+        margin: 0 auto 12px auto;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 4px solid rgba(0, 0, 0, 0.1); /* viền mờ */
+        border-top: 4px solid transparent; /* ẩn viền trên */
+        border-image: linear-gradient(45deg, #3498db, #9b59b6) 1; /* gradient xanh tím */
+        animation: spin 1s linear infinite;
+        box-shadow: 0 0 10px rgba(0,0,0,0.08);
+    }
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/*css loading sp lazy load*/
+
 /* giao dien san pham da mua*/
 .order-detail-theme {
     --od-font: "Inter", system-ui, Arial;
@@ -121,7 +159,7 @@ header .meta {
     gap: 12px;
 }
 
-.product {
+.order-detail-theme .product {
     display: grid;
     grid-template-columns: 72px 1fr auto;
     gap: 12px;
@@ -131,12 +169,12 @@ header .meta {
     transition: background .18s ease, transform .12s ease;
 }
 
-    .product:hover {
+    .order-detail-theme .product:hover {
         background: rgba(245,166,35,0.04);
         transform: translateY(-2px);
     }
 
-    .product img {
+    .order-detail-theme .product img {
         width: 72px;
         height: 72px;
         border-radius: 10px;

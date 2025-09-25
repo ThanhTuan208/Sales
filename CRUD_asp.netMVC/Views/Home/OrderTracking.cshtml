@@ -4,7 +4,6 @@
 @{
     ViewData["Title"] = "OrderTracking Page";
     Layout = "_HomeLayout";
-    var User = Model.User;
 }
 
 <div class="tracking-theme">
@@ -12,153 +11,61 @@
         <div class="tracking-card">
             <div class="order-info">
                 <div class="tracking-header">
-                    <h3>Order Status</h3>
-                    <button>Track Details</button>
+                    <h3>Trạng thái đơn hàng</h3>
+                    <button>Chi tiết</button>
                 </div>
-                <h2>Order #12345</h2>
-                <p>Placed on: 15 Mar 2025 | Expected Delivery: 21 Mar 2025</p>
-            </div>
+                <h2>Đơn hàng #12345</h2>
+                <p>Ngày đặt: 15 Mar 2025 | Dự kiến: 21 Mar 2025</p>
+            </div>  
 
             <div class="tracking-timeline" id="tracking-timeline">
                 <div class="tracking-step">
                     <div class="circle done"><i class="fa fa-cart-shopping"></i></div>
-                    <span>15 Mar<br />Order Placed</span>
+                    <span>15 Mar<br />Đặt hàng</span>
                 </div>
                 <div class="tracking-step">
                     <div class="circle done"><i class="fa fa-check"></i></div>
-                    <span>15 Mar<br />Confirmed</span>
+                    <span>15 Mar<br />Xác nhận</span>
                 </div>
                 <div class="tracking-step">
-                    <div class="circle done"><i class="fa fa-truck"></i></div>
-                    <span>15 Mar<br />Dispatched</span>
+                    <div class="circle active"><i class="fa fa-truck"></i></div>
+                    <span>15 Mar<br />Gửi hàng</span>
                 </div>
                 <div class="tracking-step">
-                    <div class="circle active"><i class="fa fa-motorcycle"></i></div>
-                    <span>16 Mar<br />Out for Delivery</span>
+                    <div class="circle"><i class="fa fa-motorcycle"></i></div>
+                    <span>16 Mar<br />Đang giao hàng</span>
                 </div>
                 <div class="tracking-step">
                     <div class="circle"><i class="fa fa-box"></i></div>
-                    <span>21 Mar<br />Delivered</span>
+                    <span>21 Mar<br />Đã giao</span>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <div class="order-detail-theme">
-    @{
-        foreach (var payment in Model.PaymentList.OrderByDescending(p => p.ID))
+    <div id="orderContainer">
+        @*lazy load san pham da thanh toan*@
+        @await Html.PartialAsync("_OrderPayPartial", Model.PaymentList, new ViewDataDictionary(ViewData)
         {
-            if (Model.OrderPayList.FirstOrDefault(p => p.OrderID == payment.OrderID) != null)
-            {
-                var user = payment.Order.Users;
-                var address = payment.Order.Address;
+            { "OrderPayList", Model.OrderPayList }
+        })
+    </div>
 
-                <div class="container">
-                    <header class="page-header">
-                        <h1>Chi tiết đơn hàng</h1>
-                        <div class="meta">Ngày: @payment.PaymentDate.ToString("dd/MM/yyyy HH:mm") — Mã đơn: <strong>#@payment.OrderID</strong></div>
-                    </header>
-
-                    <section class="order-card" aria-labelledby="orderTitle">
-                        <div class="order-top">
-                            <div>
-                                <div id="orderTitle" class="order-id">Người nhận: @user.UserName — @user.PhoneNumber</div>
-                                <div class="order-id">Địa chỉ: @address.Street, @address.Ward, @address.Province</div>
-                            </div>
-                            <div class="status" aria-live="polite">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display:block">
-                                    <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                Giao hàng thành công
-                            </div>
-                        </div>
-
-                        <div class="products" role="list">
-                            @foreach (var productPayList in Model.OrderPayList)
-                            {
-                                var product = productPayList.Product;
-                                if (payment.OrderID == productPayList.OrderID)
-                                {
-                                    <div class="product" role="listitem">
-                                        <img src="@Url.Content($"~/images/products/{product.PicturePath}")" alt="@product.Name">
-                                        <div class="prod-info">
-                                            <h3>@product.Name</h3>
-                                            <div class="meta">
-                                                <span>Phân loại: @product.Cate.Name</span>
-                                                <span>•</span>
-                                                <span class="prod-sku">SKU: @product.ID.ToString("0000")</span> 
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="prod-price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", productPayList.Price)</div>
-                                            <div class="prod-qty">x @productPayList.Quantity</div>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                        </div>
-
-                        <div class="order-footer">
-                            <div class="totals" aria-hidden="false">
-                                <div class="label">Tạm tính</div>
-                                <div class="amount">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", payment.paidAmount)</div>
-                            </div>
-
-                            <div class="actions" role="group" aria-label="Hành động đơn hàng">
-                                <button class="btn-actions btn-primary-od">Đánh giá</button>
-                                <button class="btn-actions btn-outline-od">Theo dõi</button>
-                                <button class="btn-actions btn-ghost-od">Xem chi tiết</button>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            }
-        }
-    }
+    <div id="loading">
+        <div class="spinner"></div>
+        <div>Đang tải...</div>
+    </div>
 </div>
+
 <script src="~/js/jquery-3.7.1.min.js" asp-append-version="true"></script>
+<script src="~/js/order_tracking.js" asp-append-version="true"></script>
+@section Scripts {
+    <script>
+        $(function () {
+            // Gọi hàm khởi tạo lazy load với offset ban đầu = số đơn đã load
+            initLazyLoad(@Model.PaymentList.Count);
+        });
 
-<script>
-    const $timeline = $("#tracking-timeline");
-    const $circles = $timeline.find(".circle");
-
-    function updateProgress() {
-        setTimeout(() => {
-            let activeIndex = -1;
-
-            $circles.each(function (index) {
-                if ($(this).hasClass("active")) {
-                    activeIndex = index;
-                    return false;
-                }
-            });
-
-            if (activeIndex === -1) {
-                const lastDone = $circles.filter(".done").last();
-                activeIndex = lastDone.length ? lastDone.index() : 0;
-            }
-
-            const totalSteps = $circles.length;
-            if (totalSteps <= 1) {
-                $timeline.css("--track-progress", "0px");
-                return;
-            }
-
-            if ($(window).width() > 768) {
-                const lineWidth = $timeline.width() - 140;
-                const progress = (activeIndex / (totalSteps - 1)) * lineWidth;
-                $timeline.css("--track-progress", Math.max(0, progress) + "px");
-            } else {
-                const lineHeight = $timeline.height() - 60;
-                const progress = (activeIndex / (totalSteps - 1)) * lineHeight;
-                $timeline.css("--track-progress", Math.max(0, progress) + "px");
-            }
-        }, 100);
-    }
-
-    updateProgress();
-    $(window).on("resize", function () {
-        updateProgress();
-    });
-
-</script>
+    </script>
+}
