@@ -1,8 +1,5 @@
 ﻿using CRUD_asp.netMVC.Data;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
-using NuGet.Protocol;
-using System.Data;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 

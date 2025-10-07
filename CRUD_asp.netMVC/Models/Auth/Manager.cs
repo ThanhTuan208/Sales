@@ -1,5 +1,4 @@
-﻿using CRUD_asp.netMVC.Models.Product;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CRUD_asp.netMVC.Models.Auth
 {

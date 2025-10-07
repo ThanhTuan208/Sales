@@ -1,6 +1,4 @@
-﻿using NuGet.Protocol;
-
-namespace CRUD_asp.netMVC.DTO.Payment
+﻿namespace CRUD_asp.netMVC.DTO.Payment
 {
     public class PaymentRequest
     {

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace CRUD_asp.netMVC.Models.Product
+﻿namespace CRUD_asp.netMVC.Models.Product
 {
     public class ProductColors
     {

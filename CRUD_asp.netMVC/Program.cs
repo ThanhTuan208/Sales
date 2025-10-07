@@ -1,14 +1,11 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.HubRealTime;
 using CRUD_asp.netMVC.Models.Auth;
-using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Service.EmailSender;
+using CRUD_asp.netMVC.Service.GHN;
 using CRUD_asp.netMVC.Service.Payment;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using NuGet.Protocol.Resources;
-using System;
 
 namespace CRUD_asp.netMVC
 {
@@ -24,7 +21,7 @@ namespace CRUD_asp.netMVC
 
             // Dky AppDBContext 
             builder.Services.AddDbContext<AppDBContext>(option =>
-                option.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext")) // appsettings.json
+                option.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext"))
             );
 
             // Dang ky backgroud service (Xoa order.status = spending)
@@ -33,6 +30,10 @@ namespace CRUD_asp.netMVC
             // Dang ky service QrCode
             builder.Services.AddScoped<QrCodeService>();
             builder.Services.AddScoped<ISmsPaymentVerificationService, SmsPaymentVerificationService>();
+
+            // Dang ky tao don GHN
+            builder.Services.AddScoped<GhnService>();
+            builder.Services.AddHttpClient<IGhnService, GhnService>();
 
             // Dabg ky Session
             builder.Services.AddSession(options =>

@@ -1,12 +1,9 @@
-﻿using CRUD_asp.netMVC.Models.Product;
-using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace CRUD_asp.netMVC.Models.Auth
 {
     public class Roles : IdentityRole<int>
     {
-     
+
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUD_asp.netMVC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20250922135540_updateGenderUsr")]
-    partial class updateGenderUsr
+    [Migration("20251004084956_initialFirstDB")]
+    partial class initialFirstDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -406,6 +406,13 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StatusTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TrackingNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -5596,6 +5603,9 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Weight")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
                     b.HasIndex("BrandID");
@@ -5624,7 +5634,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao khoac nam nike",
                             OldPrice = 1800000.0,
                             PicturePath = "nike_jacket.jpg",
-                            Quantity = 100
+                            Quantity = 100,
+                            Weight = 300
                         },
                         new
                         {
@@ -5641,7 +5652,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "quan the thao nike",
                             OldPrice = 0.0,
                             PicturePath = "nike_pants.webp",
-                            Quantity = 80
+                            Quantity = 80,
+                            Weight = 200
                         },
                         new
                         {
@@ -5658,7 +5670,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "giay nike air max",
                             OldPrice = 3000000.0,
                             PicturePath = "nike_shoes.jpg",
-                            Quantity = 60
+                            Quantity = 60,
+                            Weight = 400
                         },
                         new
                         {
@@ -5675,7 +5688,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "vay the thao nike nu",
                             OldPrice = 0.0,
                             PicturePath = "nike_dress.jpg",
-                            Quantity = 40
+                            Quantity = 40,
+                            Weight = 150
                         },
                         new
                         {
@@ -5692,7 +5706,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao thun nike basic",
                             OldPrice = 650000.0,
                             PicturePath = "nike_tshirt.jpg",
-                            Quantity = 200
+                            Quantity = 200,
+                            Weight = 150
                         },
                         new
                         {
@@ -5709,7 +5724,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "đong ho the thao nike",
                             OldPrice = 0.0,
                             PicturePath = "nike_watch.jpg",
-                            Quantity = 25
+                            Quantity = 25,
+                            Weight = 50
                         },
                         new
                         {
@@ -5726,7 +5742,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao khoac adidas originals",
                             OldPrice = 1600000.0,
                             PicturePath = "adidas_jacket.jpg",
-                            Quantity = 70
+                            Quantity = 70,
+                            Weight = 350
                         },
                         new
                         {
@@ -5743,7 +5760,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "quan jogger adidas",
                             OldPrice = 0.0,
                             PicturePath = "adidas_pants.jpg",
-                            Quantity = 90
+                            Quantity = 90,
+                            Weight = 200
                         },
                         new
                         {
@@ -5760,7 +5778,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "giay adidas ultraboost",
                             OldPrice = 3400000.0,
                             PicturePath = "adidas_shoes.jpg",
-                            Quantity = 50
+                            Quantity = 50,
+                            Weight = 400
                         },
                         new
                         {
@@ -5777,7 +5796,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "vay tennis adidas nu",
                             OldPrice = 0.0,
                             PicturePath = "adidas_dress.jpg",
-                            Quantity = 45
+                            Quantity = 45,
+                            Weight = 150
                         },
                         new
                         {
@@ -5794,7 +5814,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao thun adidas co tron",
                             OldPrice = 700000.0,
                             PicturePath = "adidas_tshirt.jpg",
-                            Quantity = 150
+                            Quantity = 150,
+                            Weight = 150
                         },
                         new
                         {
@@ -5811,7 +5832,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "đong ho the thao adidas",
                             OldPrice = 0.0,
                             PicturePath = "adidas_watch.jpg",
-                            Quantity = 30
+                            Quantity = 30,
+                            Weight = 50
                         },
                         new
                         {
@@ -5828,7 +5850,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao khoac zara dang dai",
                             OldPrice = 2000000.0,
                             PicturePath = "zara_jacket.jpg",
-                            Quantity = 60
+                            Quantity = 60,
+                            Weight = 400
                         },
                         new
                         {
@@ -5845,7 +5868,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "quan ong rong zara",
                             OldPrice = 0.0,
                             PicturePath = "zara_pants.jpg",
-                            Quantity = 40
+                            Quantity = 40,
+                            Weight = 250
                         },
                         new
                         {
@@ -5862,7 +5886,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "giay cao got zara",
                             OldPrice = 1300000.0,
                             PicturePath = "zara_heels.jpg",
-                            Quantity = 55
+                            Quantity = 55,
+                            Weight = 300
                         },
                         new
                         {
@@ -5879,7 +5904,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "vay xep ly zara",
                             OldPrice = 0.0,
                             PicturePath = "zara_dress.jpg",
-                            Quantity = 35
+                            Quantity = 35,
+                            Weight = 200
                         },
                         new
                         {
@@ -5896,7 +5922,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao thun zara basic",
                             OldPrice = 500000.0,
                             PicturePath = "zara_tshirt.jpg",
-                            Quantity = 90
+                            Quantity = 90,
+                            Weight = 150
                         },
                         new
                         {
@@ -5913,7 +5940,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "đong ho kim zara",
                             OldPrice = 0.0,
                             PicturePath = "zara_watch.jpg",
-                            Quantity = 25
+                            Quantity = 25,
+                            Weight = 50
                         },
                         new
                         {
@@ -5930,7 +5958,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao khoac du h&m",
                             OldPrice = 1000000.0,
                             PicturePath = "hm_jacket.jpg",
-                            Quantity = 80
+                            Quantity = 80,
+                            Weight = 300
                         },
                         new
                         {
@@ -5947,7 +5976,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "quan tay h&m",
                             OldPrice = 0.0,
                             PicturePath = "hm_pants.jpg",
-                            Quantity = 65
+                            Quantity = 65,
+                            Weight = 250
                         },
                         new
                         {
@@ -5964,7 +5994,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "giay the thao h&m",
                             OldPrice = 900000.0,
                             PicturePath = "hm_shoes.jpg",
-                            Quantity = 100
+                            Quantity = 100,
+                            Weight = 350
                         },
                         new
                         {
@@ -5981,7 +6012,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "vay ngan hoa nhi h&m",
                             OldPrice = 0.0,
                             PicturePath = "hm_dress.jpg",
-                            Quantity = 45
+                            Quantity = 45,
+                            Weight = 150
                         },
                         new
                         {
@@ -5998,7 +6030,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao thun nam basic h&m",
                             OldPrice = 250000.0,
                             PicturePath = "hm_tshirt.jpg",
-                            Quantity = 150
+                            Quantity = 150,
+                            Weight = 150
                         },
                         new
                         {
@@ -6015,7 +6048,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "đong ho day silicon h&m",
                             OldPrice = 0.0,
                             PicturePath = "hm_watch.jpg",
-                            Quantity = 40
+                            Quantity = 40,
+                            Weight = 50
                         },
                         new
                         {
@@ -6032,7 +6066,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao khoac long vu uniqlo",
                             OldPrice = 1900000.0,
                             PicturePath = "uniqlo_jacket.jpg",
-                            Quantity = 70
+                            Quantity = 70,
+                            Weight = 250
                         },
                         new
                         {
@@ -6049,7 +6084,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "quan jean uniqlo",
                             OldPrice = 0.0,
                             PicturePath = "uniqlo_jeans.jpg",
-                            Quantity = 50
+                            Quantity = 50,
+                            Weight = 300
                         },
                         new
                         {
@@ -6066,7 +6102,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "giay sneaker uniqlo",
                             OldPrice = 1150000.0,
                             PicturePath = "uniqlo_shoes.jpg",
-                            Quantity = 60
+                            Quantity = 60,
+                            Weight = 350
                         },
                         new
                         {
@@ -6083,7 +6120,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "vay cotton uniqlo",
                             OldPrice = 0.0,
                             PicturePath = "uniqlo_dress.jpg",
-                            Quantity = 40
+                            Quantity = 40,
+                            Weight = 150
                         },
                         new
                         {
@@ -6100,7 +6138,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao thun airism uniqlo",
                             OldPrice = 450000.0,
                             PicturePath = "uniqlo_tshirt.jpg",
-                            Quantity = 120
+                            Quantity = 120,
+                            Weight = 150
                         },
                         new
                         {
@@ -6117,7 +6156,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "đong ho toi gian uniqlo",
                             OldPrice = 0.0,
                             PicturePath = "uniqlo_watch.jpg",
-                            Quantity = 30
+                            Quantity = 30,
+                            Weight = 50
                         },
                         new
                         {
@@ -6134,7 +6174,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao khoac cao cap gucci",
                             OldPrice = 27000000.0,
                             PicturePath = "gucci_jacket.jpg",
-                            Quantity = 10
+                            Quantity = 10,
+                            Weight = 500
                         },
                         new
                         {
@@ -6151,7 +6192,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "quan tay gucci nam",
                             OldPrice = 0.0,
                             PicturePath = "gucci_pants.jpg",
-                            Quantity = 15
+                            Quantity = 15,
+                            Weight = 300
                         },
                         new
                         {
@@ -6168,7 +6210,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "giay luoi gucci",
                             OldPrice = 24000000.0,
                             PicturePath = "gucci_shoes.jpg",
-                            Quantity = 12
+                            Quantity = 12,
+                            Weight = 450
                         },
                         new
                         {
@@ -6185,7 +6228,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "vay lua cao cap gucci",
                             OldPrice = 0.0,
                             PicturePath = "gucci_dress.jpg",
-                            Quantity = 8
+                            Quantity = 8,
+                            Weight = 200
                         },
                         new
                         {
@@ -6202,7 +6246,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao thun gucci logo lon",
                             OldPrice = 9500000.0,
                             PicturePath = "gucci_tshirt.jpg",
-                            Quantity = 20
+                            Quantity = 20,
+                            Weight = 150
                         },
                         new
                         {
@@ -6219,7 +6264,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "đong ho đinh đa gucci",
                             OldPrice = 0.0,
                             PicturePath = "gucci_watch.jpg",
-                            Quantity = 5
+                            Quantity = 5,
+                            Weight = 100
                         },
                         new
                         {
@@ -6236,7 +6282,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao khoac jean levi's",
                             OldPrice = 1600000.0,
                             PicturePath = "levis_jacket.jpg",
-                            Quantity = 40
+                            Quantity = 40,
+                            Weight = 400
                         },
                         new
                         {
@@ -6253,7 +6300,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "quan jeans levi's 501",
                             OldPrice = 0.0,
                             PicturePath = "levis_jeans.jpg",
-                            Quantity = 60
+                            Quantity = 60,
+                            Weight = 300
                         },
                         new
                         {
@@ -6270,7 +6318,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "giay the thao levi's",
                             OldPrice = 1250000.0,
                             PicturePath = "levis_shoes.jpg",
-                            Quantity = 35
+                            Quantity = 35,
+                            Weight = 350
                         },
                         new
                         {
@@ -6287,7 +6336,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "vay bo levi's nu",
                             OldPrice = 0.0,
                             PicturePath = "levis_dress.jpg",
-                            Quantity = 20
+                            Quantity = 20,
+                            Weight = 250
                         },
                         new
                         {
@@ -6304,7 +6354,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao thun co tron levi's",
                             OldPrice = 550000.0,
                             PicturePath = "levis_tshirt.jpg",
-                            Quantity = 100
+                            Quantity = 100,
+                            Weight = 150
                         },
                         new
                         {
@@ -6321,7 +6372,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "đong ho day da levi's",
                             OldPrice = 0.0,
                             PicturePath = "levis_watch.jpg",
-                            Quantity = 15
+                            Quantity = 15,
+                            Weight = 50
                         },
                         new
                         {
@@ -6338,7 +6390,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao khoac the thao lacoste",
                             OldPrice = 2900000.0,
                             PicturePath = "lacoste_jacket.jpg",
-                            Quantity = 30
+                            Quantity = 30,
+                            Weight = 300
                         },
                         new
                         {
@@ -6355,7 +6408,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "quan short lacoste",
                             OldPrice = 0.0,
                             PicturePath = "lacoste_short.jpg",
-                            Quantity = 40
+                            Quantity = 40,
+                            Weight = 150
                         },
                         new
                         {
@@ -6372,7 +6426,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "giay sneaker lacoste",
                             OldPrice = 2400000.0,
                             PicturePath = "lacoste_shoes.jpg",
-                            Quantity = 25
+                            Quantity = 25,
+                            Weight = 400
                         },
                         new
                         {
@@ -6389,7 +6444,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "vay polo lacoste",
                             OldPrice = 0.0,
                             PicturePath = "lacoste_dress.jpg",
-                            Quantity = 18
+                            Quantity = 18,
+                            Weight = 150
                         },
                         new
                         {
@@ -6406,7 +6462,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao thun ca sau lacoste",
                             OldPrice = 1200000.0,
                             PicturePath = "lacoste_tshirt.jpg",
-                            Quantity = 55
+                            Quantity = 55,
+                            Weight = 150
                         },
                         new
                         {
@@ -6423,7 +6480,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "đong ho the thao lacoste",
                             OldPrice = 0.0,
                             PicturePath = "lacoste_watch.jpg",
-                            Quantity = 20
+                            Quantity = 20,
+                            Weight = 50
                         },
                         new
                         {
@@ -6440,7 +6498,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao khoac the thao puma",
                             OldPrice = 1700000.0,
                             PicturePath = "puma_jacket.jpg",
-                            Quantity = 50
+                            Quantity = 50,
+                            Weight = 300
                         },
                         new
                         {
@@ -6457,7 +6516,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "quan jogger puma",
                             OldPrice = 0.0,
                             PicturePath = "puma_pants.jpg",
-                            Quantity = 70
+                            Quantity = 70,
+                            Weight = 200
                         },
                         new
                         {
@@ -6474,7 +6534,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "giay chay bo puma",
                             OldPrice = 2000000.0,
                             PicturePath = "puma_shoes.jpg",
-                            Quantity = 40
+                            Quantity = 40,
+                            Weight = 400
                         },
                         new
                         {
@@ -6491,7 +6552,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "vay the thao puma nu",
                             OldPrice = 0.0,
                             PicturePath = "puma_dress.jpg",
-                            Quantity = 25
+                            Quantity = 25,
+                            Weight = 150
                         },
                         new
                         {
@@ -6508,7 +6570,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao thun the thao puma",
                             OldPrice = 650000.0,
                             PicturePath = "puma_tshirt.jpg",
-                            Quantity = 90
+                            Quantity = 90,
+                            Weight = 150
                         },
                         new
                         {
@@ -6525,7 +6588,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "đong ho the thao puma",
                             OldPrice = 0.0,
                             PicturePath = "puma_watch.jpg",
-                            Quantity = 18
+                            Quantity = 18,
+                            Weight = 50
                         },
                         new
                         {
@@ -6542,7 +6606,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao khoac da chanel",
                             OldPrice = 10000000.0,
                             PicturePath = "chanel_jacket.jpg",
-                            Quantity = 15
+                            Quantity = 15,
+                            Weight = 450
                         },
                         new
                         {
@@ -6559,7 +6624,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "quan vai cao cap chanel",
                             OldPrice = 0.0,
                             PicturePath = "chanel_pants.jpg",
-                            Quantity = 12
+                            Quantity = 12,
+                            Weight = 250
                         },
                         new
                         {
@@ -6576,7 +6642,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "giay cao got chanel",
                             OldPrice = 9000000.0,
                             PicturePath = "chanel_shoes.jpg",
-                            Quantity = 10
+                            Quantity = 10,
+                            Weight = 300
                         },
                         new
                         {
@@ -6593,7 +6660,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "vay da hoi chanel",
                             OldPrice = 0.0,
                             PicturePath = "chanel_dress.jpg",
-                            Quantity = 8
+                            Quantity = 8,
+                            Weight = 200
                         },
                         new
                         {
@@ -6610,7 +6678,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "ao thun cao cap chanel",
                             OldPrice = 3500000.0,
                             PicturePath = "chanel_tshirt.jpg",
-                            Quantity = 20
+                            Quantity = 20,
+                            Weight = 150
                         },
                         new
                         {
@@ -6627,7 +6696,8 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedName = "đong ho chanel sang trong",
                             OldPrice = 0.0,
                             PicturePath = "chanel_watch.jpg",
-                            Quantity = 6
+                            Quantity = 6,
+                            Weight = 100
                         });
                 });
 

@@ -3,17 +3,15 @@ using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Abstractions;
 
 namespace CRUD_asp.netMVC.Data
 {
     public class AppDBContext : IdentityDbContext<Users, Roles, int>
     {
         public AppDBContext(DbContextOptions<AppDBContext> DBContext) : base(DBContext) { }
-            
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

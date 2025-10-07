@@ -1,5 +1,4 @@
-﻿using AspNetCoreGeneratedDocument;
-using CRUD_asp.netMVC.Data;
+﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.ViewModels.Home;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +14,7 @@ namespace CRUD_asp.netMVC.Controllers
         private readonly AppDBContext _dbContext;
         //private readonly IDbContextFactory<AppDBContext> dbContextFactory;
 
-        private ProductController(AppDBContext _context)
+        public ProductController(AppDBContext _context)
         {
             _dbContext = _context;
             //dbContextFactory = _dbContextFactory;

@@ -2,9 +2,8 @@
 @using System.Globalization
 @model CartViewModel
 @{
-    var address = Model.AddressUser.Where(p => p.IsDefault).FirstOrDefault();
+    var address = Model.AddressUser.FirstOrDefault(p => p.IsDefault);
 }
-
 
 <div class="row justify-content-around align-items-center">
     <h3 id="modalTitle">Sản phẩm đã chọn</h3>
@@ -24,6 +23,11 @@
     <tbody class="product-list">
         @{
             Layout = null;
+        }
+
+        @if (Model.QrPayment != null)
+        {
+            <input type="hidden" id="orderid" value="@Model.QrPayment.OrderId" />
         }
 
         @if (!Model.CartItemByIDs.Any())
@@ -57,7 +61,15 @@
     {
         <p class="font-weight-bold">Số lượng: <span id="total-quantity">@Model.CartItemByIDs.Sum(item => item.Quantity)</span></p>
         <p class="font-weight-bold">Tổng giá: <span class="price-complete">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", 0)</span></p>
-        <p class="font-weight-bold">Địa chỉ: <span class="address">@(address.Street + ", " + address.Ward + ", " + address.Province ?? "Hãy cập nhật địa chỉ của bạn. ")  </span></p>
+        if(address != null)
+        {   
+            <p class="font-weight-bold">Địa chỉ: <span class="address">@(address.Street + ", " + address.Ward + ", " + address.Province ?? "Hãy cập nhật địa chỉ của bạn. ")  </span></p>
+        }
+        else
+        {
+            
+        <p class="font-weight-bold">Địa chỉ: <span class="address">Hãy cập nhật địa chỉ của bạn trước khi thanh toán. </span></p>
+        }
     }
     else
     {

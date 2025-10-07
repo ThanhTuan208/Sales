@@ -1,13 +1,10 @@
-﻿using AspNetCoreGeneratedDocument;
-using CRUD_asp.netMVC.Data;
+﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Home;
 using CRUD_asp.netMVC.HubRealTime;
-using CRUD_asp.netMVC.Migrations;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.ViewModels.Home;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -38,6 +35,12 @@ public class HomeController : Controller
         _hub = hub;
         _environment = environment;
     }
+
+    [HttpPost] // Cap nhat trang thai don hang
+    //public async Task<IActionResult> UpdateStatus()
+    //{
+
+    //}
 
     [HttpGet] // Lazy load du lieu cho sp da thanh toan
     public async Task<IActionResult> LoadMoreOrders(int offset = 0, int limit = 5)
@@ -70,7 +73,7 @@ public class HomeController : Controller
     {
         try
         {
-            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value ?? "0") : 0;
+            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
             if (userID == 0) return NotFound();
 
             var orderDetailList = await _dbContext.OrderDetail.AsNoTracking()
@@ -101,7 +104,7 @@ public class HomeController : Controller
             _logger.LogError(ex, "Lỗi load dữ liệu chung: OrderTracking");
             return BadRequest();
         }
-    }
+        }
 
     // Kiem tra chuoi co dau
     public bool HasDiacritics(string text)
@@ -110,7 +113,7 @@ public class HomeController : Controller
         return text.Equals(removeDiacritics) ? true : false;
     }
 
-    /// Thay doi name co cac ki tu co dau thanh khong dau
+    // Thay doi name co cac ki tu co dau thanh khong dau
     public string RemoveDiacritics(string text)
     {
         if (string.IsNullOrEmpty(text))

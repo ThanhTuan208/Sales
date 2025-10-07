@@ -1,7 +1,8 @@
 ﻿using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Product;
 using System.ComponentModel.DataAnnotations;
-using System.Net.NetworkInformation;
+using System.Diagnostics.CodeAnalysis;
+using System.Security.Permissions;
 
 namespace CRUD_asp.netMVC.Models.Order
 {
@@ -14,8 +15,7 @@ namespace CRUD_asp.netMVC.Models.Order
         public int UserID { get; set; }
         public Users? Users { get; set; }
 
-        [Required]
-        public int AddressID { get; set; }
+        public int? AddressID { get; set; }
         public Address? Address { get; set; }
 
         [DataType(DataType.Currency)]
@@ -25,14 +25,37 @@ namespace CRUD_asp.netMVC.Models.Order
         public string? Status { get; set; } = "Pending"; // Paid, failed, shipped, completed
 
         [Required]
-        public string PaymentMethod { get; set; } = "Cash"; // or Transfer, credit card
+        public string PaymentMethod { get; set; } // or Transfer, credit card
 
         [Required]
         public string TransactionId { get; set; }
 
+        public string TrackingNumber { get; set; } // Ma van don
+
         public DateTime OrderDate { get; set; }
 
         public DateTime? PaidAt { get; set; }
+
+        public DateTime? StatusTime { get; set; }
+
+        [StringLength(50)]
+        public string? ShipRecipientName { get; set; }
+
+        [StringLength(50)]
+        public string? ShipPhoneNumber { get; set; }
+
+        [StringLength(50)]
+        public string? ShipStreet { get; set; }
+
+        [StringLength(50)]
+        public string? ShipProvince { get; set; }
+
+        [StringLength(50)]
+        public string? ShipWard { get; set; }
+
+        [StringLength(50)]
+        public string? ShipPostalCode { get; set; }
+
         public Payment? Payment { get; set; }
 
         public List<OrderDetail>? OrderDetail { get; set; }

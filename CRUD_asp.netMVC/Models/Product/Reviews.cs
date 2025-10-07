@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using CRUD_asp.netMVC.Models.Auth;
 using System.ComponentModel.DataAnnotations;
-using CRUD_asp.netMVC.Models.Auth;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CRUD_asp.netMVC.Models.Product
 {

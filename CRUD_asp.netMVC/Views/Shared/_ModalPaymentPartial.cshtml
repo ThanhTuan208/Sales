@@ -8,11 +8,11 @@
 @Html.AntiForgeryToken()
 
 <section class="modal-left">
-    @Html.Partial("_ModalPaymentPartialLeft", Model)
+    @await Html.PartialAsync("_ModalPaymentPartialLeft", Model)
 </section>
 
 <section class="modal-right">
-    @Html.Partial("_ModalPaymentPartialRight", Model)
+    @await Html.PartialAsync("_ModalPaymentPartialRight", Model)
 </section>
 
 <div id="overlayStatus" class="overlay-status" style="display:none;">

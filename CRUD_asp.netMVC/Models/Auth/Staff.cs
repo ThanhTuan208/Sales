@@ -1,7 +1,4 @@
-﻿using CRUD_asp.netMVC.Models.Product;
-using System.ComponentModel.DataAnnotations;
-
-namespace CRUD_asp.netMVC.Models.Auth
+﻿namespace CRUD_asp.netMVC.Models.Auth
 {
     //public class Staff : FieldGeneralRoles
     //{

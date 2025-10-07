@@ -1,7 +1,5 @@
 ﻿using CRUD_asp.netMVC.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 public class OrderCleanupService : BackgroundService
 {

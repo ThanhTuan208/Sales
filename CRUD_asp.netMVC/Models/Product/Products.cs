@@ -10,7 +10,8 @@ namespace CRUD_asp.netMVC.Models.Product
         [Key]
         public int ID { get; set; }
 
-        [Required(ErrorMessage = "Ban can phai nhap Ten !!!"), StringLength(50, MinimumLength = 5, ErrorMessage = "Do dai ten tu {2} den {1} ky tu")]
+        [Required(ErrorMessage = "Ban can phai nhap Ten !!!"),
+            StringLength(50, MinimumLength = 5, ErrorMessage = "Do dai ten tu {2} den {1} ky tu")]
         public string? Name { get; set; }
         public string? NormalizedName { get; set; }
 
@@ -53,9 +54,11 @@ namespace CRUD_asp.netMVC.Models.Product
         public int? CateID { get; set; }
         public Category? Cate { get; set; }
 
+        public int? Weight { get; set; }
+
         public List<AddToCart>? Carts { get; set; }
-        public List<OrderDetail>? OrderDetails { get; set; }
         public List<Reviews>? Reviews { get; set; }
+        public List<OrderDetail>? OrderDetails { get; set; }
 
         public List<ProductColors>? ProductColor { get; set; }
         public List<ProductSize>? ProductSize { get; set; }
@@ -64,7 +67,5 @@ namespace CRUD_asp.netMVC.Models.Product
         public List<ProductSeason>? ProductSeasons { get; set; }
         public List<ProductMaterial>? ProductMaterial { get; set; }
         public List<ProductImages>? ProductImages { get; set; }
-
-
     }
 }

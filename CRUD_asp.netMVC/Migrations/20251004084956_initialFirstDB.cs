@@ -193,6 +193,8 @@ namespace CRUD_asp.netMVC.Migrations
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ProfileImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RoleID = table.Column<int>(type: "int", nullable: false),
                     RolesId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -238,7 +240,8 @@ namespace CRUD_asp.netMVC.Migrations
                     FeaturedID = table.Column<int>(type: "int", nullable: false),
                     GenderID = table.Column<int>(type: "int", nullable: false),
                     BrandID = table.Column<int>(type: "int", nullable: false),
-                    CateID = table.Column<int>(type: "int", nullable: false)
+                    CateID = table.Column<int>(type: "int", nullable: false),
+                    Weight = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -270,7 +273,7 @@ namespace CRUD_asp.netMVC.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Address",
+                name: "Addresses",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
@@ -281,14 +284,14 @@ namespace CRUD_asp.netMVC.Migrations
                     Street = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Province = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Ward = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    PostalCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PostalCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     IsDefault = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Address", x => x.ID);
+                    table.PrimaryKey("PK_Addresses", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Address_AspNetUsers_UserID",
+                        name: "FK_Addresses_AspNetUsers_UserID",
                         column: x => x.UserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -660,22 +663,23 @@ namespace CRUD_asp.netMVC.Migrations
                 {
                     ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserID = table.Column<int>(type: "int", nullable: false),
-                    PaymentID = table.Column<int>(type: "int", nullable: false),
                     AddressID = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Amount = table.Column<double>(type: "float", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TransactionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TrackingNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PaidAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    PaidAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StatusTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Orders_Address_AddressID",
+                        name: "FK_Orders_Addresses_AddressID",
                         column: x => x.AddressID,
-                        principalTable: "Address",
+                        principalTable: "Addresses",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -883,69 +887,69 @@ namespace CRUD_asp.netMVC.Migrations
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "ID", "BrandID", "CateID", "Created", "Description", "FeaturedID", "GenderID", "Name", "NewPrice", "NormalizedDescription", "NormalizedName", "OldPrice", "PicturePath", "Quantity" },
+                columns: new[] { "ID", "BrandID", "CateID", "Created", "Description", "FeaturedID", "GenderID", "Name", "NewPrice", "NormalizedDescription", "NormalizedName", "OldPrice", "PicturePath", "Quantity", "Weight" },
                 values: new object[,]
                 {
-                    { 1, 1, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo khoác nam chính hãng Nike, phong cách thể thao", 2, 1, "Áo khoác nam Nike", 1500000.0, "ao khoac nam chinh hang nike, phong cach the thao", "ao khoac nam nike", 1800000.0, "nike_jacket.jpg", 100 },
-                    { 2, 1, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Quần thể thao Nike chất liệu thoáng mát, phù hợp tập luyện", 2, 1, "Quần thể thao Nike", 900000.0, "quan the thao nike chat lieu thoang mat, phu hop tap luyen", "quan the thao nike", 0.0, "nike_pants.webp", 80 },
-                    { 3, 1, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Giày thể thao Nike Air Max thoải mái và bền bỉ", 2, 1, "Giày Nike Air Max", 2800000.0, "giay the thao nike air max thoai mai va ben bi", "giay nike air max", 3000000.0, "nike_shoes.jpg", 60 },
-                    { 4, 1, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Váy thể thao nữ năng động, thiết kế hiện đại", 2, 2, "Váy thể thao Nike nữ", 1100000.0, "vay the thao nu nang đong, thiet ke hien đai", "vay the thao nike nu", 0.0, "nike_dress.jpg", 40 },
-                    { 5, 1, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo thun nam Nike cổ tròn, chất liệu cotton thoải mái", 2, 1, "Áo thun Nike basic", 590000.0, "ao thun nam nike co tron, chat lieu cotton thoai mai", "ao thun nike basic", 650000.0, "nike_tshirt.jpg", 200 },
-                    { 6, 1, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đồng hồ thể thao phong cách Nike, chống nước, dây silicon", 2, 3, "Đồng hồ thể thao Nike", 1900000.0, "đong ho the thao phong cach nike, chong nuoc, day silicon", "đong ho the thao nike", 0.0, "nike_watch.jpg", 25 },
-                    { 7, 2, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế cổ điển, chống gió và giữ ấm tốt", 2, 1, "Áo khoác Adidas Originals", 1450000.0, "thiet ke co đien, chong gio va giu am tot", "ao khoac adidas originals", 1600000.0, "adidas_jacket.jpg", 70 },
-                    { 8, 2, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Quần thể thao thoải mái, phù hợp vận động", 2, 1, "Quần jogger Adidas", 850000.0, "quan the thao thoai mai, phu hop van đong", "quan jogger adidas", 0.0, "adidas_pants.jpg", 90 },
-                    { 9, 2, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đệm Boost êm ái, hỗ trợ chạy bộ hiệu quả", 2, 3, "Giày Adidas Ultraboost", 3200000.0, "đem boost em ai, ho tro chay bo hieu qua", "giay adidas ultraboost", 3400000.0, "adidas_shoes.jpg", 50 },
-                    { 10, 2, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Váy thể thao nhẹ, thấm hút mồ hôi tốt", 2, 2, "Váy tennis Adidas nữ", 990000.0, "vay the thao nhe, tham hut mo hoi tot", "vay tennis adidas nu", 0.0, "adidas_dress.jpg", 45 },
-                    { 11, 2, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo thun cổ điển, logo 3 sọc đặc trưng", 2, 1, "Áo thun Adidas cổ tròn", 650000.0, "ao thun co đien, logo 3 soc đac trung", "ao thun adidas co tron", 700000.0, "adidas_tshirt.jpg", 150 },
-                    { 12, 2, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế năng động, chống nước tốt", 2, 3, "Đồng hồ thể thao Adidas", 1750000.0, "thiet ke nang đong, chong nuoc tot", "đong ho the thao adidas", 0.0, "adidas_watch.jpg", 30 },
-                    { 13, 3, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo khoác nữ dáng dài thanh lịch", 2, 2, "Áo khoác Zara Dáng Dài", 1900000.0, "ao khoac nu dang dai thanh lich", "ao khoac zara dang dai", 2000000.0, "zara_jacket.jpg", 60 },
-                    { 14, 3, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách hiện đại, thời trang", 2, 2, "Quần Ống Rộng Zara", 980000.0, "phong cach hien đai, thoi trang", "quan ong rong zara", 0.0, "zara_pants.jpg", 40 },
-                    { 15, 3, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế sang trọng, phù hợp tiệc tùng", 2, 2, "Giày Cao Gót Zara", 1200000.0, "thiet ke sang trong, phu hop tiec tung", "giay cao got zara", 1300000.0, "zara_heels.jpg", 55 },
-                    { 16, 3, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Váy dài thướt tha, thanh lịch", 2, 2, "Váy Xếp Ly Zara", 1250000.0, "vay dai thuot tha, thanh lich", "vay xep ly zara", 0.0, "zara_dress.jpg", 35 },
-                    { 17, 3, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo thun đơn giản, dễ phối đồ", 2, 3, "Áo Thun Zara Basic", 450000.0, "ao thun đon gian, de phoi đo", "ao thun zara basic", 500000.0, "zara_tshirt.jpg", 90 },
-                    { 18, 3, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế mặt tròn, dây da tinh tế", 2, 2, "Đồng Hồ Kim Zara", 1350000.0, "thiet ke mat tron, day da tinh te", "đong ho kim zara", 0.0, "zara_watch.jpg", 25 },
-                    { 19, 4, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Chống gió, nhẹ và gọn", 2, 1, "Áo Khoác Dù H&M", 950000.0, "chong gio, nhe va gon", "ao khoac du h&m", 1000000.0, "hm_jacket.jpg", 80 },
-                    { 20, 4, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách công sở lịch sự", 2, 1, "Quần Tây H&M", 700000.0, "phong cach cong so lich su", "quan tay h&m", 0.0, "hm_pants.jpg", 65 },
-                    { 21, 4, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Giày đơn giản, năng động", 2, 3, "Giày Thể Thao H&M", 820000.0, "giay đon gian, nang đong", "giay the thao h&m", 900000.0, "hm_shoes.jpg", 100 },
-                    { 22, 4, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Váy xinh xắn cho mùa hè", 2, 2, "Váy Ngắn Hoa Nhí H&M", 600000.0, "vay xinh xan cho mua he", "vay ngan hoa nhi h&m", 0.0, "hm_dress.jpg", 45 },
-                    { 23, 4, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo thun trơn giá rẻ", 2, 1, "Áo Thun Nam Basic H&M", 200000.0, "ao thun tron gia re", "ao thun nam basic h&m", 250000.0, "hm_tshirt.jpg", 150 },
-                    { 24, 4, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế đơn giản, hiện đại", 2, 3, "Đồng Hồ Dây Silicon H&M", 550000.0, "thiet ke đon gian, hien đai", "đong ho day silicon h&m", 0.0, "hm_watch.jpg", 40 },
-                    { 25, 5, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Giữ ấm nhẹ nhàng, tiện lợi", 2, 1, "Áo khoác lông vũ Uniqlo", 1750000.0, "giu am nhe nhang, tien loi", "ao khoac long vu uniqlo", 1900000.0, "uniqlo_jacket.jpg", 70 },
-                    { 26, 5, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Jean co giãn, phong cách tối giản", 2, 1, "Quần Jean Uniqlo", 950000.0, "jean co gian, phong cach toi gian", "quan jean uniqlo", 0.0, "uniqlo_jeans.jpg", 50 },
-                    { 27, 5, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế tối giản, thoải mái", 2, 1, "Giày Sneaker Uniqlo", 1050000.0, "thiet ke toi gian, thoai mai", "giay sneaker uniqlo", 1150000.0, "uniqlo_shoes.jpg", 60 },
-                    { 28, 5, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế tối giản, thoải mái cho mùa hè", 2, 2, "Váy Cotton Uniqlo", 850000.0, "thiet ke toi gian, thoai mai cho mua he", "vay cotton uniqlo", 0.0, "uniqlo_dress.jpg", 40 },
-                    { 29, 5, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thoáng mát, nhanh khô, thích hợp mùa hè", 2, 3, "Áo thun Airism Uniqlo", 400000.0, "thoang mat, nhanh kho, thich hop mua he", "ao thun airism uniqlo", 450000.0, "uniqlo_tshirt.jpg", 120 },
-                    { 30, 5, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách tối giản, dây da đen", 2, 1, "Đồng hồ tối giản Uniqlo", 980000.0, "phong cach toi gian, day da đen", "đong ho toi gian uniqlo", 0.0, "uniqlo_watch.jpg", 30 },
-                    { 31, 6, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế sang trọng, dành cho thời trang cao cấp", 2, 2, "Áo khoác cao cấp Gucci", 25000000.0, "thiet ke sang trong, danh cho thoi trang cao cap", "ao khoac cao cap gucci", 27000000.0, "gucci_jacket.jpg", 10 },
-                    { 32, 6, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách lịch lãm, chất liệu cao cấp", 2, 1, "Quần tây Gucci nam", 15500000.0, "phong cach lich lam, chat lieu cao cap", "quan tay gucci nam", 0.0, "gucci_pants.jpg", 15 },
-                    { 33, 6, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế logo đặc trưng, đẳng cấp", 2, 1, "Giày lười Gucci", 22000000.0, "thiet ke logo đac trung, đang cap", "giay luoi gucci", 24000000.0, "gucci_shoes.jpg", 12 },
-                    { 34, 6, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Chất liệu mềm mại, sang trọng", 2, 2, "Váy lụa cao cấp Gucci", 30000000.0, "chat lieu mem mai, sang trong", "vay lua cao cap gucci", 0.0, "gucci_dress.jpg", 8 },
-                    { 35, 6, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách trẻ trung, thời thượng", 2, 3, "Áo thun Gucci logo lớn", 9000000.0, "phong cach tre trung, thoi thuong", "ao thun gucci logo lon", 9500000.0, "gucci_tshirt.jpg", 20 },
-                    { 36, 6, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đồng hồ xa xỉ với thiết kế tinh xảo", 2, 2, "Đồng hồ đính đá Gucci", 45000000.0, "đong ho xa xi voi thiet ke tinh xao", "đong ho đinh đa gucci", 0.0, "gucci_watch.jpg", 5 },
-                    { 37, 7, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Chất liệu jean bền, phong cách cổ điển", 2, 1, "Áo khoác jean Levi's", 1450000.0, "chat lieu jean ben, phong cach co đien", "ao khoac jean levi's", 1600000.0, "levis_jacket.jpg", 40 },
-                    { 38, 7, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Form dáng chuẩn Mỹ, chất lượng cao", 2, 1, "Quần jeans Levi's 501", 1250000.0, "form dang chuan my, chat luong cao", "quan jeans levi's 501", 0.0, "levis_jeans.jpg", 60 },
-                    { 39, 7, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thoải mái và thời trang hàng ngày", 2, 1, "Giày thể thao Levi's", 1150000.0, "thoai mai va thoi trang hang ngay", "giay the thao levi's", 1250000.0, "levis_shoes.jpg", 35 },
-                    { 40, 7, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế trẻ trung, năng động", 2, 2, "Váy bò Levi's nữ", 980000.0, "thiet ke tre trung, nang đong", "vay bo levi's nu", 0.0, "levis_dress.jpg", 20 },
-                    { 41, 7, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Logo cổ điển, phong cách Mỹ", 2, 3, "Áo thun cổ tròn Levi's", 500000.0, "logo co đien, phong cach my", "ao thun co tron levi's", 550000.0, "levis_tshirt.jpg", 100 },
-                    { 42, 7, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đơn giản, mạnh mẽ, cá tính", 2, 1, "Đồng hồ dây da Levi's", 850000.0, "đon gian, manh me, ca tinh", "đong ho day da levi's", 0.0, "levis_watch.jpg", 15 },
-                    { 43, 8, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế năng động, thời trang", 2, 3, "Áo khoác thể thao Lacoste", 2700000.0, "thiet ke nang đong, thoi trang", "ao khoac the thao lacoste", 2900000.0, "lacoste_jacket.jpg", 30 },
-                    { 44, 8, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách thể thao, thoáng mát", 2, 1, "Quần short Lacoste", 1450000.0, "phong cach the thao, thoang mat", "quan short lacoste", 0.0, "lacoste_short.jpg", 40 },
-                    { 45, 8, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Chất liệu cao cấp, thiết kế tinh tế", 2, 1, "Giày sneaker Lacoste", 2200000.0, "chat lieu cao cap, thiet ke tinh te", "giay sneaker lacoste", 2400000.0, "lacoste_shoes.jpg", 25 },
-                    { 46, 8, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lịch sự, sang trọng cho nữ", 2, 2, "Váy polo Lacoste", 1900000.0, "lich su, sang trong cho nu", "vay polo lacoste", 0.0, "lacoste_dress.jpg", 18 },
-                    { 47, 8, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Biểu tượng nổi bật với logo cá sấu", 2, 1, "Áo thun cá sấu Lacoste", 1100000.0, "bieu tuong noi bat voi logo ca sau", "ao thun ca sau lacoste", 1200000.0, "lacoste_tshirt.jpg", 55 },
-                    { 48, 8, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Năng động, trẻ trung, phù hợp với người chơi thể thao", 2, 3, "Đồng hồ thể thao Lacoste", 2600000.0, "nang đong, tre trung, phu hop voi nguoi choi the thao", "đong ho the thao lacoste", 0.0, "lacoste_watch.jpg", 20 },
-                    { 49, 9, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế hiện đại, năng động", 2, 1, "Áo khoác thể thao Puma", 1550000.0, "thiet ke hien đai, nang đong", "ao khoac the thao puma", 1700000.0, "puma_jacket.jpg", 50 },
-                    { 50, 9, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thoải mái, phù hợp vận động", 2, 1, "Quần jogger Puma", 1100000.0, "thoai mai, phu hop van đong", "quan jogger puma", 0.0, "puma_pants.jpg", 70 },
-                    { 51, 9, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế thể thao, hỗ trợ di chuyển", 2, 1, "Giày chạy bộ Puma", 1800000.0, "thiet ke the thao, ho tro di chuyen", "giay chay bo puma", 2000000.0, "puma_shoes.jpg", 40 },
-                    { 52, 9, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phù hợp tập luyện hoặc mặc thường ngày", 2, 2, "Váy thể thao Puma nữ", 950000.0, "phu hop tap luyen hoac mac thuong ngay", "vay the thao puma nu", 0.0, "puma_dress.jpg", 25 },
-                    { 53, 9, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Chất vải thấm hút, thoáng mát", 2, 3, "Áo thun thể thao Puma", 600000.0, "chat vai tham hut, thoang mat", "ao thun the thao puma", 650000.0, "puma_tshirt.jpg", 90 },
-                    { 54, 9, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế mạnh mẽ, phong cách", 2, 1, "Đồng hồ thể thao Puma", 1200000.0, "thiet ke manh me, phong cach", "đong ho the thao puma", 0.0, "puma_watch.jpg", 18 },
-                    { 55, 10, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đẳng cấp, thời thượng, thiết kế quý phái", 2, 2, "Áo khoác dạ Chanel", 9500000.0, "đang cap, thoi thuong, thiet ke quy phai", "ao khoac da chanel", 10000000.0, "chanel_jacket.jpg", 15 },
-                    { 56, 10, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đường may tinh xảo, chất liệu mềm mịn", 2, 2, "Quần vải cao cấp Chanel", 7200000.0, "đuong may tinh xao, chat lieu mem min", "quan vai cao cap chanel", 0.0, "chanel_pants.jpg", 12 },
-                    { 57, 10, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thanh lịch, sang trọng", 2, 2, "Giày cao gót Chanel", 8300000.0, "thanh lich, sang trong", "giay cao got chanel", 9000000.0, "chanel_shoes.jpg", 10 },
-                    { 58, 10, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lộng lẫy, thiết kế quyến rũ", 2, 2, "Váy dạ hội Chanel", 13000000.0, "long lay, thiet ke quyen ru", "vay da hoi chanel", 0.0, "chanel_dress.jpg", 8 },
-                    { 59, 10, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đơn giản nhưng đầy tinh tế", 2, 2, "Áo thun cao cấp Chanel", 3200000.0, "đon gian nhung đay tinh te", "ao thun cao cap chanel", 3500000.0, "chanel_tshirt.jpg", 20 },
-                    { 60, 10, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Tinh xảo, sang trọng và nữ tính", 2, 2, "Đồng hồ Chanel sang trọng", 18000000.0, "tinh xao, sang trong va nu tinh", "đong ho chanel sang trong", 0.0, "chanel_watch.jpg", 6 }
+                    { 1, 1, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo khoác nam chính hãng Nike, phong cách thể thao", 2, 1, "Áo khoác nam Nike", 1500000.0, "ao khoac nam chinh hang nike, phong cach the thao", "ao khoac nam nike", 1800000.0, "nike_jacket.jpg", 100, 300 },
+                    { 2, 1, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Quần thể thao Nike chất liệu thoáng mát, phù hợp tập luyện", 2, 1, "Quần thể thao Nike", 900000.0, "quan the thao nike chat lieu thoang mat, phu hop tap luyen", "quan the thao nike", 0.0, "nike_pants.webp", 80, 200 },
+                    { 3, 1, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Giày thể thao Nike Air Max thoải mái và bền bỉ", 2, 1, "Giày Nike Air Max", 2800000.0, "giay the thao nike air max thoai mai va ben bi", "giay nike air max", 3000000.0, "nike_shoes.jpg", 60, 400 },
+                    { 4, 1, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Váy thể thao nữ năng động, thiết kế hiện đại", 2, 2, "Váy thể thao Nike nữ", 1100000.0, "vay the thao nu nang đong, thiet ke hien đai", "vay the thao nike nu", 0.0, "nike_dress.jpg", 40, 150 },
+                    { 5, 1, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo thun nam Nike cổ tròn, chất liệu cotton thoải mái", 2, 1, "Áo thun Nike basic", 590000.0, "ao thun nam nike co tron, chat lieu cotton thoai mai", "ao thun nike basic", 650000.0, "nike_tshirt.jpg", 200, 150 },
+                    { 6, 1, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đồng hồ thể thao phong cách Nike, chống nước, dây silicon", 2, 3, "Đồng hồ thể thao Nike", 1900000.0, "đong ho the thao phong cach nike, chong nuoc, day silicon", "đong ho the thao nike", 0.0, "nike_watch.jpg", 25, 50 },
+                    { 7, 2, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế cổ điển, chống gió và giữ ấm tốt", 2, 1, "Áo khoác Adidas Originals", 1450000.0, "thiet ke co đien, chong gio va giu am tot", "ao khoac adidas originals", 1600000.0, "adidas_jacket.jpg", 70, 350 },
+                    { 8, 2, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Quần thể thao thoải mái, phù hợp vận động", 2, 1, "Quần jogger Adidas", 850000.0, "quan the thao thoai mai, phu hop van đong", "quan jogger adidas", 0.0, "adidas_pants.jpg", 90, 200 },
+                    { 9, 2, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đệm Boost êm ái, hỗ trợ chạy bộ hiệu quả", 2, 3, "Giày Adidas Ultraboost", 3200000.0, "đem boost em ai, ho tro chay bo hieu qua", "giay adidas ultraboost", 3400000.0, "adidas_shoes.jpg", 50, 400 },
+                    { 10, 2, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Váy thể thao nhẹ, thấm hút mồ hôi tốt", 2, 2, "Váy tennis Adidas nữ", 990000.0, "vay the thao nhe, tham hut mo hoi tot", "vay tennis adidas nu", 0.0, "adidas_dress.jpg", 45, 150 },
+                    { 11, 2, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo thun cổ điển, logo 3 sọc đặc trưng", 2, 1, "Áo thun Adidas cổ tròn", 650000.0, "ao thun co đien, logo 3 soc đac trung", "ao thun adidas co tron", 700000.0, "adidas_tshirt.jpg", 150, 150 },
+                    { 12, 2, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế năng động, chống nước tốt", 2, 3, "Đồng hồ thể thao Adidas", 1750000.0, "thiet ke nang đong, chong nuoc tot", "đong ho the thao adidas", 0.0, "adidas_watch.jpg", 30, 50 },
+                    { 13, 3, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo khoác nữ dáng dài thanh lịch", 2, 2, "Áo khoác Zara Dáng Dài", 1900000.0, "ao khoac nu dang dai thanh lich", "ao khoac zara dang dai", 2000000.0, "zara_jacket.jpg", 60, 400 },
+                    { 14, 3, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách hiện đại, thời trang", 2, 2, "Quần Ống Rộng Zara", 980000.0, "phong cach hien đai, thoi trang", "quan ong rong zara", 0.0, "zara_pants.jpg", 40, 250 },
+                    { 15, 3, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế sang trọng, phù hợp tiệc tùng", 2, 2, "Giày Cao Gót Zara", 1200000.0, "thiet ke sang trong, phu hop tiec tung", "giay cao got zara", 1300000.0, "zara_heels.jpg", 55, 300 },
+                    { 16, 3, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Váy dài thướt tha, thanh lịch", 2, 2, "Váy Xếp Ly Zara", 1250000.0, "vay dai thuot tha, thanh lich", "vay xep ly zara", 0.0, "zara_dress.jpg", 35, 200 },
+                    { 17, 3, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo thun đơn giản, dễ phối đồ", 2, 3, "Áo Thun Zara Basic", 450000.0, "ao thun đon gian, de phoi đo", "ao thun zara basic", 500000.0, "zara_tshirt.jpg", 90, 150 },
+                    { 18, 3, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế mặt tròn, dây da tinh tế", 2, 2, "Đồng Hồ Kim Zara", 1350000.0, "thiet ke mat tron, day da tinh te", "đong ho kim zara", 0.0, "zara_watch.jpg", 25, 50 },
+                    { 19, 4, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Chống gió, nhẹ và gọn", 2, 1, "Áo Khoác Dù H&M", 950000.0, "chong gio, nhe va gon", "ao khoac du h&m", 1000000.0, "hm_jacket.jpg", 80, 300 },
+                    { 20, 4, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách công sở lịch sự", 2, 1, "Quần Tây H&M", 700000.0, "phong cach cong so lich su", "quan tay h&m", 0.0, "hm_pants.jpg", 65, 250 },
+                    { 21, 4, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Giày đơn giản, năng động", 2, 3, "Giày Thể Thao H&M", 820000.0, "giay đon gian, nang đong", "giay the thao h&m", 900000.0, "hm_shoes.jpg", 100, 350 },
+                    { 22, 4, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Váy xinh xắn cho mùa hè", 2, 2, "Váy Ngắn Hoa Nhí H&M", 600000.0, "vay xinh xan cho mua he", "vay ngan hoa nhi h&m", 0.0, "hm_dress.jpg", 45, 150 },
+                    { 23, 4, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo thun trơn giá rẻ", 2, 1, "Áo Thun Nam Basic H&M", 200000.0, "ao thun tron gia re", "ao thun nam basic h&m", 250000.0, "hm_tshirt.jpg", 150, 150 },
+                    { 24, 4, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế đơn giản, hiện đại", 2, 3, "Đồng Hồ Dây Silicon H&M", 550000.0, "thiet ke đon gian, hien đai", "đong ho day silicon h&m", 0.0, "hm_watch.jpg", 40, 50 },
+                    { 25, 5, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Giữ ấm nhẹ nhàng, tiện lợi", 2, 1, "Áo khoác lông vũ Uniqlo", 1750000.0, "giu am nhe nhang, tien loi", "ao khoac long vu uniqlo", 1900000.0, "uniqlo_jacket.jpg", 70, 250 },
+                    { 26, 5, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Jean co giãn, phong cách tối giản", 2, 1, "Quần Jean Uniqlo", 950000.0, "jean co gian, phong cach toi gian", "quan jean uniqlo", 0.0, "uniqlo_jeans.jpg", 50, 300 },
+                    { 27, 5, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế tối giản, thoải mái", 2, 1, "Giày Sneaker Uniqlo", 1050000.0, "thiet ke toi gian, thoai mai", "giay sneaker uniqlo", 1150000.0, "uniqlo_shoes.jpg", 60, 350 },
+                    { 28, 5, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế tối giản, thoải mái cho mùa hè", 2, 2, "Váy Cotton Uniqlo", 850000.0, "thiet ke toi gian, thoai mai cho mua he", "vay cotton uniqlo", 0.0, "uniqlo_dress.jpg", 40, 150 },
+                    { 29, 5, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thoáng mát, nhanh khô, thích hợp mùa hè", 2, 3, "Áo thun Airism Uniqlo", 400000.0, "thoang mat, nhanh kho, thich hop mua he", "ao thun airism uniqlo", 450000.0, "uniqlo_tshirt.jpg", 120, 150 },
+                    { 30, 5, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách tối giản, dây da đen", 2, 1, "Đồng hồ tối giản Uniqlo", 980000.0, "phong cach toi gian, day da đen", "đong ho toi gian uniqlo", 0.0, "uniqlo_watch.jpg", 30, 50 },
+                    { 31, 6, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế sang trọng, dành cho thời trang cao cấp", 2, 2, "Áo khoác cao cấp Gucci", 25000000.0, "thiet ke sang trong, danh cho thoi trang cao cap", "ao khoac cao cap gucci", 27000000.0, "gucci_jacket.jpg", 10, 500 },
+                    { 32, 6, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách lịch lãm, chất liệu cao cấp", 2, 1, "Quần tây Gucci nam", 15500000.0, "phong cach lich lam, chat lieu cao cap", "quan tay gucci nam", 0.0, "gucci_pants.jpg", 15, 300 },
+                    { 33, 6, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế logo đặc trưng, đẳng cấp", 2, 1, "Giày lười Gucci", 22000000.0, "thiet ke logo đac trung, đang cap", "giay luoi gucci", 24000000.0, "gucci_shoes.jpg", 12, 450 },
+                    { 34, 6, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Chất liệu mềm mại, sang trọng", 2, 2, "Váy lụa cao cấp Gucci", 30000000.0, "chat lieu mem mai, sang trong", "vay lua cao cap gucci", 0.0, "gucci_dress.jpg", 8, 200 },
+                    { 35, 6, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách trẻ trung, thời thượng", 2, 3, "Áo thun Gucci logo lớn", 9000000.0, "phong cach tre trung, thoi thuong", "ao thun gucci logo lon", 9500000.0, "gucci_tshirt.jpg", 20, 150 },
+                    { 36, 6, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đồng hồ xa xỉ với thiết kế tinh xảo", 2, 2, "Đồng hồ đính đá Gucci", 45000000.0, "đong ho xa xi voi thiet ke tinh xao", "đong ho đinh đa gucci", 0.0, "gucci_watch.jpg", 5, 100 },
+                    { 37, 7, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Chất liệu jean bền, phong cách cổ điển", 2, 1, "Áo khoác jean Levi's", 1450000.0, "chat lieu jean ben, phong cach co đien", "ao khoac jean levi's", 1600000.0, "levis_jacket.jpg", 40, 400 },
+                    { 38, 7, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Form dáng chuẩn Mỹ, chất lượng cao", 2, 1, "Quần jeans Levi's 501", 1250000.0, "form dang chuan my, chat luong cao", "quan jeans levi's 501", 0.0, "levis_jeans.jpg", 60, 300 },
+                    { 39, 7, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thoải mái và thời trang hàng ngày", 2, 1, "Giày thể thao Levi's", 1150000.0, "thoai mai va thoi trang hang ngay", "giay the thao levi's", 1250000.0, "levis_shoes.jpg", 35, 350 },
+                    { 40, 7, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế trẻ trung, năng động", 2, 2, "Váy bò Levi's nữ", 980000.0, "thiet ke tre trung, nang đong", "vay bo levi's nu", 0.0, "levis_dress.jpg", 20, 250 },
+                    { 41, 7, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Logo cổ điển, phong cách Mỹ", 2, 3, "Áo thun cổ tròn Levi's", 500000.0, "logo co đien, phong cach my", "ao thun co tron levi's", 550000.0, "levis_tshirt.jpg", 100, 150 },
+                    { 42, 7, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đơn giản, mạnh mẽ, cá tính", 2, 1, "Đồng hồ dây da Levi's", 850000.0, "đon gian, manh me, ca tinh", "đong ho day da levi's", 0.0, "levis_watch.jpg", 15, 50 },
+                    { 43, 8, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế năng động, thời trang", 2, 3, "Áo khoác thể thao Lacoste", 2700000.0, "thiet ke nang đong, thoi trang", "ao khoac the thao lacoste", 2900000.0, "lacoste_jacket.jpg", 30, 300 },
+                    { 44, 8, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phong cách thể thao, thoáng mát", 2, 1, "Quần short Lacoste", 1450000.0, "phong cach the thao, thoang mat", "quan short lacoste", 0.0, "lacoste_short.jpg", 40, 150 },
+                    { 45, 8, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Chất liệu cao cấp, thiết kế tinh tế", 2, 1, "Giày sneaker Lacoste", 2200000.0, "chat lieu cao cap, thiet ke tinh te", "giay sneaker lacoste", 2400000.0, "lacoste_shoes.jpg", 25, 400 },
+                    { 46, 8, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lịch sự, sang trọng cho nữ", 2, 2, "Váy polo Lacoste", 1900000.0, "lich su, sang trong cho nu", "vay polo lacoste", 0.0, "lacoste_dress.jpg", 18, 150 },
+                    { 47, 8, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Biểu tượng nổi bật với logo cá sấu", 2, 1, "Áo thun cá sấu Lacoste", 1100000.0, "bieu tuong noi bat voi logo ca sau", "ao thun ca sau lacoste", 1200000.0, "lacoste_tshirt.jpg", 55, 150 },
+                    { 48, 8, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Năng động, trẻ trung, phù hợp với người chơi thể thao", 2, 3, "Đồng hồ thể thao Lacoste", 2600000.0, "nang đong, tre trung, phu hop voi nguoi choi the thao", "đong ho the thao lacoste", 0.0, "lacoste_watch.jpg", 20, 50 },
+                    { 49, 9, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế hiện đại, năng động", 2, 1, "Áo khoác thể thao Puma", 1550000.0, "thiet ke hien đai, nang đong", "ao khoac the thao puma", 1700000.0, "puma_jacket.jpg", 50, 300 },
+                    { 50, 9, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thoải mái, phù hợp vận động", 2, 1, "Quần jogger Puma", 1100000.0, "thoai mai, phu hop van đong", "quan jogger puma", 0.0, "puma_pants.jpg", 70, 200 },
+                    { 51, 9, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế thể thao, hỗ trợ di chuyển", 2, 1, "Giày chạy bộ Puma", 1800000.0, "thiet ke the thao, ho tro di chuyen", "giay chay bo puma", 2000000.0, "puma_shoes.jpg", 40, 400 },
+                    { 52, 9, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phù hợp tập luyện hoặc mặc thường ngày", 2, 2, "Váy thể thao Puma nữ", 950000.0, "phu hop tap luyen hoac mac thuong ngay", "vay the thao puma nu", 0.0, "puma_dress.jpg", 25, 150 },
+                    { 53, 9, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Chất vải thấm hút, thoáng mát", 2, 3, "Áo thun thể thao Puma", 600000.0, "chat vai tham hut, thoang mat", "ao thun the thao puma", 650000.0, "puma_tshirt.jpg", 90, 150 },
+                    { 54, 9, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thiết kế mạnh mẽ, phong cách", 2, 1, "Đồng hồ thể thao Puma", 1200000.0, "thiet ke manh me, phong cach", "đong ho the thao puma", 0.0, "puma_watch.jpg", 18, 50 },
+                    { 55, 10, 1, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đẳng cấp, thời thượng, thiết kế quý phái", 2, 2, "Áo khoác dạ Chanel", 9500000.0, "đang cap, thoi thuong, thiet ke quy phai", "ao khoac da chanel", 10000000.0, "chanel_jacket.jpg", 15, 450 },
+                    { 56, 10, 2, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đường may tinh xảo, chất liệu mềm mịn", 2, 2, "Quần vải cao cấp Chanel", 7200000.0, "đuong may tinh xao, chat lieu mem min", "quan vai cao cap chanel", 0.0, "chanel_pants.jpg", 12, 250 },
+                    { 57, 10, 3, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thanh lịch, sang trọng", 2, 2, "Giày cao gót Chanel", 8300000.0, "thanh lich, sang trong", "giay cao got chanel", 9000000.0, "chanel_shoes.jpg", 10, 300 },
+                    { 58, 10, 4, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lộng lẫy, thiết kế quyến rũ", 2, 2, "Váy dạ hội Chanel", 13000000.0, "long lay, thiet ke quyen ru", "vay da hoi chanel", 0.0, "chanel_dress.jpg", 8, 200 },
+                    { 59, 10, 5, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đơn giản nhưng đầy tinh tế", 2, 2, "Áo thun cao cấp Chanel", 3200000.0, "đon gian nhung đay tinh te", "ao thun cao cap chanel", 3500000.0, "chanel_tshirt.jpg", 20, 150 },
+                    { 60, 10, 6, new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Tinh xảo, sang trọng và nữ tính", 2, 2, "Đồng hồ Chanel sang trọng", 18000000.0, "tinh xao, sang trong va nu tinh", "đong ho chanel sang trong", 0.0, "chanel_watch.jpg", 6, 100 }
                 });
 
             migrationBuilder.InsertData(
@@ -1920,8 +1924,8 @@ namespace CRUD_asp.netMVC.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Address_UserID",
-                table: "Address",
+                name: "IX_Addresses_UserID",
+                table: "Addresses",
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
@@ -2166,7 +2170,7 @@ namespace CRUD_asp.netMVC.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Address");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "Brand");

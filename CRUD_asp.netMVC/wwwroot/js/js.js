@@ -1,4 +1,4 @@
-﻿//const { regions } = require("modernizr");
+﻿import { startCountdown } from './globalGeneralFunc.js';
 
 $(document).ready(function () {
     $('.owl-clients').owlCarousel({
@@ -313,6 +313,7 @@ $(document).ready(function () {
     $(document).off('click', '.select-address').on('click', '.select-address', function (e) {
         e.preventDefault();
 
+        //const orderid = $('#orderid').val();
         let ids = [];
         GetArrIDChecked(ids);
         const isAddress = true;
@@ -333,6 +334,7 @@ $(document).ready(function () {
         });
     });
 
+    // js.js
     // Xu ly button checkout
     $(document).off('click', '.buy.bn54').on('click', '.buy.bn54', function (e) {
         e.preventDefault(); // ngan button type submit
@@ -343,7 +345,6 @@ $(document).ready(function () {
         if (!IsGetArr.success || ids === null) {
             return;
         }
-        console.log(ids);
 
         $.ajax({
             url: "/Cart/ShowQrModalCart",
@@ -354,12 +355,13 @@ $(document).ready(function () {
             },
             traditional: true, // quan trọng để bind mảng
             success: function (response) {
-                $(".modal").html(response); // render vào modal Index
+                $(".modal").html(response);
 
                 // Cap nhat gia tong
                 $(".modal-overlay").fadeIn(300);
                 $(".modal").addClass("active").fadeIn(300);
 
+                startCountdown(300);
                 updateQtyAfterCheck();
             },
             error: function (response) {

@@ -1,9 +1,4 @@
-﻿using MimeKit.Tnef;
-using NuGet.Protocol;
-using Org.BouncyCastle.Pqc.Crypto.Lms;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing.Printing;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CRUD_asp.netMVC.DTO.Auth
 {
@@ -32,7 +27,7 @@ namespace CRUD_asp.netMVC.DTO.Auth
         public string Phone { get; set; }
 
         [Required(ErrorMessage = "Vui lòng thêm vai trò")]
-        public int RoleID { get; set; }    
+        public int RoleID { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
         [DataType(DataType.Password)]

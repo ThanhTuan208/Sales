@@ -9,7 +9,7 @@
     foreach (var payment in Model)
     {
         @await Html.PartialAsync("_OrderPayItemPartial", payment, new ViewDataDictionary(ViewData){
-        { "OrderPayListPartial", OrderPayList }
+            { "OrderPayListPartial", OrderPayList }
         });
     }
 }

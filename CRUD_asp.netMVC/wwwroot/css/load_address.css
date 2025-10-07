@@ -1,4 +1,20 @@
-﻿/*Hieu ung load khi thanh toan*/
+﻿#resetQR,
+#locationQR {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+/*Hieu ung load khi thanh toan*/
 /* overlay status phủ toàn màn hình */
 .overlay-status {
     position: fixed;

@@ -1,5 +1,4 @@
-﻿using AspNetCoreGeneratedDocument;
-using CRUD_asp.netMVC.Data;
+﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
@@ -7,12 +6,7 @@ using CRUD_asp.netMVC.Service.Payment;
 using CRUD_asp.netMVC.ViewModels.Cart;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using NuGet.Protocol.Resources;
-using Org.BouncyCastle.Crypto;
-using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -21,13 +15,40 @@ namespace CRUD_asp.netMVC.Controllers
 {
     public class CartController : Controller
     {
-        private readonly AppDBContext context;
+        private readonly AppDBContext _dbContext;
         private readonly QrCodeService _qrCode;
 
         public CartController(AppDBContext _context, QrCodeService qrCode)
         {
-            context = _context;
+            _dbContext = _context;
             _qrCode = qrCode;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckAddressData(string[]? arrID)
+        {
+            try
+            {
+                var viewModel = await GeneralIndex(arrID);
+
+                var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
+                if (userID > 0)
+                {
+                    var address = await _dbContext.Addresses.FirstOrDefaultAsync(p => p.UserID == userID && p.IsDefault);
+
+                    if (address == null)
+                    {
+                        return PartialView("_ModalPaymentPartialRight", viewModel);
+                    }
+                }
+
+                return Json(new { success = true, message = $"Có dữ liệu. " });
+            }
+            catch (Exception ex)
+            {
+
+                return Json(new { success = false, message = $"Server: " + ex.Message });
+            }
         }
 
         // Su dung method chung cho Index (get, post)
@@ -43,7 +64,7 @@ namespace CRUD_asp.netMVC.Controllers
 
                 if (userID > 0)
                 {
-                    cartItems = await context.Carts
+                    cartItems = await _dbContext.Carts
                         .AsNoTracking()
                         .Include(c => c.Product)
                         .Include(c => c.Product).ThenInclude(p => p.ProductColor)
@@ -57,17 +78,17 @@ namespace CRUD_asp.netMVC.Controllers
                     var arrIDSet = arrID?.Select(int.Parse).ToHashSet() ?? new HashSet<int>();
                     cartItemByIDs = cartItems.Where(p => arrIDSet.Contains(p.ID)).ToList();
 
-                    addressUser = await context.Addresses.ToListAsync();
+                    addressUser = await _dbContext.Addresses.Where(p => p.UserID == userID).ToListAsync();
                 }
                 else
                 {
                     var cart = HttpContext.Session.GetString("Cart");
                     cartItems = string.IsNullOrEmpty(cart) ? new List<AddToCart>() : JsonSerializer.Deserialize<List<AddToCart>>(cart);
 
-                    if (cartItems.Any())
+                    if (cartItems != null && cartItems.Any())
                     {
                         var getIDProductByCart = cartItems.Select(p => p.ProductID);
-                        var products = await context.Products.Where(p => getIDProductByCart.Contains(p.ID)).ToListAsync();
+                        var products = await _dbContext.Products.Where(p => getIDProductByCart.Contains(p.ID)).ToListAsync();
 
                         if (products.Any())
                         {
@@ -84,8 +105,7 @@ namespace CRUD_asp.netMVC.Controllers
                 {
                     CartItems = cartItems,
                     AddressUser = addressUser,
-                    QrPayment = { },
-                    CartItemByIDs = cartItemByIDs,
+                    CartItemByIDs = cartItemByIDs ?? new List<AddToCart>(),
                     TotalPrice = cartItems.Sum(p => p.Product != null ? p.Product.NewPrice * p.Quantity : 0)
                 };
 
@@ -118,7 +138,7 @@ namespace CRUD_asp.netMVC.Controllers
                     }
                     else
                     {
-                        // Tra ve partial dia chi form modal
+                        // Tra ve partial form modal
                         return PartialView("_ModalPaymentPartial", viewModel);
                     }
                 }
@@ -147,22 +167,28 @@ namespace CRUD_asp.netMVC.Controllers
                     var selectList = viewModel.CartItemByIDs.Where(p => arrID.Contains(p.ID.ToString())).ToList();
                     var totalList = selectList.Sum(p => p.Product != null ? p.Product.NewPrice * p.Quantity : 0);
 
-                    var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
+                    var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
                     if (userID > 0)
                     {
-                        var address = await context.Addresses.FirstOrDefaultAsync(p => p.UserID == userID && p.IsDefault);
+                        var address = await _dbContext.Addresses.FirstOrDefaultAsync(p => p.UserID == userID && p.IsDefault);
 
                         string timeID = Regex.Replace(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), @"[/:\s]", "") + "VN_NTT";
+
+                        //if (address == null)
+                        //{
+                        //    return PartialView("_ModalPaymentPartial", viewModel);
+                        //}
 
                         var order = new Orders
                         {
                             ID = timeID,
                             UserID = userID,
-                            AddressID = address.ID,
+                            //AddressID = address.ID,
                             Amount = totalList > 1000000 ? totalList : totalList + 30000,
                             Status = "Pending",
                             PaymentMethod = PaymentMethod ?? string.Empty,
                             OrderDate = DateTime.Now,
+                            TrackingNumber = "Đang tạo mã vận đơn",
                             TransactionId = Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper()
                         };
 
@@ -176,11 +202,11 @@ namespace CRUD_asp.netMVC.Controllers
                                 Price = p.Product.NewPrice
                             };
 
-                            await context.OrderDetail.AddAsync(orderDetail);
+                            await _dbContext.OrderDetail.AddAsync(orderDetail);
                         });
 
-                        await context.Orders.AddAsync(order);
-                        await context.SaveChangesAsync();
+                        await _dbContext.Orders.AddAsync(order);
+                        await _dbContext.SaveChangesAsync();
                         // Xu ly xoa don hang khi nguoi dung khong thanh toan sau 10p (Service/OrderCleanupService.cs)
 
                         // Tao ma QR
@@ -188,7 +214,7 @@ namespace CRUD_asp.netMVC.Controllers
                         string qrUrl = _qrCode.GenerateBankQrCode(
                             bankAcc,
                             order.Amount,
-                            $"Vui lòng không thay đổi: ORD{order.TransactionId}",
+                            $"Vui lòng không thay đổi ORD{order.TransactionId}",
                             "NGUYEN THANH TUAN");
 
                         var qrPaymentModel = new QrPaymentViewModel
@@ -200,6 +226,7 @@ namespace CRUD_asp.netMVC.Controllers
                         };
 
                         viewModel.QrPayment = qrPaymentModel;
+
 
                         if (resetQR)
                         {
@@ -230,7 +257,7 @@ namespace CRUD_asp.netMVC.Controllers
         {
             try
             {
-                var productExists = await context.Products.FindAsync(productID);
+                var productExists = await _dbContext.Products.FindAsync(productID);
 
                 if (productExists == null)
                 {
@@ -251,16 +278,16 @@ namespace CRUD_asp.netMVC.Controllers
                 }
                 else
                 {
-                    var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
+                    var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
 
                     if (userID > 0)
                     {
-                        var cartItem = context.Carts.FirstOrDefault(p => p.UserID == userID && p.ProductID == productID && p.SelectColor == color && p.SelectSize == size);
+                        var cartItem = _dbContext.Carts.FirstOrDefault(p => p.UserID == userID && p.ProductID == productID && p.SelectColor == color && p.SelectSize == size);
 
                         if (cartItem != null) // San pham ton tai, + so so luong san pham
                         {
                             cartItem.Quantity += qty;
-                            context.Carts.Update(cartItem);
+                            _dbContext.Carts.Update(cartItem);
                         }
                         else // Sp ko ton tai, them moi
                         {
@@ -274,12 +301,12 @@ namespace CRUD_asp.netMVC.Controllers
                                 created_at = DateTime.Now
                             };
 
-                            context.Carts.Add(cartItem);
+                            _dbContext.Carts.Add(cartItem);
                         }
 
-                        await context.SaveChangesAsync();
+                        await _dbContext.SaveChangesAsync();
 
-                        var countCart = await context.Carts.Where(p => p.UserID == userID).ToListAsync();
+                        var countCart = await _dbContext.Carts.Where(p => p.UserID == userID).ToListAsync();
 
                         return Json(new
                         {
@@ -312,17 +339,17 @@ namespace CRUD_asp.netMVC.Controllers
         {
             try
             {
-                var productExists = await context.Carts.FindAsync(id);
+                var productExists = await _dbContext.Carts.FindAsync(id);
                 if (productExists == null)
                 {
                     return Json(new { success = false, message = "Sản phẩm trong giỏ hàng không tồn tại" });
                 }
 
-                var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
+                var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
 
                 if (userID > 0)
                 {
-                    var cartItem = context.Carts.Include(p => p.Product).FirstOrDefault(p => p.UserID == userID && p.ID == id);
+                    var cartItem = _dbContext.Carts.Include(p => p.Product).FirstOrDefault(p => p.UserID == userID && p.ID == id);
 
                     if (cartItem != null)
                     {
@@ -346,8 +373,8 @@ namespace CRUD_asp.netMVC.Controllers
                             return Json(new { success = false, message = "Thao tác không hợp lệ" });
                         }
 
-                        context.Carts.Update(cartItem);
-                        await context.SaveChangesAsync();
+                        _dbContext.Carts.Update(cartItem);
+                        await _dbContext.SaveChangesAsync();
 
                         return Json(new
                         {
@@ -376,25 +403,25 @@ namespace CRUD_asp.netMVC.Controllers
         {
             try
             {
-                var productExists = await context.Carts.FindAsync(id);
+                var productExists = await _dbContext.Carts.FindAsync(id);
                 if (productExists == null)
                 {
                     ModelState.AddModelError("Cart", "Sản phẩm trong giỏ hàng không tồn tại");
                     return NotFound();
                 }
 
-                var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : 0;
+                var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
 
                 if (userID > 0)
                 {
-                    var cartItem = context.Carts.FirstOrDefault(p => p.UserID == userID && p.ID == id);
+                    var cartItem = _dbContext.Carts.FirstOrDefault(p => p.UserID == userID && p.ID == id);
 
                     if (cartItem != null) // xoa san pham ton tai
                     {
-                        context.Carts.Remove(cartItem);
+                        _dbContext.Carts.Remove(cartItem);
                     }
 
-                    await context.SaveChangesAsync();
+                    await _dbContext.SaveChangesAsync();
 
                     return Json(new { success = true, message = "Xóa sản phẩm thành công." });
                 }

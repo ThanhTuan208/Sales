@@ -1,9 +1,5 @@
 ﻿using CRUD_asp.netMVC.Models.Order;
-using Microsoft.CodeAnalysis;
-using Microsoft.Extensions.FileSystemGlobbing.Internal.PatternContexts;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Numerics;
 
 namespace CRUD_asp.netMVC.Models.Product
 {

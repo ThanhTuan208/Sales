@@ -1,11 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.VisualBasic.FileIO;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi;
 using MimeKit;
-using SixLabors.ImageSharp.Processing.Processors;
-using System.Configuration;
-using System.Net.NetworkInformation;
 
 namespace CRUD_asp.netMVC.Service.EmailSender
 {

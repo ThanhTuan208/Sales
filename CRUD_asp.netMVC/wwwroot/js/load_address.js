@@ -1,77 +1,74 @@
 ﻿import { updateQtyAfterCheck, GetArrIDChecked, LoadView } from './js.js';
+import { startCountdown } from './globalGeneralFunc.js';
 
 $(document).ready(function () {
 
     LoadView();
 
-    
-    $(function () { // Dem nguoc thoi gian het han QR
-        var expireSeconds = parseInt($(".qr-expire-time").data("expire-seconds")) || 300;
-        var remaining = expireSeconds;
-        var timerInterval;
+    // chay timer ban dau
+    //startCountdown(expireSeconds);
 
-        function startCountdown(seconds) {
-            remaining = seconds;
-            $("#resetQR").hide(); // Ẩn nút reset lúc mới bắt đầu
+    // Tao lai QR
+    $(document).off('click', '#resetQR').on('click', '#resetQR', function () {
 
-            clearInterval(timerInterval);
-            timerInterval = setInterval(function () {
-                remaining--;
-
-                // format mm:ss
-                var minutes = Math.floor(remaining / 60);
-                var secs = remaining % 60;
-                $("#timer").text(
-                    (minutes < 10 ? "0" : "") + minutes + ":" +
-                    (secs < 10 ? "0" : "") + secs
-                );
-
-                if (remaining <= 0) {
-                    clearInterval(timerInterval);
-                    $("#timer").text("QR đã hết hạn");
-                    $("#resetQR").show(); // Hiện nút reset khi hết hạn
-                }
-            }, 1000);
+        let ids = [];
+        let ArrChecked = GetArrIDChecked(ids);
+        if (!ArrChecked) {
+            return;
         }
 
-        // Khởi động countdown lần đầu
-        startCountdown(expireSeconds);
-
-        // Khi bấm Reset thì tạo QR mới
-        $(document).off('click', '#resetQR').on('click', '#resetQR', function () {
-
-            let ids = [];
-            let ArrChecked = GetArrIDChecked(ids);
-            if (!ArrChecked) {
-                return;
+        $.ajax({
+            url: "/Cart/ShowQrModalCart",
+            type: "GET",
+            data: {
+                arrID: ids,
+                ResetQR: false,
+                PaymentMethod: ArrChecked.paymentMethod
+            },
+            traditional: true,
+            success: function (response) {
+                $(".modal").html(response);
+                updateQtyAfterCheck();
+            },
+            error: function () {
+                alert("Lỗi không hiển thị !");
             }
+        });
 
-            $.ajax({
-                url: "/Cart/ShowQrModalCart",
-                type: "GET",
-                data: {
-                    arrID: ids,
-                    ResetQR: true,
-                    PaymentMethod: ArrChecked.paymentMethod
-                },
-                traditional: true, // bind mảng
-                success: function (response) {
-                    $(".modal-right").html(response); // render vào modal
-                    updateQtyAfterCheck();
-                },
-                error: function () {
-                    alert("Lỗi không hiển thị !");
-                }
-            });
+        $("#resetQR").hide();
+        startCountdown(300); // chay lai timer
+    });
 
-            $("#resetQR").hide(); // ẩn nút reset ngay sau khi đổi QR
-            startCountdown(expireSeconds); // chạy lại timer
+    $(document).off('click', '#locationQR').on('click', '#locationQR', function () {
+
+        let ids = [];
+        let ArrChecked = GetArrIDChecked(ids);
+        if (!ArrChecked) {
+            return;
+        }
+
+        $.ajax({
+            url: "/Cart",
+            type: "GET",
+            data: {
+                arrID: ids,
+                IsAddress: true,
+                UpdateAddress: false,
+            },
+            traditional: true,
+
+            success: function (response) {
+                $(".modal-left").html(response);
+            },
+
+            error: function () {
+                alert("Lỗi không hiển thị !");
+            }
         });
     });
 
-
     // Goi alert realtime khi thanh toan thanh cong //
-     $(function () {
+    $(function () {
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/paymentHub")
             .build();
@@ -85,7 +82,7 @@ $(document).ready(function () {
             const successIcon = overlay.find(".success-icon");
             const successText = overlay.find(".success-text");
 
-            overlay.show();   // bật overlay phủ hết màn hình
+            overlay.show();
             spinner.show();
             successIcon.hide();
             successText.hide();
@@ -150,28 +147,19 @@ $(document).ready(function () {
             "transitionend webkitTransitionEnd oTransitionEnd",
             function (e) {
                 if ($modal.hasClass("at-top")) {
-                    // optionally hide the order details box to keep the header compact:
-                    // $order.slideUp(220);
-                    // or keep visible — comment/uncomment above
                 }
             }
         );
 
-        //$("#btnHome").on("click", function (e) {
-        //    e.preventDefault();
-
-        //    window.history.replaceState(null, "", "/Home/Index");
-        //    location.href = '/Home/Index';
-        //})
     });
-
 
     // Xoa dia chi //
     $(document).off('click', '.deleteAddress').on('click', '.deleteAddress', function () {
 
         const id = $('#id').val();
+        const qr = $('.qrCodeString').val();
+
         if (!id || id === "undefined") {
-            console.log("Gía trị id không hợp lệ !");
             return;
         }
 
@@ -189,9 +177,42 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.success) {
 
+                    let ids = [];
+                    let ArrChecked = GetArrIDChecked(ids);
+                    if (!ArrChecked) {
+                        return;
+                    }
+
+                    $.ajax({
+                        url: "/Cart/CheckAddressData",
+                        type: "GET",
+                        data: { arrID: ids },
+                        traditional: true,
+
+                        success: function (response) {
+
+                            if (!response.success) {
+                                $(".modal-right").html(response);
+                                $('#reCodeQR').attr('src', qr);
+
+                                //clearInterval(timerInterval);
+                                $("#timer").text("Cần thêm địa chỉ mặc định mới.");
+                            }
+                        },
+
+                        error: function () {
+                            alert("Lỗi cập nhật địa chỉ QR !");
+                        }
+                    })
+
                     GeneralAjaxResponse(true, false);
                 }
-                else console.log("False: " + response.message);
+                else {
+                    if (response.addressData === 'undefined') {
+                        clearInterval(timerInterval);
+                        $("#timer").text("QR đã hết hạn");
+                    }
+                }
             },
 
             error: function (response) {
@@ -228,7 +249,6 @@ $(document).ready(function () {
         let ids = [];
         let ArrChecked = GetArrIDChecked(ids);
         if (!ArrChecked) {
-            console.log("false. ");
             return;
         }
 
@@ -236,7 +256,6 @@ $(document).ready(function () {
         const isAddress = true;
         const updateAddress = true;
 
-        //$('.address-container').hide();
         $.ajax({
             url: "/Cart",
             type: "GET",
@@ -258,9 +277,7 @@ $(document).ready(function () {
 
                 // Gọi LoadDataAddress và chọn tỉnh, xã
                 LoadDataAddress(province, ward, function (data) {
-                    if (data) {
-                        console.log("Dữ liệu JSON đã tải");
-                    } else {
+                    if (!data) {
                         console.log("Không thể tải dữ liệu JSON.");
                     }
                 });
@@ -285,7 +302,7 @@ $(document).ready(function () {
 
     // Them, cap nhat dia chi cho user (chung button click) //
     $(document).on('click', '.updateAddress', function () {
-        // Xóa các lỗi cũ
+
         $('.form-control, .ts-wrapper').removeClass('error');
         //$('.error-message').remove();
 
@@ -335,13 +352,37 @@ $(document).ready(function () {
             contentType: false,
             success: function (response) {
                 if (response.success) {
-                    console.log("True: " + response.message);
+                    if (response.status === 'unique' || response.isDefault) {
+                        let ids = [];
+                        let ArrChecked = GetArrIDChecked(ids);
+                        if (!ArrChecked) {
+                            return;
+                        }
 
+                        $.ajax({
+                            url: "/Cart/ShowQrModalCart",
+                            type: "GET",
+                            data: {
+                                arrID: ids,
+                                resetQR: true,
+                                PaymentMethod: ArrChecked.paymentMethod
+                            },
+                            traditional: true, 
+                            success: function (response) {
+                                $(".modal-right").html(response);
+
+                                startCountdown(300);
+                                updateQtyAfterCheck();
+                            },
+                            error: function () {
+                                alert("Lỗi không hiển thị !");
+                            }
+                        });
+                    }
                     // Dieu huong quay ve list address sau khi them thanh cong
                     GeneralAjaxResponse(true, false);
 
                 } else {
-                    console.log("False: " + response.message);
                     if (response.errors) {
                         Object.keys(response.errors).forEach(function (field) {
                             const messages = response.errors[field];
@@ -388,7 +429,6 @@ $(document).ready(function () {
         let ids = [];
         let ArrChecked = GetArrIDChecked(ids);
         if (!ArrChecked) {
-            console.log("false. ");
             return;
         }
 
@@ -435,7 +475,7 @@ $(document).ready(function () {
             data: { arrID: ids },
             traditional: true, // bind mảng
             success: function (response) {
-                $(".modal-left").html(response); // render vào modal
+                $(".modal-left").html(response); 
                 updateQtyAfterCheck();
             },
 
@@ -456,6 +496,7 @@ $(document).ready(function () {
 });
 
 function GeneralAjaxResponse(isAddress, updateAddress) {
+
     let ids = [];
     let ArrChecked = GetArrIDChecked(ids);
     if (!ArrChecked) {
@@ -530,7 +571,7 @@ function LoadDataAddress(provinceName, wardName, callback) {
                 const provinceCode = addressData.find(p => p.Name === provinceName);
                 if (provinceCode) {
                     provinceSelect.setValue(provinceCode.Code);
-                    console.log("Tỉnh được chọn:", provinceSelect.getItem(provinceCode.Code)?.textContent || provinceName);
+                    //console.log("Tỉnh được chọn:", provinceSelect.getItem(provinceCode.Code)?.textContent || provinceName);
 
                     // Cập nhật danh sách phường/xã
                     updateWardOptions(provinceCode.Code);
@@ -540,7 +581,7 @@ function LoadDataAddress(provinceName, wardName, callback) {
                         const wardCode = provinceCode.Wards.find(w => w.Name === wardName)?.Code;
                         if (wardCode) {
                             wardSelect.setValue(wardCode);
-                            console.log("Phường/xã được chọn:", wardSelect.getItem(wardCode)?.textContent || wardName);
+                            //console.log("Phường/xã được chọn:", wardSelect.getItem(wardCode)?.textContent || wardName);
                         } else {
                             console.log("Không tìm thấy phường/xã:", wardName);
                         }

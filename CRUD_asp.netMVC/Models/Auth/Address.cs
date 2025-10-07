@@ -1,6 +1,5 @@
 ﻿using CRUD_asp.netMVC.Models.Order;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CRUD_asp.netMVC.Models.Auth
 {
@@ -37,7 +36,9 @@ namespace CRUD_asp.netMVC.Models.Auth
         [StringLength(50)]
         public string? PostalCode { get; set; }  // Ma buu chinh
 
-        public bool IsDefault { get; set; } = false; // Địa chỉ mặc định
+        public bool IsDefault { get; set; }
+
+        public bool IsDelete { get; set; } 
 
         public List<Orders>? Orders { get; set; }
     }

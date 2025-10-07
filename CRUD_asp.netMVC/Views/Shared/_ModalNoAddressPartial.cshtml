@@ -1,0 +1,27 @@
+﻿@using CRUD_asp.netMVC.ViewModels.Cart
+@using System.Globalization
+@model CartViewModel
+@{
+}
+<link rel="stylesheet" href="~/css/load_address.css" asp-append-version="true" />
+
+@Html.AntiForgeryToken()
+
+<section class="modal-left">
+    @await Html.PartialAsync("_ListAddressPartial", Model)
+</section>
+
+<section class="modal-right">
+    @await Html.PartialAsync("_ModalPaymentPartialRight", Model)
+</section>
+
+<div id="overlayStatus" class="overlay-status" style="display:none;">
+    <div class="status-box">
+        <div class="spinner"></div>
+        <div class="success-icon" style="display:none;">✔</div>
+        <div class="success-text" style="display:none;">Thanh toán thành công !</div>
+    </div>
+</div>
+
+<script src="~/js/signalr.min.js" asp-append-version="true"></script>
+<script type="module" src="~/js/load_address.js" asp-append-version="true"></script>

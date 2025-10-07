@@ -5,9 +5,24 @@
 
 @{
     var payment = Model;
+    var address = payment.Order;
     var user = payment.Order.Users;
-    var address = payment.Order.Address;
-    var orderPayList = ViewData["OrderPayListPartial"] as List<OrderDetail>;
+    var statusName = payment.Order.Status switch
+    {
+        "Paid" => "Đã thanh toán",
+        "Confirmed" => "Đã xác nhận",
+        "Intransit" => "Đang vận chuyển",
+        "OutForDelivery" => "Đang giao hàng",
+        "Delivered" => "Đã giao hàng",
+        "Failed" => "Thất bại",
+    };
+
+    // var address = payment.Order.Address;
+    var orderPayList = new List<OrderDetail>();
+    if (ViewData["OrderPayListPartial"] != null)
+    {
+        orderPayList = ViewData["OrderPayListPartial"] as List<OrderDetail>;
+    }
 
     <div class="container">
         <header class="page-header">
@@ -19,13 +34,13 @@
             <div class="order-top">
                 <div>
                     <div id="orderTitle" class="order-id">Người nhận: @user.UserName — @user.PhoneNumber</div>
-                    <div class="order-id">Địa chỉ: @address.Street, @address.Ward, @address.Province</div>
+                    <div class="order-id">Địa chỉ: @address.ShipStreet, @address.ShipWard, @address.ShipProvince</div>
                 </div>
                 <div class="status" aria-live="polite">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display:block">
                         <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
-                    Giao hàng thành công
+                    @statusName
                 </div>
             </div>
 

@@ -11,5 +11,8 @@
         public string Ward { get; set; }
         //public string PostalCode { get; set; }
         public bool IsDefault { get; set; } = false;
+        public bool IsDelete { get; set; } = false;
+
+
     }
 }

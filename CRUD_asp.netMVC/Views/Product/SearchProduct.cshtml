@@ -51,7 +51,11 @@
         <div class="row">
             @if (!Model.Products.Any())
             {
-                <p class="text-center p-5 fs-1">@ViewData["Info"]</p>
+                <div class="text-center p-5 fs-1">
+
+                    <p><strong>@ViewData["Info"]</strong></p>
+                <a asp-controller="Product" asp-action="Index">Khám phá thêm sản phẩm.</a>
+                </div>
             }
             else
             {
