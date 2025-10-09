@@ -16,7 +16,7 @@ namespace CRUD_asp.netMVC.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Thiết lập quan hệ giữa các thực thể
+            // Thiet lap moi quan he Entity
             modelBuilder.RelationshipEntitys();
 
             // Them du lieu Featured
@@ -64,7 +64,7 @@ namespace CRUD_asp.netMVC.Data
             // Them du lieu ProductMaterial
             modelBuilder.SeedProductMaterial();
 
-            // Them du lieu SeedProducts, productSeason, productStyle, productColor, productGender
+            // Them du lieu Products, productSeason, productStyle, productColor, productGender
             modelBuilder.SeedProducts_ProductSeason_ProductStyle();
         }
 

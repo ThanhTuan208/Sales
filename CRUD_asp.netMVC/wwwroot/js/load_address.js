@@ -432,7 +432,6 @@ $(document).ready(function () {
             return;
         }
 
-        // Chuyen tu select address -> add address
         const isAddress = true;
         const updateAddress = true;
 
@@ -444,12 +443,12 @@ $(document).ready(function () {
                 IsAddress: isAddress,
                 UpdateAddress: updateAddress
             },
-            traditional: true, // bind mảng
+            traditional: true,
 
             success: function (response) {
                 console.log("Hiển thị modal thêm địa chỉ thành công. ");
 
-                $(".modal-left").html(response); // render vào modal
+                $(".modal-left").html(response); 
                 updateQtyAfterCheck();
                 LoadDataAddress(); // hien thi json address VN
             },
@@ -473,7 +472,7 @@ $(document).ready(function () {
             url: "/Cart/ShowQrModalCart",
             type: "GET",
             data: { arrID: ids },
-            traditional: true, // bind mảng
+            traditional: true, 
             success: function (response) {
                 $(".modal-left").html(response); 
                 updateQtyAfterCheck();

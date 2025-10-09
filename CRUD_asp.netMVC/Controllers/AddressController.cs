@@ -2,12 +2,15 @@
 using CRUD_asp.netMVC.DTO.Address;
 using CRUD_asp.netMVC.Models.Auth;
 using EFCoreSecondLevelCacheInterceptor;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Org.BouncyCastle.Bcpg;
+using System.Diagnostics.Contracts;
 using System.Runtime.Loader;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -87,14 +90,25 @@ namespace CRUD_asp.netMVC.Controllers
                 }
 
                 var UniqueAddressbyUser = _dbContext.Addresses.Where(p => p.UserID == userID);
+                var UniqueAddressbyUserIsNull = UniqueAddressbyUser.FirstOrDefault(p => p.IsDefault);
 
-                if (UniqueAddressbyUser != null && UniqueAddressbyUser.ToList().Count == 1)
+                if (!_cache.TryGetValue("countRequest", out int count))
                 {
-                    return Json(new { success = true, message = "Thêm địa chỉ thành công.", status = "unique" });
+                    count = 0;
                 }
-                else if (UniqueAddressbyUser != null && UniqueAddressbyUser.ToList().Count > 1)
+
+                IsRequestByQR(count, userID, true);
+
+                if (UniqueAddressbyUser != null)
                 {
-                    return Json(new { success = true, message = "Thêm địa chỉ thành công.", isDefault = true });
+                    if (UniqueAddressbyUser.ToList().Count == 1)
+                    {
+                        return Json(new { success = true, message = "Thêm địa chỉ thành công.", status = "unique" });
+                    }
+                    else if (UniqueAddressbyUser.ToList().Count > 1)
+                    {
+                        return Json(new { success = true, message = "Thêm địa chỉ thành công.", isDefault = true });
+                    }
                 }
 
                 return Json(new { success = true, message = "Thêm địa chỉ thành công." });
@@ -143,15 +157,13 @@ namespace CRUD_asp.netMVC.Controllers
                     AddressExists.Province = addressDTO.Province;
                     AddressExists.Ward = addressDTO.Ward;
                     AddressExists.PostalCode = null;
-                    //PostalCode = addressDTO.PostalCode ?? string.Empty,
-
 
                     if (addressDTO.IsDefault)
                     {
-                        var addreesDefaultUser = await _dbContext.Addresses.Where(p => p.UserID == userID).ToListAsync();
+                        var addreesDefaultUserList = await _dbContext.Addresses.Where(p => p.UserID == userID).ToListAsync();
 
                         List<Address> userDefault = new List<Address>();
-                        foreach (var item in addreesDefaultUser)
+                        foreach (var item in addreesDefaultUserList)
                         {
                             item.IsDefault = false;
                             userDefault = new List<Address>() { item };
@@ -171,31 +183,13 @@ namespace CRUD_asp.netMVC.Controllers
 
                 var UniqueAddressbyUser = _dbContext.Addresses.Where(p => p.UserID == userID);
                 var UniqueAddressbyUserIsNull = UniqueAddressbyUser.FirstOrDefault(p => p.IsDefault);
-                //updateQR = UniqueAddressbyUser.ToList().Count > 1 && UniqueAddressbyUserIsNull != null;
 
                 if (!_cache.TryGetValue("countRequest", out int count))
                 {
                     count = 0;
                 }
 
-                var updateQR = false;
-                count = _cache.Get<int>("countRequest");
-                if (UniqueAddressbyUserIsNull != null)
-                {
-                    count++;
-                }
-
-                if (UniqueAddressbyUserIsNull != null && count == 0)
-                {
-                    updateQR = true;
-                    count++;
-                }
-                else
-                {
-                    updateQR = false;
-                    count--;
-                }
-                _cache.Set("countRequest", count);
+                var updateQR = IsRequestByQR(count, userID, false);
 
                 if (UniqueAddressbyUser != null)
                 {
@@ -218,7 +212,6 @@ namespace CRUD_asp.netMVC.Controllers
                 }
 
                 return Json(new { success = true, message = "Cập nhật địa chỉ thành công." });
-
             }
             catch (Exception)
             {
@@ -236,7 +229,6 @@ namespace CRUD_asp.netMVC.Controllers
                     return Json(new { success = false, message = $"Không tìm thấy id = {addressId} !" });
                 }
 
-
                 var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
                 if (userID > 0)
                 {
@@ -250,10 +242,23 @@ namespace CRUD_asp.netMVC.Controllers
                         _dbContext.Orders.Update(IsAddressExistsOrder);
                     }
 
-                    _dbContext.Addresses.Remove(address);
+                    if (address != null)
+                    {
+                        _dbContext.Addresses.Remove(address);
+                    }
                     await _dbContext.SaveChangesAsync();
-
                 }
+
+                var UniqueAddressbyUser = _dbContext.Addresses.Where(p => p.UserID == userID);
+                var UniqueAddressbyUserIsNull = UniqueAddressbyUser.FirstOrDefault(p => p.IsDefault);
+                //updateQR = UniqueAddressbyUser.ToList().Count > 1 && UniqueAddressbyUserIsNull != null;
+
+                if (!_cache.TryGetValue("countRequest", out int count))
+                {
+                    count = 0;
+                }
+
+                IsRequestByQR(count, userID, true);
 
                 return Json(new { success = true, message = $"Xóa địa chỉ thành công. " });
             }
@@ -262,6 +267,52 @@ namespace CRUD_asp.netMVC.Controllers
 
                 return Json(new { success = false, message = "Server: " + ex.Message });
             }
+        }
+
+        // Xu ly reset QR cho logic them, cap nhat, xoa Dia Chi 
+        public bool IsRequestByQR(int count, int userID, bool isDelete)
+        {
+            if (userID > 0)
+            {
+                var UniqueAddressbyUser = _dbContext.Addresses.Where(p => p.UserID == userID);
+                var UniqueAddressbyUserIsNull = UniqueAddressbyUser.FirstOrDefault(p => p.IsDefault);
+
+                if (!isDelete)
+                {
+                    count = _cache.Get<int>("countRequest");
+                }
+                else _cache.Set("countRequest", 0);
+
+                if (UniqueAddressbyUserIsNull == null)
+                {
+                    return false;
+                }
+
+                if (UniqueAddressbyUser.ToList().Count > 1 && UniqueAddressbyUserIsNull != null)
+                {
+                    if (count != 0)
+                    {
+                        count = 1;
+                    }
+                    else count = 0;
+                }
+                else count = 1;
+
+                // reset QR
+                if (count == 0)
+                {
+                    count++;
+                    _cache.Set("countRequest", count);
+                    return true;
+                }
+                else // khong reset QR
+                {
+                    _cache.Set("countRequest", count);
+                    return false;
+                }
+            }
+
+            return false;
         }
     }
 }

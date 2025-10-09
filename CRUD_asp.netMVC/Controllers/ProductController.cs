@@ -273,7 +273,7 @@ namespace CRUD_asp.netMVC.Controllers
 
             var cateList = await _dbContext.Category.AsNoTracking().ToListAsync();
 
-            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
+            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
             var carts = await _dbContext.Carts.Where(p => p.UserID == userID).ToListAsync();
 
             ViewData["cart"] = carts.Count;
