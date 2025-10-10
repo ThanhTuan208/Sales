@@ -277,7 +277,6 @@ namespace CRUD_asp.netMVC.Controllers
                     }
                     catch (Exception ex)
                     {
-                        ModelState.AddModelError(string.Empty, "Lỗi khi gửi email xác nhận: " + ex.Message);
                         return Json(new { success = false, message = "Lỗi khi gửi email xác nhận: " + ex.Message });
                     }
                 }

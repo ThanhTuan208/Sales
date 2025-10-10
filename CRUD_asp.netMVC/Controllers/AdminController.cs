@@ -4,9 +4,11 @@ using CRUD_asp.netMVC.ViewModels.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
 using System.Collections.Immutable;
 using System.Data;
@@ -166,6 +168,16 @@ namespace CRUD_asp.netMVC.Controllers
 
                         nameFile = Guid.NewGuid().ToString() + getPathExtentions;
                         var fileUpLoadPath = Path.Combine(environment.WebRootPath, "images", "Products", nameFile).Replace("\\", "/");
+
+                        using (var image = await Image.LoadAsync(file.OpenReadStream()))
+                        {
+                            image.Mutate(x => x.Resize(new ResizeOptions
+                            {
+                                Size = new SixLabors.ImageSharp.Size(800, 800),
+                                Mode = ResizeMode.Crop
+                            }));
+                            await image.SaveAsync(fileUpLoadPath, new WebpEncoder { Quality = 75 });
+                        }
 
                         using (var fileStream = new FileStream(fileUpLoadPath, FileMode.Create))
                         {
@@ -415,9 +427,9 @@ namespace CRUD_asp.netMVC.Controllers
                                 image.Mutate(x => x.Resize(new ResizeOptions
                                 {
                                     Size = new SixLabors.ImageSharp.Size(800, 800),
-                                    Mode = ResizeMode.Max
+                                    Mode = ResizeMode.Crop
                                 }));
-                                await image.SaveAsync(fileUploadPathImage, new JpegEncoder { Quality = 80 });
+                                await image.SaveAsync(fileUploadPathImage, new WebpEncoder { Quality = 75 });
                             }
 
                             using (var FileStream = new FileStream(fileUploadPathImage, FileMode.Create))

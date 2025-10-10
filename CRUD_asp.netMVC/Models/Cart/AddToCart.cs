@@ -26,6 +26,8 @@ namespace CRUD_asp.netMVC.Models.Cart
         [Required]
         public int Quantity { get; set; }
 
+        public bool IsDelete { get; set; }
+
         public DateTime created_at { get; set; }
     }
 }

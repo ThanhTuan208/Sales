@@ -1,8 +1,11 @@
 ﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.ViewModels.Home;
+using CRUD_asp.netMVC.ViewModels.Product;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Tls;
 using System.Globalization;
 using System.Security.Claims;
 using System.Text;
@@ -273,6 +276,8 @@ namespace CRUD_asp.netMVC.Controllers
 
             var cateList = await _dbContext.Category.AsNoTracking().ToListAsync();
 
+            var orderPaid = await _dbContext.OrderDetail.CountAsync(p => p.ProductID == id);
+
             var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
             var carts = await _dbContext.Carts.Where(p => p.UserID == userID).ToListAsync();
 
@@ -283,7 +288,8 @@ namespace CRUD_asp.netMVC.Controllers
                 Product = product,
                 Brands = brandList,
                 Categories = cateList,
-                Carts = carts
+                Carts = carts,
+                Sold = orderPaid
             };
 
             return ViewModel != null ? View(ViewModel) : NotFound();
@@ -311,27 +317,36 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         /// <summary>
+        /// Phan trang san pham 
         /// </summary>
         /// <param name="Iqueryable"></param>
         /// <param name="pageCurrent"></param>
-        /// <param name="pageCount"></param>
+        /// <param name="pageCount"></param> 
         /// <param name="carts"></param>
         /// <returns></returns>
-        public async Task<getPaginationByProductViewModel> CreatePaginationGeneral(IQueryable<Products> Iqueryable, int pageCurrent, int pageCount)
+        public async Task<getPaginationByProductViewModel> CreatePaginationGeneral(IQueryable<Products> Products, int pageCurrent, int pageCount)
         {
-            var product = await PaginatedList<Products>.CreatePagAsync(Iqueryable, pageCurrent, pageCount);
-            var brands = await PaginatedList<Brand>.CreatePagAsync(_dbContext.Brand.AsNoTracking(), 1, _dbContext.Brand.AsNoTracking().Count());
-            var cates = await PaginatedList<Category>.CreatePagAsync(_dbContext.Category.AsNoTracking(), 1, _dbContext.Category.AsNoTracking().Count());
+            var brands = _dbContext.Brand.AsNoTracking();
+            var cates = _dbContext.Category.AsNoTracking();
 
-            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
-            var carts = await _dbContext.Carts.Where(p => p.UserID == userID).ToListAsync();
+            var productPag = await PaginatedList<Products>.CreatePagAsync(Products, pageCurrent, pageCount);
+            var brandPag = await PaginatedList<Brand>.CreatePagAsync(brands, 1, brands.Count());
+            var catePag = await PaginatedList<Category>.CreatePagAsync(cates, 1, cates.Count());
+
+            var carts = new List<AddToCart>();
+            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
+            if (userID > 0)
+            {
+                carts = await _dbContext.Carts.Where(p => p.UserID == userID).ToListAsync();
+            }
+
             ViewData["cart"] = carts.Count;
 
             return new getPaginationByProductViewModel
             {
-                Products = product,
-                Brands = brands,
-                Categories = cates,
+                Products = productPag,
+                Brands = brandPag,
+                Categories = catePag,
                 Carts = carts
             };
         }

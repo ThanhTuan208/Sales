@@ -372,8 +372,29 @@ $(document).ready(function () {
 
     // Đóng modal khi click nút đóng / dung off, on de tranh luu tru connsole vao DOM
     $(document).off('click', '.btn-close').on('click', '.btn-close', function () {
-        $(".modal").removeClass("active").fadeOut(200);
-        $(".modal-overlay").fadeOut(200);
+
+        let ids = [];
+        const IsGetArr = GetArrIDChecked(ids);
+
+        if (!IsGetArr.success || ids === null) {
+            return;
+        }
+
+        $.ajax({
+            url: "/Cart/UdpateIsDeleteCart",
+            type: "GET",
+            data: { arrID: ids },
+            traditional: true,
+
+            success: function () {
+                $(".modal").removeClass("active").fadeOut(200);
+                $(".modal-overlay").fadeOut(200);
+
+            },
+            error: function (response) {
+                alert("Lỗi đóng modal cart: " + response.message || "khong xac dinh");
+            }
+        });
     });
 
     // Cap nhat brand
@@ -875,7 +896,7 @@ $(document).ready(function () {
         });
     });
 
-    // Tang giam so luong trong gio hang (tranh bi luu lich su trang web khong nhu su dung method post)
+    // Tang giam so luong trong gio hang
     $('.quantity-btn').on('click', function () {
         var $btn = $(this);
         const itemID = $btn.data('id');
@@ -903,24 +924,32 @@ $(document).ready(function () {
                     quantityInput.val(NewQty);
                     let price = parseFloat($btn.closest('tr').find('.price').text().replace(/[^0-9]+/g, ''));
                     var totalPrice = price * NewQty;
-                    //$btn.closest('tr').find('.priceTotal').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice));
-                    /*$('.payment').find('.priceTotal').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice));*/
+
                     updateQtyAfterCheck();
                 }
-                else {
-                    //alert('Cập nhật số lượng không thành công.' + response.message);
-                }
             },
-            error: function (response) {
+            error: function () {
                 alert('Đã xảy ra lỗi trong quá trình cập nhật số lượng.');
             }
         });
     });
 
     /*Tăng giảm số lượng (Chi ap dung duoc 1 tang giam so luong)*/
-    $('#increase').click(() => {
+    $('#increase').on('click', function () {
+
+        let qtyDetail = parseInt($('.qtyDetail').attr('data-qty-detail'));
         let qty = parseInt($('#quantity').val());
-        $('#quantity').val(qty + 1);
+        if (qtyDetail === 0) {
+            return;
+        }
+
+        if (qty >= qtyDetail) {
+            return;
+        }
+
+        if (qty < 10) {
+            $('#quantity').val(qty + 1);
+        }
     });
 
     $('#decrease').click(() => {
@@ -938,9 +967,6 @@ $(document).ready(function () {
         let colorBtn = null;
         let sizeBtn = null;
         if ($('.color-option').hasClass('color-active') || $('.size-option').hasClass('size-active')) {
-
-            //(line 242 de lay gia tri #selectColor)
-            // colorBtn = $('#selectColor').val(); Cach 1 -> gia tri se tu luu vao colorBtn ngay ca khi client click gia tri co active va tat di khi ko co active nhung van lay gia tri 
 
             sizeBtn = $('.size-option.size-active').data('size');
             colorBtn = $('.color-option.color-active').data('color');
@@ -975,7 +1001,6 @@ $(document).ready(function () {
                                 $(this).remove();
                             });
                         }, 3000);
-                        //window.location.href = `/Product/ProductDetail/${itemID}`;
                     }
                     else {
                         console.log("Thêm sản phẩm vào giỏ hàng thất bại." + response.message);
@@ -987,7 +1012,6 @@ $(document).ready(function () {
                                     $(this).remove();
                                 });
                             }, 3000);
-                            //window.location.href = `/Product/ProductDetail/${response.productID}`;
                         }
                         else {
                             window.location.href = `/Auth/LoginByProductID/${response.productID}`;
@@ -1091,37 +1115,8 @@ $(document).ready(function () {
             button.style.transform = 'scale(1)';
         });
     });
-
-    // dung cho hieu ung hinh anh qua lai (product detail)
-
 });
 
-var owl;
-$(document).ready(function () {
-    owl = $('.owl-carousel-fullwidth').owlCarousel({
-        items: 1,
-        loop: true,
-        dots: false,
-        nav: true
-    });
-});
-
-$('.thumbnail-img').on('click', function () {
-    const index = $(this).index();
-    owl.trigger('to.owl.carousel', [index, 700]);
-
-    $('.thumbnail-img').removeClass('image-active');
-    $(this).addClass('image-active');
-});
-
-// Thoi gian thong bao them thanh cong hoac that bai
-//$ (document).ready(function () {
-//    setTimeout(() => {
-//        $('.alert').alert('close')
-//    }, 5000);
-//})
-
-/* Lay gia tri color -> product detail*/
 $('.color-option').on('click', function () {
 
     const color = $(this).data('color');
@@ -1129,14 +1124,15 @@ $('.color-option').on('click', function () {
 });
 
 
-/*Lay gia tri size -> product detail*/
 $('.size-option').on('click', function () {
+
     const size = $(this).data('size');
     $('#selectSize').val(size);
 });
 
 // lay mang id san pham da chon trong gio hang
 export function GetArrIDChecked(ids) {
+
     const productChecked = $('.checkbox:checked');
     const paymentMethodChecked = $('input[name="payment"]:checked').data('method');
 
@@ -1153,8 +1149,31 @@ export function GetArrIDChecked(ids) {
     return { success: true, paymentMethod: "transfer" };
 }
 
+
+// Xoa IsDelete sau khi load, back, return trang Cart
+$(window).on("pageshow", function () {
+
+    if (window.location.pathname === "/Cart/Index" || window.location.pathname === "/Cart") {
+        callUpdateCart();
+    }
+});
+
+function callUpdateCart() {
+
+    $.ajax({
+        url: "/Cart/UdpateIsDeleteCart",
+        type: "GET",
+
+        success: function (response) {
+            console.log(response.success ? true : false);
+        },
+        error: function (response) {
+            alert("Lỗi Load cart: " + (response.message || "không xác định"));
+        }
+    });
+}
+
 LoadView();
-// Xu li khi go back va return lai, o check van checked nhung gia ko hien thi 
 export function LoadView() {
     // Su dung pageshow de load lai trang (ke ca khi go back va return view)
     $(window).on('pageshow', function () {
@@ -1162,6 +1181,7 @@ export function LoadView() {
         $('.checkbox:checked').each(function () {
             $(this).addClass('active');
         });
+
         updateQtyAfterCheck();
     });
 }
@@ -1189,9 +1209,6 @@ export function updateQtyAfterCheck() {
     }
 
     let vat = 0;
-    //if (total > 50000000) {
-    //    vat = total * 0.005;
-    //}
     if (total > 1000000) {
         ship = 0;
     }

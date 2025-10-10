@@ -24,6 +24,31 @@ namespace CRUD_asp.netMVC.Controllers
             _qrCode = qrCode;
         }
 
+        [HttpGet] // Cap nhat cart isDelete = false
+        public async Task<IActionResult> UdpateIsDeleteCart(string[]? arrID)
+        {
+            try
+            {
+                var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
+                if (userID > 0)
+                {
+                    var cart = _dbContext.Carts.Where(p => p.UserID == userID);
+                    if (await cart.AllAsync(p => !p.IsDelete))
+                    {
+                        return Json(new { success = false });
+                    }
+
+                    await cart.ExecuteUpdateAsync(e => e.SetProperty(s => s.IsDelete, false));
+                }
+
+                return Json(new { success = true });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> CheckAddressData(string[]? arrID)
         {
@@ -174,11 +199,6 @@ namespace CRUD_asp.netMVC.Controllers
 
                         string timeID = Regex.Replace(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), @"[/:\s]", "") + "VN_NTT";
 
-                        //if (address == null)
-                        //{
-                        //    return PartialView("_ModalPaymentPartial", viewModel);
-                        //}
-
                         var order = new Orders
                         {
                             ID = timeID,
@@ -204,6 +224,9 @@ namespace CRUD_asp.netMVC.Controllers
 
                             await _dbContext.OrderDetail.AddAsync(orderDetail);
                         });
+
+                        await _dbContext.Carts.Where(p => p.UserID == userID && arrID.Contains(p.ID.ToString()))
+                                              .ExecuteUpdateAsync(s => s.SetProperty(sp => sp.IsDelete, true));
 
                         await _dbContext.Orders.AddAsync(order);
                         await _dbContext.SaveChangesAsync();

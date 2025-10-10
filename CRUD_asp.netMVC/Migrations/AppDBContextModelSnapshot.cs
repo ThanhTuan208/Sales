@@ -325,6 +325,9 @@ namespace CRUD_asp.netMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 

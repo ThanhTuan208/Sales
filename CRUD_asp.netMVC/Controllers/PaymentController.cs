@@ -7,9 +7,12 @@ using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Service.GHN;
 using CRUD_asp.netMVC.Service.Payment;
 using CRUD_asp.netMVC.ViewModels.Order;
+using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Elfie.Model.Tree;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Versioning;
 using System.Formats.Asn1;
@@ -18,6 +21,8 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using System.Transactions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -64,6 +69,9 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpPost] // Nhan sms tu dien thoai
         public async Task<IActionResult> SmsReceive([FromBody] SmsMessage sms, [FromServices] IHubContext<PaymentHub> hub)
         {
+            //Mở 1 giao dịch(transaction). -> thuc hien cho kieu toi uu sql "raw sql bulk update"
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
             try
             {
                 var NDMessage = sms.Message.Split("ND:")[1].Trim();
@@ -91,36 +99,68 @@ namespace CRUD_asp.netMVC.Controllers
                     paymentMethod = order.PaymentMethod
                 };
 
-                order.Payment = payment;
-                order.Status = "Paid"; // cap nhat lai trang thai sau khi chuyen khoan thanh cong
+                // Cap nhat lai trang thai sau khi chuyen khoan thanh cong
+                order.Payment = payment; // add data payment
+                order.Status = "Paid";
                 order.PaidAt = DateTime.Now;
 
-                var cart = await _dbContext.Carts.FirstOrDefaultAsync(p => p.ProductID == order.OrderDetail.FirstOrDefault().ProductID);
+                var productIDList = order.OrderDetail.Where(p => p.OrderID == order.ID).Select(p => p.ProductID).ToList();
 
-                if (cart != null)
+                var productQtyList = order.OrderDetail
+                    .GroupBy(x => x.ProductID)
+                    .Select(p => new { PorductID = p.Key, ToTalQty = p.Sum(s => s.Quantity) })
+                    .ToList();
+
+                StringBuilder build = new StringBuilder();
+                foreach (var product in productQtyList)
                 {
-                    _dbContext.Carts.Remove(cart);
+                    build.AppendLine($"WHEN {product.PorductID} THEN Quantity - {product.ToTalQty}");
+                }
+
+                var caseWhen = build.ToString();
+                string productIDSelected = string.Join(", ", productQtyList.Select(p => p.PorductID));
+
+                string sqlUpdateQty = @$"
+                        UPDATE Products
+                        SET Quantity = CASE ID
+                            {caseWhen}
+                            ELSE Quantity
+                        END
+                        WHERE ID IN ({productIDSelected});";
+
+                var affectRow = await _dbContext.Database.ExecuteSqlRawAsync(sqlUpdateQty);
+
+                if (affectRow > 0)
+                {
+                    await _dbContext.Carts
+                        .Where(p => p.UserID == order.UserID && productIDList.Contains(p.ProductID) && p.IsDelete)
+                        .ExecuteDeleteAsync();
                 }
 
                 _dbContext.Orders.Update(order);
 
-
                 await _dbContext.SaveChangesAsync();
 
-                // phat real time sau khi cap nhat db
                 await hub.Clients.All.SendAsync("ReceivePaymentStatus", order.ID, formartTransaction);
 
                 // Tao van don GHN sau khi thanh toan
                 //await RequestGHN(order);
 
+                //Nếu không có lỗi → commit, lưu thay đổi.
+                await transaction.CommitAsync();
+
                 return Json(new { sucess = true, message = "Thanh toán thành công." });
             }
             catch (Exception ex)
             {
+                //Nếu có lỗi ở bất kỳ bước nào → rollback, đảm bảo dữ liệu không bị nửa vời.
+                await transaction.RollbackAsync();
+
                 return Json(new { sucess = false, message = "Thanh toán thất bại: " + ex.Message });
             }
         }
 
+        #region CallWardAPIGHN
         public async Task<string> RequestGHN(Orders order)
         {
 
@@ -209,7 +249,7 @@ namespace CRUD_asp.netMVC.Controllers
 
         //    return null; // không tìm thấy
         //}
-
+        #endregion
 
         [HttpGet] // Goi trang thanh toan thanh cong
         public async Task<IActionResult> PaymentSuccess(string orderID, string transactionCode)

@@ -55,8 +55,8 @@ namespace CRUD_asp.netMVC
 
                 // Cau hinh nguoi dung
                 options.User.RequireUniqueEmail = true;
-            })
-                .AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders(); // Để dùng chức năng reset password, confirm email, v.v.
+
+            }).AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders(); // Để dùng chức năng reset password, confirm email, v.v.
 
             // Dang ky Cookie
             builder.Services.ConfigureApplicationCookie(options =>

@@ -1,17 +1,19 @@
-﻿@using CRUD_asp.netMVC.ViewModels.Home
+﻿@using CRUD_asp.netMVC.ViewModels.Product
 @using System.Globalization
 @model GeneralProduct_ListCateBrand
 
 @{
-    var countCart = ViewData["cart"] as int? ?? 0; 
+    var countCart = ViewData["cart"] as int? ?? 0;
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
-    
+
 }
 
 <link rel="stylesheet" href="~/css/productDetail.css" asp-append-version="true">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/css/lightslider.min.css" asp-append-version="true" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fancyapps/ui/dist/fancybox.css" asp-append-version="true" />
 
-<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(@Url.Content($"~/images/banner/banner2.jpg"));">
+<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(@Url.Content("~/images/banner/banner2.jpg"));">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
@@ -30,34 +32,34 @@
 <div id="fh5co-product">
     <div class="container">
         <div class="row">
-            @* updated *@
             <div class="col-md-5">
-                <div class="owl-carousel owl-carousel-fullwidth product-carousel">
-                    @foreach (var item in Model.Product.ProductImages)
-                    {
-                        <div class="item">
-                            <div class="active text-center">
-                                <figure>
-                                    <img src="@Url.Content($"~/images/products/{item.PathNameImage}")" loading="lazy" alt="user" style="object-fit: cover" class="img-fluid p-3" />
-                                </figure>
-                            </div>
-                        </div>
-                    }
-                </div>
-
-                <div class="d-flex gap-2 pb-5 justify-content-center">
-                    @for (int i = 0; i < Model.Product.ProductImages.Count; i++)
-                    {
-                        var item = Model.Product.ProductImages[i];
-
-                        <img src="@Url.Content($"~/images/products/{item.PathNameImage}")" class="thumbnail-img @(i == 0 ? "image-active" : "")" >
-                    }
+                <div class="vrmedia-gallery">
+                    <ul class="ecommerce-gallery">
+                        @if (Model.Product.ProductImages != null && Model.Product.ProductImages.Count > 0)
+                        {
+                            foreach (var img in Model.Product.ProductImages)
+                            {
+                                var imgPath = Url.Content($"~/images/products/{img.PathNameImage}");
+                                <li data-fancybox="gallery"
+                                    data-src="@imgPath"
+                                    data-thumb="@imgPath">
+                                    <img src="@imgPath" alt="@Model.Product.Name" />
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <img src="@Url.Content("~/images/image/not-found-image.jpg")" alt="No image available" />
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
 
             <!-- Thông tin sản phẩm -->
             <div class="col-md-7">
-                <div class="product-content" style="font-size: 3rem">
+                <div class="product-content" style="font-size: 3rem; margin-top: 10px">
                     <h2 class="product-title text-center mb-5 fw-bold" style="font-size: 4rem">@Model.Product.Name</h2>
                     <div class="product-general d-flex justify-content-between align-items-center fs-3 my-3">
                         <div class="product-rating">
@@ -69,10 +71,13 @@
                             <span>4.7(21)</span>
                         </div>|
                         <div class="sold">
-                            da ban: 100 sp
+                            Đã bán: @Model.Sold sp
                         </div>|
-                        <div class="sold">
-                            danh gia: 100 reviews
+                        <div class="review">
+                            Đánh giá: 100 
+                        </div>| 
+                        <div class="qtyDetail" data-qty-detail="@(Model.Product?.Quantity ?? 0)">
+                            Số lượng: @Model.Product.Quantity
                         </div>
                     </div>
 
@@ -96,22 +101,9 @@
                             </div>
                         </div>
 
-                        @* Xu li post *@
-                        <!-- Chọn số lượng -->
                         <div class="addCart">
 
-                            <div class="row align-items-center mb-4">
-                                <div class="col-md-3 fw-bold">
-                                    <p class="fs-3 mb-0 me-3">số lượng: </p>
-                                </div>
-                                <div class="col-md-9 d-flex">
-                                    <a class="btn btn-outline-secondary qty-btn" data-qty="-" id="decrease">-</a>
-                                    <input type="text" id="quantity" class="qtyInput form-control mx-2 text-center" value="1" style="width: 60px; height: 40px" readonly>
-                                    <a class="btn btn-outline-secondary qty-btn" data-qty="+" id="increase">+</a>
-                                </div>
-                            </div>
-
-                            <!-- Chọn màu sắc -->
+                            <!-- Mau sac -->
                             <div class="row align-items-center mb-4">
                                 <div class="col-md-3 fw-bold">
                                     <p class="fs-3 mb-0 me-2">Màu sắc: </p>
@@ -120,12 +112,12 @@
                                     <input type="hidden" id="selectColor" name="color" class="color" />
                                     @foreach (var item in Model.Product.ProductColor)
                                     {
-                                        <div class="border p-2 px-3 color-option" data-color="@item.Color.Name" >@item.Color.Name</div>
+                                        <div class="border p-2 px-3 color-option" data-color="@item.Color.Name">@item.Color.Name</div>
                                     }
                                 </div>
                             </div>
 
-                            <!-- Chọn size -->
+                            <!-- Kich thuoc -->
                             <div class="row align-items-center mb-5">
                                 <div class="col-md-3 fw-bold">
                                     <p class="fs-3 mb-0 me-2">Kích thước: </p>
@@ -139,19 +131,32 @@
                                 </div>
                             </div>
 
+                            <!-- So luong -->
+                            <div class="row align-items-center mb-4">
+                                <div class="col-md-3 fw-bold">
+                                    <p class="fs-3 mb-0 me-3">số lượng: </p>
+                                </div>
+                                <div class="col-md-9 d-flex">
+                                    <a class="btn btn-outline-secondary qty-btn" data-qty="-" id="decrease">-</a>
+                                    <input type="text" id="quantity" class="qtyInput form-control mx-2 text-center" value="1" style="width: 60px; height: 40px" readonly>
+                                    <a class="btn btn-outline-secondary qty-btn" data-qty="+" id="increase">+</a>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-md-6 offset-md-3 mt-5">
                                     <p class="d-flex justify-content-center me-4">
                                         <input type="hidden" class="countCart" value="@countCart" />
-                                            <input type="hidden" class="productID" name="productID" data-id="@Model.Product.ID" value="@Model.Product.ID" />
+                                        <input type="hidden" class="productID" name="productID" data-id="@Model.Product.ID" value="@Model.Product.ID" />
                                         <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5" data-method="cart">Thêm giỏ hàng</button>
-                                        <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5" data-method="buy">Mua ngay</button>
+                                        <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5" data-method="buy">Mua liền</button>
+
                                     </p>
                                 </div>
                             </div>
                         </div>
-                       
-                        <div class="alertInfo"></div>   
+
+                        <div class="alertInfo"></div>
                     </div>
                 </div>
             </div>
@@ -166,7 +171,6 @@
                         <li><a href="#" data-tab="3"><span class="icon visible-xs"><i class="icon-star"></i></span><span class="hidden-xs">Nhận xét &amp; đánh giá</span></a></li>
                     </ul>
 
-                    <!-- Tabs -->
                     <div class="fh5co-tab-content-wrap">
 
                         <div class="fh5co-tab-content tab-content active" data-tab-content="1">
@@ -176,19 +180,16 @@
 
                                 <ul>
 
-                                    <li><p>Giới tính: @Model.Product.Gender.Name</p></li>
-                                    <li><p>Thương hiệu: @Model.Product.Brands.Name</p></li>
-                                    <li><p>Danh mục: @Model.Product.Cate.Name</p></li>
-                                    @* <li><p>Mổ tả sản phẩm: @Model.Product.Description</p></li> *@
+                                    <li><p>Giới tính: @Model.Product?.Gender?.Name</p></li>
+                                    <li><p>Thương hiệu: @Model.Product?.Brands?.Name</p></li>
+                                    <li><p>Danh mục: @Model.Product?.Cate?.Name</p></li>
                                     <li>Kích cỡ: @string.Join(", ", Model.Product.ProductSize.Select(s => s.size.Name))</li>
                                     <li>Phong cách: @string.Join(", ", Model.Product.ProductTags.Select(p => p.Tag.Name))</li>
                                     <li>Chất liệu: @string.Join(", ", Model.Product.ProductMaterial.Select(p => p.Material.Name))</li>
                                     <li>Màu sắc: @string.Join(", ", Model.Product.ProductColor.Select(c => c.Color.Name))</li>
                                 </ul>
 
-                                @* <p>Ullam dolorum iure dolore dicta fuga ipsa velit veritatis molestias totam fugiat soluta accusantium omnis quod similique placeat at. Dolorum ducimus libero fuga molestiae asperiores obcaecati corporis sint illo facilis.</p> *@
-
-                                <div class="row">
+                                @* <div class="row">
                                     <div class="col-md-6">
                                         <h2 class="uppercase">Keep it simple</h2>
                                         <p>Ullam dolorum iure dolore dicta fuga ipsa velit veritatis</p>
@@ -197,14 +198,14 @@
                                         <h2 class="uppercase">Less is more</h2>
                                         <p>Ullam dolorum iure dolore dicta fuga ipsa velit veritatis</p>
                                     </div>
-                                </div>
+                                </div> *@
 
                             </div>
                         </div>
 
                         <div class="fh5co-tab-content tab-content" data-tab-content="2">
                             <div class="col-md-10 col-md-offset-1">
-                                <h3>Product Specification</h3>
+                                <h3>Mô tả sản phẩm</h3>
                                 <ul>
                                     <li><p>Mổ tả sản phẩm: @Model.Product.Description</p></li>
                                 </ul>
@@ -251,3 +252,30 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/js/lightslider.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@fancyapps/ui/dist/fancybox.umd.js"></script>
+
+    <script>
+        $(document).ready(function () {
+                $('.ecommerce-gallery').lightSlider({
+              gallery: true,
+              item: 1,
+              thumbItem: 5,
+              slideMargin: 5,
+              speed: 400,
+              loop: false,
+              controls: true,
+              keyPress: true,
+              enableDrag: true,
+            });
+        });
+        Fancybox.bind("[data-fancybox='gallery']", {
+          Hash: false, // tắt lưu lịch sử
+          Thumbs: {
+            autoStart: true,
+          },
+        });
+
+    </script>
+}

@@ -10,6 +10,55 @@
     font-style: normal;
 }
 
+/*phan hien thi anh san pham (moi)*/
+.vrmedia-gallery {
+    max-width: 567px;
+    margin: 5rem auto;
+    background: white;
+    padding: 20px;
+    box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
+    border-radius: 8px;
+}
+
+    .vrmedia-gallery img {
+        object-fit: cover;
+        width: 100%;
+        border-radius: 6px;
+    }
+
+    .vrmedia-gallery .lSGallery {
+        display: inline-flex;
+    }
+
+        .vrmedia-gallery .lSGallery li {
+            border-radius: 10px !important;
+            overflow: hidden;
+        }
+
+            .vrmedia-gallery .lSGallery li.active {
+                border: 2px solid #0096c7;
+            }
+
+.lSPager.lSGallery li {
+    width: 80px !important;
+    height: 80px !important;
+    overflow: hidden; /* đảm bảo ảnh không tràn */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .lSPager.lSGallery li img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain !important; /* 👈 hiển thị toàn bộ ảnh */
+        border-radius: 6px; /* bo góc nhẹ cho đẹp */
+        background-color: #f8f8f8; /* thêm nền để dễ nhìn khi ảnh nhỏ */
+        padding: 2px; /* tạo viền cách nhỏ nếu muốn */
+    }
+
+
+/*phan hien thi anh san pham (moi)*/
 /* Phần CSS cho sản phẩm chi tiết (không thay đổi) */
 .item .active img {
     margin: auto;
