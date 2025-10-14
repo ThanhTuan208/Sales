@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using CRUD_asp.netMVC.ViewModels.Admin;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Razor.Language.Extensions;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,20 +12,20 @@ namespace CRUD_asp.netMVC.ViewModels.Product
         [Required]
         public int ID { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập tên. "),
+        [Required(ErrorMessage = "Nhập tên sản phẩm. "),
             StringLength(60, MinimumLength = 5, ErrorMessage = "Do dai ten tu {2} den {1} ky tu")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
-        //[Required(ErrorMessage = "Vui lòng chọn hình. ")]
+        //[Required(ErrorMessage = "Chọn hình ânh. ")]
         public IFormFile[]? Picture { get; set; }
 
         public string? PicturePath { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng thêm mô tả. "), Column(TypeName = "nvarchar(max)")]
-        public string? Description { get; set; }
+        [Required(ErrorMessage = "Nhập mô tả sản phẩm. "), Column(TypeName = "nvarchar(max)")]
+        public string Description { get; set; }
 
         [Required(ErrorMessage = "Nhập giá mới. "), DataType(DataType.Currency)]
-        public double NewPrice { get; set; }
+        public double? NewPrice { get; set; }
 
         [Required(ErrorMessage = "Nhập giá cũ. "), DataType(DataType.Currency)]
         public double OldPrice { get; set; }
@@ -48,11 +51,11 @@ namespace CRUD_asp.netMVC.ViewModels.Product
         [Required(ErrorMessage = "Chọn chất liệu. ")]
         public int[] SelectedMaterialID { get; set; }
 
-        [Required(ErrorMessage = "Chọn màu sắc. ")]
-        public int[] SelectedColorID { get; set; }
+        //[Required(ErrorMessage = "Chọn màu sắc. ")]
+        public int[]? SelectedColorID { get; set; }
 
-        [Required(ErrorMessage = "Chọn kích thước. ")]
-        public int[] SelectedSizeID { get; set; }
+        //[Required(ErrorMessage = "Chọn kích thước. ")]
+        public int[]? SelectedSizeID { get; set; }
 
         [Required(ErrorMessage = "Chọn mùa. ")]
         public int[] SelectedSeasonID { get; set; }
@@ -75,5 +78,7 @@ namespace CRUD_asp.netMVC.ViewModels.Product
         public SelectList? SeasonList { get; set; }
 
         public List<string> ImagePaths { get; set; } = new List<string>();
+
+        public List<TempProductQty> TempProductQty { get; set; } = new List<TempProductQty>();
     }
 }

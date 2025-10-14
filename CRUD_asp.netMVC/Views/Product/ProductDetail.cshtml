@@ -70,14 +70,14 @@
                             <i class="icon-star2"></i>
                             <span>4.7(21)</span>
                         </div>|
-                        <div class="sold">
-                            Đã bán: @Model.Sold sp
-                        </div>|
                         <div class="review">
-                            Đánh giá: 100 
-                        </div>| 
+                            <strong>Đánh giá</strong>: 100
+                        </div>|
+                        <div class="sold">
+                            <strong>Đã bán</strong>: @Model.Sold sp
+                        </div>|
                         <div class="qtyDetail" data-qty-detail="@(Model.Product?.Quantity ?? 0)">
-                            Số lượng: @Model.Product.Quantity
+                            <strong>Số lượng</strong>: @(Model.Product?.Quantity ?? 0)
                         </div>
                     </div>
 
@@ -102,7 +102,6 @@
                         </div>
 
                         <div class="addCart">
-
                             <!-- Mau sac -->
                             <div class="row align-items-center mb-4">
                                 <div class="col-md-3 fw-bold">
@@ -136,20 +135,34 @@
                                 <div class="col-md-3 fw-bold">
                                     <p class="fs-3 mb-0 me-3">số lượng: </p>
                                 </div>
-                                <div class="col-md-9 d-flex">
+                                <div class="col-auto d-flex">
                                     <a class="btn btn-outline-secondary qty-btn" data-qty="-" id="decrease">-</a>
                                     <input type="text" id="quantity" class="qtyInput form-control mx-2 text-center" value="1" style="width: 60px; height: 40px" readonly>
                                     <a class="btn btn-outline-secondary qty-btn" data-qty="+" id="increase">+</a>
                                 </div>
+                                @if (Model.Product.Quantity == 0)
+                                {
+                                    <div class="col text-center">
+                                        <p class="fs-3 mb-0 text-danger me-4" style="font: bold;"><strong>Sản phẩm đã hết !</strong> </p>
+                                    </div>
+                                }
                             </div>
+
 
                             <div class="row">
                                 <div class="col-md-6 offset-md-3 mt-5">
                                     <p class="d-flex justify-content-center me-4">
                                         <input type="hidden" class="countCart" value="@countCart" />
                                         <input type="hidden" class="productID" name="productID" data-id="@Model.Product.ID" value="@Model.Product.ID" />
-                                        <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5" data-method="cart">Thêm giỏ hàng</button>
-                                        <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5" data-method="buy">Mua liền</button>
+
+                                        <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5"
+                                                @(Model.Product.Quantity == 0 ? "disabled" : "") data-method="cart">
+                                            Thêm giỏ hàng
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5"
+                                                @(Model.Product.Quantity == 0 ? "disabled" : "") data-method="buy">
+                                            Mua liền
+                                        </button>
 
                                     </p>
                                 </div>
@@ -172,7 +185,6 @@
                     </ul>
 
                     <div class="fh5co-tab-content-wrap">
-
                         <div class="fh5co-tab-content tab-content active" data-tab-content="1">
                             <div class="col-md-10 col-md-offset-1">
                                 <span class="price">SRP: @string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.NewPrice)</span>

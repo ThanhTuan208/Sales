@@ -20,7 +20,7 @@ namespace CRUD_asp.netMVC.Models.Order
         public int Quantity { get; set; }
 
         [DataType(DataType.Currency)]
-        public double Price { get; set; }
+        public double? Price { get; set; }
 
     }
 }

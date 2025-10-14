@@ -15,7 +15,7 @@ namespace CRUD_asp.netMVC.Models.Product
         public string paymentMethod { get; set; } = "Transfer"; // or Cash, credit card
 
         [DataType(DataType.Currency)]
-        public double paidAmount { get; set; }
+        public double? paidAmount { get; set; }
 
         public DateTime PaymentDate { get; set; }
     }

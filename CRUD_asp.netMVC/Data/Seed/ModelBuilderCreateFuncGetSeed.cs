@@ -29,6 +29,11 @@ namespace CRUD_asp.netMVC.Data.Seed
             modelBuilder.Entity<Reviews>().HasOne(r => r.Users).WithMany(r => r.Reviews).HasForeignKey(u => u.UserID).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Reviews>().HasOne(r => r.Product).WithMany(r => r.Reviews).HasForeignKey(u => u.ProductID).OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<ProductQuantity>().HasKey(p => new { p.ProductID, p.SizeID, p.ColorID });
+            modelBuilder.Entity<ProductQuantity>().HasOne(p => p.Product).WithMany(p => p.ProductQty).HasForeignKey(u => u.ProductID).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ProductQuantity>().HasOne(p => p.Size).WithMany(p => p.ProductQty).HasForeignKey(u => u.SizeID).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ProductQuantity>().HasOne(p => p.Color).WithMany(p => p.ProductQty).HasForeignKey(u => u.ColorID).OnDelete(DeleteBehavior.Restrict);
+
             // Mockup du lieu mqh 1 - 1
             modelBuilder.Entity<Payment>().HasOne(o => o.Order).WithOne(p => p.Payment).HasForeignKey<Payment>(o => o.OrderID).OnDelete(DeleteBehavior.Restrict);
 
@@ -47,7 +52,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             modelBuilder.Entity<ProductStyle>().HasKey(p => new { p.StyleID, p.ProductID });
             modelBuilder.Entity<ProductStyle>().HasOne(p => p.Product).WithMany(p => p.ProductStyles).HasForeignKey(p => p.ProductID);
             modelBuilder.Entity<ProductStyle>().HasOne(p => p.Style).WithMany(p => p.ProductStyles).HasForeignKey(p => p.StyleID);
-            // Cac thuc the khac....
+
             modelBuilder.Entity<ProductSize>().HasKey(p => new { p.ProductID, p.SizeID });
             modelBuilder.Entity<ProductSize>().HasOne(p => p.products).WithMany(p => p.ProductSize).HasForeignKey(p => p.ProductID);
             modelBuilder.Entity<ProductSize>().HasOne(p => p.size).WithMany(p => p.ProductSize).HasForeignKey(p => p.SizeID);

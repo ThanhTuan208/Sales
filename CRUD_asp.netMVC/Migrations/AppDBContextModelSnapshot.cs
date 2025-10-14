@@ -72,7 +72,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Customer", b =>
@@ -122,7 +122,7 @@ namespace CRUD_asp.netMVC.Migrations
                         .IsUnique()
                         .HasFilter("[UserID] IS NOT NULL");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customer", (string)null);
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Manager", b =>
@@ -172,7 +172,7 @@ namespace CRUD_asp.netMVC.Migrations
                         .IsUnique()
                         .HasFilter("[UserID] IS NOT NULL");
 
-                    b.ToTable("Manager");
+                    b.ToTable("Manager", (string)null);
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Roles", b =>
@@ -354,7 +354,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Order.OrderDetail", b =>
@@ -384,7 +384,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("OrderDetail");
+                    b.ToTable("OrderDetail", (string)null);
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Order.Orders", b =>
@@ -456,7 +456,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Brand", b =>
@@ -481,7 +481,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Brand");
+                    b.ToTable("Brand", (string)null);
 
                     b.HasData(
                         new
@@ -574,7 +574,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
 
                     b.HasData(
                         new
@@ -629,7 +629,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Color");
+                    b.ToTable("Color", (string)null);
 
                     b.HasData(
                         new
@@ -689,7 +689,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Featured");
+                    b.ToTable("Featured", (string)null);
 
                     b.HasData(
                         new
@@ -718,7 +718,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Gender");
+                    b.ToTable("Gender", (string)null);
 
                     b.HasData(
                         new
@@ -752,7 +752,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Material");
+                    b.ToTable("Material", (string)null);
 
                     b.HasData(
                         new
@@ -809,7 +809,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasIndex("OrderID")
                         .IsUnique();
 
-                    b.ToTable("Payment");
+                    b.ToTable("Payment", (string)null);
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductColors", b =>
@@ -824,7 +824,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("ColorID");
 
-                    b.ToTable("ProductColor");
+                    b.ToTable("ProductColor", (string)null);
 
                     b.HasData(
                         new
@@ -2047,7 +2047,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductMaterial", b =>
@@ -2062,7 +2062,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("MaterialID");
 
-                    b.ToTable("ProductMaterial");
+                    b.ToTable("ProductMaterial", (string)null);
 
                     b.HasData(
                         new
@@ -2552,6 +2552,29 @@ namespace CRUD_asp.netMVC.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductQuantity", b =>
+                {
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SizeID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ColorID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductID", "SizeID", "ColorID");
+
+                    b.HasIndex("ColorID");
+
+                    b.HasIndex("SizeID");
+
+                    b.ToTable("ProductQty", (string)null);
+                });
+
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductSeason", b =>
                 {
                     b.Property<int>("SeasonID")
@@ -2564,7 +2587,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("ProductSeason");
+                    b.ToTable("ProductSeason", (string)null);
 
                     b.HasData(
                         new
@@ -3601,7 +3624,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("SizeID");
 
-                    b.ToTable("ProductSize");
+                    b.ToTable("ProductSize", (string)null);
 
                     b.HasData(
                         new
@@ -4818,7 +4841,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("ProductStyle");
+                    b.ToTable("ProductStyle", (string)null);
 
                     b.HasData(
                         new
@@ -5215,7 +5238,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("ProductTag");
+                    b.ToTable("ProductTag", (string)null);
 
                     b.HasData(
                         new
@@ -5643,7 +5666,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("GenderID");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
                     b.HasData(
                         new
@@ -6755,7 +6778,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Season", b =>
@@ -6773,7 +6796,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Season");
+                    b.ToTable("Season", (string)null);
 
                     b.HasData(
                         new
@@ -6812,7 +6835,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Size");
+                    b.ToTable("Size", (string)null);
 
                     b.HasData(
                         new
@@ -6901,7 +6924,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Style");
+                    b.ToTable("Style", (string)null);
 
                     b.HasData(
                         new
@@ -6956,7 +6979,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Tag");
+                    b.ToTable("Tag", (string)null);
 
                     b.HasData(
                         new
@@ -7267,6 +7290,33 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductQuantity", b =>
+                {
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Color", "Color")
+                        .WithMany("ProductQty")
+                        .HasForeignKey("ColorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Products", "Product")
+                        .WithMany("ProductQty")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Size", "Size")
+                        .WithMany("ProductQty")
+                        .HasForeignKey("SizeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Color");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Size");
+                });
+
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductSeason", b =>
                 {
                     b.HasOne("CRUD_asp.netMVC.Models.Product.Products", "Product")
@@ -7488,6 +7538,8 @@ namespace CRUD_asp.netMVC.Migrations
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Color", b =>
                 {
                     b.Navigation("ProductColor");
+
+                    b.Navigation("ProductQty");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Featured", b =>
@@ -7517,6 +7569,8 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.Navigation("ProductMaterial");
 
+                    b.Navigation("ProductQty");
+
                     b.Navigation("ProductSeasons");
 
                     b.Navigation("ProductSize");
@@ -7535,6 +7589,8 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Size", b =>
                 {
+                    b.Navigation("ProductQty");
+
                     b.Navigation("ProductSize");
                 });
 

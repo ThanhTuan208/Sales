@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CRUD_asp.netMVC.ViewModels.Admin;
+using System.ComponentModel.DataAnnotations;
 
 namespace CRUD_asp.netMVC.Models.Product
 {
-    public class Style
+    public class Style : IProductItemGeneral
     {
         [Key]
         public int ID { get; set; }

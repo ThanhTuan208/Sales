@@ -30,7 +30,7 @@ namespace CRUD_asp.netMVC.Models.Product
 
         [Required(ErrorMessage = "Ban can phai nhap {0} sp !!!")]
         [DataType(DataType.Currency)]
-        public double NewPrice { get; set; }
+        public double? NewPrice { get; set; }
 
         [Required(ErrorMessage = "Ban can phai nhap {0} !!!")]
         public int Quantity { get; set; }
@@ -67,5 +67,6 @@ namespace CRUD_asp.netMVC.Models.Product
         public List<ProductSeason>? ProductSeasons { get; set; }
         public List<ProductMaterial>? ProductMaterial { get; set; }
         public List<ProductImages>? ProductImages { get; set; }
+        public List<ProductQuantity>? ProductQty { get; set; }
     }
 }

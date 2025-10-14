@@ -1,19 +1,26 @@
-﻿using CRUD_asp.netMVC.Data;
+﻿using AspNetCoreGeneratedDocument;
+using CRUD_asp.netMVC.Controllers.Extentions;
+using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Product;
+using CRUD_asp.netMVC.ViewModels.Admin;
 using CRUD_asp.netMVC.ViewModels.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
 using System.Collections.Immutable;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
+using System.Reflection.Emit;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json;
+using Color = CRUD_asp.netMVC.Models.Product.Color;
+using Size = CRUD_asp.netMVC.Models.Product.Size;
 
 
 namespace CRUD_asp.netMVC.Controllers
@@ -21,12 +28,12 @@ namespace CRUD_asp.netMVC.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly AppDBContext _context;
+        private readonly AppDBContext _dbContext;
         private readonly IWebHostEnvironment environment;
 
         public AdminController(AppDBContext context, IWebHostEnvironment _environment)
         {
-            _context = context;
+            _dbContext = context;
             environment = _environment;
         }
 
@@ -34,7 +41,7 @@ namespace CRUD_asp.netMVC.Controllers
         [Route("Admin"), Route("Admin/Index"), Route("Admin/{page:int}")]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var product = _context.Products.AsNoTracking()
+            var product = _dbContext.Products.AsNoTracking()
                        .Include(p => p.Brands)
                        .Include(p => p.Cate).OrderByDescending(p => p.ID);
 
@@ -46,7 +53,7 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(int page = 1, string keyword = "")
         {
-            var product = _context.Products.AsNoTracking()
+            var product = _dbContext.Products.AsNoTracking()
                 .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Where(p => p.Description.Contains(keyword) || p.Name.Contains(keyword));
@@ -64,7 +71,7 @@ namespace CRUD_asp.netMVC.Controllers
                 return NotFound();
             }
 
-            var Product = await _context.Products.AsNoTracking()
+            var Product = await _dbContext.Products.AsNoTracking()
                 .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)
@@ -114,26 +121,42 @@ namespace CRUD_asp.netMVC.Controllers
             return await ReloadViewModel(new ProductGeneralViewModel());
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductGeneralViewModel viewModel)
         {
-
             try
             {
+                var getTempProduct = HttpContext.Session.GetString("TempProductQty");
+                var productQtyList = string.IsNullOrEmpty(getTempProduct) ? new List<TempProductQty>() : JsonSerializer.Deserialize<List<TempProductQty>>(getTempProduct);
+
+                viewModel.TempProductQty = productQtyList ?? new List<TempProductQty>();
+
+                if (viewModel.Picture == null)
+                {
+                    ModelState.AddModelError(nameof(viewModel.Picture), "Cần thêm ít nhất 1 hình ảnh sản phẩm. ");
+                }
+                else
+                {
+                    ModelState.Remove(nameof(viewModel.Picture));
+                }
+
+                if (viewModel.TempProductQty.Count == 0)
+                {
+                    ModelState.AddModelError(nameof(viewModel.TempProductQty), "Cần cập nhật số lượng sản phẩm ít nhất 1 mục.");
+                }
+                else
+                {
+                    ModelState.Remove(nameof(viewModel.TempProductQty));
+                }
+
                 if (!ModelState.IsValid)
                 {
-                    var errors = ModelState
-                        .Where(ms => ms.Value.Errors.Count > 0)
-                        .ToDictionary(
-                        kvp => kvp.Key,
-                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-                    );
-                    return Json(new
-                    {
-                        success = false,
-                        message = "Nhập thông tin sản phẩm của bạn !!!",
-                        errors = errors
-                    });
+                    var allErrors = ModelState
+                                    .Where(e => e.Value.Errors.Count > 0)
+                                    .Select(e => new { Field = e.Key, Errors = e.Value.Errors.Select(er => er.ErrorMessage) })
+                                    .ToList();
+
+                    return Json(new { success = false, message = "Loi valid", errors = allErrors });
                 }
 
                 Products products = new Products()
@@ -176,7 +199,7 @@ namespace CRUD_asp.netMVC.Controllers
                                 Size = new SixLabors.ImageSharp.Size(800, 800),
                                 Mode = ResizeMode.Crop
                             }));
-                            await image.SaveAsync(fileUpLoadPath, new WebpEncoder { Quality = 75 });
+                            await image.SaveAsync(fileUpLoadPath, new WebpEncoder { Quality = 80 });
                         }
 
                         using (var fileStream = new FileStream(fileUpLoadPath, FileMode.Create))
@@ -188,11 +211,11 @@ namespace CRUD_asp.netMVC.Controllers
                         // Them du lieu productID truoc khi them cac entity khac
                         if (products.ID == 0)
                         {
-                            _context.Products.Add(products);
-                            await _context.SaveChangesAsync();
+                            _dbContext.Products.Add(products);
+                            await _dbContext.SaveChangesAsync();
                         }
 
-                        _context.ProductImages.Add(new ProductImages()
+                        _dbContext.ProductImages.Add(new ProductImages()
                         {
                             ProductID = products.ID,
                             PathNameImage = imagePath
@@ -204,29 +227,22 @@ namespace CRUD_asp.netMVC.Controllers
                             IsFirstImage = false;
                         }
                     }
-                }
 
-                if (viewModel.SelectedColorID != null && viewModel.SelectedColorID.Any())
-                {
-                    foreach (var ColorID in viewModel.SelectedColorID)
-                    {
-                        _context.ProductColor.Add(new ProductColors()
-                        {
-                            ProductID = products.ID,
-                            ColorID = ColorID
-                        });
-                    }
-                }
 
-                if (viewModel.SelectedSizeID != null && viewModel.SelectedSizeID.Any())
-                {
-                    foreach (var SizeID in viewModel.SelectedSizeID)
+                    if (productQtyList.Count != 0)
                     {
-                        _context.ProductSize.Add(new ProductSize()
+                        foreach (var proQty in productQtyList)
                         {
-                            ProductID = products.ID,
-                            SizeID = SizeID
-                        });
+                            await _dbContext.ProductQty.AddRangeAsync(new ProductQuantity()
+                            {
+                                ProductID = products.ID,
+                                ColorID = proQty.ColorID,
+                                SizeID = proQty.SizeID,
+                                Quantity = proQty.Quantity
+                            });
+                        }
+
+                        HttpContext.Session.Remove("TempProductQty");
                     }
                 }
 
@@ -234,7 +250,7 @@ namespace CRUD_asp.netMVC.Controllers
                 {
                     foreach (var MateID in viewModel.SelectedMaterialID)
                     {
-                        _context.ProductMaterial.Add(new ProductMaterial()
+                        _dbContext.ProductMaterial.Add(new ProductMaterial()
                         {
                             ProductID = products.ID,
                             MaterialID = MateID
@@ -246,7 +262,7 @@ namespace CRUD_asp.netMVC.Controllers
                 {
                     foreach (var SeasonID in viewModel.SelectedSeasonID)
                     {
-                        _context.ProductSeason.Add(new ProductSeason()
+                        _dbContext.ProductSeason.Add(new ProductSeason()
                         {
                             ProductID = products.ID,
                             SeasonID = SeasonID
@@ -258,7 +274,7 @@ namespace CRUD_asp.netMVC.Controllers
                 {
                     foreach (var StyleID in viewModel.SelectedStyleID)
                     {
-                        _context.ProductStyle.Add(new ProductStyle()
+                        _dbContext.ProductStyle.Add(new ProductStyle()
                         {
                             ProductID = products.ID,
                             StyleID = StyleID
@@ -270,7 +286,7 @@ namespace CRUD_asp.netMVC.Controllers
                 {
                     foreach (var TagID in viewModel.SelectedTagID)
                     {
-                        _context.ProductTag.Add(new ProductTag()
+                        _dbContext.ProductTag.Add(new ProductTag()
                         {
                             ProductID = products.ID,
                             TagID = TagID
@@ -279,9 +295,9 @@ namespace CRUD_asp.netMVC.Controllers
                 }
 
 
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-                //return Json(new { success = true, message = "Thêm sản vào thành công. " });
+                await _dbContext.SaveChangesAsync();
+                //return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "Thêm sản vào thành công. " });
             }
             catch (Exception ex)
             {
@@ -301,7 +317,7 @@ namespace CRUD_asp.netMVC.Controllers
         {
             if (id == null) return NotFound();
 
-            var Product = await _context.Products.AsNoTracking()
+            var Product = await _dbContext.Products.AsNoTracking()
                 .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)
@@ -355,7 +371,7 @@ namespace CRUD_asp.netMVC.Controllers
             {
                 try
                 {
-                    var Product = await _context.Products
+                    var Product = await _dbContext.Products
                        .Include(p => p.Brands)
                        .Include(p => p.Cate)
                        .Include(p => p.Gender)
@@ -386,7 +402,7 @@ namespace CRUD_asp.netMVC.Controllers
 
                     if (viewModel.Picture != null && viewModel.Picture.Length > 0)
                     {
-                        var oldImage = await _context.ProductImages.Where(p => p.ProductID == id).ToListAsync();
+                        var oldImage = await _dbContext.ProductImages.Where(p => p.ProductID == id).ToListAsync();
                         var deleteTask = oldImage.Select(async item =>
                         {
                             var oldPathPicture = Path.Combine(environment.WebRootPath, item.PathNameImage).Replace("\\", "/");
@@ -405,7 +421,7 @@ namespace CRUD_asp.netMVC.Controllers
                         });
                         await Task.WhenAll(deleteTask); // dung lai den khi xoa het anh theo id product
 
-                        _context.ProductImages.RemoveRange(oldImage);
+                        _dbContext.ProductImages.RemoveRange(oldImage);
 
                         var imageTasks = viewModel.Picture.Select(async (item, index) =>
                         {
@@ -451,13 +467,13 @@ namespace CRUD_asp.netMVC.Controllers
                         var newImageList = (await Task.WhenAll(imageTasks)).Where(img => img != null).ToList();
                         if (ModelState.IsValid)
                         {
-                            _context.ProductImages.AddRange(newImageList);
+                            _dbContext.ProductImages.AddRange(newImageList);
                             viewModel.PicturePath = newImageList.FirstOrDefault()?.PathNameImage;
                         }
                     }
                     else
                     {
-                        var oldPicture = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ID == id);
+                        var oldPicture = await _dbContext.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ID == id);
 
                         if (oldPicture != null)
                         {
@@ -472,8 +488,8 @@ namespace CRUD_asp.netMVC.Controllers
                     var addColor = selectColors.Except(ProductColorList).ToList();
                     var removeColor = ProductColorList.Except(selectColors).ToList();
 
-                    _context.ProductColor.RemoveRange(Product.ProductColor.Where(p => removeColor.Contains(p.ColorID)));
-                    _context.ProductColor.AddRange(
+                    _dbContext.ProductColor.RemoveRange(Product.ProductColor.Where(p => removeColor.Contains(p.ColorID)));
+                    _dbContext.ProductColor.AddRange(
                         addColor.Select(idColor => new ProductColors()
                         {
                             ProductID = Product.ID,
@@ -485,8 +501,8 @@ namespace CRUD_asp.netMVC.Controllers
                     var addSize = selectSizes.Except(ProductSizeList).ToList();
                     var removeSize = ProductSizeList.Except(selectSizes).ToList();
 
-                    _context.ProductSize.RemoveRange(Product.ProductSize.Where(p => removeSize.Contains(p.SizeID)));
-                    _context.ProductSize.AddRange(
+                    _dbContext.ProductSize.RemoveRange(Product.ProductSize.Where(p => removeSize.Contains(p.SizeID)));
+                    _dbContext.ProductSize.AddRange(
                         addSize.Select(idSize => new ProductSize()
                         {
                             ProductID = Product.ID,
@@ -498,8 +514,8 @@ namespace CRUD_asp.netMVC.Controllers
                     var addStyle = selectStyles.Except(ProductStyleList).ToList();
                     var removeStyle = ProductStyleList.Except(selectStyles).ToList();
 
-                    _context.ProductStyle.RemoveRange(Product.ProductStyles.Where(p => removeStyle.Contains(p.StyleID)));
-                    _context.ProductStyle.AddRange(
+                    _dbContext.ProductStyle.RemoveRange(Product.ProductStyles.Where(p => removeStyle.Contains(p.StyleID)));
+                    _dbContext.ProductStyle.AddRange(
                         addStyle.Select(idStyle => new ProductStyle()
                         {
                             ProductID = Product.ID,
@@ -511,8 +527,8 @@ namespace CRUD_asp.netMVC.Controllers
                     var addCTag = selectTags.Except(ProductTagList).ToList();
                     var removeTag = ProductTagList.Except(selectTags).ToList();
 
-                    _context.ProductTag.RemoveRange(Product.ProductTags.Where(p => removeTag.Contains(p.TagID)));
-                    _context.ProductTag.AddRange(
+                    _dbContext.ProductTag.RemoveRange(Product.ProductTags.Where(p => removeTag.Contains(p.TagID)));
+                    _dbContext.ProductTag.AddRange(
                         addCTag.Select(idTag => new ProductTag()
                         {
                             ProductID = Product.ID,
@@ -524,8 +540,8 @@ namespace CRUD_asp.netMVC.Controllers
                     var addSeason = selectSeason.Except(ProductSeasonList).ToList();
                     var removeSeason = ProductSeasonList.Except(selectSeason).ToList();
 
-                    _context.ProductSeason.RemoveRange(Product.ProductSeasons.Where(p => removeSeason.Contains(p.SeasonID)));
-                    _context.ProductSeason.AddRange(
+                    _dbContext.ProductSeason.RemoveRange(Product.ProductSeasons.Where(p => removeSeason.Contains(p.SeasonID)));
+                    _dbContext.ProductSeason.AddRange(
                         addSeason.Select(idSeason => new ProductSeason()
                         {
                             ProductID = Product.ID,
@@ -537,8 +553,8 @@ namespace CRUD_asp.netMVC.Controllers
                     var addMaterial = selectMaterials.Except(ProductMaterialList).ToList();
                     var removeMaterial = ProductMaterialList.Except(selectMaterials).ToList();
 
-                    _context.ProductMaterial.RemoveRange(Product.ProductMaterial.Where(p => removeMaterial.Contains(p.MaterialID)));
-                    _context.ProductMaterial.AddRange(
+                    _dbContext.ProductMaterial.RemoveRange(Product.ProductMaterial.Where(p => removeMaterial.Contains(p.MaterialID)));
+                    _dbContext.ProductMaterial.AddRange(
                         addMaterial.Select(idMaterial => new ProductMaterial()
                         {
                             ProductID = Product.ID,
@@ -546,8 +562,8 @@ namespace CRUD_asp.netMVC.Controllers
                         }));
 
 
-                    _context.Update(Product);
-                    await _context.SaveChangesAsync();
+                    _dbContext.Update(Product);
+                    await _dbContext.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
@@ -566,19 +582,25 @@ namespace CRUD_asp.netMVC.Controllers
         // cap nhat du lieu trong database len cac select or option trong create, edit
         public async Task<IActionResult> ReloadViewModel(IProductGeneralViewModel IviewModel)
         {
+            var getTempProduct = HttpContext.Session.GetString("TempProductQty");
+            var productQtyList = string.IsNullOrEmpty(getTempProduct) ? new List<TempProductQty>() : JsonSerializer.Deserialize<List<TempProductQty>>(getTempProduct);
+
+            IviewModel.TempProductQty = productQtyList;
+
             // mqh 1-n
-            IviewModel.BrandList = new SelectList(await _context.Brand.AsNoTracking().ToListAsync(), "ID", "Name", IviewModel.BrandID);
-            IviewModel.CategoryList = new SelectList(await _context.Category.AsNoTracking().ToListAsync(), "ID", "Name", IviewModel.CateID);
-            IviewModel.GenderList = new SelectList(await _context.Gender.AsNoTracking().ToListAsync(), "ID", "Name", IviewModel.GenderID);
-            IviewModel.FeaturedList = new SelectList(await _context.Featured.AsNoTracking().ToListAsync(), "ID", "Name", IviewModel.FeaturedID);
+            IviewModel.BrandList = new SelectList(await _dbContext.Brand.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.CategoryList = new SelectList(await _dbContext.Category.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.GenderList = new SelectList(await _dbContext.Gender.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.FeaturedList = new SelectList(await _dbContext.Featured.AsNoTracking().ToListAsync(), "ID", "Name");
 
             // mqh n-n
-            IviewModel.MaterialList = new SelectList(await _context.Material.AsNoTracking().ToListAsync(), "ID", "Name");
-            IviewModel.SeasonList = new SelectList(await _context.Season.AsNoTracking().ToListAsync(), "ID", "Name");
-            IviewModel.TagList = new SelectList(await _context.Tag.AsNoTracking().ToListAsync(), "ID", "Name");
-            IviewModel.StyleList = new SelectList(await _context.Style.AsNoTracking().ToListAsync(), "ID", "Name");
-            IviewModel.SizeList = new SelectList(await _context.Size.AsNoTracking().ToListAsync(), "ID", "Name");
-            IviewModel.ColorList = new SelectList(await _context.Color.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.MaterialList = new SelectList(await _dbContext.Material.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.SeasonList = new SelectList(await _dbContext.Season.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.TagList = new SelectList(await _dbContext.Tag.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.StyleList = new SelectList(await _dbContext.Style.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.SizeList = new SelectList(await _dbContext.Size.AsNoTracking().ToListAsync(), "ID", "Name");
+            IviewModel.ColorList = new SelectList(await _dbContext.Color.AsNoTracking().ToListAsync(), "ID", "Name");
+
 
             return View(IviewModel);
         }
@@ -591,7 +613,7 @@ namespace CRUD_asp.netMVC.Controllers
                 return NotFound();
             }
 
-            var products = await _context.Products
+            var products = await _dbContext.Products
                 .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .FirstOrDefaultAsync(m => m.ID == id);
@@ -608,25 +630,25 @@ namespace CRUD_asp.netMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var products = await _context.Products.FindAsync(id);
+            var products = await _dbContext.Products.FindAsync(id);
             if (products != null)
             {
-                _context.Products.Remove(products);
+                _dbContext.Products.Remove(products);
             }
 
-            await _context.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProductsExists(int id)
         {
-            return _context.Products.Any(e => e.ID == id);
+            return _dbContext.Products.Any(e => e.ID == id);
         }
 
         [HttpGet] // Danh sach thuong hieu
         public async Task<IActionResult> BrandList(int page = 1)
         {
-            var brand = _context.Brand.AsNoTracking().OrderByDescending(p => p.ID);
+            var brand = _dbContext.Brand.AsNoTracking().OrderByDescending(p => p.ID);
 
             var paginationBrand = await PaginatedList<Brand>.CreatePagAsync(brand, page, 5);
             return View(paginationBrand);
@@ -681,8 +703,8 @@ namespace CRUD_asp.netMVC.Controllers
 
                     brand.PicturePath = Path.Combine("images", "logo", nameFile).ToLower().Replace("\\", "/");
 
-                    _context.Brand.Add(brand);
-                    await _context.SaveChangesAsync();
+                    _dbContext.Brand.Add(brand);
+                    await _dbContext.SaveChangesAsync();
                 }
                 else
                 {
@@ -714,7 +736,7 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpGet] // Chinh sua thuong hieu
         public async Task<IActionResult> EditBrand(int id)
         {
-            var Brand = await _context.Brand.FindAsync(id);
+            var Brand = await _dbContext.Brand.FindAsync(id);
             if (Brand == null)
             {
                 return View();
@@ -724,7 +746,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> EditBrand(Brand brand)
         {
             try
@@ -772,8 +794,8 @@ namespace CRUD_asp.netMVC.Controllers
 
                 }
 
-                _context.Brand.Update(brand);
-                await _context.SaveChangesAsync();
+                _dbContext.Brand.Update(brand);
+                await _dbContext.SaveChangesAsync();
 
 
                 return Json(new
@@ -808,18 +830,18 @@ namespace CRUD_asp.netMVC.Controllers
             return brand != null ? View(brand) : View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> DeleteBrandByID(int id)
         {
-            var brand = await _context.Brand.FindAsync(id);
+            var brand = await _dbContext.Brand.FindAsync(id);
             if (brand != null)
             {
-                var product = await _context.Products.Where(p => p.BrandID == brand.ID).ToListAsync();
+                var product = await _dbContext.Products.Where(p => p.BrandID == brand.ID).ToListAsync();
 
-                _context.Brand.Remove(brand);
-                _context.Products.RemoveRange(product);
+                _dbContext.Brand.Remove(brand);
+                _dbContext.Products.RemoveRange(product);
 
-                await _context.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
                 return RedirectToAction(nameof(BrandList));
             }
 
@@ -829,10 +851,245 @@ namespace CRUD_asp.netMVC.Controllers
 
         public async Task<Brand?> BrandByID(int id)
         {
-            var brand = await _context.Brand.FindAsync(id);
+            var brand = await _dbContext.Brand.FindAsync(id);
+
+            if (brand == null) return null;
+
             return brand;
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> AddTempProductQty(int colorVal, int sizeVal, int qtyVal)
+        {
+            try
+            {
+                var ProductQty = HttpContext.Session.GetString("TempProductQty");
+                var tempDataList = string.IsNullOrEmpty(ProductQty) ? new List<TempProductQty>() : JsonSerializer.Deserialize<List<TempProductQty>>(ProductQty);
+
+                var dataExist = tempDataList.FirstOrDefault(p => p.ColorID == colorVal && p.SizeID == sizeVal);
+                if (dataExist != null)
+                {
+                    dataExist.Quantity += qtyVal;
+                }
+                else
+                {
+                    tempDataList.Add(new TempProductQty
+                    {
+                        ColorID = colorVal,
+                        SizeID = sizeVal,
+                        Quantity = qtyVal
+                    });
+                }
+
+                HttpContext.Session.SetString("TempProductQty", JsonSerializer.Serialize(tempDataList));
+
+                var partial = await LoadProductQty(null, null, null);
+                partial.TempProductQty = tempDataList;
+                partial.ValueType = "Update";
+                partial.Qty = partial.TempProductQty.Sum(p => p.Quantity);
+
+                string html = await this.RenderViewAsync("_ProductItemPartial", partial, true);
+
+                return Json(new { success = true, html = html, qty = partial.Qty });
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateTempProductQty(int newColorVal, int newSizeVal, int newQtyVal, int oldColorVal, int oldSizeVal)
+        {
+            try
+            {
+                var ProductQty = HttpContext.Session.GetString("TempProductQty");
+                var tempDataList = string.IsNullOrEmpty(ProductQty) ? new List<TempProductQty>() : JsonSerializer.Deserialize<List<TempProductQty>>(ProductQty);
+
+                var dataExist = tempDataList.FirstOrDefault(p => p.ColorID == newColorVal && p.SizeID == newSizeVal
+                                                            && !(p.ColorID == oldColorVal && p.SizeID == oldSizeVal));
+                var dataSelected = tempDataList.FirstOrDefault(p => p.ColorID == oldColorVal && p.SizeID == oldSizeVal);
+
+                if (dataExist != null)
+                {
+                    dataExist.Quantity += newQtyVal;
+                    if (dataSelected != null)
+                    {
+                        tempDataList.Remove(dataSelected);
+                    }
+                }
+                else
+                {
+                    dataSelected.ColorID = newColorVal;
+                    dataSelected.SizeID = newSizeVal;
+                    dataSelected.Quantity = newQtyVal;
+                }
+
+                HttpContext.Session.SetString("TempProductQty", JsonSerializer.Serialize(tempDataList));
+
+                var partial = await LoadProductQty(null, null, null);
+                partial.TempProductQty = tempDataList;
+                partial.ValueType = "Update";
+                partial.Qty = partial.TempProductQty.Sum(p => p.Quantity);
+
+                string html = await this.RenderViewAsync("_ProductItemPartial", partial, true);
+
+                return Json(new { success = true, html = html, qty = partial.Qty });
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteTempProductQty(int colorVal, int sizeVal, int qtyVal)
+        {
+            try
+            {
+                var ProductQty = HttpContext.Session.GetString("TempProductQty");
+                var tempDataList = string.IsNullOrEmpty(ProductQty) ? new List<TempProductQty>() : JsonSerializer.Deserialize<List<TempProductQty>>(ProductQty);
+
+                tempDataList.RemoveAll(p => p.SizeID == sizeVal && p.ColorID == colorVal && p.Quantity == qtyVal);
+
+                HttpContext.Session.SetString("TempProductQty", JsonSerializer.Serialize(tempDataList));
+
+                var partial = await LoadProductQty(null, null, null);
+                partial.TempProductQty = tempDataList;
+                partial.ValueType = "Update";
+                partial.Qty = partial.TempProductQty.Sum(p => p.Quantity);
+
+                string html = await this.RenderViewAsync("_ProductItemPartial", partial, true);
+
+                return Json(new { success = true, html = html, qty = partial.Qty });
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet] // Load bang so luong san pham
+        public async Task<IActionResult> DisplayProductQty(int? idExist, string[] arrColor, string[] arrSize)
+        {
+            try
+            {
+                if (arrColor.Length == 0) arrColor = Array.Empty<string>();
+                if (arrSize.Length == 0) arrSize = Array.Empty<string>();
+
+                var partial = await LoadProductQty(idExist, arrColor, arrSize);
+                partial.ValueType = "Update";
+
+                string html = await this.RenderViewAsync("_ProductItemPartial", partial, true);
+
+                return Json(new { success = true, html = html, qty = partial.Qty });
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
+        }
+
+        public async Task<ProductItemGeneral> LoadProductQty(int? id, string[]? arrColor, string[]? arrSize)
+        {
+            var ProductQty = HttpContext.Session.GetString("TempProductQty");
+            var tempDataList = string.IsNullOrEmpty(ProductQty) ? new List<TempProductQty>() : JsonSerializer.Deserialize<List<TempProductQty>>(ProductQty);
+
+            ProductItemGeneral partial = new ProductItemGeneral()
+            {
+                ProductQty = new List<ProductQuantity>(),
+                TempProductQty = tempDataList ?? new List<TempProductQty>()
+            };
+
+            var colorBySelectList = new List<Color>();
+            var sizeBySelectList = new List<Size>();
+
+            if (id.HasValue)
+            {
+                colorBySelectList = await _dbContext.Color.Where(p => arrColor.Contains(p.ID.ToString())).ToListAsync();
+                sizeBySelectList = await _dbContext.Size.Where(p => arrSize.Contains(p.ID.ToString())).ToListAsync();
+            }
+            else
+            {
+                colorBySelectList = await _dbContext.Color.ToListAsync();
+                sizeBySelectList = await _dbContext.Size.ToListAsync();
+            }
+
+            partial.ProductQty = await _dbContext.ProductQty.Where(p => p.ProductID == id && arrColor.Contains(p.ColorID.ToString()) && arrSize.Contains(p.SizeID.ToString()))
+                                                            .Include(p => p.Color)
+                                                            .Include(p => p.Size)
+                                                            .ToListAsync() ?? new List<ProductQuantity>();
+
+            partial.SelectListSize = new SelectList(sizeBySelectList, "ID", "Name");
+            partial.SelectListColor = new SelectList(colorBySelectList, "ID", "Name");
+
+            return partial;
+        }
+
+        [HttpGet] // lay danh sach chi tiet san pham
+        public async Task<IActionResult> ProductDetailListItem(string[]? opsValue, string nameValue)
+        {
+            try
+            {
+                ProductItemGeneral partial = new ProductItemGeneral()
+                {
+                    ValueType = nameValue,
+                    Items = new List<IProductItemGeneral>()
+                };
+
+                if (opsValue == null)
+                {
+                    opsValue = Array.Empty<string>();
+                }
+
+                switch (nameValue)
+                {
+                    case "Material":
+                        var materialList = await _dbContext.Material.Where(p => opsValue.Contains(p.ID.ToString())).ToListAsync();
+                        partial.Items = materialList.Cast<IProductItemGeneral>().ToList();
+                        partial.Material = materialList;
+                        break;
+
+                    case "Color":
+                        var colorList = await _dbContext.Color.Where(p => opsValue.Contains(p.ID.ToString())).ToListAsync();
+                        partial.Items = colorList.Cast<IProductItemGeneral>().ToList();
+                        partial.Color = colorList;
+                        break;
+
+                    case "Size":
+                        var sizeList = await _dbContext.Size.Where(p => opsValue.Contains(p.ID.ToString())).ToListAsync();
+                        partial.Items = sizeList.Cast<IProductItemGeneral>().ToList();
+                        partial.Size = sizeList;
+                        break;
+
+                    case "Season":
+                        var seasonList = await _dbContext.Season.Where(p => opsValue.Contains(p.ID.ToString())).ToListAsync();
+                        partial.Items = seasonList.Cast<IProductItemGeneral>().ToList();
+                        partial.Season = seasonList;
+                        break;
+
+                    case "Style":
+                        var styleList = await _dbContext.Style.Where(p => opsValue.Contains(p.ID.ToString())).ToListAsync();
+                        partial.Items = styleList.Cast<IProductItemGeneral>().ToList();
+                        partial.Style = styleList;
+                        break;
+
+                    case "Tag":
+                        var tagList = await _dbContext.Tag.Where(p => opsValue.Contains(p.ID.ToString())).ToListAsync();
+                        partial.Items = tagList.Cast<IProductItemGeneral>().ToList();
+                        partial.Tag = tagList;
+                        break;
+
+                    default: return await ReloadViewModel(new ProductGeneralViewModel());
+                }
+
+                return PartialView("_ProductItemPartial", partial);
+            }
+            catch
+            {
+                throw new Exception();
+            }
+        }
     }
 }

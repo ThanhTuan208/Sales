@@ -45,23 +45,16 @@
 
 <table class="table table-hover text-center">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model[0].ID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].Name)
-            </th>
-            <th>Picture</th>
-
-            <th>Price</th>
-
-            <th>Brand</th>
-
-            <th>Categoies</th>
-
-            <th>Action</th>
+        <tr class="fs-5">
+            <th>Mã sản phẩm</th>
+            <th>Tên sản phẩm</th>
+            <th>Hình ảnh</th>
+            <th>Giá</th>
+            <th>Thương hiệu</th>
+            <th>Phân loại</th>
+            <th>Thao tác</th>
         </tr>
+
     </thead>
     <tbody>
         @foreach (var item in Model)

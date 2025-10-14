@@ -39,10 +39,9 @@ $(document).ready(function () {
             const overlay = $("#loadingOverlay");
             const spinner = overlay.find(".spinner-container");
 
-            overlay.show();   // bật overlay phủ hết màn hình
+            overlay.show();  
             spinner.show();
 
-            // Ẩn modal và overlay sau 3s
             setTimeout(() => {
 
                 overlay.fadeOut();
@@ -65,17 +64,15 @@ $(document).ready(function () {
             const overlay = $("#loadingOverlay");
             const spinner = overlay.find(".spinner-container");
 
-            overlay.show();   // bật overlay phủ hết màn hình
+            overlay.show();   
             spinner.show();
 
-            // Ẩn modal và overlay sau 3s
             setTimeout(() => {
 
                 overlay.fadeOut(300);
                 spinner.fadeOut(300);
 
             }, 3000);
-
         })
     });
 
@@ -291,8 +288,6 @@ $(document).ready(function () {
         $(document).off('click', '.btn-select-image').on('click', '.btn-select-image', function () {
 
             $('#avatarInput').click(); // lay anh
-
-
         });
 
         $('#avatarInput').on('change', function (event) {
@@ -524,117 +519,8 @@ $(document).ready(function () {
         });
     });
 
-    // Truyen du lieu san pham, ktra dkien them hoac sua
-    //$('#btnAdminProduct').on('click', function () {
-    //    // Lấy dữ liệu từ form
-    //    const id = $('#id').val();
-    //    const name = $('#name').val();
-    //    const description = $('#description').val();
-    //    const feature = $('#feature').val() || 0;
-    //    const cate = $('#cate').val() || 0;
-    //    const brand = $('#brand').val() || 0;
-    //    const gender = $('#gender').val() || 0;
-    //    const newPrice = $('#newPrice').val();
-    //    const oldPrice = $('#oldPrice').val();
-    //    const qty = $('#qty').val();
-    //    const material = $('#material').val() || [];
-    //    const color = $('#color').val() || [];
-    //    const size = $('#size').val() || [];
-    //    const season = $('#season').val() || [];
-    //    const style = $('#style').val() || [];
-    //    const tag = $('#tag').val() || [];
-    //    const files = $('#picture')[0].files;
-
-    //    // Tạo formData để gửi dữ liệu và file
-    //    const formData = new FormData();
-    //    if (id) formData.append('ID', id);
-    //    formData.append('Name', name);
-    //    formData.append('Description', description);
-    //    formData.append('NewPrice', newPrice);
-    //    formData.append('OldPrice', oldPrice);
-    //    formData.append('Quantity', qty);
-    //    formData.append('FeaturedID', feature);
-    //    formData.append('GenderID', gender);
-    //    formData.append('BrandID', brand);
-    //    formData.append('CateID', cate);
-
-    //    // Append mảng các giá trị cho các trường select multiple
-    //    if (Array.isArray(material)) {
-    //        material.forEach(val => formData.append('SelectedMaterialID', val));
-    //    } else {
-    //        formData.append('SelectedMaterialID', material);
-    //    }
-    //    if (Array.isArray(color)) {
-    //        color.forEach(val => formData.append('SelectedColorID', val));
-    //    } else {
-    //        formData.append('SelectedColorID', color);
-    //    }
-    //    if (Array.isArray(size)) {
-    //        size.forEach(val => formData.append('SelectedSizeID', val));
-    //    } else {
-    //        formData.append('SelectedSizeID', size);
-    //    }
-    //    if (Array.isArray(season)) {
-    //        season.forEach(val => formData.append('SelectedSeasonID', val));
-    //    } else {
-    //        formData.append('SelectedSeasonID', season);
-    //    }
-    //    if (Array.isArray(style)) {
-    //        style.forEach(val => formData.append('SelectedStyleID', val));
-    //    } else {
-    //        formData.append('SelectedStyleID', style);
-    //    }
-    //    if (Array.isArray(tag)) {
-    //        tag.forEach(val => formData.append('SelectedTagID', val));
-    //    } else {
-    //        formData.append('SelectedTagID', tag);
-    //    }
-    //    //Thêm các file vào formData
-    //    for (let i = 0; i < files.length; i++) {
-    //        formData.append('Picture', files[i]); // Tên 'Picture' phải khớp với tên thuộc tính trong formData
-    //    }
-    //    console.log(color);
-    //    for (let [key, value] of formData.entries()) {
-    //        console.log(`${key}: ${value}`);
-    //    }
-
-    //    formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
-
-    //    //Gửi AJAX request
-    //    $.ajax({
-    //        url: id ? `/Admin/Edit/${id}` : '/Admin/Create',
-    //        type: 'POST',
-    //        data: formData,
-    //        processData: false, // Không xử lý dữ liệu (cần cho formData)
-    //        contentType: false, // Không đặt contentType (formData tự xử lý)
-    //        success: function (response) {
-    //            if (response.success) {
-    //                console.log("Thành công: " + response.message);
-    //                window.location.href = '/Admin/Index';
-    //            } else {
-    //                console.log("Lỗi: " + response.message);
-    //                if (response.errors) {
-    //                    $('.text-danger').text('');
-
-    //                    Object.keys(response.errors).forEach(function (field) {
-    //                        const messages = response.errors[field];
-    //                        const correctField = field.charAt(0).toUpperCase() + field.slice(1);
-    //                        console.log(field);
-    //                        console.log(messages);
-    //                        $(`span[data-valmsg-for="${correctField}"]`).text(messages);
-    //                    });
-    //                }
-    //            }
-    //        },
-    //        error: function (xhr) {
-    //            console.log("Lỗi AJAX: ", xhr.responseText);
-    //            alert('Đã xảy ra lỗi trong quá trình gửi yêu cầu.');
-    //        }
-    //    });
-    //});
-
+    
     // Truyen thong tin gmail cua contactUs
-
     $('.sendMess').on('click', function () {
         const fname = $('#fname').val();
         const lname = $('#lname').val();
@@ -905,9 +791,9 @@ $(document).ready(function () {
         let CurrentQty = parseInt(quantityInput.val());
         let NewQty = operation === '+' ? CurrentQty + 1 : CurrentQty - 1;
 
-        if (NewQty < 1) {
-            NewQty = 1;
-        }
+        if (NewQty < 1) NewQty = 1;
+
+        if (operation === '+' && CurrentQty >= 10) return;
 
         $.ajax({
             url: 'Cart/UpdateToCart',
@@ -922,8 +808,6 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.success) {
                     quantityInput.val(NewQty);
-                    let price = parseFloat($btn.closest('tr').find('.price').text().replace(/[^0-9]+/g, ''));
-                    var totalPrice = price * NewQty;
 
                     updateQtyAfterCheck();
                 }
@@ -1165,7 +1049,7 @@ function callUpdateCart() {
         type: "GET",
 
         success: function (response) {
-            console.log(response.success ? true : false);
+            //console.log(response.success ? true : false);
         },
         error: function (response) {
             alert("Lỗi Load cart: " + (response.message || "không xác định"));

@@ -12,8 +12,9 @@
 
 /*phan hien thi anh san pham (moi)*/
 .vrmedia-gallery {
-    max-width: 567px;
-    margin: 5rem auto;
+    max-width: 467px;
+    margin: 1rem auto;
+    margin-bottom: 4rem;
     background: white;
     padding: 20px;
     box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
@@ -39,7 +40,8 @@
                 border: 2px solid #0096c7;
             }
 
-.lSPager.lSGallery li {
+.lSPager.lSGallery li,
+.carousel__slide.has-thumb.has-image {
     width: 80px !important;
     height: 80px !important;
     overflow: hidden; /* đảm bảo ảnh không tràn */

@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="~/css/styleCart.css" asp-append-version="true" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 
+@Html.AntiForgeryToken()
 <section class="ftco-section">
     <div class="container">
         <div class="row">
@@ -48,12 +49,11 @@
                                 {
                                     foreach (var item in Model.CartItems)
                                     {
-
-                                        <tr class="alert1" role="alert">
+                                        <tr class="itemCart" role="alert" style="opacity: @(item.Product.Quantity == 0 ? "0.5" : "1")">
                                             @*    <td name="id" value="@item.ID">@item.ID</td> *@
                                             <td>
                                                 <label class="checkbox-wrap checkbox-primary">
-                                                    <input type="checkbox" class="checkbox" value="@item.ID" />
+                                                    <input type="checkbox" class="checkbox" value="@item.ID" @(item.Product.Quantity == 0 ? "disabled" : "") />
                                                     <span class="checkmark"></span>
                                                 </label>
                                             </td>
@@ -64,9 +64,12 @@
                                             </td>
 
                                             <td>
-                                                <div class="email" style="text-align: left">
+                                                <div class="name" style="text-align: center; ">
                                                     <p class="">@item.Product.Name</p>
-
+                                                    @if (item.Product.Quantity == 0)
+                                                    {
+                                                        <p class="text-danger">Sản phẩm đã hết hàng</p>
+                                                    }
                                                 </div>
                                             </td>
 
@@ -88,22 +91,20 @@
                                             <td class="quantity">
                                                 <div class="quantity-container" data-id="@item.ID">
                                                     <button type="button" class="quantity-btn decrease" data-id="@item.ID" data-opera="-">-</button>
-                                                    <input type="text" name="qty" class="quantity-input" value="@item.Quantity" min="1" max="100" readonly>
+                                                    <input type="text" name="qty" class="quantity-input" value="@item.Quantity" min="1" max="10" readonly>
                                                     <button type="button" class="quantity-btn increase" data-id="@item.ID" data-opera="+">+</button>
                                                 </div>
                                             </td>
 
-
-                                            @* co xai thi mo lai js line 619
-                                        <td class="priceTotal">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", TempData["totalPrice"])</td>*@
+                                            @* <td class="priceTotal">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", TempData["totalPrice"])</td> *@
 
                                             <td class="deleteCartItem" style="vertical-align:middle; text-align:center">
-                                                @* Thieu token nen khi truyen du lieu qua ben ajax se chay xuong error *@
-                                                @Html.AntiForgeryToken()
+
                                                 <button type="submit"
                                                         class="close"
                                                         aria-label="Close"
-                                                        data-id="@item.ID">
+                                                        data-id="@item.ID"
+                                                        style="opacity:  @(item.Product.Quantity == 0 ? "1" : "1")">
                                                     <span aria-hidden="true">
                                                         <i class="fa fa-close" style="font-size: 3rem;"></i>
                                                     </span>
@@ -182,7 +183,6 @@
                                      role="dialog"
                                      aria-modal="true"
                                      aria-labelledby="modalTitle">
-                                    
                                 </div>
                             </div>
                         </div>

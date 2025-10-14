@@ -1,0 +1,149 @@
+﻿@using CRUD_asp.netMVC.ViewModels.Admin
+@model ProductItemGeneral
+
+@{
+    var nameValue = Model.ValueType switch
+    {
+        "Material" => "Chất liệu",
+        "Color" => "Màu sắc",
+        "Size" => "Kích cỡ",
+        "Season" => "Mùa",
+        "Style" => "Phong cách",
+        "Tag" => "Thể loại",
+        "Update" => "Số lượng sản phẩm",
+        _ => "Thuộc tính"
+    };
+}
+
+<div class="container product-section">
+    <div class="update d-flex justify-content-between align-items-center">
+        <h3>@nameValue</h3>
+        <a href="#" id="update-qty">Cập nhật số lượng</a>
+    </div>
+
+    @if (Model.Items != null && Model.Items.Any())
+    {
+        <table class="product-table table-hover w-100">
+            <thead>
+                <tr>
+                    <th style="width: 60%;">Tên</th>
+                    <th style="width: 40%;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td class="form-floating mb-3">
+                            <input asp-for="@item.Name" id="name-prop" class="form-control" style="text-align: center;" required placeholder="Nhập tên @nameValue" />
+                            <span asp-validation-for="@item.Name" class="text-danger"></span>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button class="action-btn btn-update-prop bn54 me-2"> Sửa</button>
+                                <button class="action-btn btn-delete-prop bn54 me-2"> Xóa</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (Model.Items == null || !Model.Items.Any())
+    {
+        <table class="product-table table-hover w-100">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Màu sắc</th>
+                    <th style="width: 25%;">Kích thước</th>
+                    <th style="width: 25%;">Số lượng</th>
+                    <th style="width: 25%;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.TempProductQty)
+                {
+                    <tr class="selectTemp">
+                        <td>
+                            <div class="form-floating mb-3">
+
+                                <select asp-for="@item.ColorID" class="form-select color-qty" data-oldcolor="@item.ColorID" asp-items="Model.SelectListColor ?? new SelectList(Enumerable.Empty<object>())">
+                                    <option value="" disabled selected>Chọn màu sắc</option>
+                                </select>
+                                <label asp-for="@item.ColorID" class="form-label">Màu sắc</label>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="form-floating mb-3">
+
+                                <select asp-for="@item.SizeID" class="form-select size-qty" data-oldsize="@item.SizeID" asp-items="Model.SelectListSize ?? new SelectList(Enumerable.Empty<object>())">
+                                    <option value="" disabled selected>Chọn kích thước</option>
+                                </select>
+                                <label asp-for="@item.SizeID" class="form-label">Kích thước</label>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="form-floating mb-3">
+                                <input asp-for="@item.Quantity" class="form-control exist-qty" data-exist-qty="@item.Quantity" type="text" required placeholder="Nhập số lượng" maxlength="3" />
+                                <label asp-for="@item.Quantity" class="form-label">Số lượng</label>
+                                <span asp-validation-for="@item.Quantity" class="text-danger"></span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button type="button" class="action-btn btn-update-proqty bn54 me-2">Sửa</button>
+                                <button type="button" class="action-btn btn-delete-proqty bn54 me-2">Xóa</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+                <tr class="new-row" id="new-row-template">
+                    <td>
+                        <div class="form-floating mb-3">
+
+                            <select id="color-new-qty" class="form-select" asp-items="Model.SelectListColor ?? new SelectList(Enumerable.Empty<object>())">
+                                <option value="" disabled selected>Chọn màu sắc</option>
+                            </select>
+                            <label class="form-label">Màu sắc</label>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="form-floating mb-3">
+                            <select id="size-new-qty" class="form-select" asp-items="Model.SelectListSize ?? new SelectList(Enumerable.Empty<object>())">
+                                <option value="" disabled selected>Chọn kích thước</option>
+                            </select>
+                            <label class="form-label">Kích thước</label>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="form-floating mb-3">
+                            <input id="new-qty" class="form-control" type="text" placeholder="Nhập số lượng" maxlength="3" />
+                            <label class="form-label">Số lượng</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <input class="countQty" type="hidden" value="@Model.TempProductQty.Count" />
+                            <button type="button" class="action-btn btn-update-proqty bn54 me-2" disabled>Sửa</button>
+                            <button type="button" class="action-btn btn-delete-proqty bn54 me-2" disabled>Xóa</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="no-data">Không có dữ liệu cho <strong>@nameValue</strong>.</p>
+    }
+    <div class="row justify-content-center align-items-center mt-3">
+
+        <button type="button" class="action-btn btn-add-proqty bn54">Thêm</button>
+    </div>
+</div>

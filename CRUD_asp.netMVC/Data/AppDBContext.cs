@@ -77,6 +77,7 @@ namespace CRUD_asp.netMVC.Data
         //public DbSet<Users>? Users { get; set; }
         //public DbSet<Roles>? Roles { get; set; }
         //public DbSet<Staff> Staff { get; set; }
+        public DbSet<ProductQuantity>? ProductQty { get; set; }
         public DbSet<Address>? Addresses { get; set; }
         public DbSet<Featured>? Featured { get; set; }
         public DbSet<Products>? Products { get; set; }

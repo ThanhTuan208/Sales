@@ -7,22 +7,13 @@ using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Service.GHN;
 using CRUD_asp.netMVC.Service.Payment;
 using CRUD_asp.netMVC.ViewModels.Order;
-using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Elfie.Model.Tree;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Versioning;
-using System.Formats.Asn1;
 using System.Globalization;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
-using System.Transactions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -66,7 +57,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
 
-        [HttpPost] // Nhan sms tu dien thoai
+        [HttpPost,IgnoreAntiforgeryToken] // Nhan sms tu dien thoai
         public async Task<IActionResult> SmsReceive([FromBody] SmsMessage sms, [FromServices] IHubContext<PaymentHub> hub)
         {
             //Mở 1 giao dịch(transaction). -> thuc hien cho kieu toi uu sql "raw sql bulk update"
@@ -100,6 +91,7 @@ namespace CRUD_asp.netMVC.Controllers
                 };
 
                 // Cap nhat lai trang thai sau khi chuyen khoan thanh cong
+                _dbContext.Attach(order); // huy asnotracking()
                 order.Payment = payment; // add data payment
                 order.Status = "Paid";
                 order.PaidAt = DateTime.Now;
@@ -120,7 +112,7 @@ namespace CRUD_asp.netMVC.Controllers
                 var caseWhen = build.ToString();
                 string productIDSelected = string.Join(", ", productQtyList.Select(p => p.PorductID));
 
-                string sqlUpdateQty = @$"
+                string sqlUpdateQty = $@"
                         UPDATE Products
                         SET Quantity = CASE ID
                             {caseWhen}

@@ -113,7 +113,7 @@ namespace CRUD_asp.netMVC.Controllers
 
         }
 
-        [HttpGet]
+        [Route("Product"), Route("Product/Index"), HttpGet]
         /// Hien thi danh sach phan trang san pham va phan trang thuong hieu
         public async Task<IActionResult> Index(int productPage = 1)
         {
@@ -161,10 +161,6 @@ namespace CRUD_asp.netMVC.Controllers
 
             // Pagination truyen tham so cho product, brand, category, cart
             var ViewModel = await CreatePaginationGeneral(getPagProductByBrand, productPage, 6);
-
-            //var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
-            //var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
-            //ViewBag.ActionNameUrl = actionNameUrl;
 
             return View(ViewModel);
         }
@@ -259,40 +255,49 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> ProductDetail(int id)
         {
-            var product = await _dbContext.Products.AsNoTracking()
-                .Include(p => p.Brands)
-                .Include(p => p.Cate)
-                .Include(p => p.Gender)
-                .Include(p => p.ProductImages)
-                .Include(p => p.ProductSize).ThenInclude(p => p.size)
-                .Include(p => p.ProductColor).ThenInclude(p => p.Color)
-                .Include(p => p.ProductMaterial).ThenInclude(p => p.Material)
-                .Include(p => p.ProductStyles).ThenInclude(p => p.Style)
-                .Include(p => p.ProductSeasons).ThenInclude(p => p.Season)
-                .Include(p => p.ProductTags).ThenInclude(p => p.Tag)
-                .FirstOrDefaultAsync(p => p.ID == id);
-
-            var brandList = await _dbContext.Brand.AsNoTracking().ToListAsync();
-
-            var cateList = await _dbContext.Category.AsNoTracking().ToListAsync();
-
-            var orderPaid = await _dbContext.OrderDetail.CountAsync(p => p.ProductID == id);
-
-            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
-            var carts = await _dbContext.Carts.Where(p => p.UserID == userID).ToListAsync();
-
-            ViewData["cart"] = carts.Count;
-
-            GeneralProduct_ListCateBrand ViewModel = new()
+            try
             {
-                Product = product,
-                Brands = brandList,
-                Categories = cateList,
-                Carts = carts,
-                Sold = orderPaid
-            };
+                var product = await _dbContext.Products.AsNoTracking()
+               .Include(p => p.Brands)
+               .Include(p => p.Cate)
+               .Include(p => p.Gender)
+               .Include(p => p.ProductImages)
+               .Include(p => p.ProductSize).ThenInclude(p => p.size)
+               .Include(p => p.ProductColor).ThenInclude(p => p.Color)
+               .Include(p => p.ProductMaterial).ThenInclude(p => p.Material)
+               .Include(p => p.ProductStyles).ThenInclude(p => p.Style)
+               .Include(p => p.ProductSeasons).ThenInclude(p => p.Season)
+               .Include(p => p.ProductTags).ThenInclude(p => p.Tag)
+               .FirstOrDefaultAsync(p => p.ID == id);
 
-            return ViewModel != null ? View(ViewModel) : NotFound();
+                if (product == null) return NotFound();
+
+                var brandList = await _dbContext.Brand.AsNoTracking().ToListAsync();
+
+                var cateList = await _dbContext.Category.AsNoTracking().ToListAsync();
+
+                var orderPaid = await _dbContext.OrderDetail.Where(p => p.ProductID == id).SumAsync(p => p.Quantity);
+
+                var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
+                var carts = await _dbContext.Carts.Where(p => p.UserID == userID).ToListAsync();
+
+                ViewData["cart"] = carts.Count;
+
+                GeneralProduct_ListCateBrand ViewModel = new()
+                {
+                    Product = product,
+                    Brands = brandList,
+                    Categories = cateList,
+                    Carts = carts,
+                    Sold = orderPaid
+                };
+
+                return ViewModel != null ? View(ViewModel) : NotFound();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet] // Hien thi danh sach san pham noi bat
@@ -317,7 +322,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         /// <summary>
-        /// Phan trang san pham 
+        /// Phuong thuc phan trang san pham chung
         /// </summary>
         /// <param name="Iqueryable"></param>
         /// <param name="pageCurrent"></param>

@@ -86,7 +86,6 @@ namespace CRUD_asp.netMVC.Controllers
                 var addressUser = new List<Address>();
 
                 var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
-
                 if (userID > 0)
                 {
                     cartItems = await _dbContext.Carts

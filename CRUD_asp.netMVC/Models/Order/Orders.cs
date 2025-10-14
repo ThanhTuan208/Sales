@@ -19,7 +19,7 @@ namespace CRUD_asp.netMVC.Models.Order
         public Address? Address { get; set; }
 
         [DataType(DataType.Currency)]
-        public double Amount { get; set; }
+        public double? Amount { get; set; }
 
         [Required]
         public string? Status { get; set; } = "Pending"; // Paid, failed, shipped, completed

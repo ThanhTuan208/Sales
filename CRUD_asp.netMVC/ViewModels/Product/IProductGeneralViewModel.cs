@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using CRUD_asp.netMVC.ViewModels.Admin;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CRUD_asp.netMVC.ViewModels.Product
 {
@@ -10,8 +11,8 @@ namespace CRUD_asp.netMVC.ViewModels.Product
         public int? FeaturedID { get; set; }
 
         public int[] SelectedMaterialID { get; set; }
-        public int[] SelectedColorID { get; set; }
-        public int[] SelectedSizeID { get; set; }
+        public int[]? SelectedColorID { get; set; }
+        public int[]? SelectedSizeID { get; set; }
         public int[] SelectedStyleID { get; set; }
         public int[] SelectedSeasonID { get; set; }
         public int[] SelectedTagID { get; set; }
@@ -26,5 +27,7 @@ namespace CRUD_asp.netMVC.ViewModels.Product
         public SelectList? StyleList { get; set; }
         public SelectList? TagList { get; set; }
         public SelectList? SeasonList { get; set; }
+
+        public List<TempProductQty> TempProductQty { get; set; }
     }
 }

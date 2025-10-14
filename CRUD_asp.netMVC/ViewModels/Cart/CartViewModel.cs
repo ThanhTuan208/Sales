@@ -11,6 +11,6 @@ namespace CRUD_asp.netMVC.ViewModels.Cart
         public List<AddToCart>? CartItemByIDs { get; set; }
         public QrPaymentViewModel QrPayment { get; set; }
         public Address? Address { get; set; }
-        public double TotalPrice { get; set; }
+        public double? TotalPrice { get; set; }
     }
 }
