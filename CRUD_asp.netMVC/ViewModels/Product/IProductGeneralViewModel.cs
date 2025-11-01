@@ -1,4 +1,5 @@
-﻿using CRUD_asp.netMVC.ViewModels.Admin;
+﻿using CRUD_asp.netMVC.Models.Product;
+using CRUD_asp.netMVC.ViewModels.Admin;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CRUD_asp.netMVC.ViewModels.Product
@@ -29,5 +30,6 @@ namespace CRUD_asp.netMVC.ViewModels.Product
         public SelectList? SeasonList { get; set; }
 
         public List<TempProductQty> TempProductQty { get; set; }
+        public List<ProductQuantity> ProductQty { get; set; }
     }
 }

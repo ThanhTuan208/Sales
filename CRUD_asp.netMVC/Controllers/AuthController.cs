@@ -163,9 +163,9 @@ namespace CRUD_asp.netMVC.Controllers
                 ViewData["pass"] = pass;
 
                 return View();
-            }
+            }           
 
-            return Redirect("/Auth/Register"); // Link tuyet doi
+            return Redirect("/Auth/Register"); 
         }
 
         /// <summary>

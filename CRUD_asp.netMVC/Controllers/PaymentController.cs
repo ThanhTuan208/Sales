@@ -36,7 +36,7 @@ namespace CRUD_asp.netMVC.Controllers
             //_token = config["GHN:Token"] ?? "";
             //_httpClient = httpClient;
             //_httpClient.DefaultRequestHeaders.Add("Token", _token);
-            //_httpClient.DefaultRequestHeaders.Add("_dbContext-Type", "application/json");
+            //_httpClient.DefaultRequestHeaders.Add("_dbContext-Type", "application/json"); 
         }
 
         // Thay doi name co cac ki tu co dau thanh khong dau

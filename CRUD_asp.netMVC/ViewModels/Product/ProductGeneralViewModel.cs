@@ -1,7 +1,7 @@
-﻿using CRUD_asp.netMVC.ViewModels.Admin;
+﻿using CRUD_asp.netMVC.Models.Product;
+using CRUD_asp.netMVC.ViewModels.Admin;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Razor.Language.Extensions;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -77,8 +77,8 @@ namespace CRUD_asp.netMVC.ViewModels.Product
         public SelectList? TagList { get; set; }
         public SelectList? SeasonList { get; set; }
 
-        public List<string> ImagePaths { get; set; } = new List<string>();
-
         public List<TempProductQty> TempProductQty { get; set; } = new List<TempProductQty>();
+
+        public List<ProductQuantity> ProductQty { get; set; } = new List<ProductQuantity>();
     }
 }

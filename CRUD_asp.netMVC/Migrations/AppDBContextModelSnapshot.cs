@@ -72,7 +72,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Customer", b =>
@@ -122,7 +122,7 @@ namespace CRUD_asp.netMVC.Migrations
                         .IsUnique()
                         .HasFilter("[UserID] IS NOT NULL");
 
-                    b.ToTable("Customer", (string)null);
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Manager", b =>
@@ -172,7 +172,7 @@ namespace CRUD_asp.netMVC.Migrations
                         .IsUnique()
                         .HasFilter("[UserID] IS NOT NULL");
 
-                    b.ToTable("Manager", (string)null);
+                    b.ToTable("Manager");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Roles", b =>
@@ -354,7 +354,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Order.OrderDetail", b =>
@@ -369,7 +369,7 @@ namespace CRUD_asp.netMVC.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<double>("Price")
+                    b.Property<double?>("Price")
                         .HasColumnType("float");
 
                     b.Property<int>("ProductID")
@@ -384,7 +384,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("OrderDetail", (string)null);
+                    b.ToTable("OrderDetail");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Order.Orders", b =>
@@ -395,7 +395,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<int?>("AddressID")
                         .HasColumnType("int");
 
-                    b.Property<double>("Amount")
+                    b.Property<double?>("Amount")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("OrderDate")
@@ -456,7 +456,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Brand", b =>
@@ -481,7 +481,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Brand", (string)null);
+                    b.ToTable("Brand");
 
                     b.HasData(
                         new
@@ -574,7 +574,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
 
                     b.HasData(
                         new
@@ -629,7 +629,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Color", (string)null);
+                    b.ToTable("Color");
 
                     b.HasData(
                         new
@@ -689,7 +689,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Featured", (string)null);
+                    b.ToTable("Featured");
 
                     b.HasData(
                         new
@@ -718,7 +718,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Gender", (string)null);
+                    b.ToTable("Gender");
 
                     b.HasData(
                         new
@@ -752,7 +752,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Material", (string)null);
+                    b.ToTable("Material");
 
                     b.HasData(
                         new
@@ -797,7 +797,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("paidAmount")
+                    b.Property<double?>("paidAmount")
                         .HasColumnType("float");
 
                     b.Property<string>("paymentMethod")
@@ -809,7 +809,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasIndex("OrderID")
                         .IsUnique();
 
-                    b.ToTable("Payment", (string)null);
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductColors", b =>
@@ -824,7 +824,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("ColorID");
 
-                    b.ToTable("ProductColor", (string)null);
+                    b.ToTable("ProductColor");
 
                     b.HasData(
                         new
@@ -2047,7 +2047,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("ProductImages", (string)null);
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductMaterial", b =>
@@ -2062,7 +2062,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("MaterialID");
 
-                    b.ToTable("ProductMaterial", (string)null);
+                    b.ToTable("ProductMaterial");
 
                     b.HasData(
                         new
@@ -2572,7 +2572,6876 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("SizeID");
 
-                    b.ToTable("ProductQty", (string)null);
+                    b.ToTable("ProductQty");
+
+                    b.HasData(
+                        new
+                        {
+                            ProductID = 1,
+                            SizeID = 4,
+                            ColorID = 1,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 1,
+                            SizeID = 11,
+                            ColorID = 1,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 1,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 1,
+                            SizeID = 7,
+                            ColorID = 1,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 1,
+                            SizeID = 4,
+                            ColorID = 6,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 1,
+                            SizeID = 11,
+                            ColorID = 6,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 1,
+                            SizeID = 5,
+                            ColorID = 6,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 1,
+                            SizeID = 7,
+                            ColorID = 6,
+                            Quantity = 14
+                        },
+                        new
+                        {
+                            ProductID = 1,
+                            SizeID = 4,
+                            ColorID = 8,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 1,
+                            SizeID = 11,
+                            ColorID = 8,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 1,
+                            SizeID = 5,
+                            ColorID = 8,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 1,
+                            SizeID = 7,
+                            ColorID = 8,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 2,
+                            SizeID = 9,
+                            ColorID = 6,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 2,
+                            SizeID = 12,
+                            ColorID = 6,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 2,
+                            SizeID = 3,
+                            ColorID = 6,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 2,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 2,
+                            SizeID = 12,
+                            ColorID = 7,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 2,
+                            SizeID = 3,
+                            ColorID = 7,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 2,
+                            SizeID = 9,
+                            ColorID = 2,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 2,
+                            SizeID = 12,
+                            ColorID = 2,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 2,
+                            SizeID = 3,
+                            ColorID = 2,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 3,
+                            SizeID = 9,
+                            ColorID = 8,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 3,
+                            SizeID = 12,
+                            ColorID = 8,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 3,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 3,
+                            SizeID = 12,
+                            ColorID = 7,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 3,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 3,
+                            SizeID = 12,
+                            ColorID = 4,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 3,
+                            SizeID = 9,
+                            ColorID = 3,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 3,
+                            SizeID = 12,
+                            ColorID = 3,
+                            Quantity = 24
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 13,
+                            ColorID = 6,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 5,
+                            ColorID = 6,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 10,
+                            ColorID = 6,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 13,
+                            ColorID = 1,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 10,
+                            ColorID = 1,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 13,
+                            ColorID = 3,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 5,
+                            ColorID = 3,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 10,
+                            ColorID = 3,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 13,
+                            ColorID = 5,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 5,
+                            ColorID = 5,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 10,
+                            ColorID = 5,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 13,
+                            ColorID = 8,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 5,
+                            ColorID = 8,
+                            Quantity = 24
+                        },
+                        new
+                        {
+                            ProductID = 4,
+                            SizeID = 10,
+                            ColorID = 8,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 5,
+                            SizeID = 12,
+                            ColorID = 3,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 5,
+                            SizeID = 8,
+                            ColorID = 3,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 5,
+                            SizeID = 12,
+                            ColorID = 2,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 5,
+                            SizeID = 8,
+                            ColorID = 2,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 5,
+                            SizeID = 12,
+                            ColorID = 8,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 5,
+                            SizeID = 8,
+                            ColorID = 8,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 5,
+                            SizeID = 12,
+                            ColorID = 5,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 5,
+                            SizeID = 8,
+                            ColorID = 5,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 5,
+                            SizeID = 12,
+                            ColorID = 4,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 5,
+                            SizeID = 8,
+                            ColorID = 4,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 5,
+                            SizeID = 12,
+                            ColorID = 1,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 5,
+                            SizeID = 8,
+                            ColorID = 1,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 6,
+                            SizeID = 3,
+                            ColorID = 1,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 6,
+                            SizeID = 8,
+                            ColorID = 1,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 6,
+                            SizeID = 3,
+                            ColorID = 5,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 6,
+                            SizeID = 8,
+                            ColorID = 5,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 6,
+                            SizeID = 3,
+                            ColorID = 2,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 6,
+                            SizeID = 8,
+                            ColorID = 2,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 6,
+                            SizeID = 3,
+                            ColorID = 7,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 6,
+                            SizeID = 8,
+                            ColorID = 7,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 6,
+                            SizeID = 3,
+                            ColorID = 6,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 6,
+                            SizeID = 8,
+                            ColorID = 6,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 12,
+                            ColorID = 1,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 1,
+                            ColorID = 1,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 2,
+                            ColorID = 1,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 12,
+                            ColorID = 6,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 5,
+                            ColorID = 6,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 1,
+                            ColorID = 6,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 2,
+                            ColorID = 6,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 12,
+                            ColorID = 7,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 5,
+                            ColorID = 7,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 1,
+                            ColorID = 7,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 2,
+                            ColorID = 7,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 12,
+                            ColorID = 2,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 5,
+                            ColorID = 2,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 1,
+                            ColorID = 2,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 2,
+                            ColorID = 2,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 12,
+                            ColorID = 4,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 5,
+                            ColorID = 4,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 1,
+                            ColorID = 4,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 2,
+                            ColorID = 4,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 12,
+                            ColorID = 5,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 5,
+                            ColorID = 5,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 1,
+                            ColorID = 5,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 7,
+                            SizeID = 2,
+                            ColorID = 5,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 8,
+                            ColorID = 1,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 6,
+                            ColorID = 1,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 9,
+                            ColorID = 1,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 11,
+                            ColorID = 1,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 1,
+                            ColorID = 1,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 8,
+                            ColorID = 8,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 6,
+                            ColorID = 8,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 9,
+                            ColorID = 8,
+                            Quantity = 14
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 11,
+                            ColorID = 8,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 1,
+                            ColorID = 8,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 8,
+                            ColorID = 4,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 6,
+                            ColorID = 4,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 11,
+                            ColorID = 4,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 1,
+                            ColorID = 4,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 8,
+                            ColorID = 2,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 6,
+                            ColorID = 2,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 9,
+                            ColorID = 2,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 11,
+                            ColorID = 2,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 1,
+                            ColorID = 2,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 8,
+                            ColorID = 3,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 6,
+                            ColorID = 3,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 9,
+                            ColorID = 3,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 11,
+                            ColorID = 3,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 1,
+                            ColorID = 3,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 8,
+                            ColorID = 6,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 6,
+                            ColorID = 6,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 9,
+                            ColorID = 6,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 11,
+                            ColorID = 6,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 8,
+                            SizeID = 1,
+                            ColorID = 6,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 7,
+                            ColorID = 4,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 13,
+                            ColorID = 4,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 6,
+                            ColorID = 4,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 3,
+                            ColorID = 4,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 7,
+                            ColorID = 7,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 13,
+                            ColorID = 7,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 6,
+                            ColorID = 7,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 3,
+                            ColorID = 7,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 7,
+                            ColorID = 3,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 13,
+                            ColorID = 3,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 9,
+                            ColorID = 3,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 6,
+                            ColorID = 3,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 3,
+                            ColorID = 3,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 7,
+                            ColorID = 6,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 13,
+                            ColorID = 6,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 9,
+                            ColorID = 6,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 6,
+                            ColorID = 6,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 3,
+                            ColorID = 6,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 7,
+                            ColorID = 5,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 13,
+                            ColorID = 5,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 9,
+                            ColorID = 5,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 6,
+                            ColorID = 5,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 9,
+                            SizeID = 3,
+                            ColorID = 5,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 5,
+                            ColorID = 5,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 12,
+                            ColorID = 5,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 7,
+                            ColorID = 5,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 2,
+                            ColorID = 5,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 12,
+                            ColorID = 1,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 7,
+                            ColorID = 1,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 2,
+                            ColorID = 1,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 5,
+                            ColorID = 4,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 12,
+                            ColorID = 4,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 7,
+                            ColorID = 4,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 2,
+                            ColorID = 4,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 5,
+                            ColorID = 2,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 12,
+                            ColorID = 2,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 7,
+                            ColorID = 2,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 2,
+                            ColorID = 2,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 5,
+                            ColorID = 3,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 12,
+                            ColorID = 3,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 7,
+                            ColorID = 3,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 2,
+                            ColorID = 3,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 5,
+                            ColorID = 8,
+                            Quantity = 14
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 12,
+                            ColorID = 8,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 7,
+                            ColorID = 8,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 10,
+                            SizeID = 2,
+                            ColorID = 8,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 11,
+                            SizeID = 11,
+                            ColorID = 6,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 11,
+                            SizeID = 12,
+                            ColorID = 6,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 11,
+                            SizeID = 11,
+                            ColorID = 1,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 11,
+                            SizeID = 12,
+                            ColorID = 1,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 11,
+                            SizeID = 11,
+                            ColorID = 5,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 11,
+                            SizeID = 12,
+                            ColorID = 5,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 11,
+                            SizeID = 11,
+                            ColorID = 4,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 11,
+                            SizeID = 12,
+                            ColorID = 4,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 11,
+                            ColorID = 8,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 13,
+                            ColorID = 8,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 14,
+                            ColorID = 8,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 1,
+                            ColorID = 8,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 7,
+                            ColorID = 8,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 11,
+                            ColorID = 6,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 13,
+                            ColorID = 6,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 14,
+                            ColorID = 6,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 1,
+                            ColorID = 6,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 7,
+                            ColorID = 6,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 11,
+                            ColorID = 7,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 13,
+                            ColorID = 7,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 14,
+                            ColorID = 7,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 1,
+                            ColorID = 7,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 7,
+                            ColorID = 7,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 11,
+                            ColorID = 1,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 13,
+                            ColorID = 1,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 14,
+                            ColorID = 1,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 1,
+                            ColorID = 1,
+                            Quantity = 14
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 7,
+                            ColorID = 1,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 11,
+                            ColorID = 4,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 13,
+                            ColorID = 4,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 14,
+                            ColorID = 4,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 1,
+                            ColorID = 4,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 12,
+                            SizeID = 7,
+                            ColorID = 4,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 13,
+                            SizeID = 6,
+                            ColorID = 6,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 13,
+                            SizeID = 2,
+                            ColorID = 6,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 13,
+                            SizeID = 6,
+                            ColorID = 2,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 13,
+                            SizeID = 2,
+                            ColorID = 2,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 13,
+                            SizeID = 6,
+                            ColorID = 5,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 13,
+                            SizeID = 2,
+                            ColorID = 5,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 13,
+                            SizeID = 6,
+                            ColorID = 7,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 13,
+                            SizeID = 2,
+                            ColorID = 7,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 14,
+                            SizeID = 14,
+                            ColorID = 7,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 14,
+                            SizeID = 13,
+                            ColorID = 7,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 14,
+                            SizeID = 11,
+                            ColorID = 7,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 14,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 14,
+                            SizeID = 14,
+                            ColorID = 8,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 14,
+                            SizeID = 13,
+                            ColorID = 8,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 14,
+                            SizeID = 11,
+                            ColorID = 8,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 14,
+                            SizeID = 9,
+                            ColorID = 8,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 14,
+                            SizeID = 14,
+                            ColorID = 6,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 14,
+                            SizeID = 13,
+                            ColorID = 6,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 14,
+                            SizeID = 11,
+                            ColorID = 6,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 14,
+                            SizeID = 9,
+                            ColorID = 6,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 2,
+                            ColorID = 3,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 9,
+                            ColorID = 3,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 10,
+                            ColorID = 3,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 11,
+                            ColorID = 3,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 6,
+                            ColorID = 3,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 2,
+                            ColorID = 1,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 9,
+                            ColorID = 1,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 10,
+                            ColorID = 1,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 11,
+                            ColorID = 1,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 6,
+                            ColorID = 1,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 2,
+                            ColorID = 2,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 9,
+                            ColorID = 2,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 10,
+                            ColorID = 2,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 11,
+                            ColorID = 2,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 6,
+                            ColorID = 2,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 2,
+                            ColorID = 6,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 9,
+                            ColorID = 6,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 10,
+                            ColorID = 6,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 11,
+                            ColorID = 6,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 6,
+                            ColorID = 6,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 2,
+                            ColorID = 5,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 9,
+                            ColorID = 5,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 10,
+                            ColorID = 5,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 11,
+                            ColorID = 5,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 6,
+                            ColorID = 5,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 2,
+                            ColorID = 4,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 10,
+                            ColorID = 4,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 11,
+                            ColorID = 4,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 15,
+                            SizeID = 6,
+                            ColorID = 4,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 3,
+                            ColorID = 4,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 11,
+                            ColorID = 4,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 10,
+                            ColorID = 4,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 5,
+                            ColorID = 4,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 12,
+                            ColorID = 4,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 3,
+                            ColorID = 1,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 11,
+                            ColorID = 1,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 10,
+                            ColorID = 1,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 12,
+                            ColorID = 1,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 3,
+                            ColorID = 3,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 11,
+                            ColorID = 3,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 10,
+                            ColorID = 3,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 5,
+                            ColorID = 3,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 12,
+                            ColorID = 3,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 3,
+                            ColorID = 2,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 11,
+                            ColorID = 2,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 10,
+                            ColorID = 2,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 5,
+                            ColorID = 2,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 12,
+                            ColorID = 2,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 3,
+                            ColorID = 8,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 11,
+                            ColorID = 8,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 10,
+                            ColorID = 8,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 5,
+                            ColorID = 8,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 16,
+                            SizeID = 12,
+                            ColorID = 8,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 13,
+                            ColorID = 5,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 4,
+                            ColorID = 5,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 3,
+                            ColorID = 5,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 13,
+                            ColorID = 3,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 4,
+                            ColorID = 3,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 3,
+                            ColorID = 3,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 13,
+                            ColorID = 6,
+                            Quantity = 24
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 4,
+                            ColorID = 6,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 3,
+                            ColorID = 6,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 13,
+                            ColorID = 1,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 4,
+                            ColorID = 1,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 3,
+                            ColorID = 1,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 13,
+                            ColorID = 8,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 4,
+                            ColorID = 8,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 3,
+                            ColorID = 8,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 13,
+                            ColorID = 7,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 4,
+                            ColorID = 7,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 17,
+                            SizeID = 3,
+                            ColorID = 7,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 18,
+                            SizeID = 13,
+                            ColorID = 7,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 18,
+                            SizeID = 1,
+                            ColorID = 7,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 18,
+                            SizeID = 13,
+                            ColorID = 1,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 18,
+                            SizeID = 1,
+                            ColorID = 1,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 18,
+                            SizeID = 13,
+                            ColorID = 3,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 18,
+                            SizeID = 1,
+                            ColorID = 3,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 19,
+                            SizeID = 11,
+                            ColorID = 5,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 19,
+                            SizeID = 2,
+                            ColorID = 5,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 19,
+                            SizeID = 14,
+                            ColorID = 5,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 19,
+                            SizeID = 11,
+                            ColorID = 1,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 19,
+                            SizeID = 2,
+                            ColorID = 1,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 19,
+                            SizeID = 14,
+                            ColorID = 1,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 19,
+                            SizeID = 11,
+                            ColorID = 4,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 19,
+                            SizeID = 2,
+                            ColorID = 4,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 19,
+                            SizeID = 14,
+                            ColorID = 4,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 19,
+                            SizeID = 11,
+                            ColorID = 6,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 19,
+                            SizeID = 2,
+                            ColorID = 6,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 19,
+                            SizeID = 14,
+                            ColorID = 6,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 20,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 20,
+                            SizeID = 3,
+                            ColorID = 7,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 20,
+                            SizeID = 9,
+                            ColorID = 3,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 20,
+                            SizeID = 3,
+                            ColorID = 3,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 20,
+                            SizeID = 9,
+                            ColorID = 8,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 20,
+                            SizeID = 3,
+                            ColorID = 8,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 1,
+                            ColorID = 5,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 13,
+                            ColorID = 5,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 14,
+                            ColorID = 5,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 5,
+                            ColorID = 5,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 1,
+                            ColorID = 8,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 13,
+                            ColorID = 8,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 14,
+                            ColorID = 8,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 5,
+                            ColorID = 8,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 1,
+                            ColorID = 2,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 13,
+                            ColorID = 2,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 14,
+                            ColorID = 2,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 5,
+                            ColorID = 2,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 1,
+                            ColorID = 1,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 13,
+                            ColorID = 1,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 14,
+                            ColorID = 1,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 1,
+                            ColorID = 3,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 13,
+                            ColorID = 3,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 14,
+                            ColorID = 3,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 5,
+                            ColorID = 3,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 1,
+                            ColorID = 6,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 13,
+                            ColorID = 6,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 14,
+                            ColorID = 6,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 21,
+                            SizeID = 5,
+                            ColorID = 6,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 22,
+                            SizeID = 1,
+                            ColorID = 2,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 22,
+                            SizeID = 11,
+                            ColorID = 2,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 22,
+                            SizeID = 14,
+                            ColorID = 2,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 22,
+                            SizeID = 1,
+                            ColorID = 7,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 22,
+                            SizeID = 11,
+                            ColorID = 7,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 22,
+                            SizeID = 14,
+                            ColorID = 7,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 22,
+                            SizeID = 1,
+                            ColorID = 3,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 22,
+                            SizeID = 11,
+                            ColorID = 3,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 22,
+                            SizeID = 14,
+                            ColorID = 3,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 10,
+                            ColorID = 3,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 11,
+                            ColorID = 3,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 4,
+                            ColorID = 3,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 2,
+                            ColorID = 3,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 10,
+                            ColorID = 8,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 11,
+                            ColorID = 8,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 4,
+                            ColorID = 8,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 2,
+                            ColorID = 8,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 10,
+                            ColorID = 1,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 11,
+                            ColorID = 1,
+                            Quantity = 24
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 4,
+                            ColorID = 1,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 2,
+                            ColorID = 1,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 10,
+                            ColorID = 2,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 11,
+                            ColorID = 2,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 4,
+                            ColorID = 2,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 2,
+                            ColorID = 2,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 10,
+                            ColorID = 4,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 11,
+                            ColorID = 4,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 4,
+                            ColorID = 4,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 23,
+                            SizeID = 2,
+                            ColorID = 4,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 10,
+                            ColorID = 4,
+                            Quantity = 14
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 4,
+                            ColorID = 4,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 8,
+                            ColorID = 4,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 12,
+                            ColorID = 4,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 10,
+                            ColorID = 2,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 4,
+                            ColorID = 2,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 8,
+                            ColorID = 2,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 9,
+                            ColorID = 2,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 12,
+                            ColorID = 2,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 10,
+                            ColorID = 5,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 4,
+                            ColorID = 5,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 8,
+                            ColorID = 5,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 9,
+                            ColorID = 5,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 12,
+                            ColorID = 5,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 10,
+                            ColorID = 3,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 4,
+                            ColorID = 3,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 8,
+                            ColorID = 3,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 9,
+                            ColorID = 3,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 24,
+                            SizeID = 12,
+                            ColorID = 3,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 5,
+                            ColorID = 6,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 1,
+                            ColorID = 6,
+                            Quantity = 14
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 13,
+                            ColorID = 6,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 11,
+                            ColorID = 6,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 2,
+                            ColorID = 6,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 5,
+                            ColorID = 8,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 1,
+                            ColorID = 8,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 13,
+                            ColorID = 8,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 11,
+                            ColorID = 8,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 2,
+                            ColorID = 8,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 5,
+                            ColorID = 3,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 1,
+                            ColorID = 3,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 13,
+                            ColorID = 3,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 11,
+                            ColorID = 3,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 25,
+                            SizeID = 2,
+                            ColorID = 3,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 5,
+                            ColorID = 2,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 10,
+                            ColorID = 2,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 6,
+                            ColorID = 2,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 8,
+                            ColorID = 2,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 5,
+                            ColorID = 7,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 10,
+                            ColorID = 7,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 6,
+                            ColorID = 7,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 8,
+                            ColorID = 7,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 5,
+                            ColorID = 8,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 10,
+                            ColorID = 8,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 6,
+                            ColorID = 8,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 8,
+                            ColorID = 8,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 5,
+                            ColorID = 3,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 10,
+                            ColorID = 3,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 6,
+                            ColorID = 3,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 8,
+                            ColorID = 3,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 5,
+                            ColorID = 5,
+                            Quantity = 14
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 10,
+                            ColorID = 5,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 6,
+                            ColorID = 5,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 26,
+                            SizeID = 8,
+                            ColorID = 5,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 27,
+                            SizeID = 8,
+                            ColorID = 8,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 27,
+                            SizeID = 3,
+                            ColorID = 8,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 27,
+                            SizeID = 10,
+                            ColorID = 8,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 27,
+                            SizeID = 8,
+                            ColorID = 2,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 27,
+                            SizeID = 3,
+                            ColorID = 2,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 27,
+                            SizeID = 10,
+                            ColorID = 2,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 27,
+                            SizeID = 8,
+                            ColorID = 4,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 27,
+                            SizeID = 3,
+                            ColorID = 4,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 27,
+                            SizeID = 10,
+                            ColorID = 4,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 28,
+                            SizeID = 14,
+                            ColorID = 2,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 28,
+                            SizeID = 7,
+                            ColorID = 2,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 28,
+                            SizeID = 14,
+                            ColorID = 8,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 28,
+                            SizeID = 7,
+                            ColorID = 8,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 28,
+                            SizeID = 14,
+                            ColorID = 3,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 28,
+                            SizeID = 7,
+                            ColorID = 3,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 28,
+                            SizeID = 14,
+                            ColorID = 5,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 28,
+                            SizeID = 7,
+                            ColorID = 5,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 29,
+                            SizeID = 5,
+                            ColorID = 8,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 29,
+                            SizeID = 12,
+                            ColorID = 8,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 29,
+                            SizeID = 5,
+                            ColorID = 7,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 29,
+                            SizeID = 12,
+                            ColorID = 7,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 29,
+                            SizeID = 5,
+                            ColorID = 2,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 29,
+                            SizeID = 12,
+                            ColorID = 2,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 29,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 29,
+                            SizeID = 12,
+                            ColorID = 1,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 29,
+                            SizeID = 5,
+                            ColorID = 5,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 29,
+                            SizeID = 12,
+                            ColorID = 5,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 29,
+                            SizeID = 5,
+                            ColorID = 3,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 29,
+                            SizeID = 12,
+                            ColorID = 3,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 30,
+                            SizeID = 12,
+                            ColorID = 4,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 30,
+                            SizeID = 8,
+                            ColorID = 4,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 30,
+                            SizeID = 7,
+                            ColorID = 4,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 30,
+                            SizeID = 12,
+                            ColorID = 7,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 30,
+                            SizeID = 8,
+                            ColorID = 7,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 30,
+                            SizeID = 7,
+                            ColorID = 7,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 30,
+                            SizeID = 12,
+                            ColorID = 3,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 30,
+                            SizeID = 8,
+                            ColorID = 3,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 30,
+                            SizeID = 7,
+                            ColorID = 3,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 30,
+                            SizeID = 12,
+                            ColorID = 2,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 30,
+                            SizeID = 8,
+                            ColorID = 2,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 30,
+                            SizeID = 7,
+                            ColorID = 2,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 6,
+                            ColorID = 7,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 10,
+                            ColorID = 7,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 5,
+                            ColorID = 7,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 14,
+                            ColorID = 7,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 6,
+                            ColorID = 4,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 10,
+                            ColorID = 4,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 5,
+                            ColorID = 4,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 14,
+                            ColorID = 4,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 9,
+                            ColorID = 5,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 6,
+                            ColorID = 5,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 10,
+                            ColorID = 5,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 5,
+                            ColorID = 5,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 14,
+                            ColorID = 5,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 9,
+                            ColorID = 1,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 6,
+                            ColorID = 1,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 10,
+                            ColorID = 1,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 14,
+                            ColorID = 1,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 9,
+                            ColorID = 2,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 6,
+                            ColorID = 2,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 10,
+                            ColorID = 2,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 5,
+                            ColorID = 2,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 14,
+                            ColorID = 2,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 9,
+                            ColorID = 6,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 6,
+                            ColorID = 6,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 10,
+                            ColorID = 6,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 5,
+                            ColorID = 6,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 31,
+                            SizeID = 14,
+                            ColorID = 6,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 2,
+                            ColorID = 1,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 12,
+                            ColorID = 1,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 10,
+                            ColorID = 1,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 6,
+                            ColorID = 1,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 2,
+                            ColorID = 5,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 5,
+                            ColorID = 5,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 12,
+                            ColorID = 5,
+                            Quantity = 14
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 10,
+                            ColorID = 5,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 6,
+                            ColorID = 5,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 2,
+                            ColorID = 8,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 5,
+                            ColorID = 8,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 12,
+                            ColorID = 8,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 10,
+                            ColorID = 8,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 6,
+                            ColorID = 8,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 2,
+                            ColorID = 4,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 5,
+                            ColorID = 4,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 12,
+                            ColorID = 4,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 10,
+                            ColorID = 4,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 6,
+                            ColorID = 4,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 2,
+                            ColorID = 3,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 5,
+                            ColorID = 3,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 12,
+                            ColorID = 3,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 10,
+                            ColorID = 3,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 6,
+                            ColorID = 3,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 2,
+                            ColorID = 7,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 5,
+                            ColorID = 7,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 12,
+                            ColorID = 7,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 10,
+                            ColorID = 7,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 32,
+                            SizeID = 6,
+                            ColorID = 7,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 9,
+                            ColorID = 5,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 10,
+                            ColorID = 5,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 5,
+                            ColorID = 5,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 2,
+                            ColorID = 5,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 9,
+                            ColorID = 2,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 10,
+                            ColorID = 2,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 5,
+                            ColorID = 2,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 2,
+                            ColorID = 2,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 9,
+                            ColorID = 3,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 10,
+                            ColorID = 3,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 5,
+                            ColorID = 3,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 2,
+                            ColorID = 3,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 9,
+                            ColorID = 8,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 10,
+                            ColorID = 8,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 5,
+                            ColorID = 8,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 2,
+                            ColorID = 8,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 9,
+                            ColorID = 1,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 10,
+                            ColorID = 1,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 2,
+                            ColorID = 1,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 10,
+                            ColorID = 4,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 5,
+                            ColorID = 4,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 33,
+                            SizeID = 2,
+                            ColorID = 4,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 34,
+                            SizeID = 5,
+                            ColorID = 3,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 34,
+                            SizeID = 14,
+                            ColorID = 3,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 34,
+                            SizeID = 8,
+                            ColorID = 3,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 34,
+                            SizeID = 5,
+                            ColorID = 8,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 34,
+                            SizeID = 14,
+                            ColorID = 8,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 34,
+                            SizeID = 8,
+                            ColorID = 8,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 34,
+                            SizeID = 5,
+                            ColorID = 4,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 34,
+                            SizeID = 14,
+                            ColorID = 4,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 34,
+                            SizeID = 8,
+                            ColorID = 4,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 6,
+                            ColorID = 7,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 1,
+                            ColorID = 7,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 2,
+                            ColorID = 7,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 6,
+                            ColorID = 5,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 1,
+                            ColorID = 5,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 9,
+                            ColorID = 5,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 2,
+                            ColorID = 5,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 6,
+                            ColorID = 2,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 1,
+                            ColorID = 2,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 9,
+                            ColorID = 2,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 2,
+                            ColorID = 2,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 6,
+                            ColorID = 3,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 1,
+                            ColorID = 3,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 9,
+                            ColorID = 3,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 2,
+                            ColorID = 3,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 6,
+                            ColorID = 4,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 1,
+                            ColorID = 4,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 35,
+                            SizeID = 2,
+                            ColorID = 4,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 4,
+                            ColorID = 3,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 9,
+                            ColorID = 3,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 14,
+                            ColorID = 3,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 3,
+                            ColorID = 3,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 4,
+                            ColorID = 7,
+                            Quantity = 14
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 14,
+                            ColorID = 7,
+                            Quantity = 24
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 3,
+                            ColorID = 7,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 4,
+                            ColorID = 8,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 9,
+                            ColorID = 8,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 14,
+                            ColorID = 8,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 3,
+                            ColorID = 8,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 4,
+                            ColorID = 5,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 9,
+                            ColorID = 5,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 14,
+                            ColorID = 5,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 36,
+                            SizeID = 3,
+                            ColorID = 5,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 10,
+                            ColorID = 4,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 6,
+                            ColorID = 4,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 11,
+                            ColorID = 4,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 14,
+                            ColorID = 4,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 1,
+                            ColorID = 4,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 10,
+                            ColorID = 8,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 6,
+                            ColorID = 8,
+                            Quantity = 24
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 11,
+                            ColorID = 8,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 14,
+                            ColorID = 8,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 1,
+                            ColorID = 8,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 10,
+                            ColorID = 2,
+                            Quantity = 24
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 6,
+                            ColorID = 2,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 11,
+                            ColorID = 2,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 14,
+                            ColorID = 2,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 1,
+                            ColorID = 2,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 10,
+                            ColorID = 7,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 6,
+                            ColorID = 7,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 11,
+                            ColorID = 7,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 14,
+                            ColorID = 7,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 1,
+                            ColorID = 7,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 10,
+                            ColorID = 5,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 6,
+                            ColorID = 5,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 11,
+                            ColorID = 5,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 14,
+                            ColorID = 5,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 1,
+                            ColorID = 5,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 10,
+                            ColorID = 6,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 6,
+                            ColorID = 6,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 11,
+                            ColorID = 6,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 14,
+                            ColorID = 6,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 37,
+                            SizeID = 1,
+                            ColorID = 6,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 38,
+                            SizeID = 7,
+                            ColorID = 5,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 38,
+                            SizeID = 5,
+                            ColorID = 5,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 38,
+                            SizeID = 10,
+                            ColorID = 5,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 38,
+                            SizeID = 7,
+                            ColorID = 3,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 38,
+                            SizeID = 5,
+                            ColorID = 3,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 38,
+                            SizeID = 10,
+                            ColorID = 3,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 38,
+                            SizeID = 7,
+                            ColorID = 1,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 38,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 38,
+                            SizeID = 10,
+                            ColorID = 1,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 38,
+                            SizeID = 7,
+                            ColorID = 7,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 38,
+                            SizeID = 5,
+                            ColorID = 7,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 38,
+                            SizeID = 10,
+                            ColorID = 7,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 7,
+                            ColorID = 6,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 9,
+                            ColorID = 6,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 4,
+                            ColorID = 6,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 5,
+                            ColorID = 6,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 14,
+                            ColorID = 6,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 7,
+                            ColorID = 4,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 4,
+                            ColorID = 4,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 5,
+                            ColorID = 4,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 14,
+                            ColorID = 4,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 7,
+                            ColorID = 5,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 9,
+                            ColorID = 5,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 4,
+                            ColorID = 5,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 5,
+                            ColorID = 5,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 14,
+                            ColorID = 5,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 7,
+                            ColorID = 7,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 4,
+                            ColorID = 7,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 5,
+                            ColorID = 7,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 14,
+                            ColorID = 7,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 7,
+                            ColorID = 1,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 9,
+                            ColorID = 1,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 4,
+                            ColorID = 1,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 14,
+                            ColorID = 1,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 7,
+                            ColorID = 2,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 9,
+                            ColorID = 2,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 4,
+                            ColorID = 2,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 5,
+                            ColorID = 2,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 39,
+                            SizeID = 14,
+                            ColorID = 2,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 40,
+                            SizeID = 10,
+                            ColorID = 8,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 40,
+                            SizeID = 6,
+                            ColorID = 8,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 40,
+                            SizeID = 10,
+                            ColorID = 4,
+                            Quantity = 24
+                        },
+                        new
+                        {
+                            ProductID = 40,
+                            SizeID = 6,
+                            ColorID = 4,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 40,
+                            SizeID = 10,
+                            ColorID = 7,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 40,
+                            SizeID = 6,
+                            ColorID = 7,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 40,
+                            SizeID = 10,
+                            ColorID = 5,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 40,
+                            SizeID = 6,
+                            ColorID = 5,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 40,
+                            SizeID = 10,
+                            ColorID = 1,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 40,
+                            SizeID = 6,
+                            ColorID = 1,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 13,
+                            ColorID = 7,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 1,
+                            ColorID = 7,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 8,
+                            ColorID = 7,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 13,
+                            ColorID = 5,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 9,
+                            ColorID = 5,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 1,
+                            ColorID = 5,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 8,
+                            ColorID = 5,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 13,
+                            ColorID = 3,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 9,
+                            ColorID = 3,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 1,
+                            ColorID = 3,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 8,
+                            ColorID = 3,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 13,
+                            ColorID = 6,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 9,
+                            ColorID = 6,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 1,
+                            ColorID = 6,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 41,
+                            SizeID = 8,
+                            ColorID = 6,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 1,
+                            ColorID = 4,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 14,
+                            ColorID = 4,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 11,
+                            ColorID = 4,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 1,
+                            ColorID = 1,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 14,
+                            ColorID = 1,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 11,
+                            ColorID = 1,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 1,
+                            ColorID = 2,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 14,
+                            ColorID = 2,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 11,
+                            ColorID = 2,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 1,
+                            ColorID = 8,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 14,
+                            ColorID = 8,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 11,
+                            ColorID = 8,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 1,
+                            ColorID = 5,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 14,
+                            ColorID = 5,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 11,
+                            ColorID = 5,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 1,
+                            ColorID = 7,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 14,
+                            ColorID = 7,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 42,
+                            SizeID = 11,
+                            ColorID = 7,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 43,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 24
+                        },
+                        new
+                        {
+                            ProductID = 43,
+                            SizeID = 1,
+                            ColorID = 7,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 43,
+                            SizeID = 9,
+                            ColorID = 1,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 43,
+                            SizeID = 1,
+                            ColorID = 1,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 43,
+                            SizeID = 9,
+                            ColorID = 8,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 43,
+                            SizeID = 1,
+                            ColorID = 8,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 43,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 43,
+                            SizeID = 1,
+                            ColorID = 4,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 8,
+                            ColorID = 2,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 12,
+                            ColorID = 2,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 9,
+                            ColorID = 2,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 6,
+                            ColorID = 2,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 5,
+                            ColorID = 2,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 8,
+                            ColorID = 7,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 12,
+                            ColorID = 7,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 6,
+                            ColorID = 7,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 5,
+                            ColorID = 7,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 8,
+                            ColorID = 6,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 12,
+                            ColorID = 6,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 9,
+                            ColorID = 6,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 6,
+                            ColorID = 6,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 5,
+                            ColorID = 6,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 8,
+                            ColorID = 8,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 12,
+                            ColorID = 8,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 9,
+                            ColorID = 8,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 6,
+                            ColorID = 8,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 44,
+                            SizeID = 5,
+                            ColorID = 8,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 45,
+                            SizeID = 6,
+                            ColorID = 7,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 45,
+                            SizeID = 3,
+                            ColorID = 7,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 45,
+                            SizeID = 11,
+                            ColorID = 7,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 45,
+                            SizeID = 6,
+                            ColorID = 5,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 45,
+                            SizeID = 3,
+                            ColorID = 5,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 45,
+                            SizeID = 11,
+                            ColorID = 5,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 45,
+                            SizeID = 6,
+                            ColorID = 2,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 45,
+                            SizeID = 3,
+                            ColorID = 2,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 45,
+                            SizeID = 11,
+                            ColorID = 2,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 46,
+                            SizeID = 9,
+                            ColorID = 3,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 46,
+                            SizeID = 6,
+                            ColorID = 3,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 46,
+                            SizeID = 9,
+                            ColorID = 6,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 46,
+                            SizeID = 6,
+                            ColorID = 6,
+                            Quantity = 14
+                        },
+                        new
+                        {
+                            ProductID = 46,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 46,
+                            SizeID = 6,
+                            ColorID = 7,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 46,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 46,
+                            SizeID = 6,
+                            ColorID = 4,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 46,
+                            SizeID = 9,
+                            ColorID = 8,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 46,
+                            SizeID = 6,
+                            ColorID = 8,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 46,
+                            SizeID = 9,
+                            ColorID = 1,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 46,
+                            SizeID = 6,
+                            ColorID = 1,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 47,
+                            SizeID = 12,
+                            ColorID = 1,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 47,
+                            SizeID = 6,
+                            ColorID = 1,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 47,
+                            SizeID = 1,
+                            ColorID = 1,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 47,
+                            SizeID = 12,
+                            ColorID = 2,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 47,
+                            SizeID = 6,
+                            ColorID = 2,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 47,
+                            SizeID = 1,
+                            ColorID = 2,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 47,
+                            SizeID = 12,
+                            ColorID = 3,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 47,
+                            SizeID = 6,
+                            ColorID = 3,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 47,
+                            SizeID = 1,
+                            ColorID = 3,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 48,
+                            SizeID = 14,
+                            ColorID = 1,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 48,
+                            SizeID = 11,
+                            ColorID = 1,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 48,
+                            SizeID = 14,
+                            ColorID = 5,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 48,
+                            SizeID = 11,
+                            ColorID = 5,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 48,
+                            SizeID = 14,
+                            ColorID = 8,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 48,
+                            SizeID = 11,
+                            ColorID = 8,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 9,
+                            ColorID = 2,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 6,
+                            ColorID = 2,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 3,
+                            ColorID = 2,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 1,
+                            ColorID = 2,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 9,
+                            ColorID = 1,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 6,
+                            ColorID = 1,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 3,
+                            ColorID = 1,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 1,
+                            ColorID = 1,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 9,
+                            ColorID = 5,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 6,
+                            ColorID = 5,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 3,
+                            ColorID = 5,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 1,
+                            ColorID = 5,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 9,
+                            ColorID = 6,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 6,
+                            ColorID = 6,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 3,
+                            ColorID = 6,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 49,
+                            SizeID = 1,
+                            ColorID = 6,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 4,
+                            ColorID = 7,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 5,
+                            ColorID = 7,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 14,
+                            ColorID = 7,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 10,
+                            ColorID = 7,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 4,
+                            ColorID = 2,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 5,
+                            ColorID = 2,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 14,
+                            ColorID = 2,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 9,
+                            ColorID = 2,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 10,
+                            ColorID = 2,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 4,
+                            ColorID = 4,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 5,
+                            ColorID = 4,
+                            Quantity = 14
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 14,
+                            ColorID = 4,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 10,
+                            ColorID = 4,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 4,
+                            ColorID = 1,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 14,
+                            ColorID = 1,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 9,
+                            ColorID = 1,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 50,
+                            SizeID = 10,
+                            ColorID = 1,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 51,
+                            SizeID = 4,
+                            ColorID = 5,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 51,
+                            SizeID = 9,
+                            ColorID = 5,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 51,
+                            SizeID = 10,
+                            ColorID = 5,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 51,
+                            SizeID = 13,
+                            ColorID = 5,
+                            Quantity = 44
+                        },
+                        new
+                        {
+                            ProductID = 51,
+                            SizeID = 4,
+                            ColorID = 4,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 51,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 51,
+                            SizeID = 10,
+                            ColorID = 4,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 51,
+                            SizeID = 13,
+                            ColorID = 4,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 51,
+                            SizeID = 4,
+                            ColorID = 1,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 51,
+                            SizeID = 9,
+                            ColorID = 1,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 51,
+                            SizeID = 10,
+                            ColorID = 1,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 51,
+                            SizeID = 13,
+                            ColorID = 1,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 52,
+                            SizeID = 11,
+                            ColorID = 8,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 52,
+                            SizeID = 12,
+                            ColorID = 8,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 52,
+                            SizeID = 11,
+                            ColorID = 2,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 52,
+                            SizeID = 12,
+                            ColorID = 2,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 52,
+                            SizeID = 11,
+                            ColorID = 7,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 52,
+                            SizeID = 12,
+                            ColorID = 7,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 52,
+                            SizeID = 11,
+                            ColorID = 5,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 52,
+                            SizeID = 12,
+                            ColorID = 5,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 53,
+                            SizeID = 3,
+                            ColorID = 1,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 53,
+                            SizeID = 9,
+                            ColorID = 1,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 53,
+                            SizeID = 3,
+                            ColorID = 3,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 53,
+                            SizeID = 9,
+                            ColorID = 3,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 53,
+                            SizeID = 3,
+                            ColorID = 5,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 53,
+                            SizeID = 9,
+                            ColorID = 5,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 53,
+                            SizeID = 3,
+                            ColorID = 6,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 53,
+                            SizeID = 9,
+                            ColorID = 6,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 53,
+                            SizeID = 3,
+                            ColorID = 2,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 53,
+                            SizeID = 9,
+                            ColorID = 2,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 53,
+                            SizeID = 3,
+                            ColorID = 4,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 53,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 10,
+                            ColorID = 4,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 8,
+                            ColorID = 4,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 3,
+                            ColorID = 4,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 2,
+                            ColorID = 4,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 10,
+                            ColorID = 8,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 8,
+                            ColorID = 8,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 3,
+                            ColorID = 8,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 2,
+                            ColorID = 8,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 10,
+                            ColorID = 6,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 8,
+                            ColorID = 6,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 3,
+                            ColorID = 6,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 2,
+                            ColorID = 6,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 10,
+                            ColorID = 5,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 8,
+                            ColorID = 5,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 3,
+                            ColorID = 5,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 54,
+                            SizeID = 2,
+                            ColorID = 5,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 8,
+                            ColorID = 2,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 4,
+                            ColorID = 2,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 11,
+                            ColorID = 2,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 12,
+                            ColorID = 2,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 8,
+                            ColorID = 4,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 4,
+                            ColorID = 4,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 11,
+                            ColorID = 4,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 12,
+                            ColorID = 4,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 8,
+                            ColorID = 6,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 4,
+                            ColorID = 6,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 11,
+                            ColorID = 6,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 12,
+                            ColorID = 6,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 8,
+                            ColorID = 1,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 4,
+                            ColorID = 1,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 11,
+                            ColorID = 1,
+                            Quantity = 26
+                        },
+                        new
+                        {
+                            ProductID = 55,
+                            SizeID = 12,
+                            ColorID = 1,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 3,
+                            ColorID = 6,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 7,
+                            ColorID = 6,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 6,
+                            ColorID = 6,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 5,
+                            ColorID = 6,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 3,
+                            ColorID = 4,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 7,
+                            ColorID = 4,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 6,
+                            ColorID = 4,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 5,
+                            ColorID = 4,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 3,
+                            ColorID = 2,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 7,
+                            ColorID = 2,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 6,
+                            ColorID = 2,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 5,
+                            ColorID = 2,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 3,
+                            ColorID = 8,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 7,
+                            ColorID = 8,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 6,
+                            ColorID = 8,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 5,
+                            ColorID = 8,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 3,
+                            ColorID = 5,
+                            Quantity = 28
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 7,
+                            ColorID = 5,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 6,
+                            ColorID = 5,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 5,
+                            ColorID = 5,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 3,
+                            ColorID = 1,
+                            Quantity = 36
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 7,
+                            ColorID = 1,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 6,
+                            ColorID = 1,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 56,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 7,
+                            ColorID = 4,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 8,
+                            ColorID = 4,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 4,
+                            ColorID = 4,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 2,
+                            ColorID = 4,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 9,
+                            ColorID = 4,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 7,
+                            ColorID = 7,
+                            Quantity = 18
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 8,
+                            ColorID = 7,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 4,
+                            ColorID = 7,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 2,
+                            ColorID = 7,
+                            Quantity = 34
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 9,
+                            ColorID = 7,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 7,
+                            ColorID = 6,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 8,
+                            ColorID = 6,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 4,
+                            ColorID = 6,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 2,
+                            ColorID = 6,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 9,
+                            ColorID = 6,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 7,
+                            ColorID = 3,
+                            Quantity = 32
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 8,
+                            ColorID = 3,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 4,
+                            ColorID = 3,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 2,
+                            ColorID = 3,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 57,
+                            SizeID = 9,
+                            ColorID = 3,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 5,
+                            ColorID = 2,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 1,
+                            ColorID = 2,
+                            Quantity = 17
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 4,
+                            ColorID = 2,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 14,
+                            ColorID = 2,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 11,
+                            ColorID = 2,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 5,
+                            ColorID = 1,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 1,
+                            ColorID = 1,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 4,
+                            ColorID = 1,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 14,
+                            ColorID = 1,
+                            Quantity = 22
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 11,
+                            ColorID = 1,
+                            Quantity = 37
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 5,
+                            ColorID = 3,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 1,
+                            ColorID = 3,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 4,
+                            ColorID = 3,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 14,
+                            ColorID = 3,
+                            Quantity = 38
+                        },
+                        new
+                        {
+                            ProductID = 58,
+                            SizeID = 11,
+                            ColorID = 3,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 4,
+                            ColorID = 7,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 14,
+                            ColorID = 7,
+                            Quantity = 23
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 1,
+                            ColorID = 7,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 13,
+                            ColorID = 7,
+                            Quantity = 11
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 3,
+                            ColorID = 7,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 4,
+                            ColorID = 2,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 14,
+                            ColorID = 2,
+                            Quantity = 31
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 1,
+                            ColorID = 2,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 13,
+                            ColorID = 2,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 3,
+                            ColorID = 2,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 4,
+                            ColorID = 6,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 14,
+                            ColorID = 6,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 1,
+                            ColorID = 6,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 13,
+                            ColorID = 6,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 3,
+                            ColorID = 6,
+                            Quantity = 41
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 4,
+                            ColorID = 3,
+                            Quantity = 46
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 14,
+                            ColorID = 3,
+                            Quantity = 21
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 1,
+                            ColorID = 3,
+                            Quantity = 13
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 13,
+                            ColorID = 3,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 3,
+                            ColorID = 3,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 4,
+                            ColorID = 5,
+                            Quantity = 24
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 14,
+                            ColorID = 5,
+                            Quantity = 48
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 1,
+                            ColorID = 5,
+                            Quantity = 9
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 13,
+                            ColorID = 5,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 3,
+                            ColorID = 5,
+                            Quantity = 35
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 4,
+                            ColorID = 8,
+                            Quantity = 16
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 14,
+                            ColorID = 8,
+                            Quantity = 40
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 1,
+                            ColorID = 8,
+                            Quantity = 42
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 13,
+                            ColorID = 8,
+                            Quantity = 27
+                        },
+                        new
+                        {
+                            ProductID = 59,
+                            SizeID = 3,
+                            ColorID = 8,
+                            Quantity = 49
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 2,
+                            ColorID = 7,
+                            Quantity = 33
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 1,
+                            ColorID = 7,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 13,
+                            ColorID = 7,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 4,
+                            ColorID = 7,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 7,
+                            ColorID = 7,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 2,
+                            ColorID = 4,
+                            Quantity = 19
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 1,
+                            ColorID = 4,
+                            Quantity = 43
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 13,
+                            ColorID = 4,
+                            Quantity = 39
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 4,
+                            ColorID = 4,
+                            Quantity = 29
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 7,
+                            ColorID = 4,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 2,
+                            ColorID = 3,
+                            Quantity = 45
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 1,
+                            ColorID = 3,
+                            Quantity = 25
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 13,
+                            ColorID = 3,
+                            Quantity = 47
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 4,
+                            ColorID = 3,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductID = 60,
+                            SizeID = 7,
+                            ColorID = 3,
+                            Quantity = 47
+                        });
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductSeason", b =>
@@ -2587,7 +9456,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("ProductSeason", (string)null);
+                    b.ToTable("ProductSeason");
 
                     b.HasData(
                         new
@@ -3624,7 +10493,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("SizeID");
 
-                    b.ToTable("ProductSize", (string)null);
+                    b.ToTable("ProductSize");
 
                     b.HasData(
                         new
@@ -4841,7 +11710,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("ProductStyle", (string)null);
+                    b.ToTable("ProductStyle");
 
                     b.HasData(
                         new
@@ -5238,7 +12107,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("ProductTag", (string)null);
+                    b.ToTable("ProductTag");
 
                     b.HasData(
                         new
@@ -5666,7 +12535,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("GenderID");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
 
                     b.HasData(
                         new
@@ -6778,7 +13647,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Season", b =>
@@ -6796,7 +13665,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Season", (string)null);
+                    b.ToTable("Season");
 
                     b.HasData(
                         new
@@ -6835,7 +13704,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Size", (string)null);
+                    b.ToTable("Size");
 
                     b.HasData(
                         new
@@ -6924,7 +13793,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Style", (string)null);
+                    b.ToTable("Style");
 
                     b.HasData(
                         new
@@ -6968,7 +13837,6 @@ namespace CRUD_asp.netMVC.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -6979,7 +13847,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Tag", (string)null);
+                    b.ToTable("Tag");
 
                     b.HasData(
                         new

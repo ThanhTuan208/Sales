@@ -116,7 +116,7 @@
 
                             <li class="has-dropdown nav-item">
                                 <a class="cart">
-                                    <span><small class="count">0</small><i class="icon-bell2 fs-4"></i></span>
+                                    <span><small class="">0</small><i class="icon-bell2 fs-4"></i></span>
                                 </a>
 
                                 <ul class="dropdown" style="width: 150px">
@@ -131,10 +131,8 @@
                             <li class="has-dropdown nav-item">
                                 @if (User.Identity.IsAuthenticated)
                                 {
-                                    <form id="logoutForm" asp-controller="Auth" asp-action="Logout" method="post" style="display: none;">
-                                        @* @Html.AntiForgeryToken(): Khi dung attribute ValidateAntiForgeryToken thi phai su dung hepler html nay nhung khi check devtool kiem tra thi da co phat sinh doan ma nen ko can them  *@ 
-                                                    </form>
-
+                                    <form id="logoutForm" asp-controller="Auth" asp-action="Logout" method="post" style="display: none;"></form>
+                                        
                                     <a class="cart">
                                         <span><i class="icon-user fs-4"></i><small>&check;</small></span>
                                     </a>

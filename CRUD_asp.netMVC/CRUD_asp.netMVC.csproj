@@ -1,14 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
+		<!--<LangVersion>preview</LangVersion>-->
+		<LangVersion>12.0</LangVersion>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>c3153b37-ecec-42f8-89ee-0163a574cad6</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Remove="wwwroot\images\logo\logo_adidas1.png\**" />
 		<Content Remove="wwwroot\images\logo\logo_adidas1.png\**" />
 		<EmbeddedResource Remove="wwwroot\images\logo\logo_adidas1.png\**" />
 		<None Remove="wwwroot\images\logo\logo_adidas1.png\**" />
@@ -30,7 +31,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="wwwroot\images\avatar\" />
+		<Folder Include="wwwroot\images\avatar\" />
 	</ItemGroup>
 
 </Project>

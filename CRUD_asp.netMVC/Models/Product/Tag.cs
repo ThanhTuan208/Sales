@@ -11,7 +11,7 @@ namespace CRUD_asp.netMVC.Models.Product
         [Required, StringLength(50, ErrorMessage = "Loi {0}")]
         public string? Name { get; set; }
 
-        [Required, StringLength(50, ErrorMessage = "Loi {0}")]
+        [StringLength(50, ErrorMessage = "Loi {0}")]
         public string? Description { get; set; }
 
         public List<ProductTag>? ProductTag { get; set; }

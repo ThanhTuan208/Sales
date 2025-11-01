@@ -1,5 +1,4 @@
-﻿using AspNetCoreGeneratedDocument;
-using CRUD_asp.netMVC.Controllers.Extentions;
+﻿using CRUD_asp.netMVC.Controllers.Extentions;
 using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.ViewModels.Admin;
@@ -7,16 +6,16 @@ using CRUD_asp.netMVC.ViewModels.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
 using System.Collections.Immutable;
+using System.Collections.Specialized;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Diagnostics;
 using System.Globalization;
-using System.Reflection.Emit;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using Color = CRUD_asp.netMVC.Models.Product.Color;
@@ -29,12 +28,14 @@ namespace CRUD_asp.netMVC.Controllers
     public class AdminController : Controller
     {
         private readonly AppDBContext _dbContext;
-        private readonly IWebHostEnvironment environment;
+        private readonly IWebHostEnvironment _environment;
+        private readonly IDbContextFactory<AppDBContext> _dbFactory;
 
-        public AdminController(AppDBContext context, IWebHostEnvironment _environment)
+        public AdminController(AppDBContext context, IWebHostEnvironment environment, IDbContextFactory<AppDBContext> dbFactory)
         {
             _dbContext = context;
-            environment = _environment;
+            _environment = environment;
+            _dbFactory = dbFactory;
         }
 
         [HttpGet]
@@ -50,7 +51,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // Find Porduct by keyword
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> Index(int page = 1, string keyword = "")
         {
             var product = _dbContext.Products.AsNoTracking()
@@ -66,13 +67,10 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpGet]// GET: GetProducts/DetailProduct/5
         public async Task<IActionResult> DetailProduct(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var Product = await _dbContext.Products.AsNoTracking()
-                .Include(p => p.Brands)
+                    .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)
                 .Include(p => p.Featured)
@@ -82,12 +80,10 @@ namespace CRUD_asp.netMVC.Controllers
                 .Include(p => p.ProductColor)
                 .Include(p => p.ProductSeasons)
                 .Include(p => p.ProductSize)
+                .Include(p => p.ProductQty)
                 .FirstOrDefaultAsync(p => p.ID == id);
 
-            if (Product == null)
-            {
-                return NotFound();
-            }
+            if (Product == null) return NotFound();
 
             return View(Product);
         }
@@ -135,19 +131,13 @@ namespace CRUD_asp.netMVC.Controllers
                 {
                     ModelState.AddModelError(nameof(viewModel.Picture), "Cần thêm ít nhất 1 hình ảnh sản phẩm. ");
                 }
-                else
-                {
-                    ModelState.Remove(nameof(viewModel.Picture));
-                }
+                else ModelState.Remove(nameof(viewModel.Picture));
 
                 if (viewModel.TempProductQty.Count == 0)
                 {
                     ModelState.AddModelError(nameof(viewModel.TempProductQty), "Cần cập nhật số lượng sản phẩm ít nhất 1 mục.");
                 }
-                else
-                {
-                    ModelState.Remove(nameof(viewModel.TempProductQty));
-                }
+                else ModelState.Remove(nameof(viewModel.TempProductQty));
 
                 if (!ModelState.IsValid)
                 {
@@ -190,7 +180,7 @@ namespace CRUD_asp.netMVC.Controllers
                         }
 
                         nameFile = Guid.NewGuid().ToString() + getPathExtentions;
-                        var fileUpLoadPath = Path.Combine(environment.WebRootPath, "images", "Products", nameFile).Replace("\\", "/");
+                        var fileUpLoadPath = Path.Combine(_environment.WebRootPath, "images", "Products", nameFile).Replace("\\", "/");
 
                         using (var image = await Image.LoadAsync(file.OpenReadStream()))
                         {
@@ -311,7 +301,6 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-        // GET: GetProducts/EditProduct/5
         [HttpGet]
         public async Task<IActionResult> EditProduct(int? id)
         {
@@ -328,6 +317,7 @@ namespace CRUD_asp.netMVC.Controllers
                 .Include(p => p.ProductColor)
                 .Include(p => p.ProductSeasons)
                 .Include(p => p.ProductSize)
+                .Include(p => p.ProductImages)
                 .FirstOrDefaultAsync(p => p.ID == id);
 
             // Gan du lieu vao edit thong qua truy van qua id product
@@ -339,19 +329,19 @@ namespace CRUD_asp.netMVC.Controllers
                 PicturePath = Product.PicturePath,
                 NewPrice = Product.NewPrice,
                 OldPrice = Product.OldPrice,
-                Quantity = Product.Quantity,
+                Quantity = await _dbContext.ProductQty.Where(p => p.ProductID == id).SumAsync(p => p.Quantity),
                 GenderID = Product.GenderID,
                 BrandID = Product.BrandID,
                 CateID = Product.CateID,
                 FeaturedID = Product.FeaturedID,
 
-                ImagePaths = Product.ProductImages?.Select(p => p.PathNameImage).ToList() ?? new List<string>(),
-                SelectedMaterialID = Product.ProductMaterial?.Select(p => p.MaterialID).ToArray() ?? Array.Empty<int>(),
-                SelectedColorID = Product.ProductColor?.Select(p => p.ColorID).ToArray() ?? Array.Empty<int>(),
-                SelectedStyleID = Product.ProductStyles?.Select(p => p.StyleID).ToArray() ?? Array.Empty<int>(),
-                SelectedSeasonID = Product.ProductSeasons?.Select(p => p.SeasonID).ToArray() ?? Array.Empty<int>(),
-                SelectedTagID = Product.ProductTags?.Select(p => p.TagID).ToArray() ?? Array.Empty<int>(),
-                SelectedSizeID = Product.ProductSize?.Select(p => p.SizeID).ToArray() ?? Array.Empty<int>(),
+                //Array.Empty<int>() -> [] (.net 8)
+                SelectedMaterialID = Product.ProductMaterial?.Select(p => p.MaterialID).ToArray() ?? [],
+                SelectedColorID = Product.ProductColor?.Select(p => p.ColorID).ToArray() ?? [],
+                SelectedStyleID = Product.ProductStyles?.Select(p => p.StyleID).ToArray() ?? [],
+                SelectedSeasonID = Product.ProductSeasons?.Select(p => p.SeasonID).ToArray() ?? [],
+                SelectedTagID = Product.ProductTags?.Select(p => p.TagID).ToArray() ?? [],
+                SelectedSizeID = Product.ProductSize?.Select(p => p.SizeID).ToArray() ?? [],
             };
 
             return await ReloadViewModel(viewModel);
@@ -359,12 +349,31 @@ namespace CRUD_asp.netMVC.Controllers
 
         // Note: get all properties GetProducts class
         // POST: GetProducts/EditProduct/5
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> EditProduct(int id, ProductGeneralViewModel viewModel)
         {
             if (id != viewModel.ID)
             {
                 return NotFound();
+            }
+
+            var productQtyList = _dbContext.ProductQty.Where(p => p.ProductID == id).ToList();
+            viewModel.ProductQty = productQtyList ?? new List<ProductQuantity>();
+
+            if (viewModel.ProductQty.Count == 0)
+            {
+                ModelState.AddModelError(nameof(viewModel.ProductQty), "Cần cập nhật số lượng sản phẩm ít nhất 1 mục.");
+            }
+            else ModelState.Remove(nameof(viewModel.ProductQty));
+
+            if (!ModelState.IsValid)
+            {
+                var allErrors = ModelState
+                                .Where(e => e.Value.Errors.Count > 0)
+                                .Select(e => new { Field = e.Key, Errors = e.Value.Errors.Select(er => er.ErrorMessage) })
+                                .ToList();
+
+                return Json(new { success = false, message = "Loi valid", errors = allErrors });
             }
 
             if (ModelState.IsValid)
@@ -405,7 +414,7 @@ namespace CRUD_asp.netMVC.Controllers
                         var oldImage = await _dbContext.ProductImages.Where(p => p.ProductID == id).ToListAsync();
                         var deleteTask = oldImage.Select(async item =>
                         {
-                            var oldPathPicture = Path.Combine(environment.WebRootPath, item.PathNameImage).Replace("\\", "/");
+                            var oldPathPicture = Path.Combine(_environment.WebRootPath, item.PathNameImage).Replace("\\", "/");
                             if (System.IO.File.Exists(oldPathPicture))
                             {
                                 try
@@ -417,8 +426,8 @@ namespace CRUD_asp.netMVC.Controllers
                                     ModelState.AddModelError("Picture", $"Lỗi khi xóa hình ảnh: {ex.Message}");
                                 }
                             }
-
                         });
+
                         await Task.WhenAll(deleteTask); // dung lai den khi xoa het anh theo id product
 
                         _dbContext.ProductImages.RemoveRange(oldImage);
@@ -434,9 +443,8 @@ namespace CRUD_asp.netMVC.Controllers
                                 return null;
                             }
 
-                            // add new image
                             var nameFile = Guid.NewGuid().ToString() + fileExtension;
-                            var fileUploadPathImage = Path.Combine(environment.WebRootPath, "images", "Products", nameFile).Replace("\\", "/");
+                            var fileUploadPathImage = Path.Combine(_environment.WebRootPath, "images", "Products", nameFile).Replace("\\", "/");
 
                             using (var image = await Image.LoadAsync(item.OpenReadStream()))
                             {
@@ -564,7 +572,8 @@ namespace CRUD_asp.netMVC.Controllers
 
                     _dbContext.Update(Product);
                     await _dbContext.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    //return RedirectToAction(nameof(Index));
+                    return Json(new { success = true, message = "Thêm sản vào thành công. " });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -601,11 +610,10 @@ namespace CRUD_asp.netMVC.Controllers
             IviewModel.SizeList = new SelectList(await _dbContext.Size.AsNoTracking().ToListAsync(), "ID", "Name");
             IviewModel.ColorList = new SelectList(await _dbContext.Color.AsNoTracking().ToListAsync(), "ID", "Name");
 
-
             return View(IviewModel);
         }
 
-        // GET: GetProducts/DeleteProduct/5
+        [HttpGet]
         public async Task<IActionResult> DeleteProduct(int? id)
         {
             if (id == null)
@@ -625,15 +633,21 @@ namespace CRUD_asp.netMVC.Controllers
             return View(products);
         }
 
-        // POST: GetProducts/DeleteProduct/5
         [HttpPost, ActionName("DeleteProduct")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var products = await _dbContext.Products.FindAsync(id);
-            if (products != null)
+            if (id < 1) return NotFound();
+
+            var productQtyExist = await _dbContext.ProductQty.Where(p => p.ProductID == id).ToListAsync();
+            if (productQtyExist.Count > 0 && productQtyExist != null)
             {
-                _dbContext.Products.Remove(products);
+                _dbContext.ProductQty.RemoveRange(productQtyExist);
+
+                var products = await _dbContext.Products.FindAsync(id);
+                if (products != null)
+                {
+                    _dbContext.Products.Remove(products);
+                }
             }
 
             await _dbContext.SaveChangesAsync();
@@ -694,7 +708,7 @@ namespace CRUD_asp.netMVC.Controllers
                     }
 
                     nameFile = Guid.NewGuid().ToString() + getPathExtentions;
-                    var fileUpLoadPath = Path.Combine(environment.WebRootPath, "images", "Logo", nameFile).Replace("\\", "/");
+                    var fileUpLoadPath = Path.Combine(_environment.WebRootPath, "images", "Logo", nameFile).Replace("\\", "/");
 
                     using (var fileStream = new FileStream(fileUpLoadPath, FileMode.Create))
                     {
@@ -783,7 +797,7 @@ namespace CRUD_asp.netMVC.Controllers
                     }
 
                     nameFile = Guid.NewGuid().ToString() + getPathExtentions;
-                    var fileUpLoadPath = Path.Combine(environment.WebRootPath, "images", "Logo", nameFile).Replace("\\", "/");
+                    var fileUpLoadPath = Path.Combine(_environment.WebRootPath, "images", "Logo", nameFile).Replace("\\", "/");
 
                     using (var fileStream = new FileStream(fileUpLoadPath, FileMode.Create))
                     {
@@ -858,36 +872,255 @@ namespace CRUD_asp.netMVC.Controllers
             return brand;
         }
 
-
-        [HttpPost]
-        public async Task<IActionResult> AddTempProductQty(int colorVal, int sizeVal, int qtyVal)
+        [HttpPost] // Them value cho thuoc tinh san pham
+        public async Task<IActionResult> AddPropTValueForProduct(string value, string typeVal)
         {
             try
             {
-                var ProductQty = HttpContext.Session.GetString("TempProductQty");
-                var tempDataList = string.IsNullOrEmpty(ProductQty) ? new List<TempProductQty>() : JsonSerializer.Deserialize<List<TempProductQty>>(ProductQty);
+                object addValue = new object();
+                var typeValList = new List<IProductItemGeneral>();
 
-                var dataExist = tempDataList.FirstOrDefault(p => p.ColorID == colorVal && p.SizeID == sizeVal);
+                var nameType = typeVal switch
+                {
+                    "Material" => "Chất liệu",
+                    "Color" => "Màu sắc",
+                    "Size" => "Kích cỡ",
+                    "Season" => "Mùa",
+                    "Style" => "Phong cách",
+                    "Tag" => "Thể loại",
+                    _ => "Thuộc tính"
+                };
+
+                nameType = nameType.ToLower();
+
+                switch (typeVal)
+                {
+                    case "Material":
+
+                        var materialExist = await _dbContext.Material.FirstOrDefaultAsync(m => m.Name.ToLower() == value.ToLower());
+
+                        if (materialExist == null)
+                        {
+                            ModelState.Remove(nameof(materialExist.Name));
+
+                            addValue = new Material() { Name = value };
+                            await _dbContext.Material.AddAsync((Material)addValue);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(nameof(materialExist.Name), $"{value} đã tồn tại, cần thêm 1 {nameType} mới. ");
+                            break;
+                        }
+
+                        await _dbContext.SaveChangesAsync();
+                        typeValList = _dbContext.Material.Cast<IProductItemGeneral>().ToList();
+
+                        break;
+
+                    case "Tag":
+
+                        var tagExist = await _dbContext.Tag.FirstOrDefaultAsync(m => m.Name.ToLower() == value.ToLower());
+
+                        if (tagExist == null)
+                        {
+                            ModelState.Remove(nameof(tagExist.Name));
+
+                            addValue = new Tag() { Name = value, Description = null };
+                            await _dbContext.Tag.AddAsync((Tag)addValue);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(nameof(tagExist.Name), $"{value} đã tồn tại, cần thêm 1 {nameType} mới. ");
+                            break;
+                        }
+                        await _dbContext.SaveChangesAsync();
+                        typeValList = _dbContext.Tag.Cast<IProductItemGeneral>().ToList();
+
+                        break;
+
+                    case "Season":
+
+                        var seasonExist = await _dbContext.Season.FirstOrDefaultAsync(m => m.Name.ToLower() == value.ToLower());
+
+                        if (seasonExist == null)
+                        {
+                            ModelState.Remove(nameof(seasonExist.Name));
+
+                            addValue = new Season() { Name = value };
+                            await _dbContext.Season.AddAsync((Season)addValue);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(nameof(seasonExist.Name), $"{value} đã tồn tại, cần thêm 1 {nameType} mới. ");
+                            break;
+                        }
+                        await _dbContext.SaveChangesAsync();
+                        typeValList = _dbContext.Season.Cast<IProductItemGeneral>().ToList();
+
+                        break;
+
+                    case "Color":
+
+                        var colorExist = await _dbContext.Color.FirstOrDefaultAsync(m => m.Name.ToLower() == value.ToLower());
+
+                        if (colorExist == null)
+                        {
+                            ModelState.Remove(nameof(colorExist.Name));
+
+                            addValue = new Color() { Name = value };
+                            await _dbContext.Color.AddAsync((Color)addValue);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(nameof(colorExist.Name), $"{value} đã tồn tại, cần thêm 1 {nameType} mới. ");
+                            break;
+                        }
+                        await _dbContext.SaveChangesAsync();
+                        typeValList = _dbContext.Color.Cast<IProductItemGeneral>().ToList();
+
+                        break;
+
+                    case "Size":
+
+                        var sizeExist = await _dbContext.Size.FirstOrDefaultAsync(m => m.Name.ToLower() == value.ToLower());
+
+                        if (sizeExist == null)
+                        {
+                            ModelState.Remove(nameof(sizeExist.Name));
+
+                            addValue = new Size() { Name = value };
+                            await _dbContext.Size.AddAsync((Size)addValue);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(nameof(sizeExist.Name), $"{value} đã tồn tại, cần thêm 1 {nameType} mới. ");
+                            break;
+                        }
+                        await _dbContext.SaveChangesAsync();
+                        typeValList = _dbContext.Size.Cast<IProductItemGeneral>().ToList();
+
+                        break;
+
+                    default:
+
+                        var styleExist = await _dbContext.Style.FirstOrDefaultAsync(m => m.Name.ToLower() == value.ToLower());
+
+                        if (styleExist == null)
+                        {
+                            ModelState.Remove(nameof(styleExist.Name));
+
+                            addValue = new Style() { Name = value };
+                            await _dbContext.Style.AddAsync((Style)addValue);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(nameof(styleExist.Name), $"{value} đã tồn tại, cần thêm 1 {nameType} mới. ");
+                            break;
+                        }
+
+                        await _dbContext.SaveChangesAsync();
+                        typeValList = _dbContext.Style.Cast<IProductItemGeneral>().ToList();
+
+                        break;
+                }
+
+                var partial = await LoadProductQty(null, null, null);
+                partial.ValueType = typeVal;
+                partial.Items = typeValList;
+
+                var listStyle = await _dbContext.Style.ToListAsync();
+
+                string html = await this.RenderViewAsync("_ProductItemPartial", partial, true);
+
+                if (!ModelState.IsValid)
+                {
+                    var Errors = ModelState
+                                    .Where(e => e.Value.Errors.Count > 0)
+                                    .Select(e => new { Field = e.Key, Errors = e.Value.Errors.Select(er => er.ErrorMessage) })
+                                    .ToList();
+
+                    return Json(new { success = false, html = html, errors = Errors });
+                }
+
+                var propList = typeValList.Select(p => new { ID = p.ID, Name = p.Name }).ToList();
+
+                return Json(new { success = true, html = html, typeVal = typeVal, nameType, propList });
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost] // Them quantity, size, color cua san pham hien thi chi tiet cho nguoi dung
+        public async Task<IActionResult> AddTempProductQty(int? id, int colorVal, int sizeVal, int qtyVal)
+        {
+            try
+            {
+                var productQtyList = await _dbContext.ProductQty.Where(p => p.ProductID == id).ToListAsync();
+                var ProductQty = HttpContext.Session.GetString("TempProductQty");
+                var tempDataList = string.IsNullOrEmpty(ProductQty) ? new List<TempProductQty>() : JsonSerializer.Deserialize<List<TempProductQty>>(ProductQty) ?? [];
+
+                var dataExistList = id.HasValue ? productQtyList.Cast<IProductQty>().ToList() : tempDataList.Cast<IProductQty>().ToList();
+
+                var dataExist = dataExistList.FirstOrDefault(p => p.ColorID == colorVal && p.SizeID == sizeVal);
                 if (dataExist != null)
                 {
                     dataExist.Quantity += qtyVal;
+
+                    if (id.HasValue)
+                    {
+                        if (dataExist is ProductQuantity)
+                        {
+                            _dbContext.ProductQty.Update((ProductQuantity)dataExist);
+                        }
+                    }
                 }
                 else
                 {
-                    tempDataList.Add(new TempProductQty
+                    if (id.HasValue)
                     {
-                        ColorID = colorVal,
-                        SizeID = sizeVal,
-                        Quantity = qtyVal
-                    });
+                        dataExist = new ProductQuantity
+                        {
+                            ProductID = Convert.ToInt32(id.ToString()),
+                            ColorID = colorVal,
+                            SizeID = sizeVal,
+                            Quantity = qtyVal
+                        };
+
+                        if (dataExist is ProductQuantity)
+                        {
+                            await _dbContext.ProductQty.AddAsync((ProductQuantity)dataExist);
+                        }
+                    }
+                    else
+                    {
+                        dataExistList.Add(new TempProductQty
+                        {
+                            ColorID = colorVal,
+                            SizeID = sizeVal,
+                            Quantity = qtyVal
+                        });
+
+                        HttpContext.Session.SetString("TempProductQty", JsonSerializer.Serialize(dataExistList));
+                    }
                 }
 
-                HttpContext.Session.SetString("TempProductQty", JsonSerializer.Serialize(tempDataList));
+                await _dbContext.SaveChangesAsync();
 
                 var partial = await LoadProductQty(null, null, null);
-                partial.TempProductQty = tempDataList;
                 partial.ValueType = "Update";
-                partial.Qty = partial.TempProductQty.Sum(p => p.Quantity);
+
+                if (!id.HasValue)
+                {
+                    partial.Qty = partial.TempProductQty.Sum(p => p.Quantity);
+                    partial.TempProductQty = dataExistList.OfType<TempProductQty>().ToList();
+                }
+                else
+                {
+                    partial.Qty = _dbContext.ProductQty.Where(p => p.ProductID == id).Sum(p => p.Quantity);
+                    partial.ProductQty = await _dbContext.ProductQty.Where(p => p.ProductID == id).ToListAsync();
+                }
 
                 string html = await this.RenderViewAsync("_ProductItemPartial", partial, true);
 
@@ -899,24 +1132,35 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateTempProductQty(int newColorVal, int newSizeVal, int newQtyVal, int oldColorVal, int oldSizeVal)
+        [HttpPost] // Cap nhat quantity, size, color cua san pham hien thi chi tiet cho nguoi dung
+        public async Task<IActionResult> UpdateTempProductQty(int? id, int newColorVal, int newSizeVal, int newQtyVal, int oldColorVal, int oldSizeVal)
         {
             try
             {
+                var productQtyList = await _dbContext.ProductQty.Where(p => p.ProductID == id).ToListAsync();
+
                 var ProductQty = HttpContext.Session.GetString("TempProductQty");
                 var tempDataList = string.IsNullOrEmpty(ProductQty) ? new List<TempProductQty>() : JsonSerializer.Deserialize<List<TempProductQty>>(ProductQty);
 
-                var dataExist = tempDataList.FirstOrDefault(p => p.ColorID == newColorVal && p.SizeID == newSizeVal
+                var dataExistList = id.HasValue ? productQtyList.Cast<IProductQty>().ToList() : tempDataList.Cast<IProductQty>().ToList();
+
+                var dataExist = dataExistList.FirstOrDefault(p => p.ColorID == newColorVal && p.SizeID == newSizeVal
                                                             && !(p.ColorID == oldColorVal && p.SizeID == oldSizeVal));
-                var dataSelected = tempDataList.FirstOrDefault(p => p.ColorID == oldColorVal && p.SizeID == oldSizeVal);
+
+                var dataSelected = dataExistList.FirstOrDefault(p => p.ColorID == oldColorVal && p.SizeID == oldSizeVal);
+
 
                 if (dataExist != null)
                 {
                     dataExist.Quantity += newQtyVal;
+
                     if (dataSelected != null)
                     {
-                        tempDataList.Remove(dataSelected);
+                        if (dataSelected is TempProductQty)
+                        {
+                            dataExistList.Remove((TempProductQty)dataSelected);
+                        }
+                        else _dbContext.ProductQty.Remove((ProductQuantity)dataSelected);
                     }
                 }
                 else
@@ -926,12 +1170,26 @@ namespace CRUD_asp.netMVC.Controllers
                     dataSelected.Quantity = newQtyVal;
                 }
 
-                HttpContext.Session.SetString("TempProductQty", JsonSerializer.Serialize(tempDataList));
+                if (id.HasValue)
+                {
+                    _dbContext.ProductQty.Update((ProductQuantity)dataSelected);
+                    await _dbContext.SaveChangesAsync();
+                }
+                else HttpContext.Session.SetString("TempProductQty", JsonSerializer.Serialize(tempDataList));
 
-                var partial = await LoadProductQty(null, null, null);
-                partial.TempProductQty = tempDataList;
+                var partial = await LoadProductQty(id, null, null);
                 partial.ValueType = "Update";
-                partial.Qty = partial.TempProductQty.Sum(p => p.Quantity);
+
+                if (!id.HasValue)
+                {
+                    partial.Qty = partial.TempProductQty.Sum(p => p.Quantity);
+                    partial.TempProductQty = dataExistList.OfType<TempProductQty>().ToList();
+                }
+                else
+                {
+                    partial.Qty = _dbContext.ProductQty.Where(p => p.ProductID == id).Sum(p => p.Quantity);
+                    partial.ProductQty = await _dbContext.ProductQty.Where(p => p.ProductID == id).ToListAsync();
+                }
 
                 string html = await this.RenderViewAsync("_ProductItemPartial", partial, true);
 
@@ -943,22 +1201,34 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> DeleteTempProductQty(int colorVal, int sizeVal, int qtyVal)
+        [HttpPost] // Xoa quantity, size, color cua san pham chi tiet cho nguoi dung
+        public async Task<IActionResult> DeleteTempProductQty(int? id, int colorVal, int sizeVal, int qtyVal)
         {
             try
             {
+                var productQtyList = await _dbContext.ProductQty.Where(p => p.ProductID == id).ToListAsync();
+                var partial = await LoadProductQty(null, null, null);
+                partial.ValueType = "Update";
+
                 var ProductQty = HttpContext.Session.GetString("TempProductQty");
                 var tempDataList = string.IsNullOrEmpty(ProductQty) ? new List<TempProductQty>() : JsonSerializer.Deserialize<List<TempProductQty>>(ProductQty);
 
-                tempDataList.RemoveAll(p => p.SizeID == sizeVal && p.ColorID == colorVal && p.Quantity == qtyVal);
+                if (id.HasValue)
+                {
+                    var productQty = await _dbContext.ProductQty.FirstOrDefaultAsync(p => p.ProductID == id && p.SizeID == sizeVal && p.ColorID == colorVal && p.Quantity == qtyVal);
+                    _dbContext.ProductQty.Remove(productQty);
+                    await _dbContext.SaveChangesAsync();
 
-                HttpContext.Session.SetString("TempProductQty", JsonSerializer.Serialize(tempDataList));
-
-                var partial = await LoadProductQty(null, null, null);
-                partial.TempProductQty = tempDataList;
-                partial.ValueType = "Update";
-                partial.Qty = partial.TempProductQty.Sum(p => p.Quantity);
+                    partial.Qty = _dbContext.ProductQty.Where(p => p.ProductID == id).Sum(p => p.Quantity);
+                    partial.ProductQty = await _dbContext.ProductQty.Where(p => p.ProductID == id).ToListAsync();
+                }
+                else
+                {
+                    tempDataList.RemoveAll(p => p.SizeID == sizeVal && p.ColorID == colorVal && p.Quantity == qtyVal);
+                    HttpContext.Session.SetString("TempProductQty", JsonSerializer.Serialize(tempDataList));
+                    partial.Qty = partial.TempProductQty.Sum(p => p.Quantity);
+                    partial.TempProductQty = tempDataList;
+                }
 
                 string html = await this.RenderViewAsync("_ProductItemPartial", partial, true);
 
@@ -975,22 +1245,34 @@ namespace CRUD_asp.netMVC.Controllers
         {
             try
             {
-                if (arrColor.Length == 0) arrColor = Array.Empty<string>();
-                if (arrSize.Length == 0) arrSize = Array.Empty<string>();
+                var productQtyList = _dbContext.ProductQty.ToList();
+                if (idExist.HasValue)
+                {
+                    arrColor = productQtyList.Where(p => p.ProductID == idExist).Select(p => p.ColorID.ToString()).ToArray();
+                    arrSize = productQtyList.Where(p => p.ProductID == idExist).Select(p => p.SizeID.ToString()).ToArray();
+                }
+                else
+                {
+                    if (arrColor.Length == 0) arrColor = [];
+                    if (arrSize.Length == 0) arrSize = [];
+                }
 
                 var partial = await LoadProductQty(idExist, arrColor, arrSize);
                 partial.ValueType = "Update";
+
+                partial.Qty = idExist.HasValue ? partial.ProductQty.Sum(p => p.Quantity) : partial.TempProductQty.Sum(p => p.Quantity);
 
                 string html = await this.RenderViewAsync("_ProductItemPartial", partial, true);
 
                 return Json(new { success = true, html = html, qty = partial.Qty });
             }
-            catch (Exception)
+            catch
             {
                 throw new Exception();
             }
         }
 
+        // Ham load san pham chung
         public async Task<ProductItemGeneral> LoadProductQty(int? id, string[]? arrColor, string[]? arrSize)
         {
             var ProductQty = HttpContext.Session.GetString("TempProductQty");
@@ -1005,16 +1287,8 @@ namespace CRUD_asp.netMVC.Controllers
             var colorBySelectList = new List<Color>();
             var sizeBySelectList = new List<Size>();
 
-            if (id.HasValue)
-            {
-                colorBySelectList = await _dbContext.Color.Where(p => arrColor.Contains(p.ID.ToString())).ToListAsync();
-                sizeBySelectList = await _dbContext.Size.Where(p => arrSize.Contains(p.ID.ToString())).ToListAsync();
-            }
-            else
-            {
-                colorBySelectList = await _dbContext.Color.ToListAsync();
-                sizeBySelectList = await _dbContext.Size.ToListAsync();
-            }
+            sizeBySelectList = await _dbContext.Size.ToListAsync();
+            colorBySelectList = await _dbContext.Color.ToListAsync();
 
             partial.ProductQty = await _dbContext.ProductQty.Where(p => p.ProductID == id && arrColor.Contains(p.ColorID.ToString()) && arrSize.Contains(p.SizeID.ToString()))
                                                             .Include(p => p.Color)
@@ -1024,10 +1298,24 @@ namespace CRUD_asp.netMVC.Controllers
             partial.SelectListSize = new SelectList(sizeBySelectList, "ID", "Name");
             partial.SelectListColor = new SelectList(colorBySelectList, "ID", "Name");
 
+            var tasks = (
+                tag: _dbFactory.CreateDbContext().Tag.ToListAsync(),
+                style: _dbFactory.CreateDbContext().Style.ToListAsync(),
+                season: _dbFactory.CreateDbContext().Season.ToListAsync(),
+                material: _dbFactory.CreateDbContext().Material.ToListAsync()
+            );
+
+            await Task.WhenAll(tasks.tag, tasks.style, tasks.season, tasks.material);
+
+            //partial.Tag = tasks.tag.Result;
+            //partial.Style = tasks.style.Result;
+            //partial.Season = tasks.season.Result;
+            //partial.Material = tasks.material.Result;
+
             return partial;
         }
 
-        [HttpGet] // lay danh sach chi tiet san pham
+        [HttpGet] // lay thuoc tinh hien thi danh sach chi tiet san pham (admin)
         public async Task<IActionResult> ProductDetailListItem(string[]? opsValue, string nameValue)
         {
             try

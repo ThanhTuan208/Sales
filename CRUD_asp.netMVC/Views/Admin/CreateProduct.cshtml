@@ -75,7 +75,7 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="form-floating mb-3">
-                            <input asp-for="NewPrice" type="text" id="newPrice" class="form-control" step="0.01" required placeholder="Nhập giá mới" />
+                            <input asp-for="NewPrice" type="text" id="newPrice" class="form-control" step="0.01" onforminput="3" required placeholder="Nhập giá mới" />
                             <label asp-for="NewPrice" class="form-label">Giá mới</label>
                             <span asp-validation-for="NewPrice" class="text-danger"></span>
                         </div>

@@ -5,7 +5,6 @@ $(document).off('click', '#btnAdminProduct').on('click', '#btnAdminProduct', fun
 
     const btn = $(this);
 
-    // Lấy dữ liệu từ form
     const id = $('#id').val();
     const name = $('#name').val();
     const description = $('#description').val();
@@ -53,7 +52,7 @@ $(document).off('click', '#btnAdminProduct').on('click', '#btnAdminProduct', fun
     formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
 
     for (let i = 0; i < files.length; i++) {
-        formData.append('Picture', files[i]); // Tên 'Picture' phải khớp với tên thuộc tính trong formData
+        formData.append('Picture', files[i]);
     }
 
     let nameAction = id ? 'Edit' : 'Create';
@@ -71,13 +70,13 @@ $(document).off('click', '#btnAdminProduct').on('click', '#btnAdminProduct', fun
             btn.prop('disabled', true).text('Đang xử lý...');
 
             if (response.success) {
-                setTimeout(() => {
+                //setTimeout(() => {
 
-                    window.location.href = '/Admin/Index';
-                }, 1600);
+                //}, 700);
+                window.location.href = '/Admin/Index';
             } else {
 
-                btn.prop('disabled', false).text('Tạo');
+                btn.prop('disabled', false).text(!id ? 'Tạo' : 'Cập nhật');
 
                 if (response.errors) {
                     $('.text-danger').text('');
@@ -98,6 +97,62 @@ $(document).off('click', '#btnAdminProduct').on('click', '#btnAdminProduct', fun
         }
     });
 });
+
+// Them thuoc tinh cua material, season, style, tag
+$(document).off('click', '.btn-add-val').on('click', '.btn-add-val', function (e) {
+
+    e.preventDefault();
+
+    let typeVal = $('#typeVal').val();
+    let val = $('#new-value-prop').val();
+
+    $.ajax({
+
+        url: '/Admin/AddPropTValueForProduct',
+        type: 'POST',
+        data: {
+            value: val,
+            typeVal: typeVal,
+            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+        },
+
+        success: function (data) {
+
+            if (!data.success) {
+                if (data.errors) {
+                    $('.text-danger').text('');
+
+                    data.errors.forEach(function (err) {
+                        const fieldName = err.field;
+                        const message = err.errors[0];
+
+                        $(`#new-value-propName`).text(message);
+                    });
+                }
+                return;
+            }
+
+            $('.display-detail').html(data.html);
+
+            if (data.propList) {
+
+                const $select = $(`#${data.typeVal}`);
+                $select.empty();
+
+                $select.append(`<option value="" class="text-center" disabled>Chọn ${data.nameType} </option>`);
+
+                data.propList.forEach(function (m) {
+                    $select.append(`<option value="${m.id}">${m.name}</option>`);
+                });
+            }
+        },
+
+        error: function (err) {
+
+        }
+    });
+});
+
 
 // Cap nhat qty, size, color san pham 
 $(document).off('click', '.btn-update-proqty').on('click', '.btn-update-proqty', function () {
@@ -120,9 +175,10 @@ $(document).off('click', '.btn-add-proqty').on('click', '.btn-add-proqty', funct
 
 function GeneralTempProductQty(typeNum, btn) {
 
+    let idExist = $('#id').val();
+    let row = $(btn).closest('.selectTemp');
     let keyQtyVal, keySizeVal, keyColorVal;
     let qtyVal, sizeVal, colorVal, oldSizeVal, oldColorVal;
-    let row = $(btn).closest('.selectTemp');
 
     if (typeNum == 1) {
 
@@ -167,6 +223,7 @@ function GeneralTempProductQty(typeNum, btn) {
         formData.append('oldSizeVal', oldSizeVal);
         formData.append('oldColorVal', oldColorVal);
     }
+    if (idExist) formData.append('id', idExist);
     formData.append(keyQtyVal, qtyVal);
     formData.append(keySizeVal, sizeVal);
     formData.append(keyColorVal, colorVal);
@@ -185,8 +242,7 @@ function GeneralTempProductQty(typeNum, btn) {
             if (data.qty > 0) {
                 $('#product-qty').val(data.qty);
             }
-
-            CheckCountQty()
+            CheckCountQty();
         },
 
         error: function (err) {
@@ -229,7 +285,6 @@ $(document).off('click', '#update-qty').on('click', '#update-qty', function (e) 
             if (data.qty > 0) {
                 $('#product-qty').val(data.qty);
             }
-
         },
 
         error: function (err) {
@@ -239,7 +294,7 @@ $(document).off('click', '#update-qty').on('click', '#update-qty', function (e) 
 });
 
 // lay ops value
-$('.form-select.detail').on('click', function () {
+$(document).off('click', '.form-select.detail').on('click', '.form-select.detail', function () {
 
     let arrValue = $(this).find('option:not(:disabled)').map(function () {
         return $(this).val();
@@ -266,8 +321,22 @@ $('.form-select.detail').on('click', function () {
     });
 });
 
+
+$(document).off('change', '#new-qty, .exist-qty, #newPrice').on('change', '#new-qty, .exist-qty, #newPrice', function () {
+
+    let input = $(this);
+    let quantity = input.val();
+
+    if (quantity === "" || parseInt(quantity) < 1) {
+        return input.val(1);
+    }
+
+    return input.val(quantity);
+});
+
 // loc ki tu
 $(document).on('input paste', '#oldPrice, #newPrice, #qty, #new-qty', function () {
+
     const $input = $(this);
     let value = $input.val().replace(/[^0-9]/g, '');
     $input.val(value);
@@ -289,3 +358,8 @@ function CheckCountQty() {
 
     if (type == 'none') return false;
 }
+
+$(window).on('pageshow', function () {
+
+
+});

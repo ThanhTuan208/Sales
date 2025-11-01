@@ -1,2 +1,0 @@
-b1 -> Add-Migration InitialCreate
-b2 -> Update-Database 

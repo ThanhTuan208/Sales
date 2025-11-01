@@ -102,16 +102,18 @@
                         </div>
 
                         <div class="addCart">
+
                             <!-- Mau sac -->
                             <div class="row align-items-center mb-4">
                                 <div class="col-md-3 fw-bold">
                                     <p class="fs-3 mb-0 me-2">Màu sắc: </p>
                                 </div>
-                                <div class="col-md-9 d-flex gap-2">
+                                <div class="col-md-9 d-flex gap-2 flex-wrap">
                                     <input type="hidden" id="selectColor" name="color" class="color" />
-                                    @foreach (var item in Model.Product.ProductColor)
+
+                                    @foreach (var item in Model.Product.ProductQty.Select(p => p.Color.Name).Distinct().ToList())
                                     {
-                                        <div class="border p-2 px-3 color-option" data-color="@item.Color.Name">@item.Color.Name</div>
+                                        <div class="border p-2 px-3 color-option" data-color="@item">@item</div>
                                     }
                                 </div>
                             </div>
@@ -121,11 +123,12 @@
                                 <div class="col-md-3 fw-bold">
                                     <p class="fs-3 mb-0 me-2">Kích thước: </p>
                                 </div>
-                                <div class="col-md-9 d-flex gap-2">
+                                <div class="col-md-9 d-flex gap-2 flex-wrap">
                                     <input type="hidden" id="selectSize" name="size" class="size" />
-                                    @foreach (var item in Model.Product.ProductSize)
+
+                                    @foreach (var item in Model.Product.ProductQty.Select(p => p.Size.Name).Distinct())
                                     {
-                                        <div class="border p-2 px-3 size-option" data-size="@item.size.Name">@item.size.Name</div>
+                                        <div class="border p-2 px-3 size-option" data-size="@item">@item</div>
                                     }
                                 </div>
                             </div>
@@ -137,7 +140,7 @@
                                 </div>
                                 <div class="col-auto d-flex">
                                     <a class="btn btn-outline-secondary qty-btn" data-qty="-" id="decrease">-</a>
-                                    <input type="text" id="quantity" class="qtyInput form-control mx-2 text-center" value="1" style="width: 60px; height: 40px" readonly>
+                                    <input type="text" id="quantity" class="qtyInput form-control mx-2 text-center" value="1" style="width: 70px; height: 40px" readonly>
                                     <a class="btn btn-outline-secondary qty-btn" data-qty="+" id="increase">+</a>
                                 </div>
                                 @if (Model.Product.Quantity == 0)
@@ -195,10 +198,10 @@
                                     <li><p>Giới tính: @Model.Product?.Gender?.Name</p></li>
                                     <li><p>Thương hiệu: @Model.Product?.Brands?.Name</p></li>
                                     <li><p>Danh mục: @Model.Product?.Cate?.Name</p></li>
-                                    <li>Kích cỡ: @string.Join(", ", Model.Product.ProductSize.Select(s => s.size.Name))</li>
+                                    <li>Kích cỡ: @string.Join(", ", Model.Product.ProductQty.Select(s => s.Size.Name).Distinct())</li>
                                     <li>Phong cách: @string.Join(", ", Model.Product.ProductTags.Select(p => p.Tag.Name))</li>
                                     <li>Chất liệu: @string.Join(", ", Model.Product.ProductMaterial.Select(p => p.Material.Name))</li>
-                                    <li>Màu sắc: @string.Join(", ", Model.Product.ProductColor.Select(c => c.Color.Name))</li>
+                                    <li>Màu sắc: @string.Join(", ", Model.Product.ProductQty.Select(s => s.Color.Name).Distinct())</li>
                                 </ul>
 
                                 @* <div class="row">

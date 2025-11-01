@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using CRUD_asp.netMVC.ViewModels.Admin;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 
 namespace CRUD_asp.netMVC.Models.Product
 {
-    public class ProductQuantity
+    public class ProductQuantity : IProductQty
     {
         [Key]
         public int ProductID { get; set; }

@@ -5,6 +5,7 @@ using CRUD_asp.netMVC.ViewModels.Home;
 using CRUD_asp.netMVC.ViewModels.Product;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 using Org.BouncyCastle.Tls;
 using System.Globalization;
 using System.Security.Claims;
@@ -15,7 +16,7 @@ namespace CRUD_asp.netMVC.Controllers
     public class ProductController : Controller
     {
         private readonly AppDBContext _dbContext;
-        //private readonly IDbContextFactory<AppDBContext> dbContextFactory;
+        private readonly IDbContextFactory<AppDBContext> dbContextFactory;
 
         public ProductController(AppDBContext _context)
         {
@@ -262,6 +263,8 @@ namespace CRUD_asp.netMVC.Controllers
                .Include(p => p.Cate)
                .Include(p => p.Gender)
                .Include(p => p.ProductImages)
+               .Include(p => p.ProductQty).ThenInclude(p => p.Color)
+               .Include(p => p.ProductQty).ThenInclude(p => p.Size)
                .Include(p => p.ProductSize).ThenInclude(p => p.size)
                .Include(p => p.ProductColor).ThenInclude(p => p.Color)
                .Include(p => p.ProductMaterial).ThenInclude(p => p.Material)
@@ -279,17 +282,22 @@ namespace CRUD_asp.netMVC.Controllers
                 var orderPaid = await _dbContext.OrderDetail.Where(p => p.ProductID == id).SumAsync(p => p.Quantity);
 
                 var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
+
                 var carts = await _dbContext.Carts.Where(p => p.UserID == userID).ToListAsync();
+
+                //await Task.WhenAll(brandList, cateList, orderPaid, productQty);
 
                 ViewData["cart"] = carts.Count;
 
+                var s = product.ProductQty.GroupBy(p => p.Color.ID).Distinct().Select(p => new { Color = p.Key }).ToList();
                 GeneralProduct_ListCateBrand ViewModel = new()
                 {
                     Product = product,
                     Brands = brandList,
                     Categories = cateList,
                     Carts = carts,
-                    Sold = orderPaid
+                    Sold = orderPaid,
+
                 };
 
                 return ViewModel != null ? View(ViewModel) : NotFound();

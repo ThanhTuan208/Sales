@@ -9,6 +9,7 @@ namespace CRUD_asp.netMVC.ViewModels.Product
         public List<Brand>? Brands { get; set; }
         public List<Category>? Categories { get; set; }
         public List<AddToCart>? Carts { get; set; }
+        public List<ProductQuantity>? ProductQty { get; set; }
         public int? Sold { get; set; }
     }
 }

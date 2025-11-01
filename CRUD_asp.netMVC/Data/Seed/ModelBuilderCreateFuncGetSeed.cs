@@ -75,6 +75,48 @@ namespace CRUD_asp.netMVC.Data.Seed
             //var hashPass2 = new PasswordHasher<Users>().HashPassword(null, "123456");
         }
 
+        public static void SeedProductQty(this ModelBuilder modelBuilder)
+        {
+            var productQuantities = new List<ProductQuantity>();
+            int productCount = 60;
+            int colorCount = 8;
+            int sizeCount = 14;
+
+            Random rnd = new Random(12345);
+
+            for (int productId = 1; productId <= productCount; productId++)
+            {
+                // Chọn random 3–6 màu
+                var selectedColors = Enumerable.Range(1, colorCount)
+                    .OrderBy(x => rnd.Next())
+                    .Take(rnd.Next(3, 7))
+                    .ToList();
+
+                // Chọn random 2–5 size
+                var selectedSizes = Enumerable.Range(1, sizeCount)
+                    .OrderBy(x => rnd.Next())
+                    .Take(rnd.Next(2, 6))
+                    .ToList();
+
+                // Tạo combination color × size
+                foreach (var colorId in selectedColors)
+                {
+                    foreach (var sizeId in selectedSizes)
+                    {
+                        productQuantities.Add(new ProductQuantity
+                        {
+                            ProductID = productId,
+                            ColorID = colorId,
+                            SizeID = sizeId,
+                            Quantity = rnd.Next(5, 50)
+                        });
+                    }
+                }
+            }
+
+            modelBuilder.Entity<ProductQuantity>().HasData(productQuantities);
+        }
+
 
         public static void SeedFeatured(this ModelBuilder modelBuilder)
         {
