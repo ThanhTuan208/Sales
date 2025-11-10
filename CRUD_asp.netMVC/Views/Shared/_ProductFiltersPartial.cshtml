@@ -1,0 +1,45 @@
+﻿@using CRUD_asp.netMVC.ViewModels.Home
+@using System.Globalization
+@model getPaginationByProductViewModel
+
+@foreach (var item in Model.Products)
+{
+    <div class="col-md-3 text-center animate-box">
+        <div class="product">
+            <div class="product-grid" style="background-image:url(@Url.Content($"~/images/products/{item.PicturePath}"));">
+                <div class="inner">
+                    <p>
+                        <a asp-action="ProductDetail" asp-route-id="@item.ID" class="icon"><i class="icon-eye"></i></a>
+                    </p>
+                </div>
+                @if (item.OldPrice > 0)
+                {
+                    <div class="discount-badge">
+                        <span class="price"><s>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.OldPrice)</s> </span>
+                    </div>
+                }
+            </div>
+            <div class="desc">
+                <h3><a asp-action="ProductDetail" asp-route-id="@item.ID">@item.Name</a></h3>
+                <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.NewPrice)</span>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="pagination d-flex justify-content-center">
+    @if (Model.Products.PreviousPage)
+    {
+        <button class="btn btn-outline-warning m-1 page-btn" data-page="@(Model.Products.PageCurrent - 1)">Previous</button>
+    }
+
+    @for (int i = 1; i <= Model.Products.TotalPage; i++)
+    {
+        <button class="btn btn-outline-warning m-1 page-btn @(i == Model.Products.PageCurrent ? "active" : "")" data-page="@i">@i</button>
+    }
+
+    @if (Model.Products.NextPage)
+    {
+        <button class="btn btn-outline-warning m-1 page-btn" data-page="@(Model.Products.PageCurrent + 1)">Next</button>
+    }
+</div>

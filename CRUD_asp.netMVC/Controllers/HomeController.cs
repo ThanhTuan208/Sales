@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Org.BouncyCastle.Crypto.Signers;
+using System.Diagnostics;
 using System.Globalization;
 using System.Security.Claims;
 using System.Text;
@@ -104,7 +106,7 @@ public class HomeController : Controller
             _logger.LogError(ex, "Lỗi load dữ liệu chung: OrderTracking");
             return BadRequest();
         }
-        }
+    }
 
     // Kiem tra chuoi co dau
     public bool HasDiacritics(string text)
@@ -511,16 +513,19 @@ public class HomeController : Controller
             .Where(p => p.FeaturedID == 1)
             .Take(6).OrderByDescending(p => p.ID).ToListAsync();
 
-        var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0;
+        var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
 
+        Random rand = new Random();
         var brand = await _dbContext.Brand.AsNoTracking().ToListAsync();
         var categories = await _dbContext.Category.AsNoTracking().ToListAsync();
         var carts = await _dbContext.Carts.Where(p => p.UserID == userID).ToListAsync();
         var user = await _dbContext.Users.FirstOrDefaultAsync(p => p.Id == userID);
+        var oldPriceProduct = await _dbContext.Products.Where(p => p.OldPrice > 0).OrderBy(_ => Guid.NewGuid()).Take(7).ToListAsync();
 
         HomeViewModel ViewModel = new HomeViewModel()
         {
             Products = product,
+            OldPriceProducts = oldPriceProduct,
             Brands = brand,
             Categories = categories,
             Carts = carts,

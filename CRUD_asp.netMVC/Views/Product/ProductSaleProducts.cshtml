@@ -2,18 +2,18 @@
 @using System.Globalization
 @model getPaginationByProductViewModel
 @{
-    var ActionNameByUrl = ViewBag.ActionNameUrl;
+    var info = Convert.ToString(ViewData["Info"]);
     var productCount = ViewBag.ProductCount ?? 0;
-    var cateID = ViewData["cateID"];
-    var index = (int)cateID;
-    var cateName = Model.Categories[index - 1].Name;
+    var ActionNameByUrl = ViewBag.ActionNameUrl;
     string NameAction = ViewBag.NameAction;
+    bool IsSales = ViewBag.IsSales;
+    int cateID = ViewBag.CateID ?? 0;
 
     ViewData["Title"] = "Product Page";
     Layout = "_HomeLayout";
 }
 
-<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm animate-box" role="banner" style="background-image:url(@Url.Content($"~/images/banner/banner1.jpg")); ">
+<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(@Url.Content($"~/images/banner/banner1.jpg"));">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
@@ -29,40 +29,17 @@
 
 <div id="fh5co-product">
     <div class="container">
-        <div class="row animate-box my-5">
-            <div class="col-md-12 text-center">
-                <div class="desc">
-                    <h1 style="font-weight: 700; text-shadow: 2px 3px 6px; font-size: 6rem">@cateName.ToUpper()</h1>
-                </div>
-            </div>
-        </div>
-
         <div class="row animate-box">
             @foreach (var item in Model.Categories)
             {
                 <div class="col-md-2 text-center animate-box">
                     <div class="product">
                         <div class="desc">
-                            @{
-                                if (Model.IsFeatured)
-                                {
-                                    <a asp-action="getProductByCate" asp-controller="Product" asp-route-cateID="@item.ID" asp-route-productPage="1"
-                                       asp-route-featured="@Model.IsFeatured">
-                                        <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow cate-image"
-                                             alt="Categories">
-                                    </a>
-                                    <h3><a asp-route-cateID="@item.ID" asp-route-productPage="1" asp-route-featured="@Model.IsFeatured" class="btn">@item.Name</a></h3>
-                                }
-                                else
-                                {
-                                    <a asp-action="getProductByCate" asp-controller="Product" asp-route-cateID="@item.ID" asp-route-productPage="1"
-                                       asp-route-sales="@Model.IsSales">
-                                        <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow cate-image"
-                                             alt="Categories">
-                                    </a>
-                                    <h3><a asp-route-cateID="@item.ID" asp-route-productPage="1" asp-route-sales="@Model.IsSales" class="btn">@item.Name</a></h3>
-                                }
-                            }
+                            <a asp-action="Sales" asp-controller="Product" asp-route-cateID="@item.ID" asp-route-productPage="1" asp-route-sales="true">
+                                <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow cate-image"
+                                     alt="Categories">
+                            </a>
+                            <h3><a asp-route-cateID="@item.ID" asp-route-productPage="1" asp-route-sales="true" class="btn">@item.Name</a></h3>
                         </div>
                     </div>
                 </div>
@@ -72,7 +49,7 @@
         @if (!Model.Products.Any())
         {
             <div class="row">
-                <p class="text-center p-5 fs-1">@ViewData["Info"]</p>
+                <p class="text-center p-5 fs-1">Không còn sản phẩm ở danh mục này.</p>
             </div>
         }
         else
@@ -104,6 +81,7 @@
             </div>
 
             <div class="row product-filter-list animate-box">
+
                 @foreach (var item in Model.Products)
                 {
                     <div class="col-md-3 text-center animate-box">
@@ -113,6 +91,9 @@
                                     <p>
                                         <a asp-action="ProductDetail" asp-route-id="@item.ID" class="icon"><i class="icon-eye"></i></a>
                                     </p>
+                                </div>
+                                <div class="discount-badge">
+                                    <span class="price"><s>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.OldPrice)</s> </span>
                                 </div>
                             </div>
                             <div class="desc">
@@ -124,45 +105,71 @@
                 }
 
                 <div class="pagination d-flex justify-content-center animate-box">
-                    @if (Model.Products.PreviousPage)
+                    @if (IsSales)
                     {
-                        <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-productPage="@(Model.Products.PageCurrent - 1)" asp-route-brandID="@(ViewContext.RouteData.Values["brandID"] != null ? ViewContext.RouteData.Values["brandID"] : "")">Previous</a>
-                    }
+                        @if (Model.Products.PreviousPage)
+                        {
+                            <a class="btn btn-outline-warning m-1" asp-action="Sales" asp-route-cateID="@cateID" asp-route-salse="true" asp-route-productPage="@(Model.Products.PageCurrent - 1)">Previous</a>
+                        }
 
-                    @for (int i = 1; i <= Model.Products.TotalPage; i++)
-                    {
-                        <a asp-action="Index" asp-route-productPage="@i" asp-route-brandID="@(ViewContext.RouteData.Values["brandID"] != null ? ViewContext.RouteData.Values["brandID"] : "")" class="btn btn-outline-warning m-1 @(i == Model.Products.PageCurrent ? "active" : "")">@i</a>
-                    }
+                        @for (int i = 1; i <= Model.Products.TotalPage; i++)
+                        {
+                            <a asp-action="Sales" asp-route-productPage="@i" asp-route-salse="true" asp-route-cateID="@cateID" class="btn btn-outline-warning m-1 @(i == Model.Products.PageCurrent ? "active" : "")">@i</a>
+                        }
 
-                    @if (Model.Products.NextPage)
+                        @if (Model.Products.NextPage)
+                        {
+                            <a class="btn btn-outline-warning m-1" asp-action="Sales" asp-route-cateID="@cateID" asp-route-salse="true" asp-route-productPage="@(Model.Products.PageCurrent + 1)">Next</a>
+                        }
+
+                    }
+                    else
                     {
-                        <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-productPage="@(Model.Products.PageCurrent + 1)" asp-route-brandID="@(ViewContext.RouteData.Values["brandID"] != null ? ViewContext.RouteData.Values["brandID"] : "")">Next</a>
+
+                        @if (Model.Products.PreviousPage)
+                        {
+                            <button class="btn btn-outline-warning m-1 page-btn" data-page="@(Model.Products.PageCurrent - 1)">Previous</button>
+                        }
+
+                        @for (int i = 1; i <= Model.Products.TotalPage; i++)
+                        {
+                            <button class="btn btn-outline-warning m-1 page-btn @(i == Model.Products.PageCurrent ? "active" : "")" data-page="@i">@i</button>
+                        }
+
+                        @if (Model.Products.NextPage)
+                        {
+                            <button class="btn btn-outline-warning m-1 page-btn" data-page="@(Model.Products.PageCurrent + 1)">Next</button>
+                        }
                     }
                 </div>
+
             </div>
         }
 
         <div class="row animate-box mt-5">
             <div class="col-md-12">
                 <div class="section-heading">
-                    <h2 class="text-center my-2 mb-5"><strong>THƯƠNG HIỆU NỔI TIẾNG</strong></h2>
+                    <h2 class="text-center my-2 mb-5"><strong style="font-weight: 700;">THƯƠNG HIỆU NỔI TIẾNG</strong></h2>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="owl-clients owl-carousel text-center">
                     @foreach (var item in Model.Brands)
                     {
-                        <div class="service-item">
+                        <div class="service-item" style="margin:auto;">
+                            @* width: 200px;  *@
                             <a asp-action="getProductByBrand" asp-route-brandID="@item.ID" asp-route-productPage="1" class="services-item-image" style="display: block;">
+
                                 <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow"
                                      style="width: 100%; max-width: 230px; height: 100px; object-fit: cover; display: block; margin: auto;
-                                        filter: contrast(110%) brightness(105%);
-                                        border-radius: 15px;
-                                        box-shadow: 0 4px 12px rgba(0,0,0,0.2);"
-                                     loading="lazy"
-                                     alt="@item.Name">
+                                                                                        filter: contrast(110%) brightness(105%);
+                                                                                        border-radius: 15px;
+                                                                                        box-shadow: 0 4px 12px rgba(0,0,0,0.2);"
+                                     alt="Brand">
+
                             </a>
                             <div class="down-content">
+
                                 <p class="my-3"><em>@item.Name</em></p>
                             </div>
                         </div>

@@ -6,6 +6,7 @@ namespace CRUD_asp.netMVC.ViewModels.Product
     public class GeneralProduct_ListCateBrand
     {
         public Products? Product { get; set; }
+        public List<Products>? Products { get; set; }
         public List<Brand>? Brands { get; set; }
         public List<Category>? Categories { get; set; }
         public List<AddToCart>? Carts { get; set; }

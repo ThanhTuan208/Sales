@@ -6,23 +6,14 @@ using CRUD_asp.netMVC.ViewModels.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Elfie.Model.Tree;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Org.BouncyCastle.Tls;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
 using System.Collections.Immutable;
-using System.Collections.Specialized;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Reflection;
-using System.Security.AccessControl;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Color = CRUD_asp.netMVC.Models.Product.Color;
@@ -1451,11 +1442,6 @@ namespace CRUD_asp.netMVC.Controllers
             );
 
             await Task.WhenAll(tasks.tag, tasks.style, tasks.season, tasks.material);
-
-            //partial.Tag = tasks.tag.Result;
-            //partial.Style = tasks.style.Result;
-            //partial.Season = tasks.season.Result;
-            //partial.Material = tasks.material.Result;
 
             return partial;
         }

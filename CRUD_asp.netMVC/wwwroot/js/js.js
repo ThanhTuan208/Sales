@@ -27,6 +27,12 @@ $(document).ready(function () {
         }
     });
 
+    $('.sort-btn').on('click', function () {
+        $('.sort-btn').removeClass('active');
+        $(this).addClass('active');
+    });
+
+
     $(function () { // Loading screen cho thay doi email ho so
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/changeEmailProfile")
@@ -39,7 +45,7 @@ $(document).ready(function () {
             const overlay = $("#loadingOverlay");
             const spinner = overlay.find(".spinner-container");
 
-            overlay.show();  
+            overlay.show();
             spinner.show();
 
             setTimeout(() => {
@@ -64,7 +70,7 @@ $(document).ready(function () {
             const overlay = $("#loadingOverlay");
             const spinner = overlay.find(".spinner-container");
 
-            overlay.show();   
+            overlay.show();
             spinner.show();
 
             setTimeout(() => {
@@ -75,6 +81,50 @@ $(document).ready(function () {
             }, 3000);
         })
     });
+
+
+    // Biến toàn cục để nhớ bộ lọc hiện tại
+    let currentFilter = "sortNew";
+    let actionName = $('#name-action').val();
+
+    $(document).off('click', '#sortNew, #sortBest, #sortHighToLow, #sortLowToHigh')
+        .on('click', '#sortNew, #sortBest, #sortHighToLow, #sortLowToHigh', function (e) {
+            e.preventDefault();
+            currentFilter = $(this).attr('id');
+
+            loadProducts(actionName, currentFilter, 1);
+        });
+
+    // Khi click phan trang
+    $(document).off('click', '.page-btn').on('click', '.page-btn', function () {
+        const page = $(this).data('page');
+        loadProducts(actionName, currentFilter, page);
+    });
+
+    // load chung
+    function loadProducts(actionName, filter, productPage) {
+        $.ajax({
+            url: "/Product/FilterProduct",
+            type: "GET",
+            data: {
+                actionName: actionName,
+                filter: filter,
+                productPage: productPage
+            },
+            beforeSend: function () {
+
+                $('.product-filter-list').html('<div class="text-center p-5">Đang tải sản phẩm...</div>');
+            },
+            success: function (data) {
+                $('.product-filter-list').html(data.html);
+                $('#countProductFilter').html(data.countProduct + ' sản phẩm được thấy');
+                $('.animate-box').addClass('fadeInUp animated-fast');
+            },
+            error: function () {
+                alert("Lỗi khi tải sản phẩm!");
+            }
+        });
+    }
 
     // Xóa viền đỏ khi người dùng chỉnh sửa hoặc chọn giá trị mới //
     $(document).on('change input', '#username, #phone', function () {
@@ -104,7 +154,7 @@ $(document).ready(function () {
         formData.append('ProfileImage', avatar);
         formData.append('Gender', gender);
         formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
-        console.log(phone);
+
         $.ajax({
             url: "/Home/UpdateProfile",
             type: "POST",
@@ -227,7 +277,6 @@ $(document).ready(function () {
                                                 let $field = $(`#${field.toLowerCase()}`);
 
                                                 //Gan loi de hien thi vien do loi
-
                                                 if (!response.success) {
                                                     $field.addClass('error');
                                                     messages.forEach(message => {
@@ -401,7 +450,6 @@ $(document).ready(function () {
         const picturePath = $('#picturePath').val();
         const description = $('#description').val();
 
-        console.log(image);
         let formData = new FormData();
         formData.append("ID", id);
         formData.append("Name", name);
@@ -448,7 +496,6 @@ $(document).ready(function () {
         const image = $('#image')[0].files[0];
         const description = $('#description').val();
 
-        console.log(image);
         let formData = new FormData();
         formData.append("Name", name);
         formData.append("Picture", image);
@@ -519,7 +566,7 @@ $(document).ready(function () {
         });
     });
 
-    
+
     // Truyen thong tin gmail cua contactUs
     $('.sendMess').on('click', function () {
         const fname = $('#fname').val();

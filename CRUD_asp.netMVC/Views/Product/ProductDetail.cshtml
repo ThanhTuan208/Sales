@@ -265,6 +265,37 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            
+                <div class="container">
+                    <div class="row mt-5">
+                        <div class="d-flex justify-content-between">
+                            <h1 style="font-weight: 600;text-shadow: 2px 3px 8px">Sản phẩm liên quan</h1>
+                        <a asp-controller="Product" asp-action="getProductByCate" asp-route-cateID="@Model.Product.CateID" asp-route-productPage="1" class="fs-2"><p>Xem thêm</p></a>
+                        </div>
+                        @foreach (var item in Model.Products)
+                        {
+                            <div class="col-md-3 text-center animate-box">
+                                <div class="product">
+                                    <div class="product-grid shadow-lg" style="background: url(@Url.Content("~/images/products/" + @item.PicturePath)) no-repeat center center/ cover;">
+                                        <div class="inner">
+                                            <p>
+                                                <a asp-action="ProductDetail" asp-controller="Product" asp-route-id="@item.ID" class="icon"><i class="icon-eye"></i></a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="desc">
+                                        <h3><a asp-action="ProductDetail" asp-controller="Product" asp-route-id="@item.ID">@item.Name</a></h3>
+                                        <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", @item.NewPrice)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            
+        </div>
     </div>
 </div>
 @section Scripts {

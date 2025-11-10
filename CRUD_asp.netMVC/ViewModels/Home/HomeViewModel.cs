@@ -9,6 +9,7 @@ namespace CRUD_asp.netMVC.ViewModels.Home
     public class HomeViewModel
     {
         public List<Products>? Products { get; set; }
+        public List<Products>? OldPriceProducts { get; set; }
         public List<Brand>? Brands { get; set; }
         public List<Category>? Categories { get; set; }
         public List<AddToCart>? Carts { get; set; }
