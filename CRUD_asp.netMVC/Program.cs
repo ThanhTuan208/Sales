@@ -22,9 +22,9 @@ namespace CRUD_asp.netMVC
             builder.Services.AddSignalR(); // Cau hinh SignalR real time
 
             // Dky AppDBContext 
-//            builder.Services.AddDbContext<AppDBContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext"))
-//);
+            //            builder.Services.AddDbContext<AppDBContext>(options =>
+            //    options.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext"))
+            //);
 
             builder.Services.AddDbContextFactory<AppDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext"))

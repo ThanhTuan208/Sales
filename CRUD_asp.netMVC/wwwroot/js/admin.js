@@ -98,6 +98,129 @@ $(document).off('click', '#btnAdminProduct').on('click', '#btnAdminProduct', fun
     });
 });
 
+// Xoa thuoc tinh cho san pham (material, season, style, tag)
+$(document).off('click', '.btn-delete-val').on('click', '.btn-delete-val', function (e) {
+
+    e.preventDefault();
+    const btn = $(this);
+    let typeVal = $('#typeVal').val();
+    const id = btn.closest('.new-prop-product').find('#id-prop').val();
+    const value = btn.closest('.new-prop-product').find('.name-prop').val();
+
+    if (!id) {
+        alert(`Mã của ${typeVal} Không tồn tại !`);
+        return;
+    }
+
+    $.ajax({
+        url: '/Admin/DeletePropTValueForProduct',
+        type: 'POST',
+        data: {
+            id: id,
+            value: value,
+            type: typeVal,
+            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+        },
+
+        success: function (data) {
+
+            if (!data.success) {
+                if (data.errors) {
+                    $('.text-danger').text('');
+
+                    data.errors.forEach(function (err) {
+                        const message = err.errors[0];
+
+                        btn.closest('.new-prop-product').find(`.alert-error-sameval`).text(message);
+                    });
+                }
+                return;
+            }
+
+            $('.display-detail').html(data.html);
+            if (data.propList) {
+
+                const $select = $(`#${data.typeVal}`);
+                $select.empty();
+
+                $select.append(`<option value="" class="text-center" disabled>Chọn ${data.nameType} </option>`);
+
+                data.propList.forEach(function (m) {
+                    $select.append(`<option value="${m.id}">${m.name}</option>`);
+                });
+            }
+        },
+
+        error: function (err) {
+
+            alert("Lỗi xóa thuộc tính sản phẩm !");
+        }
+    });
+});
+
+// Cap nhat thuoc tinh cho san pham (material, season, style, tag)
+$(document).off('click', '.btn-update-val').on('click', '.btn-update-val', function (e) {
+
+    e.preventDefault();
+    const btn = $(this);
+
+    const id = btn.closest('.new-prop-product').find('#id-prop').val();
+    const value = btn.closest('.new-prop-product').find('.name-prop').val();
+    let typeVal = $('#typeVal').val();
+
+    if (!id) {
+        alert(`Mã của ${typeVal} Không tồn tại !`);
+        return;
+    }
+
+    $.ajax({
+        url: '/Admin/UpdatePropTValueForProduct',
+        type: 'POST',
+        data: {
+            id: id,
+            value: value,
+            typeVal: typeVal,
+            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+        },
+
+        success: function (data) {
+
+            if (!data.success) {
+                if (data.errors) {
+                    $('.text-danger').text('');
+      
+                    data.errors.forEach(function (err) {
+                        const message = err.errors[0];
+
+                        btn.closest('.new-prop-product').find(`.alert-error-sameval`).text(message);
+                    });
+
+                }
+                return;
+            }
+
+            $('.display-detail').html(data.html);
+
+            if (data.propList) {
+
+                const $select = $(`#${data.typeVal}`); 
+                $select.empty();
+
+                $select.append(`<option value="" class="text-center" disabled>Chọn ${data.nameType} </option>`);
+
+                data.propList.forEach(function (m) {
+                    $select.append(`<option value="${m.id}">${m.name}</option>`);
+                });
+            }
+        },
+
+        error: function (err) {
+
+        }
+    });
+
+});
+
 // Them thuoc tinh cua material, season, style, tag
 $(document).off('click', '.btn-add-val').on('click', '.btn-add-val', function (e) {
 
@@ -123,7 +246,6 @@ $(document).off('click', '.btn-add-val').on('click', '.btn-add-val', function (e
                     $('.text-danger').text('');
 
                     data.errors.forEach(function (err) {
-                        const fieldName = err.field;
                         const message = err.errors[0];
 
                         $(`#new-value-propName`).text(message);

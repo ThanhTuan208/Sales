@@ -36,15 +36,16 @@
             <tbody>
                 @foreach (var item in Model.Items)
                 {
-                    <tr>
+                    <tr class="new-prop-product">
                         <td class="form-floating mb-3">
-                            <input asp-for="@item.Name" id="name-prop" class="form-control" style="text-align: center;" required placeholder="Nhập tên @nameValue" />
-                            <span asp-validation-for="@item.Name" class="text-danger"></span>
+                            <input type="hidden" id="id-prop" value="@item.ID" />
+                            <input asp-for="@item.Name" class="form-control name-prop" style="text-align: center;" required placeholder="Nhập tên @nameValue" />
+                            <span asp-validation-for="@item.Name" class="alert-error-sameval text-danger"></span>
                         </td>
                         <td>
                             <div class="d-flex justify-content-center align-items-center">
-                                <button class="action-btn btn-update-prop bn54 me-2"> Sửa</button>
-                                <button class="action-btn btn-delete-prop bn54 me-2"> Xóa</button>
+                                <button class="action-btn btn-update-val bn54 me-2"> Sửa</button>
+                                <button class="action-btn btn-delete-val bn54 me-2"> Xóa</button>
                             </div>
                         </td>
                     </tr>

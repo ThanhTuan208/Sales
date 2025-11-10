@@ -7,7 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Elfie.Model.Tree;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Org.BouncyCastle.Tls;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
@@ -16,6 +20,9 @@ using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
+using System.Reflection;
+using System.Security.AccessControl;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Color = CRUD_asp.netMVC.Models.Product.Color;
@@ -872,6 +879,145 @@ namespace CRUD_asp.netMVC.Controllers
             return brand;
         }
 
+        [HttpPost] // Xoa value thuoc tinh san pham 
+        public async Task<IActionResult> DeletePropTValueForProduct(int id, string value, string type)
+        {
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                if (id < 1) return NotFound();
+
+                var productQtyList = await _dbContext.ProductQty.ToListAsync();
+
+                var data = await DataTables(type);
+
+                var idExistProp = data.FirstOrDefault(p => p.ID == id);
+                var idExistQty = productQtyList.FirstOrDefault(p => p.ColorID == id || p.SizeID == id);
+                if (idExistQty != null || idExistProp != null)
+                {
+                    ModelState.AddModelError("Name", $"{type} {value.ToLower()} đang được sử dụng !");
+                }
+                else
+                {
+                    string query = $@"
+                            DELETE FROM {type}
+                            WHERE ID = @id;";
+
+                    var result = await _dbContext.Database.ExecuteSqlRawAsync(query, new SqlParameter("@id", id));
+
+                    await transaction.CommitAsync();
+                }
+
+                var newList = await DataTables(type);
+                var partial = await LoadProductQty(null, null, null);
+                partial.ValueType = type;
+                partial.Items = newList;
+
+                string html = await this.RenderViewAsync("_ProductItemPartial", partial, true);
+
+                if (!ModelState.IsValid)
+                {
+                    await transaction.RollbackAsync();
+
+                    var Errors = ModelState
+                                        .Where(e => e.Value.Errors.Count > 0)
+                                        .Select(e => new { Field = e.Key, Errors = e.Value.Errors.Select(er => er.ErrorMessage) })
+                                        .ToList();
+
+                    return Json(new { success = false, html = html, errors = Errors });
+                }
+
+                var propList = newList.Select(p => new { ID = p.ID, Name = p.Name }).ToList();
+
+                return Json(new { success = true, html, typeVal = type, propList });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return Content($"ID Error: {ex.Message}, error detail: {ex.InnerException}");
+            }
+        }
+
+        [HttpPost] // Cap nhat value thuoc tinh san pham 
+        public async Task<IActionResult> UpdatePropTValueForProduct(int id, string value, string typeVal)
+        {
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                var dataList = await DataTables(typeVal);
+                if (dataList != null)
+                {
+                    var dataExist = dataList.FirstOrDefault(p => p.ID == id);
+                    if (dataList != null)
+                    {
+                        if (dataExist.Name.Equals(value, StringComparison.OrdinalIgnoreCase))
+                        {
+                            ModelState.AddModelError("Name", "Dữ liệu giống nhau !");
+                        }
+                        else
+                        {
+                            string sqlUpdateQty = $@"
+                                        UPDATE {typeVal}
+                                        SET Name = @value
+                                        WHERE ID = @id;";
+
+                            int result = await _dbContext.Database.ExecuteSqlRawAsync(sqlUpdateQty,
+                                new SqlParameter("@value", value),
+                                new SqlParameter("@id", id)
+                                );
+
+                            await transaction.CommitAsync();
+                        }
+
+                        var newList = await DataTables(typeVal);
+                        var partial = await LoadProductQty(null, null, null);
+                        partial.ValueType = typeVal;
+                        partial.Items = newList;
+
+                        string html = await this.RenderViewAsync("_ProductItemPartial", partial, true);
+
+                        if (!ModelState.IsValid)
+                        {
+                            await transaction.RollbackAsync();
+
+                            var Errors = ModelState
+                                                .Where(e => e.Value.Errors.Count > 0)
+                                                .Select(e => new { Field = e.Key, Errors = e.Value.Errors.Select(er => er.ErrorMessage) })
+                                                .ToList();
+
+                            return Json(new { success = false, html = html, errors = Errors });
+                        }
+
+                        var propList = newList.Select(p => new { ID = p.ID, Name = p.Name }).ToList();
+
+                        return Json(new { success = true, html, typeVal, newList, propList });
+                    }
+                }
+
+                return Json(new { success = false });
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                return BadRequest();
+            }
+        }
+
+        // Hien thi ds theo kieu thuoc tinh san pham
+        private async Task<List<IProductItemGeneral>> DataTables(string type)
+        {
+            return type switch
+            {
+                "Material" => await _dbContext.Material.AsNoTracking().ToListAsync<IProductItemGeneral>(),
+                "Color" => await _dbContext.Color.AsNoTracking().ToListAsync<IProductItemGeneral>(),
+                "Size" => await _dbContext.Size.AsNoTracking().ToListAsync<IProductItemGeneral>(),
+                "Season" => await _dbContext.Season.AsNoTracking().ToListAsync<IProductItemGeneral>(),
+                "Style" => await _dbContext.Style.AsNoTracking().ToListAsync<IProductItemGeneral>(),
+                "Tag" => await _dbContext.Tag.AsNoTracking().ToListAsync<IProductItemGeneral>(),
+                _ => new List<IProductItemGeneral>()
+            };
+        }
+
         [HttpPost] // Them value cho thuoc tinh san pham
         public async Task<IActionResult> AddPropTValueForProduct(string value, string typeVal)
         {
@@ -892,7 +1038,6 @@ namespace CRUD_asp.netMVC.Controllers
                 };
 
                 nameType = nameType.ToLower();
-
                 switch (typeVal)
                 {
                     case "Material":

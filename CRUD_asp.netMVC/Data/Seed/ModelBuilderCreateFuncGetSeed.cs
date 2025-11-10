@@ -118,6 +118,289 @@ namespace CRUD_asp.netMVC.Data.Seed
         }
 
 
+        public static void SeedProductImage(this ModelBuilder modelBuilder)
+        {
+
+            modelBuilder.Entity<ProductImages>().HasData(
+            // Nike
+            new ProductImages { ID = 1, PathNameImage = "nike_jacket_1.1.jpg", ProductID = 1 },
+            new ProductImages { ID = 2, PathNameImage = "nike_jacket_1.2.jpg", ProductID = 1 },
+            new ProductImages { ID = 3, PathNameImage = "nike_jacket_1.3.jpg", ProductID = 1 },
+            new ProductImages { ID = 4, PathNameImage = "nike_jacket_1.4.jpg", ProductID = 1 },
+            new ProductImages { ID = 5, PathNameImage = "nike_pants_1.1.jpg", ProductID = 2 },
+            new ProductImages { ID = 6, PathNameImage = "nike_pants_1.2.jpg", ProductID = 2 },
+            new ProductImages { ID = 7, PathNameImage = "nike_pants_1.3.jpg", ProductID = 2 },
+            new ProductImages { ID = 8, PathNameImage = "nike_pants_1.4.jpg", ProductID = 2 },
+            new ProductImages { ID = 9, PathNameImage = "nike_shoes_1.1.jpg", ProductID = 3 },
+            new ProductImages { ID = 10, PathNameImage = "nike_shoes_1.2.jpg", ProductID = 3 },
+            new ProductImages { ID = 11, PathNameImage = "nike_shoes_1.3.jpg", ProductID = 3 },
+            new ProductImages { ID = 12, PathNameImage = "nike_shoes_1.4.jpg", ProductID = 3 },
+            new ProductImages { ID = 13, PathNameImage = "nike_dress_1.1.jpg", ProductID = 4 },
+            new ProductImages { ID = 14, PathNameImage = "nike_dress_1.2.jpg", ProductID = 4 },
+            new ProductImages { ID = 15, PathNameImage = "nike_dress_1.3.jpg", ProductID = 4 },
+            new ProductImages { ID = 16, PathNameImage = "nike_dress_1.4.jpg", ProductID = 4 },
+            new ProductImages { ID = 17, PathNameImage = "nike_tshirt_1.1.jpg", ProductID = 5 },
+            new ProductImages { ID = 18, PathNameImage = "nike_tshirt_1.2.jpg", ProductID = 5 },
+            new ProductImages { ID = 19, PathNameImage = "nike_tshirt_1.3.jpg", ProductID = 5 },
+            new ProductImages { ID = 20, PathNameImage = "nike_tshirt_1.4.jpg", ProductID = 5 },
+            new ProductImages { ID = 21, PathNameImage = "nike_watch_1.1.jpg", ProductID = 6 },
+            new ProductImages { ID = 22, PathNameImage = "nike_watch_1.2.jpg", ProductID = 6 },
+            //new ProductImages { ID = 23, PathNameImage = "nike_watch_1.3.jpg", ProductID = 6 },
+            //new ProductImages { ID = 24, PathNameImage = "nike_watch_1.4.jpg", ProductID = 6 },
+
+            // Adidas
+            new ProductImages { ID = 25, PathNameImage = "adidas_jacket_1.1.jpg", ProductID = 7 },
+            new ProductImages { ID = 26, PathNameImage = "adidas_jacket_1.2.jpg", ProductID = 7 },
+            new ProductImages { ID = 27, PathNameImage = "adidas_jacket_1.3.jpg", ProductID = 7 },
+            new ProductImages { ID = 28, PathNameImage = "adidas_jacket_1.4.jpg", ProductID = 7 },
+            new ProductImages { ID = 29, PathNameImage = "adidas_pants_1.1.jpg", ProductID = 8 },
+            new ProductImages { ID = 30, PathNameImage = "adidas_pants_1.2.jpg", ProductID = 8 },
+            new ProductImages { ID = 31, PathNameImage = "adidas_pants_1.3.jpg", ProductID = 8 },
+            new ProductImages { ID = 32, PathNameImage = "adidas_pants_1.4.jpg", ProductID = 8 },
+            new ProductImages { ID = 33, PathNameImage = "adidas_shoes_1.1.jpg", ProductID = 9 },
+            new ProductImages { ID = 34, PathNameImage = "adidas_shoes_1.2.jpg", ProductID = 9 },
+            new ProductImages { ID = 35, PathNameImage = "adidas_shoes_1.3.jpg", ProductID = 9 },
+            new ProductImages { ID = 36, PathNameImage = "adidas_shoes_1.4.jpg", ProductID = 9 },
+            new ProductImages { ID = 37, PathNameImage = "adidas_dress_1.1.jpg", ProductID = 10 },
+            new ProductImages { ID = 38, PathNameImage = "adidas_dress_1.2.jpg", ProductID = 10 },
+            new ProductImages { ID = 39, PathNameImage = "adidas_dress_1.3.jpg", ProductID = 10 },
+            new ProductImages { ID = 40, PathNameImage = "adidas_dress_1.4.jpg", ProductID = 10 },
+            new ProductImages { ID = 41, PathNameImage = "adidas_tshirt_1.1.jpg", ProductID = 11 },
+            new ProductImages { ID = 42, PathNameImage = "adidas_tshirt_1.2.jpg", ProductID = 11 },
+            new ProductImages { ID = 43, PathNameImage = "adidas_tshirt_1.3.jpg", ProductID = 11 },
+            new ProductImages { ID = 44, PathNameImage = "adidas_tshirt_1.4.jpg", ProductID = 11 },
+            new ProductImages { ID = 45, PathNameImage = "adidas_watch_1.1.jpg", ProductID = 12 },
+            new ProductImages { ID = 46, PathNameImage = "adidas_watch_1.2.jpg", ProductID = 12 },
+            new ProductImages { ID = 47, PathNameImage = "adidas_watch_1.3.jpg", ProductID = 12 },
+            new ProductImages { ID = 48, PathNameImage = "adidas_watch_1.4.jpg", ProductID = 12 },
+
+            // Zara
+            new ProductImages { ID = 49, PathNameImage = "zara_jacket_1.1.jpg", ProductID = 13 },
+            new ProductImages { ID = 50, PathNameImage = "zara_jacket_1.2.jpg", ProductID = 13 },
+            new ProductImages { ID = 51, PathNameImage = "zara_jacket_1.3.jpg", ProductID = 13 },
+            new ProductImages { ID = 52, PathNameImage = "zara_jacket_1.4.jpg", ProductID = 13 },
+            new ProductImages { ID = 53, PathNameImage = "zara_pants_1.1.jpg", ProductID = 14 },
+            new ProductImages { ID = 54, PathNameImage = "zara_pants_1.2.jpg", ProductID = 14 },
+            new ProductImages { ID = 55, PathNameImage = "zara_pants_1.3.jpg", ProductID = 14 },
+            new ProductImages { ID = 56, PathNameImage = "zara_pants_1.4.jpg", ProductID = 14 },
+            new ProductImages { ID = 57, PathNameImage = "zara_shoes_1.1.jpg", ProductID = 15 },
+            new ProductImages { ID = 58, PathNameImage = "zara_shoes_1.2.jpg", ProductID = 15 },
+            new ProductImages { ID = 59, PathNameImage = "zara_shoes_1.3.jpg", ProductID = 15 },
+            new ProductImages { ID = 60, PathNameImage = "zara_shoes_1.4.jpg", ProductID = 15 },
+            new ProductImages { ID = 61, PathNameImage = "zara_dress_1.1.jpg", ProductID = 16 },
+            new ProductImages { ID = 62, PathNameImage = "zara_dress_1.2.jpg", ProductID = 16 },
+            new ProductImages { ID = 63, PathNameImage = "zara_dress_1.3.jpg", ProductID = 16 },
+            new ProductImages { ID = 64, PathNameImage = "zara_dress_1.4.jpg", ProductID = 16 },
+            new ProductImages { ID = 65, PathNameImage = "zara_tshirt_1.1.jpg", ProductID = 17 },
+            new ProductImages { ID = 66, PathNameImage = "zara_tshirt_1.2.jpg", ProductID = 17 },
+            new ProductImages { ID = 67, PathNameImage = "zara_tshirt_1.3.jpg", ProductID = 17 },
+            new ProductImages { ID = 68, PathNameImage = "zara_tshirt_1.4.jpg", ProductID = 17 },
+            new ProductImages { ID = 69, PathNameImage = "zara_watch_1.1.jpg", ProductID = 18 },
+            new ProductImages { ID = 70, PathNameImage = "zara_watch_1.2.jpg", ProductID = 18 },
+
+            // H&M
+            new ProductImages { ID = 73, PathNameImage = "h&m_jacket_1.1.jpg", ProductID = 19 },
+            new ProductImages { ID = 74, PathNameImage = "h&m_jacket_1.2.jpg", ProductID = 19 },
+            new ProductImages { ID = 75, PathNameImage = "h&m_jacket_1.3.jpg", ProductID = 19 },
+            new ProductImages { ID = 76, PathNameImage = "h&m_jacket_1.4.jpg", ProductID = 19 },
+            new ProductImages { ID = 77, PathNameImage = "h&m_pants_1.1.jpg", ProductID = 20 },
+            new ProductImages { ID = 78, PathNameImage = "h&m_pants_1.2.jpg", ProductID = 20 },
+            new ProductImages { ID = 79, PathNameImage = "h&m_pants_1.3.jpg", ProductID = 20 },
+            new ProductImages { ID = 80, PathNameImage = "h&m_pants_1.4.jpg", ProductID = 20 },
+            new ProductImages { ID = 81, PathNameImage = "h&m_shoes_1.1.jpg", ProductID = 21 },
+            new ProductImages { ID = 82, PathNameImage = "h&m_shoes_1.2.jpg", ProductID = 21 },
+            new ProductImages { ID = 83, PathNameImage = "h&m_shoes_1.3.jpg", ProductID = 21 },
+            new ProductImages { ID = 84, PathNameImage = "h&m_shoes_1.4.jpg", ProductID = 21 },
+            new ProductImages { ID = 85, PathNameImage = "h&m_dress_1.1.jpg", ProductID = 22 },
+            new ProductImages { ID = 86, PathNameImage = "h&m_dress_1.2.jpg", ProductID = 22 },
+            new ProductImages { ID = 87, PathNameImage = "h&m_dress_1.3.jpg", ProductID = 22 },
+            new ProductImages { ID = 88, PathNameImage = "h&m_dress_1.4.jpg", ProductID = 22 },
+            new ProductImages { ID = 89, PathNameImage = "h&m_tshirt_1.1.jpg", ProductID = 23 },
+            new ProductImages { ID = 90, PathNameImage = "h&m_tshirt_1.2.jpg", ProductID = 23 },
+            new ProductImages { ID = 91, PathNameImage = "h&m_tshirt_1.3.jpg", ProductID = 23 },
+            new ProductImages { ID = 92, PathNameImage = "h&m_tshirt_1.4.jpg", ProductID = 23 },
+            new ProductImages { ID = 93, PathNameImage = "h&m_watch_1.1.jpg", ProductID = 24 },
+            new ProductImages { ID = 94, PathNameImage = "h&m_watch_1.2.jpg", ProductID = 24 },
+            new ProductImages { ID = 95, PathNameImage = "h&m_watch_1.3.jpg", ProductID = 24 },
+
+            // Uniqlo
+            new ProductImages { ID = 97, PathNameImage = "uniqlo_jacket_1.1.jpg", ProductID = 25 },
+            new ProductImages { ID = 98, PathNameImage = "uniqlo_jacket_1.2.jpg", ProductID = 25 },
+            new ProductImages { ID = 99, PathNameImage = "uniqlo_jacket_1.3.jpg", ProductID = 25 },
+            new ProductImages { ID = 100, PathNameImage = "uniqlo_jacket_1.4.jpg", ProductID = 25 },
+            new ProductImages { ID = 101, PathNameImage = "uniqlo_pants_1.1.jpg", ProductID = 26 },
+            new ProductImages { ID = 102, PathNameImage = "uniqlo_pants_1.2.jpg", ProductID = 26 },
+            new ProductImages { ID = 103, PathNameImage = "uniqlo_pants_1.3.jpg", ProductID = 26 },
+            new ProductImages { ID = 104, PathNameImage = "uniqlo_pants_1.4.jpg", ProductID = 26 },
+            new ProductImages { ID = 105, PathNameImage = "uniqlo_shoes_1.1.jpg", ProductID = 27 },
+            new ProductImages { ID = 106, PathNameImage = "uniqlo_shoes_1.2.jpg", ProductID = 27 },
+            new ProductImages { ID = 107, PathNameImage = "uniqlo_shoes_1.3.jpg", ProductID = 27 },
+            new ProductImages { ID = 108, PathNameImage = "uniqlo_shoes_1.4.jpg", ProductID = 27 },
+            new ProductImages { ID = 109, PathNameImage = "uniqlo_dress_1.1.jpg", ProductID = 28 },
+            new ProductImages { ID = 110, PathNameImage = "uniqlo_dress_1.2.jpg", ProductID = 28 },
+            new ProductImages { ID = 111, PathNameImage = "uniqlo_dress_1.3.jpg", ProductID = 28 },
+            new ProductImages { ID = 112, PathNameImage = "uniqlo_dress_1.4.jpg", ProductID = 28 },
+            new ProductImages { ID = 113, PathNameImage = "uniqlo_tshirt_1.1.jpg", ProductID = 29 },
+            new ProductImages { ID = 114, PathNameImage = "uniqlo_tshirt_1.2.jpg", ProductID = 29 },
+            new ProductImages { ID = 115, PathNameImage = "uniqlo_tshirt_1.3.jpg", ProductID = 29 },
+            new ProductImages { ID = 116, PathNameImage = "uniqlo_tshirt_1.4.jpg", ProductID = 29 },
+            new ProductImages { ID = 117, PathNameImage = "uniqlo_watch_1.1.jpg", ProductID = 30 },
+            new ProductImages { ID = 118, PathNameImage = "uniqlo_watch_1.2.jpg", ProductID = 30 },
+            new ProductImages { ID = 119, PathNameImage = "uniqlo_watch_1.3.jpg", ProductID = 30 },
+            //new ProductImages { ID = 120, PathNameImage = "uniqlo_watch_1.4.jpg", ProductID = 30 },
+
+            // Gucci
+            new ProductImages { ID = 121, PathNameImage = "gucci_jacket_1.1.jpg", ProductID = 31 },
+            new ProductImages { ID = 122, PathNameImage = "gucci_jacket_1.2.jpg", ProductID = 31 },
+            new ProductImages { ID = 123, PathNameImage = "gucci_jacket_1.3.jpg", ProductID = 31 },
+            new ProductImages { ID = 124, PathNameImage = "gucci_jacket_1.4.jpg", ProductID = 31 },
+
+            new ProductImages { ID = 125, PathNameImage = "gucci_pants_1.1.jpg", ProductID = 32 },
+            new ProductImages { ID = 126, PathNameImage = "gucci_pants_1.2.jpg", ProductID = 32 },
+            new ProductImages { ID = 127, PathNameImage = "gucci_pants_1.3.jpg", ProductID = 32 },
+            new ProductImages { ID = 128, PathNameImage = "gucci_pants_1.4.jpg", ProductID = 32 },
+
+            new ProductImages { ID = 129, PathNameImage = "gucci_shoes_1.1.jpg", ProductID = 33 },
+            new ProductImages { ID = 130, PathNameImage = "gucci_shoes_1.2.jpg", ProductID = 33 },
+            new ProductImages { ID = 131, PathNameImage = "gucci_shoes_1.3.jpg", ProductID = 33 },
+            new ProductImages { ID = 132, PathNameImage = "gucci_shoes_1.4.jpg", ProductID = 33 },
+
+            new ProductImages { ID = 133, PathNameImage = "gucci_dress_1.1.jpg", ProductID = 34 },
+            new ProductImages { ID = 134, PathNameImage = "gucci_dress_1.2.jpg", ProductID = 34 },
+            new ProductImages { ID = 135, PathNameImage = "gucci_dress_1.3.jpg", ProductID = 34 },
+            new ProductImages { ID = 136, PathNameImage = "gucci_dress_1.4.jpg", ProductID = 34 },
+
+            new ProductImages { ID = 137, PathNameImage = "gucci_tshirt_1.1.jpg", ProductID = 35 },
+            new ProductImages { ID = 138, PathNameImage = "gucci_tshirt_1.2.jpg", ProductID = 35 },
+            new ProductImages { ID = 139, PathNameImage = "gucci_tshirt_1.3.jpg", ProductID = 35 },
+            new ProductImages { ID = 140, PathNameImage = "gucci_tshirt_1.4.jpg", ProductID = 35 },
+
+            new ProductImages { ID = 141, PathNameImage = "gucci_watch_1.1.jpg", ProductID = 36 },
+            new ProductImages { ID = 142, PathNameImage = "gucci_watch_1.2.jpg", ProductID = 36 },
+
+            // Levi's
+            new ProductImages { ID = 143, PathNameImage = "levis_jacket_1.1.jpg", ProductID = 37 },
+            new ProductImages { ID = 144, PathNameImage = "levis_jacket_1.2.jpg", ProductID = 37 },
+            new ProductImages { ID = 145, PathNameImage = "levis_jacket_1.3.jpg", ProductID = 37 },
+            new ProductImages { ID = 146, PathNameImage = "levis_jacket_1.4.jpg", ProductID = 37 },
+
+            new ProductImages { ID = 147, PathNameImage = "levis_pants_1.1.jpg", ProductID = 38 },
+            new ProductImages { ID = 148, PathNameImage = "levis_pants_1.2.jpg", ProductID = 38 },
+            new ProductImages { ID = 149, PathNameImage = "levis_pants_1.3.jpg", ProductID = 38 },
+            new ProductImages { ID = 150, PathNameImage = "levis_pants_1.4.jpg", ProductID = 38 },
+
+            new ProductImages { ID = 151, PathNameImage = "levis_shoes_1.1.jpg", ProductID = 39 },
+            new ProductImages { ID = 152, PathNameImage = "levis_shoes_1.2.jpg", ProductID = 39 },
+            new ProductImages { ID = 153, PathNameImage = "levis_shoes_1.3.jpg", ProductID = 39 },
+            new ProductImages { ID = 154, PathNameImage = "levis_shoes_1.4.jpg", ProductID = 39 },
+
+            new ProductImages { ID = 155, PathNameImage = "levis_dress_1.1.jpg", ProductID = 40 },
+            new ProductImages { ID = 156, PathNameImage = "levis_dress_1.2.jpg", ProductID = 40 },
+            new ProductImages { ID = 157, PathNameImage = "levis_dress_1.3.jpg", ProductID = 40 },
+            new ProductImages { ID = 158, PathNameImage = "levis_dress_1.4.jpg", ProductID = 40 },
+
+            new ProductImages { ID = 159, PathNameImage = "levis_tshirt_1.1.jpg", ProductID = 41 },
+            new ProductImages { ID = 160, PathNameImage = "levis_tshirt_1.2.jpg", ProductID = 41 },
+            new ProductImages { ID = 161, PathNameImage = "levis_tshirt_1.3.jpg", ProductID = 41 },
+            new ProductImages { ID = 162, PathNameImage = "levis_tshirt_1.4.jpg", ProductID = 41 },
+
+            new ProductImages { ID = 163, PathNameImage = "levis_watch_1.1.jpg", ProductID = 42 },
+            new ProductImages { ID = 164, PathNameImage = "levis_watch_1.2.jpg", ProductID = 42 },
+            new ProductImages { ID = 165, PathNameImage = "levis_watch_1.3.jpg", ProductID = 42 },
+
+            // Lacoste
+            new ProductImages { ID = 166, PathNameImage = "lacoste_jacket_1.1.jpg", ProductID = 43 },
+            new ProductImages { ID = 167, PathNameImage = "lacoste_jacket_1.2.jpg", ProductID = 43 },
+            new ProductImages { ID = 168, PathNameImage = "lacoste_jacket_1.3.jpg", ProductID = 43 },
+            new ProductImages { ID = 169, PathNameImage = "lacoste_jacket_1.4.jpg", ProductID = 43 },
+
+            new ProductImages { ID = 170, PathNameImage = "lacoste_pants_1.1.jpg", ProductID = 44 },
+            new ProductImages { ID = 171, PathNameImage = "lacoste_pants_1.2.jpg", ProductID = 44 },
+            new ProductImages { ID = 172, PathNameImage = "lacoste_pants_1.3.jpg", ProductID = 44 },
+            new ProductImages { ID = 173, PathNameImage = "lacoste_pants_1.4.jpg", ProductID = 44 },
+
+            new ProductImages { ID = 174, PathNameImage = "lacoste_shoes_1.1.jpg", ProductID = 45 },
+            new ProductImages { ID = 175, PathNameImage = "lacoste_shoes_1.2.jpg", ProductID = 45 },
+            new ProductImages { ID = 176, PathNameImage = "lacoste_shoes_1.3.jpg", ProductID = 45 },
+            new ProductImages { ID = 177, PathNameImage = "lacoste_shoes_1.4.jpg", ProductID = 45 },
+
+            new ProductImages { ID = 178, PathNameImage = "lacoste_dress_1.1.jpg", ProductID = 46 },
+            new ProductImages { ID = 179, PathNameImage = "lacoste_dress_1.2.jpg", ProductID = 46 },
+            new ProductImages { ID = 180, PathNameImage = "lacoste_dress_1.3.jpg", ProductID = 46 },
+            new ProductImages { ID = 181, PathNameImage = "lacoste_dress_1.4.jpg", ProductID = 46 },
+
+            new ProductImages { ID = 182, PathNameImage = "lacoste_tshirt_1.1.jpg", ProductID = 47 },
+            new ProductImages { ID = 183, PathNameImage = "lacoste_tshirt_1.2.jpg", ProductID = 47 },
+            new ProductImages { ID = 184, PathNameImage = "lacoste_tshirt_1.3.jpg", ProductID = 47 },
+            new ProductImages { ID = 185, PathNameImage = "lacoste_tshirt_1.4.jpg", ProductID = 47 },
+
+            new ProductImages { ID = 186, PathNameImage = "lacoste_watch_1.1.jpg", ProductID = 48 },
+            new ProductImages { ID = 187, PathNameImage = "lacoste_watch_1.2.jpg", ProductID = 48 },
+            new ProductImages { ID = 188, PathNameImage = "lacoste_watch_1.3.jpg", ProductID = 48 },
+
+            // Puma
+            new ProductImages { ID = 189, PathNameImage = "puma_jacket_1.1.jpg", ProductID = 49 },
+            new ProductImages { ID = 190, PathNameImage = "puma_jacket_1.2.jpg", ProductID = 49 },
+            new ProductImages { ID = 191, PathNameImage = "puma_jacket_1.3.jpg", ProductID = 49 },
+            new ProductImages { ID = 192, PathNameImage = "puma_jacket_1.4.jpg", ProductID = 49 },
+
+            new ProductImages { ID = 193, PathNameImage = "puma_pants_1.1.jpg", ProductID = 50 },
+            new ProductImages { ID = 194, PathNameImage = "puma_pants_1.2.jpg", ProductID = 50 },
+            new ProductImages { ID = 195, PathNameImage = "puma_pants_1.3.jpg", ProductID = 50 },
+            new ProductImages { ID = 196, PathNameImage = "puma_pants_1.4.jpg", ProductID = 50 },
+
+            new ProductImages { ID = 197, PathNameImage = "puma_shoes_1.1.jpg", ProductID = 51 },
+            new ProductImages { ID = 198, PathNameImage = "puma_shoes_1.2.jpg", ProductID = 51 },
+            new ProductImages { ID = 199, PathNameImage = "puma_shoes_1.3.jpg", ProductID = 51 },
+            new ProductImages { ID = 200, PathNameImage = "puma_shoes_1.4.jpg", ProductID = 51 },
+
+            new ProductImages { ID = 201, PathNameImage = "puma_dress_1.1.jpg", ProductID = 52 },
+            new ProductImages { ID = 202, PathNameImage = "puma_dress_1.2.jpg", ProductID = 52 },
+            new ProductImages { ID = 203, PathNameImage = "puma_dress_1.3.jpg", ProductID = 52 },
+            new ProductImages { ID = 204, PathNameImage = "puma_dress_1.4.jpg", ProductID = 52 },
+
+            new ProductImages { ID = 205, PathNameImage = "puma_tshirt_1.1.jpg", ProductID = 53 },
+            new ProductImages { ID = 206, PathNameImage = "puma_tshirt_1.2.jpg", ProductID = 53 },
+            new ProductImages { ID = 207, PathNameImage = "puma_tshirt_1.3.jpg", ProductID = 53 },
+            new ProductImages { ID = 208, PathNameImage = "puma_tshirt_1.4.jpg", ProductID = 53 },
+
+            new ProductImages { ID = 209, PathNameImage = "puma_watch_1.1.jpg", ProductID = 54 },
+            new ProductImages { ID = 210, PathNameImage = "puma_watch_1.2.jpg", ProductID = 54 },
+            new ProductImages { ID = 211, PathNameImage = "puma_watch_1.3.jpg", ProductID = 54 },
+
+            // Chanel
+            new ProductImages { ID = 212, PathNameImage = "chanel_jacket_1.1.jpg", ProductID = 55 },
+            new ProductImages { ID = 213, PathNameImage = "chanel_jacket_1.2.jpg", ProductID = 55 },
+            new ProductImages { ID = 214, PathNameImage = "chanel_jacket_1.3.jpg", ProductID = 55 },
+            new ProductImages { ID = 215, PathNameImage = "chanel_jacket_1.4.jpg", ProductID = 55 },
+
+            new ProductImages { ID = 216, PathNameImage = "chanel_pants_1.1.jpg", ProductID = 56 },
+            new ProductImages { ID = 217, PathNameImage = "chanel_pants_1.2.jpg", ProductID = 56 },
+            new ProductImages { ID = 218, PathNameImage = "chanel_pants_1.3.jpg", ProductID = 56 },
+            new ProductImages { ID = 219, PathNameImage = "chanel_pants_1.4.jpg", ProductID = 56 },
+
+            new ProductImages { ID = 220, PathNameImage = "chanel_shoes_1.1.jpg", ProductID = 57 },
+            new ProductImages { ID = 221, PathNameImage = "chanel_shoes_1.2.jpg", ProductID = 57 },
+            new ProductImages { ID = 222, PathNameImage = "chanel_shoes_1.3.jpg", ProductID = 57 },
+            new ProductImages { ID = 223, PathNameImage = "chanel_shoes_1.4.jpg", ProductID = 57 },
+
+            new ProductImages { ID = 224, PathNameImage = "chanel_dress_1.1.jpg", ProductID = 58 },
+            new ProductImages { ID = 225, PathNameImage = "chanel_dress_1.2.jpg", ProductID = 58 },
+            new ProductImages { ID = 226, PathNameImage = "chanel_dress_1.3.jpg", ProductID = 58 },
+            new ProductImages { ID = 227, PathNameImage = "chanel_dress_1.4.jpg", ProductID = 58 },
+
+            new ProductImages { ID = 228, PathNameImage = "chanel_tshirt_1.1.jpg", ProductID = 59 },
+            new ProductImages { ID = 229, PathNameImage = "chanel_tshirt_1.2.jpg", ProductID = 59 },
+            new ProductImages { ID = 230, PathNameImage = "chanel_tshirt_1.3.jpg", ProductID = 59 },
+            new ProductImages { ID = 231, PathNameImage = "chanel_tshirt_1.4.jpg", ProductID = 59 },
+
+            new ProductImages { ID = 232, PathNameImage = "chanel_watch_1.1.jpg", ProductID = 60 },
+            new ProductImages { ID = 233, PathNameImage = "chanel_watch_1.2.jpg", ProductID = 60 },
+            new ProductImages { ID = 234, PathNameImage = "chanel_watch_1.3.jpg", ProductID = 60 }
+
+            );
+        }
+
         public static void SeedFeatured(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Featured>().HasData(
@@ -737,8 +1020,7 @@ namespace CRUD_asp.netMVC.Data.Seed
         {
             #region Products Seed Data
             var products = new List<Products>
-{
-
+            {
                 new Products
                 {
                     ID = 1,
@@ -749,7 +1031,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     OldPrice = 1800000,
                     NewPrice = 1500000,
                     Quantity = 100,
-                    PicturePath = "nike_jacket.jpg",
+                    PicturePath = "nike_jacket_1.1.jpg",
                     Created = new DateTime(2025, 4, 18),
                     BrandID = 1,  // Nike
                     CateID = 1,   // Áo khoác
@@ -1818,9 +2100,16 @@ namespace CRUD_asp.netMVC.Data.Seed
                     GenderID = 2, // Nữ
                     FeaturedID = 2,
                     Weight = 100
-                }
+                },
+
             };
             #endregion
+
+            foreach (var product in products)
+            {
+                var baseName = System.IO.Path.GetFileNameWithoutExtension(product.PicturePath);
+                product.PicturePath = $"{baseName}_1.1.jpg";
+            }
 
             return products;
         }

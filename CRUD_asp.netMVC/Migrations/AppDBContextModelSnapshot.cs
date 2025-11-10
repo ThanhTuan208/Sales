@@ -2048,6 +2048,1376 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasIndex("ProductID");
 
                     b.ToTable("ProductImages");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            PathNameImage = "nike_jacket_1.1.jpg",
+                            ProductID = 1
+                        },
+                        new
+                        {
+                            ID = 2,
+                            PathNameImage = "nike_jacket_1.2.jpg",
+                            ProductID = 1
+                        },
+                        new
+                        {
+                            ID = 3,
+                            PathNameImage = "nike_jacket_1.3.jpg",
+                            ProductID = 1
+                        },
+                        new
+                        {
+                            ID = 4,
+                            PathNameImage = "nike_jacket_1.4.jpg",
+                            ProductID = 1
+                        },
+                        new
+                        {
+                            ID = 5,
+                            PathNameImage = "nike_pants_1.1.jpg",
+                            ProductID = 2
+                        },
+                        new
+                        {
+                            ID = 6,
+                            PathNameImage = "nike_pants_1.2.jpg",
+                            ProductID = 2
+                        },
+                        new
+                        {
+                            ID = 7,
+                            PathNameImage = "nike_pants_1.3.jpg",
+                            ProductID = 2
+                        },
+                        new
+                        {
+                            ID = 8,
+                            PathNameImage = "nike_pants_1.4.jpg",
+                            ProductID = 2
+                        },
+                        new
+                        {
+                            ID = 9,
+                            PathNameImage = "nike_shoes_1.1.jpg",
+                            ProductID = 3
+                        },
+                        new
+                        {
+                            ID = 10,
+                            PathNameImage = "nike_shoes_1.2.jpg",
+                            ProductID = 3
+                        },
+                        new
+                        {
+                            ID = 11,
+                            PathNameImage = "nike_shoes_1.3.jpg",
+                            ProductID = 3
+                        },
+                        new
+                        {
+                            ID = 12,
+                            PathNameImage = "nike_shoes_1.4.jpg",
+                            ProductID = 3
+                        },
+                        new
+                        {
+                            ID = 13,
+                            PathNameImage = "nike_dress_1.1.jpg",
+                            ProductID = 4
+                        },
+                        new
+                        {
+                            ID = 14,
+                            PathNameImage = "nike_dress_1.2.jpg",
+                            ProductID = 4
+                        },
+                        new
+                        {
+                            ID = 15,
+                            PathNameImage = "nike_dress_1.3.jpg",
+                            ProductID = 4
+                        },
+                        new
+                        {
+                            ID = 16,
+                            PathNameImage = "nike_dress_1.4.jpg",
+                            ProductID = 4
+                        },
+                        new
+                        {
+                            ID = 17,
+                            PathNameImage = "nike_tshirt_1.1.jpg",
+                            ProductID = 5
+                        },
+                        new
+                        {
+                            ID = 18,
+                            PathNameImage = "nike_tshirt_1.2.jpg",
+                            ProductID = 5
+                        },
+                        new
+                        {
+                            ID = 19,
+                            PathNameImage = "nike_tshirt_1.3.jpg",
+                            ProductID = 5
+                        },
+                        new
+                        {
+                            ID = 20,
+                            PathNameImage = "nike_tshirt_1.4.jpg",
+                            ProductID = 5
+                        },
+                        new
+                        {
+                            ID = 21,
+                            PathNameImage = "nike_watch_1.1.jpg",
+                            ProductID = 6
+                        },
+                        new
+                        {
+                            ID = 22,
+                            PathNameImage = "nike_watch_1.2.jpg",
+                            ProductID = 6
+                        },
+                        new
+                        {
+                            ID = 25,
+                            PathNameImage = "adidas_jacket_1.1.jpg",
+                            ProductID = 7
+                        },
+                        new
+                        {
+                            ID = 26,
+                            PathNameImage = "adidas_jacket_1.2.jpg",
+                            ProductID = 7
+                        },
+                        new
+                        {
+                            ID = 27,
+                            PathNameImage = "adidas_jacket_1.3.jpg",
+                            ProductID = 7
+                        },
+                        new
+                        {
+                            ID = 28,
+                            PathNameImage = "adidas_jacket_1.4.jpg",
+                            ProductID = 7
+                        },
+                        new
+                        {
+                            ID = 29,
+                            PathNameImage = "adidas_pants_1.1.jpg",
+                            ProductID = 8
+                        },
+                        new
+                        {
+                            ID = 30,
+                            PathNameImage = "adidas_pants_1.2.jpg",
+                            ProductID = 8
+                        },
+                        new
+                        {
+                            ID = 31,
+                            PathNameImage = "adidas_pants_1.3.jpg",
+                            ProductID = 8
+                        },
+                        new
+                        {
+                            ID = 32,
+                            PathNameImage = "adidas_pants_1.4.jpg",
+                            ProductID = 8
+                        },
+                        new
+                        {
+                            ID = 33,
+                            PathNameImage = "adidas_shoes_1.1.jpg",
+                            ProductID = 9
+                        },
+                        new
+                        {
+                            ID = 34,
+                            PathNameImage = "adidas_shoes_1.2.jpg",
+                            ProductID = 9
+                        },
+                        new
+                        {
+                            ID = 35,
+                            PathNameImage = "adidas_shoes_1.3.jpg",
+                            ProductID = 9
+                        },
+                        new
+                        {
+                            ID = 36,
+                            PathNameImage = "adidas_shoes_1.4.jpg",
+                            ProductID = 9
+                        },
+                        new
+                        {
+                            ID = 37,
+                            PathNameImage = "adidas_dress_1.1.jpg",
+                            ProductID = 10
+                        },
+                        new
+                        {
+                            ID = 38,
+                            PathNameImage = "adidas_dress_1.2.jpg",
+                            ProductID = 10
+                        },
+                        new
+                        {
+                            ID = 39,
+                            PathNameImage = "adidas_dress_1.3.jpg",
+                            ProductID = 10
+                        },
+                        new
+                        {
+                            ID = 40,
+                            PathNameImage = "adidas_dress_1.4.jpg",
+                            ProductID = 10
+                        },
+                        new
+                        {
+                            ID = 41,
+                            PathNameImage = "adidas_tshirt_1.1.jpg",
+                            ProductID = 11
+                        },
+                        new
+                        {
+                            ID = 42,
+                            PathNameImage = "adidas_tshirt_1.2.jpg",
+                            ProductID = 11
+                        },
+                        new
+                        {
+                            ID = 43,
+                            PathNameImage = "adidas_tshirt_1.3.jpg",
+                            ProductID = 11
+                        },
+                        new
+                        {
+                            ID = 44,
+                            PathNameImage = "adidas_tshirt_1.4.jpg",
+                            ProductID = 11
+                        },
+                        new
+                        {
+                            ID = 45,
+                            PathNameImage = "adidas_watch_1.1.jpg",
+                            ProductID = 12
+                        },
+                        new
+                        {
+                            ID = 46,
+                            PathNameImage = "adidas_watch_1.2.jpg",
+                            ProductID = 12
+                        },
+                        new
+                        {
+                            ID = 47,
+                            PathNameImage = "adidas_watch_1.3.jpg",
+                            ProductID = 12
+                        },
+                        new
+                        {
+                            ID = 48,
+                            PathNameImage = "adidas_watch_1.4.jpg",
+                            ProductID = 12
+                        },
+                        new
+                        {
+                            ID = 49,
+                            PathNameImage = "zara_jacket_1.1.jpg",
+                            ProductID = 13
+                        },
+                        new
+                        {
+                            ID = 50,
+                            PathNameImage = "zara_jacket_1.2.jpg",
+                            ProductID = 13
+                        },
+                        new
+                        {
+                            ID = 51,
+                            PathNameImage = "zara_jacket_1.3.jpg",
+                            ProductID = 13
+                        },
+                        new
+                        {
+                            ID = 52,
+                            PathNameImage = "zara_jacket_1.4.jpg",
+                            ProductID = 13
+                        },
+                        new
+                        {
+                            ID = 53,
+                            PathNameImage = "zara_pants_1.1.jpg",
+                            ProductID = 14
+                        },
+                        new
+                        {
+                            ID = 54,
+                            PathNameImage = "zara_pants_1.2.jpg",
+                            ProductID = 14
+                        },
+                        new
+                        {
+                            ID = 55,
+                            PathNameImage = "zara_pants_1.3.jpg",
+                            ProductID = 14
+                        },
+                        new
+                        {
+                            ID = 56,
+                            PathNameImage = "zara_pants_1.4.jpg",
+                            ProductID = 14
+                        },
+                        new
+                        {
+                            ID = 57,
+                            PathNameImage = "zara_shoes_1.1.jpg",
+                            ProductID = 15
+                        },
+                        new
+                        {
+                            ID = 58,
+                            PathNameImage = "zara_shoes_1.2.jpg",
+                            ProductID = 15
+                        },
+                        new
+                        {
+                            ID = 59,
+                            PathNameImage = "zara_shoes_1.3.jpg",
+                            ProductID = 15
+                        },
+                        new
+                        {
+                            ID = 60,
+                            PathNameImage = "zara_shoes_1.4.jpg",
+                            ProductID = 15
+                        },
+                        new
+                        {
+                            ID = 61,
+                            PathNameImage = "zara_dress_1.1.jpg",
+                            ProductID = 16
+                        },
+                        new
+                        {
+                            ID = 62,
+                            PathNameImage = "zara_dress_1.2.jpg",
+                            ProductID = 16
+                        },
+                        new
+                        {
+                            ID = 63,
+                            PathNameImage = "zara_dress_1.3.jpg",
+                            ProductID = 16
+                        },
+                        new
+                        {
+                            ID = 64,
+                            PathNameImage = "zara_dress_1.4.jpg",
+                            ProductID = 16
+                        },
+                        new
+                        {
+                            ID = 65,
+                            PathNameImage = "zara_tshirt_1.1.jpg",
+                            ProductID = 17
+                        },
+                        new
+                        {
+                            ID = 66,
+                            PathNameImage = "zara_tshirt_1.2.jpg",
+                            ProductID = 17
+                        },
+                        new
+                        {
+                            ID = 67,
+                            PathNameImage = "zara_tshirt_1.3.jpg",
+                            ProductID = 17
+                        },
+                        new
+                        {
+                            ID = 68,
+                            PathNameImage = "zara_tshirt_1.4.jpg",
+                            ProductID = 17
+                        },
+                        new
+                        {
+                            ID = 69,
+                            PathNameImage = "zara_watch_1.1.jpg",
+                            ProductID = 18
+                        },
+                        new
+                        {
+                            ID = 70,
+                            PathNameImage = "zara_watch_1.2.jpg",
+                            ProductID = 18
+                        },
+                        new
+                        {
+                            ID = 73,
+                            PathNameImage = "h&m_jacket_1.1.jpg",
+                            ProductID = 19
+                        },
+                        new
+                        {
+                            ID = 74,
+                            PathNameImage = "h&m_jacket_1.2.jpg",
+                            ProductID = 19
+                        },
+                        new
+                        {
+                            ID = 75,
+                            PathNameImage = "h&m_jacket_1.3.jpg",
+                            ProductID = 19
+                        },
+                        new
+                        {
+                            ID = 76,
+                            PathNameImage = "h&m_jacket_1.4.jpg",
+                            ProductID = 19
+                        },
+                        new
+                        {
+                            ID = 77,
+                            PathNameImage = "h&m_pants_1.1.jpg",
+                            ProductID = 20
+                        },
+                        new
+                        {
+                            ID = 78,
+                            PathNameImage = "h&m_pants_1.2.jpg",
+                            ProductID = 20
+                        },
+                        new
+                        {
+                            ID = 79,
+                            PathNameImage = "h&m_pants_1.3.jpg",
+                            ProductID = 20
+                        },
+                        new
+                        {
+                            ID = 80,
+                            PathNameImage = "h&m_pants_1.4.jpg",
+                            ProductID = 20
+                        },
+                        new
+                        {
+                            ID = 81,
+                            PathNameImage = "h&m_shoes_1.1.jpg",
+                            ProductID = 21
+                        },
+                        new
+                        {
+                            ID = 82,
+                            PathNameImage = "h&m_shoes_1.2.jpg",
+                            ProductID = 21
+                        },
+                        new
+                        {
+                            ID = 83,
+                            PathNameImage = "h&m_shoes_1.3.jpg",
+                            ProductID = 21
+                        },
+                        new
+                        {
+                            ID = 84,
+                            PathNameImage = "h&m_shoes_1.4.jpg",
+                            ProductID = 21
+                        },
+                        new
+                        {
+                            ID = 85,
+                            PathNameImage = "h&m_dress_1.1.jpg",
+                            ProductID = 22
+                        },
+                        new
+                        {
+                            ID = 86,
+                            PathNameImage = "h&m_dress_1.2.jpg",
+                            ProductID = 22
+                        },
+                        new
+                        {
+                            ID = 87,
+                            PathNameImage = "h&m_dress_1.3.jpg",
+                            ProductID = 22
+                        },
+                        new
+                        {
+                            ID = 88,
+                            PathNameImage = "h&m_dress_1.4.jpg",
+                            ProductID = 22
+                        },
+                        new
+                        {
+                            ID = 89,
+                            PathNameImage = "h&m_tshirt_1.1.jpg",
+                            ProductID = 23
+                        },
+                        new
+                        {
+                            ID = 90,
+                            PathNameImage = "h&m_tshirt_1.2.jpg",
+                            ProductID = 23
+                        },
+                        new
+                        {
+                            ID = 91,
+                            PathNameImage = "h&m_tshirt_1.3.jpg",
+                            ProductID = 23
+                        },
+                        new
+                        {
+                            ID = 92,
+                            PathNameImage = "h&m_tshirt_1.4.jpg",
+                            ProductID = 23
+                        },
+                        new
+                        {
+                            ID = 93,
+                            PathNameImage = "h&m_watch_1.1.jpg",
+                            ProductID = 24
+                        },
+                        new
+                        {
+                            ID = 94,
+                            PathNameImage = "h&m_watch_1.2.jpg",
+                            ProductID = 24
+                        },
+                        new
+                        {
+                            ID = 95,
+                            PathNameImage = "h&m_watch_1.3.jpg",
+                            ProductID = 24
+                        },
+                        new
+                        {
+                            ID = 97,
+                            PathNameImage = "uniqlo_jacket_1.1.jpg",
+                            ProductID = 25
+                        },
+                        new
+                        {
+                            ID = 98,
+                            PathNameImage = "uniqlo_jacket_1.2.jpg",
+                            ProductID = 25
+                        },
+                        new
+                        {
+                            ID = 99,
+                            PathNameImage = "uniqlo_jacket_1.3.jpg",
+                            ProductID = 25
+                        },
+                        new
+                        {
+                            ID = 100,
+                            PathNameImage = "uniqlo_jacket_1.4.jpg",
+                            ProductID = 25
+                        },
+                        new
+                        {
+                            ID = 101,
+                            PathNameImage = "uniqlo_pants_1.1.jpg",
+                            ProductID = 26
+                        },
+                        new
+                        {
+                            ID = 102,
+                            PathNameImage = "uniqlo_pants_1.2.jpg",
+                            ProductID = 26
+                        },
+                        new
+                        {
+                            ID = 103,
+                            PathNameImage = "uniqlo_pants_1.3.jpg",
+                            ProductID = 26
+                        },
+                        new
+                        {
+                            ID = 104,
+                            PathNameImage = "uniqlo_pants_1.4.jpg",
+                            ProductID = 26
+                        },
+                        new
+                        {
+                            ID = 105,
+                            PathNameImage = "uniqlo_shoes_1.1.jpg",
+                            ProductID = 27
+                        },
+                        new
+                        {
+                            ID = 106,
+                            PathNameImage = "uniqlo_shoes_1.2.jpg",
+                            ProductID = 27
+                        },
+                        new
+                        {
+                            ID = 107,
+                            PathNameImage = "uniqlo_shoes_1.3.jpg",
+                            ProductID = 27
+                        },
+                        new
+                        {
+                            ID = 108,
+                            PathNameImage = "uniqlo_shoes_1.4.jpg",
+                            ProductID = 27
+                        },
+                        new
+                        {
+                            ID = 109,
+                            PathNameImage = "uniqlo_dress_1.1.jpg",
+                            ProductID = 28
+                        },
+                        new
+                        {
+                            ID = 110,
+                            PathNameImage = "uniqlo_dress_1.2.jpg",
+                            ProductID = 28
+                        },
+                        new
+                        {
+                            ID = 111,
+                            PathNameImage = "uniqlo_dress_1.3.jpg",
+                            ProductID = 28
+                        },
+                        new
+                        {
+                            ID = 112,
+                            PathNameImage = "uniqlo_dress_1.4.jpg",
+                            ProductID = 28
+                        },
+                        new
+                        {
+                            ID = 113,
+                            PathNameImage = "uniqlo_tshirt_1.1.jpg",
+                            ProductID = 29
+                        },
+                        new
+                        {
+                            ID = 114,
+                            PathNameImage = "uniqlo_tshirt_1.2.jpg",
+                            ProductID = 29
+                        },
+                        new
+                        {
+                            ID = 115,
+                            PathNameImage = "uniqlo_tshirt_1.3.jpg",
+                            ProductID = 29
+                        },
+                        new
+                        {
+                            ID = 116,
+                            PathNameImage = "uniqlo_tshirt_1.4.jpg",
+                            ProductID = 29
+                        },
+                        new
+                        {
+                            ID = 117,
+                            PathNameImage = "uniqlo_watch_1.1.jpg",
+                            ProductID = 30
+                        },
+                        new
+                        {
+                            ID = 118,
+                            PathNameImage = "uniqlo_watch_1.2.jpg",
+                            ProductID = 30
+                        },
+                        new
+                        {
+                            ID = 119,
+                            PathNameImage = "uniqlo_watch_1.3.jpg",
+                            ProductID = 30
+                        },
+                        new
+                        {
+                            ID = 121,
+                            PathNameImage = "gucci_jacket_1.1.jpg",
+                            ProductID = 31
+                        },
+                        new
+                        {
+                            ID = 122,
+                            PathNameImage = "gucci_jacket_1.2.jpg",
+                            ProductID = 31
+                        },
+                        new
+                        {
+                            ID = 123,
+                            PathNameImage = "gucci_jacket_1.3.jpg",
+                            ProductID = 31
+                        },
+                        new
+                        {
+                            ID = 124,
+                            PathNameImage = "gucci_jacket_1.4.jpg",
+                            ProductID = 31
+                        },
+                        new
+                        {
+                            ID = 125,
+                            PathNameImage = "gucci_pants_1.1.jpg",
+                            ProductID = 32
+                        },
+                        new
+                        {
+                            ID = 126,
+                            PathNameImage = "gucci_pants_1.2.jpg",
+                            ProductID = 32
+                        },
+                        new
+                        {
+                            ID = 127,
+                            PathNameImage = "gucci_pants_1.3.jpg",
+                            ProductID = 32
+                        },
+                        new
+                        {
+                            ID = 128,
+                            PathNameImage = "gucci_pants_1.4.jpg",
+                            ProductID = 32
+                        },
+                        new
+                        {
+                            ID = 129,
+                            PathNameImage = "gucci_shoes_1.1.jpg",
+                            ProductID = 33
+                        },
+                        new
+                        {
+                            ID = 130,
+                            PathNameImage = "gucci_shoes_1.2.jpg",
+                            ProductID = 33
+                        },
+                        new
+                        {
+                            ID = 131,
+                            PathNameImage = "gucci_shoes_1.3.jpg",
+                            ProductID = 33
+                        },
+                        new
+                        {
+                            ID = 132,
+                            PathNameImage = "gucci_shoes_1.4.jpg",
+                            ProductID = 33
+                        },
+                        new
+                        {
+                            ID = 133,
+                            PathNameImage = "gucci_dress_1.1.jpg",
+                            ProductID = 34
+                        },
+                        new
+                        {
+                            ID = 134,
+                            PathNameImage = "gucci_dress_1.2.jpg",
+                            ProductID = 34
+                        },
+                        new
+                        {
+                            ID = 135,
+                            PathNameImage = "gucci_dress_1.3.jpg",
+                            ProductID = 34
+                        },
+                        new
+                        {
+                            ID = 136,
+                            PathNameImage = "gucci_dress_1.4.jpg",
+                            ProductID = 34
+                        },
+                        new
+                        {
+                            ID = 137,
+                            PathNameImage = "gucci_tshirt_1.1.jpg",
+                            ProductID = 35
+                        },
+                        new
+                        {
+                            ID = 138,
+                            PathNameImage = "gucci_tshirt_1.2.jpg",
+                            ProductID = 35
+                        },
+                        new
+                        {
+                            ID = 139,
+                            PathNameImage = "gucci_tshirt_1.3.jpg",
+                            ProductID = 35
+                        },
+                        new
+                        {
+                            ID = 140,
+                            PathNameImage = "gucci_tshirt_1.4.jpg",
+                            ProductID = 35
+                        },
+                        new
+                        {
+                            ID = 141,
+                            PathNameImage = "gucci_watch_1.1.jpg",
+                            ProductID = 36
+                        },
+                        new
+                        {
+                            ID = 142,
+                            PathNameImage = "gucci_watch_1.2.jpg",
+                            ProductID = 36
+                        },
+                        new
+                        {
+                            ID = 143,
+                            PathNameImage = "levis_jacket_1.1.jpg",
+                            ProductID = 37
+                        },
+                        new
+                        {
+                            ID = 144,
+                            PathNameImage = "levis_jacket_1.2.jpg",
+                            ProductID = 37
+                        },
+                        new
+                        {
+                            ID = 145,
+                            PathNameImage = "levis_jacket_1.3.jpg",
+                            ProductID = 37
+                        },
+                        new
+                        {
+                            ID = 146,
+                            PathNameImage = "levis_jacket_1.4.jpg",
+                            ProductID = 37
+                        },
+                        new
+                        {
+                            ID = 147,
+                            PathNameImage = "levis_pants_1.1.jpg",
+                            ProductID = 38
+                        },
+                        new
+                        {
+                            ID = 148,
+                            PathNameImage = "levis_pants_1.2.jpg",
+                            ProductID = 38
+                        },
+                        new
+                        {
+                            ID = 149,
+                            PathNameImage = "levis_pants_1.3.jpg",
+                            ProductID = 38
+                        },
+                        new
+                        {
+                            ID = 150,
+                            PathNameImage = "levis_pants_1.4.jpg",
+                            ProductID = 38
+                        },
+                        new
+                        {
+                            ID = 151,
+                            PathNameImage = "levis_shoes_1.1.jpg",
+                            ProductID = 39
+                        },
+                        new
+                        {
+                            ID = 152,
+                            PathNameImage = "levis_shoes_1.2.jpg",
+                            ProductID = 39
+                        },
+                        new
+                        {
+                            ID = 153,
+                            PathNameImage = "levis_shoes_1.3.jpg",
+                            ProductID = 39
+                        },
+                        new
+                        {
+                            ID = 154,
+                            PathNameImage = "levis_shoes_1.4.jpg",
+                            ProductID = 39
+                        },
+                        new
+                        {
+                            ID = 155,
+                            PathNameImage = "levis_dress_1.1.jpg",
+                            ProductID = 40
+                        },
+                        new
+                        {
+                            ID = 156,
+                            PathNameImage = "levis_dress_1.2.jpg",
+                            ProductID = 40
+                        },
+                        new
+                        {
+                            ID = 157,
+                            PathNameImage = "levis_dress_1.3.jpg",
+                            ProductID = 40
+                        },
+                        new
+                        {
+                            ID = 158,
+                            PathNameImage = "levis_dress_1.4.jpg",
+                            ProductID = 40
+                        },
+                        new
+                        {
+                            ID = 159,
+                            PathNameImage = "levis_tshirt_1.1.jpg",
+                            ProductID = 41
+                        },
+                        new
+                        {
+                            ID = 160,
+                            PathNameImage = "levis_tshirt_1.2.jpg",
+                            ProductID = 41
+                        },
+                        new
+                        {
+                            ID = 161,
+                            PathNameImage = "levis_tshirt_1.3.jpg",
+                            ProductID = 41
+                        },
+                        new
+                        {
+                            ID = 162,
+                            PathNameImage = "levis_tshirt_1.4.jpg",
+                            ProductID = 41
+                        },
+                        new
+                        {
+                            ID = 163,
+                            PathNameImage = "levis_watch_1.1.jpg",
+                            ProductID = 42
+                        },
+                        new
+                        {
+                            ID = 164,
+                            PathNameImage = "levis_watch_1.2.jpg",
+                            ProductID = 42
+                        },
+                        new
+                        {
+                            ID = 165,
+                            PathNameImage = "levis_watch_1.3.jpg",
+                            ProductID = 42
+                        },
+                        new
+                        {
+                            ID = 166,
+                            PathNameImage = "lacoste_jacket_1.1.jpg",
+                            ProductID = 43
+                        },
+                        new
+                        {
+                            ID = 167,
+                            PathNameImage = "lacoste_jacket_1.2.jpg",
+                            ProductID = 43
+                        },
+                        new
+                        {
+                            ID = 168,
+                            PathNameImage = "lacoste_jacket_1.3.jpg",
+                            ProductID = 43
+                        },
+                        new
+                        {
+                            ID = 169,
+                            PathNameImage = "lacoste_jacket_1.4.jpg",
+                            ProductID = 43
+                        },
+                        new
+                        {
+                            ID = 170,
+                            PathNameImage = "lacoste_pants_1.1.jpg",
+                            ProductID = 44
+                        },
+                        new
+                        {
+                            ID = 171,
+                            PathNameImage = "lacoste_pants_1.2.jpg",
+                            ProductID = 44
+                        },
+                        new
+                        {
+                            ID = 172,
+                            PathNameImage = "lacoste_pants_1.3.jpg",
+                            ProductID = 44
+                        },
+                        new
+                        {
+                            ID = 173,
+                            PathNameImage = "lacoste_pants_1.4.jpg",
+                            ProductID = 44
+                        },
+                        new
+                        {
+                            ID = 174,
+                            PathNameImage = "lacoste_shoes_1.1.jpg",
+                            ProductID = 45
+                        },
+                        new
+                        {
+                            ID = 175,
+                            PathNameImage = "lacoste_shoes_1.2.jpg",
+                            ProductID = 45
+                        },
+                        new
+                        {
+                            ID = 176,
+                            PathNameImage = "lacoste_shoes_1.3.jpg",
+                            ProductID = 45
+                        },
+                        new
+                        {
+                            ID = 177,
+                            PathNameImage = "lacoste_shoes_1.4.jpg",
+                            ProductID = 45
+                        },
+                        new
+                        {
+                            ID = 178,
+                            PathNameImage = "lacoste_dress_1.1.jpg",
+                            ProductID = 46
+                        },
+                        new
+                        {
+                            ID = 179,
+                            PathNameImage = "lacoste_dress_1.2.jpg",
+                            ProductID = 46
+                        },
+                        new
+                        {
+                            ID = 180,
+                            PathNameImage = "lacoste_dress_1.3.jpg",
+                            ProductID = 46
+                        },
+                        new
+                        {
+                            ID = 181,
+                            PathNameImage = "lacoste_dress_1.4.jpg",
+                            ProductID = 46
+                        },
+                        new
+                        {
+                            ID = 182,
+                            PathNameImage = "lacoste_tshirt_1.1.jpg",
+                            ProductID = 47
+                        },
+                        new
+                        {
+                            ID = 183,
+                            PathNameImage = "lacoste_tshirt_1.2.jpg",
+                            ProductID = 47
+                        },
+                        new
+                        {
+                            ID = 184,
+                            PathNameImage = "lacoste_tshirt_1.3.jpg",
+                            ProductID = 47
+                        },
+                        new
+                        {
+                            ID = 185,
+                            PathNameImage = "lacoste_tshirt_1.4.jpg",
+                            ProductID = 47
+                        },
+                        new
+                        {
+                            ID = 186,
+                            PathNameImage = "lacoste_watch_1.1.jpg",
+                            ProductID = 48
+                        },
+                        new
+                        {
+                            ID = 187,
+                            PathNameImage = "lacoste_watch_1.2.jpg",
+                            ProductID = 48
+                        },
+                        new
+                        {
+                            ID = 188,
+                            PathNameImage = "lacoste_watch_1.3.jpg",
+                            ProductID = 48
+                        },
+                        new
+                        {
+                            ID = 189,
+                            PathNameImage = "puma_jacket_1.1.jpg",
+                            ProductID = 49
+                        },
+                        new
+                        {
+                            ID = 190,
+                            PathNameImage = "puma_jacket_1.2.jpg",
+                            ProductID = 49
+                        },
+                        new
+                        {
+                            ID = 191,
+                            PathNameImage = "puma_jacket_1.3.jpg",
+                            ProductID = 49
+                        },
+                        new
+                        {
+                            ID = 192,
+                            PathNameImage = "puma_jacket_1.4.jpg",
+                            ProductID = 49
+                        },
+                        new
+                        {
+                            ID = 193,
+                            PathNameImage = "puma_pants_1.1.jpg",
+                            ProductID = 50
+                        },
+                        new
+                        {
+                            ID = 194,
+                            PathNameImage = "puma_pants_1.2.jpg",
+                            ProductID = 50
+                        },
+                        new
+                        {
+                            ID = 195,
+                            PathNameImage = "puma_pants_1.3.jpg",
+                            ProductID = 50
+                        },
+                        new
+                        {
+                            ID = 196,
+                            PathNameImage = "puma_pants_1.4.jpg",
+                            ProductID = 50
+                        },
+                        new
+                        {
+                            ID = 197,
+                            PathNameImage = "puma_shoes_1.1.jpg",
+                            ProductID = 51
+                        },
+                        new
+                        {
+                            ID = 198,
+                            PathNameImage = "puma_shoes_1.2.jpg",
+                            ProductID = 51
+                        },
+                        new
+                        {
+                            ID = 199,
+                            PathNameImage = "puma_shoes_1.3.jpg",
+                            ProductID = 51
+                        },
+                        new
+                        {
+                            ID = 200,
+                            PathNameImage = "puma_shoes_1.4.jpg",
+                            ProductID = 51
+                        },
+                        new
+                        {
+                            ID = 201,
+                            PathNameImage = "puma_dress_1.1.jpg",
+                            ProductID = 52
+                        },
+                        new
+                        {
+                            ID = 202,
+                            PathNameImage = "puma_dress_1.2.jpg",
+                            ProductID = 52
+                        },
+                        new
+                        {
+                            ID = 203,
+                            PathNameImage = "puma_dress_1.3.jpg",
+                            ProductID = 52
+                        },
+                        new
+                        {
+                            ID = 204,
+                            PathNameImage = "puma_dress_1.4.jpg",
+                            ProductID = 52
+                        },
+                        new
+                        {
+                            ID = 205,
+                            PathNameImage = "puma_tshirt_1.1.jpg",
+                            ProductID = 53
+                        },
+                        new
+                        {
+                            ID = 206,
+                            PathNameImage = "puma_tshirt_1.2.jpg",
+                            ProductID = 53
+                        },
+                        new
+                        {
+                            ID = 207,
+                            PathNameImage = "puma_tshirt_1.3.jpg",
+                            ProductID = 53
+                        },
+                        new
+                        {
+                            ID = 208,
+                            PathNameImage = "puma_tshirt_1.4.jpg",
+                            ProductID = 53
+                        },
+                        new
+                        {
+                            ID = 209,
+                            PathNameImage = "puma_watch_1.1.jpg",
+                            ProductID = 54
+                        },
+                        new
+                        {
+                            ID = 210,
+                            PathNameImage = "puma_watch_1.2.jpg",
+                            ProductID = 54
+                        },
+                        new
+                        {
+                            ID = 211,
+                            PathNameImage = "puma_watch_1.3.jpg",
+                            ProductID = 54
+                        },
+                        new
+                        {
+                            ID = 212,
+                            PathNameImage = "chanel_jacket_1.1.jpg",
+                            ProductID = 55
+                        },
+                        new
+                        {
+                            ID = 213,
+                            PathNameImage = "chanel_jacket_1.2.jpg",
+                            ProductID = 55
+                        },
+                        new
+                        {
+                            ID = 214,
+                            PathNameImage = "chanel_jacket_1.3.jpg",
+                            ProductID = 55
+                        },
+                        new
+                        {
+                            ID = 215,
+                            PathNameImage = "chanel_jacket_1.4.jpg",
+                            ProductID = 55
+                        },
+                        new
+                        {
+                            ID = 216,
+                            PathNameImage = "chanel_pants_1.1.jpg",
+                            ProductID = 56
+                        },
+                        new
+                        {
+                            ID = 217,
+                            PathNameImage = "chanel_pants_1.2.jpg",
+                            ProductID = 56
+                        },
+                        new
+                        {
+                            ID = 218,
+                            PathNameImage = "chanel_pants_1.3.jpg",
+                            ProductID = 56
+                        },
+                        new
+                        {
+                            ID = 219,
+                            PathNameImage = "chanel_pants_1.4.jpg",
+                            ProductID = 56
+                        },
+                        new
+                        {
+                            ID = 220,
+                            PathNameImage = "chanel_shoes_1.1.jpg",
+                            ProductID = 57
+                        },
+                        new
+                        {
+                            ID = 221,
+                            PathNameImage = "chanel_shoes_1.2.jpg",
+                            ProductID = 57
+                        },
+                        new
+                        {
+                            ID = 222,
+                            PathNameImage = "chanel_shoes_1.3.jpg",
+                            ProductID = 57
+                        },
+                        new
+                        {
+                            ID = 223,
+                            PathNameImage = "chanel_shoes_1.4.jpg",
+                            ProductID = 57
+                        },
+                        new
+                        {
+                            ID = 224,
+                            PathNameImage = "chanel_dress_1.1.jpg",
+                            ProductID = 58
+                        },
+                        new
+                        {
+                            ID = 225,
+                            PathNameImage = "chanel_dress_1.2.jpg",
+                            ProductID = 58
+                        },
+                        new
+                        {
+                            ID = 226,
+                            PathNameImage = "chanel_dress_1.3.jpg",
+                            ProductID = 58
+                        },
+                        new
+                        {
+                            ID = 227,
+                            PathNameImage = "chanel_dress_1.4.jpg",
+                            ProductID = 58
+                        },
+                        new
+                        {
+                            ID = 228,
+                            PathNameImage = "chanel_tshirt_1.1.jpg",
+                            ProductID = 59
+                        },
+                        new
+                        {
+                            ID = 229,
+                            PathNameImage = "chanel_tshirt_1.2.jpg",
+                            ProductID = 59
+                        },
+                        new
+                        {
+                            ID = 230,
+                            PathNameImage = "chanel_tshirt_1.3.jpg",
+                            ProductID = 59
+                        },
+                        new
+                        {
+                            ID = 231,
+                            PathNameImage = "chanel_tshirt_1.4.jpg",
+                            ProductID = 59
+                        },
+                        new
+                        {
+                            ID = 232,
+                            PathNameImage = "chanel_watch_1.1.jpg",
+                            ProductID = 60
+                        },
+                        new
+                        {
+                            ID = 233,
+                            PathNameImage = "chanel_watch_1.2.jpg",
+                            ProductID = 60
+                        },
+                        new
+                        {
+                            ID = 234,
+                            PathNameImage = "chanel_watch_1.3.jpg",
+                            ProductID = 60
+                        });
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductMaterial", b =>
@@ -12552,7 +13922,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "ao khoac nam chinh hang nike, phong cach the thao",
                             NormalizedName = "ao khoac nam nike",
                             OldPrice = 1800000.0,
-                            PicturePath = "nike_jacket.jpg",
+                            PicturePath = "nike_jacket_1.1_1.1.jpg",
                             Quantity = 100,
                             Weight = 300
                         },
@@ -12570,7 +13940,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "quan the thao nike chat lieu thoang mat, phu hop tap luyen",
                             NormalizedName = "quan the thao nike",
                             OldPrice = 0.0,
-                            PicturePath = "nike_pants.webp",
+                            PicturePath = "nike_pants_1.1.jpg",
                             Quantity = 80,
                             Weight = 200
                         },
@@ -12588,7 +13958,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "giay the thao nike air max thoai mai va ben bi",
                             NormalizedName = "giay nike air max",
                             OldPrice = 3000000.0,
-                            PicturePath = "nike_shoes.jpg",
+                            PicturePath = "nike_shoes_1.1.jpg",
                             Quantity = 60,
                             Weight = 400
                         },
@@ -12606,7 +13976,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "vay the thao nu nang đong, thiet ke hien đai",
                             NormalizedName = "vay the thao nike nu",
                             OldPrice = 0.0,
-                            PicturePath = "nike_dress.jpg",
+                            PicturePath = "nike_dress_1.1.jpg",
                             Quantity = 40,
                             Weight = 150
                         },
@@ -12624,7 +13994,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "ao thun nam nike co tron, chat lieu cotton thoai mai",
                             NormalizedName = "ao thun nike basic",
                             OldPrice = 650000.0,
-                            PicturePath = "nike_tshirt.jpg",
+                            PicturePath = "nike_tshirt_1.1.jpg",
                             Quantity = 200,
                             Weight = 150
                         },
@@ -12642,7 +14012,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "đong ho the thao phong cach nike, chong nuoc, day silicon",
                             NormalizedName = "đong ho the thao nike",
                             OldPrice = 0.0,
-                            PicturePath = "nike_watch.jpg",
+                            PicturePath = "nike_watch_1.1.jpg",
                             Quantity = 25,
                             Weight = 50
                         },
@@ -12660,7 +14030,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke co đien, chong gio va giu am tot",
                             NormalizedName = "ao khoac adidas originals",
                             OldPrice = 1600000.0,
-                            PicturePath = "adidas_jacket.jpg",
+                            PicturePath = "adidas_jacket_1.1.jpg",
                             Quantity = 70,
                             Weight = 350
                         },
@@ -12678,7 +14048,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "quan the thao thoai mai, phu hop van đong",
                             NormalizedName = "quan jogger adidas",
                             OldPrice = 0.0,
-                            PicturePath = "adidas_pants.jpg",
+                            PicturePath = "adidas_pants_1.1.jpg",
                             Quantity = 90,
                             Weight = 200
                         },
@@ -12696,7 +14066,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "đem boost em ai, ho tro chay bo hieu qua",
                             NormalizedName = "giay adidas ultraboost",
                             OldPrice = 3400000.0,
-                            PicturePath = "adidas_shoes.jpg",
+                            PicturePath = "adidas_shoes_1.1.jpg",
                             Quantity = 50,
                             Weight = 400
                         },
@@ -12714,7 +14084,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "vay the thao nhe, tham hut mo hoi tot",
                             NormalizedName = "vay tennis adidas nu",
                             OldPrice = 0.0,
-                            PicturePath = "adidas_dress.jpg",
+                            PicturePath = "adidas_dress_1.1.jpg",
                             Quantity = 45,
                             Weight = 150
                         },
@@ -12732,7 +14102,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "ao thun co đien, logo 3 soc đac trung",
                             NormalizedName = "ao thun adidas co tron",
                             OldPrice = 700000.0,
-                            PicturePath = "adidas_tshirt.jpg",
+                            PicturePath = "adidas_tshirt_1.1.jpg",
                             Quantity = 150,
                             Weight = 150
                         },
@@ -12750,7 +14120,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke nang đong, chong nuoc tot",
                             NormalizedName = "đong ho the thao adidas",
                             OldPrice = 0.0,
-                            PicturePath = "adidas_watch.jpg",
+                            PicturePath = "adidas_watch_1.1.jpg",
                             Quantity = 30,
                             Weight = 50
                         },
@@ -12768,7 +14138,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "ao khoac nu dang dai thanh lich",
                             NormalizedName = "ao khoac zara dang dai",
                             OldPrice = 2000000.0,
-                            PicturePath = "zara_jacket.jpg",
+                            PicturePath = "zara_jacket_1.1.jpg",
                             Quantity = 60,
                             Weight = 400
                         },
@@ -12786,7 +14156,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "phong cach hien đai, thoi trang",
                             NormalizedName = "quan ong rong zara",
                             OldPrice = 0.0,
-                            PicturePath = "zara_pants.jpg",
+                            PicturePath = "zara_pants_1.1.jpg",
                             Quantity = 40,
                             Weight = 250
                         },
@@ -12804,7 +14174,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke sang trong, phu hop tiec tung",
                             NormalizedName = "giay cao got zara",
                             OldPrice = 1300000.0,
-                            PicturePath = "zara_heels.jpg",
+                            PicturePath = "zara_heels_1.1.jpg",
                             Quantity = 55,
                             Weight = 300
                         },
@@ -12822,7 +14192,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "vay dai thuot tha, thanh lich",
                             NormalizedName = "vay xep ly zara",
                             OldPrice = 0.0,
-                            PicturePath = "zara_dress.jpg",
+                            PicturePath = "zara_dress_1.1.jpg",
                             Quantity = 35,
                             Weight = 200
                         },
@@ -12840,7 +14210,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "ao thun đon gian, de phoi đo",
                             NormalizedName = "ao thun zara basic",
                             OldPrice = 500000.0,
-                            PicturePath = "zara_tshirt.jpg",
+                            PicturePath = "zara_tshirt_1.1.jpg",
                             Quantity = 90,
                             Weight = 150
                         },
@@ -12858,7 +14228,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke mat tron, day da tinh te",
                             NormalizedName = "đong ho kim zara",
                             OldPrice = 0.0,
-                            PicturePath = "zara_watch.jpg",
+                            PicturePath = "zara_watch_1.1.jpg",
                             Quantity = 25,
                             Weight = 50
                         },
@@ -12876,7 +14246,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "chong gio, nhe va gon",
                             NormalizedName = "ao khoac du h&m",
                             OldPrice = 1000000.0,
-                            PicturePath = "hm_jacket.jpg",
+                            PicturePath = "hm_jacket_1.1.jpg",
                             Quantity = 80,
                             Weight = 300
                         },
@@ -12894,7 +14264,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "phong cach cong so lich su",
                             NormalizedName = "quan tay h&m",
                             OldPrice = 0.0,
-                            PicturePath = "hm_pants.jpg",
+                            PicturePath = "hm_pants_1.1.jpg",
                             Quantity = 65,
                             Weight = 250
                         },
@@ -12912,7 +14282,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "giay đon gian, nang đong",
                             NormalizedName = "giay the thao h&m",
                             OldPrice = 900000.0,
-                            PicturePath = "hm_shoes.jpg",
+                            PicturePath = "hm_shoes_1.1.jpg",
                             Quantity = 100,
                             Weight = 350
                         },
@@ -12930,7 +14300,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "vay xinh xan cho mua he",
                             NormalizedName = "vay ngan hoa nhi h&m",
                             OldPrice = 0.0,
-                            PicturePath = "hm_dress.jpg",
+                            PicturePath = "hm_dress_1.1.jpg",
                             Quantity = 45,
                             Weight = 150
                         },
@@ -12948,7 +14318,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "ao thun tron gia re",
                             NormalizedName = "ao thun nam basic h&m",
                             OldPrice = 250000.0,
-                            PicturePath = "hm_tshirt.jpg",
+                            PicturePath = "hm_tshirt_1.1.jpg",
                             Quantity = 150,
                             Weight = 150
                         },
@@ -12966,7 +14336,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke đon gian, hien đai",
                             NormalizedName = "đong ho day silicon h&m",
                             OldPrice = 0.0,
-                            PicturePath = "hm_watch.jpg",
+                            PicturePath = "hm_watch_1.1.jpg",
                             Quantity = 40,
                             Weight = 50
                         },
@@ -12984,7 +14354,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "giu am nhe nhang, tien loi",
                             NormalizedName = "ao khoac long vu uniqlo",
                             OldPrice = 1900000.0,
-                            PicturePath = "uniqlo_jacket.jpg",
+                            PicturePath = "uniqlo_jacket_1.1.jpg",
                             Quantity = 70,
                             Weight = 250
                         },
@@ -13002,7 +14372,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "jean co gian, phong cach toi gian",
                             NormalizedName = "quan jean uniqlo",
                             OldPrice = 0.0,
-                            PicturePath = "uniqlo_jeans.jpg",
+                            PicturePath = "uniqlo_jeans_1.1.jpg",
                             Quantity = 50,
                             Weight = 300
                         },
@@ -13020,7 +14390,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke toi gian, thoai mai",
                             NormalizedName = "giay sneaker uniqlo",
                             OldPrice = 1150000.0,
-                            PicturePath = "uniqlo_shoes.jpg",
+                            PicturePath = "uniqlo_shoes_1.1.jpg",
                             Quantity = 60,
                             Weight = 350
                         },
@@ -13038,7 +14408,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke toi gian, thoai mai cho mua he",
                             NormalizedName = "vay cotton uniqlo",
                             OldPrice = 0.0,
-                            PicturePath = "uniqlo_dress.jpg",
+                            PicturePath = "uniqlo_dress_1.1.jpg",
                             Quantity = 40,
                             Weight = 150
                         },
@@ -13056,7 +14426,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thoang mat, nhanh kho, thich hop mua he",
                             NormalizedName = "ao thun airism uniqlo",
                             OldPrice = 450000.0,
-                            PicturePath = "uniqlo_tshirt.jpg",
+                            PicturePath = "uniqlo_tshirt_1.1.jpg",
                             Quantity = 120,
                             Weight = 150
                         },
@@ -13074,7 +14444,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "phong cach toi gian, day da đen",
                             NormalizedName = "đong ho toi gian uniqlo",
                             OldPrice = 0.0,
-                            PicturePath = "uniqlo_watch.jpg",
+                            PicturePath = "uniqlo_watch_1.1.jpg",
                             Quantity = 30,
                             Weight = 50
                         },
@@ -13092,7 +14462,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke sang trong, danh cho thoi trang cao cap",
                             NormalizedName = "ao khoac cao cap gucci",
                             OldPrice = 27000000.0,
-                            PicturePath = "gucci_jacket.jpg",
+                            PicturePath = "gucci_jacket_1.1.jpg",
                             Quantity = 10,
                             Weight = 500
                         },
@@ -13110,7 +14480,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "phong cach lich lam, chat lieu cao cap",
                             NormalizedName = "quan tay gucci nam",
                             OldPrice = 0.0,
-                            PicturePath = "gucci_pants.jpg",
+                            PicturePath = "gucci_pants_1.1.jpg",
                             Quantity = 15,
                             Weight = 300
                         },
@@ -13128,7 +14498,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke logo đac trung, đang cap",
                             NormalizedName = "giay luoi gucci",
                             OldPrice = 24000000.0,
-                            PicturePath = "gucci_shoes.jpg",
+                            PicturePath = "gucci_shoes_1.1.jpg",
                             Quantity = 12,
                             Weight = 450
                         },
@@ -13146,7 +14516,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "chat lieu mem mai, sang trong",
                             NormalizedName = "vay lua cao cap gucci",
                             OldPrice = 0.0,
-                            PicturePath = "gucci_dress.jpg",
+                            PicturePath = "gucci_dress_1.1.jpg",
                             Quantity = 8,
                             Weight = 200
                         },
@@ -13164,7 +14534,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "phong cach tre trung, thoi thuong",
                             NormalizedName = "ao thun gucci logo lon",
                             OldPrice = 9500000.0,
-                            PicturePath = "gucci_tshirt.jpg",
+                            PicturePath = "gucci_tshirt_1.1.jpg",
                             Quantity = 20,
                             Weight = 150
                         },
@@ -13182,7 +14552,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "đong ho xa xi voi thiet ke tinh xao",
                             NormalizedName = "đong ho đinh đa gucci",
                             OldPrice = 0.0,
-                            PicturePath = "gucci_watch.jpg",
+                            PicturePath = "gucci_watch_1.1.jpg",
                             Quantity = 5,
                             Weight = 100
                         },
@@ -13200,7 +14570,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "chat lieu jean ben, phong cach co đien",
                             NormalizedName = "ao khoac jean levi's",
                             OldPrice = 1600000.0,
-                            PicturePath = "levis_jacket.jpg",
+                            PicturePath = "levis_jacket_1.1.jpg",
                             Quantity = 40,
                             Weight = 400
                         },
@@ -13218,7 +14588,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "form dang chuan my, chat luong cao",
                             NormalizedName = "quan jeans levi's 501",
                             OldPrice = 0.0,
-                            PicturePath = "levis_jeans.jpg",
+                            PicturePath = "levis_jeans_1.1.jpg",
                             Quantity = 60,
                             Weight = 300
                         },
@@ -13236,7 +14606,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thoai mai va thoi trang hang ngay",
                             NormalizedName = "giay the thao levi's",
                             OldPrice = 1250000.0,
-                            PicturePath = "levis_shoes.jpg",
+                            PicturePath = "levis_shoes_1.1.jpg",
                             Quantity = 35,
                             Weight = 350
                         },
@@ -13254,7 +14624,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke tre trung, nang đong",
                             NormalizedName = "vay bo levi's nu",
                             OldPrice = 0.0,
-                            PicturePath = "levis_dress.jpg",
+                            PicturePath = "levis_dress_1.1.jpg",
                             Quantity = 20,
                             Weight = 250
                         },
@@ -13272,7 +14642,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "logo co đien, phong cach my",
                             NormalizedName = "ao thun co tron levi's",
                             OldPrice = 550000.0,
-                            PicturePath = "levis_tshirt.jpg",
+                            PicturePath = "levis_tshirt_1.1.jpg",
                             Quantity = 100,
                             Weight = 150
                         },
@@ -13290,7 +14660,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "đon gian, manh me, ca tinh",
                             NormalizedName = "đong ho day da levi's",
                             OldPrice = 0.0,
-                            PicturePath = "levis_watch.jpg",
+                            PicturePath = "levis_watch_1.1.jpg",
                             Quantity = 15,
                             Weight = 50
                         },
@@ -13308,7 +14678,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke nang đong, thoi trang",
                             NormalizedName = "ao khoac the thao lacoste",
                             OldPrice = 2900000.0,
-                            PicturePath = "lacoste_jacket.jpg",
+                            PicturePath = "lacoste_jacket_1.1.jpg",
                             Quantity = 30,
                             Weight = 300
                         },
@@ -13326,7 +14696,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "phong cach the thao, thoang mat",
                             NormalizedName = "quan short lacoste",
                             OldPrice = 0.0,
-                            PicturePath = "lacoste_short.jpg",
+                            PicturePath = "lacoste_short_1.1.jpg",
                             Quantity = 40,
                             Weight = 150
                         },
@@ -13344,7 +14714,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "chat lieu cao cap, thiet ke tinh te",
                             NormalizedName = "giay sneaker lacoste",
                             OldPrice = 2400000.0,
-                            PicturePath = "lacoste_shoes.jpg",
+                            PicturePath = "lacoste_shoes_1.1.jpg",
                             Quantity = 25,
                             Weight = 400
                         },
@@ -13362,7 +14732,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "lich su, sang trong cho nu",
                             NormalizedName = "vay polo lacoste",
                             OldPrice = 0.0,
-                            PicturePath = "lacoste_dress.jpg",
+                            PicturePath = "lacoste_dress_1.1.jpg",
                             Quantity = 18,
                             Weight = 150
                         },
@@ -13380,7 +14750,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "bieu tuong noi bat voi logo ca sau",
                             NormalizedName = "ao thun ca sau lacoste",
                             OldPrice = 1200000.0,
-                            PicturePath = "lacoste_tshirt.jpg",
+                            PicturePath = "lacoste_tshirt_1.1.jpg",
                             Quantity = 55,
                             Weight = 150
                         },
@@ -13398,7 +14768,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "nang đong, tre trung, phu hop voi nguoi choi the thao",
                             NormalizedName = "đong ho the thao lacoste",
                             OldPrice = 0.0,
-                            PicturePath = "lacoste_watch.jpg",
+                            PicturePath = "lacoste_watch_1.1.jpg",
                             Quantity = 20,
                             Weight = 50
                         },
@@ -13416,7 +14786,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke hien đai, nang đong",
                             NormalizedName = "ao khoac the thao puma",
                             OldPrice = 1700000.0,
-                            PicturePath = "puma_jacket.jpg",
+                            PicturePath = "puma_jacket_1.1.jpg",
                             Quantity = 50,
                             Weight = 300
                         },
@@ -13434,7 +14804,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thoai mai, phu hop van đong",
                             NormalizedName = "quan jogger puma",
                             OldPrice = 0.0,
-                            PicturePath = "puma_pants.jpg",
+                            PicturePath = "puma_pants_1.1.jpg",
                             Quantity = 70,
                             Weight = 200
                         },
@@ -13452,7 +14822,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke the thao, ho tro di chuyen",
                             NormalizedName = "giay chay bo puma",
                             OldPrice = 2000000.0,
-                            PicturePath = "puma_shoes.jpg",
+                            PicturePath = "puma_shoes_1.1.jpg",
                             Quantity = 40,
                             Weight = 400
                         },
@@ -13470,7 +14840,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "phu hop tap luyen hoac mac thuong ngay",
                             NormalizedName = "vay the thao puma nu",
                             OldPrice = 0.0,
-                            PicturePath = "puma_dress.jpg",
+                            PicturePath = "puma_dress_1.1.jpg",
                             Quantity = 25,
                             Weight = 150
                         },
@@ -13488,7 +14858,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "chat vai tham hut, thoang mat",
                             NormalizedName = "ao thun the thao puma",
                             OldPrice = 650000.0,
-                            PicturePath = "puma_tshirt.jpg",
+                            PicturePath = "puma_tshirt_1.1.jpg",
                             Quantity = 90,
                             Weight = 150
                         },
@@ -13506,7 +14876,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke manh me, phong cach",
                             NormalizedName = "đong ho the thao puma",
                             OldPrice = 0.0,
-                            PicturePath = "puma_watch.jpg",
+                            PicturePath = "puma_watch_1.1.jpg",
                             Quantity = 18,
                             Weight = 50
                         },
@@ -13524,7 +14894,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "đang cap, thoi thuong, thiet ke quy phai",
                             NormalizedName = "ao khoac da chanel",
                             OldPrice = 10000000.0,
-                            PicturePath = "chanel_jacket.jpg",
+                            PicturePath = "chanel_jacket_1.1.jpg",
                             Quantity = 15,
                             Weight = 450
                         },
@@ -13542,7 +14912,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "đuong may tinh xao, chat lieu mem min",
                             NormalizedName = "quan vai cao cap chanel",
                             OldPrice = 0.0,
-                            PicturePath = "chanel_pants.jpg",
+                            PicturePath = "chanel_pants_1.1.jpg",
                             Quantity = 12,
                             Weight = 250
                         },
@@ -13560,7 +14930,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thanh lich, sang trong",
                             NormalizedName = "giay cao got chanel",
                             OldPrice = 9000000.0,
-                            PicturePath = "chanel_shoes.jpg",
+                            PicturePath = "chanel_shoes_1.1.jpg",
                             Quantity = 10,
                             Weight = 300
                         },
@@ -13578,7 +14948,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "long lay, thiet ke quyen ru",
                             NormalizedName = "vay da hoi chanel",
                             OldPrice = 0.0,
-                            PicturePath = "chanel_dress.jpg",
+                            PicturePath = "chanel_dress_1.1.jpg",
                             Quantity = 8,
                             Weight = 200
                         },
@@ -13596,7 +14966,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "đon gian nhung đay tinh te",
                             NormalizedName = "ao thun cao cap chanel",
                             OldPrice = 3500000.0,
-                            PicturePath = "chanel_tshirt.jpg",
+                            PicturePath = "chanel_tshirt_1.1.jpg",
                             Quantity = 20,
                             Weight = 150
                         },
@@ -13614,7 +14984,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "tinh xao, sang trong va nu tinh",
                             NormalizedName = "đong ho chanel sang trong",
                             OldPrice = 0.0,
-                            PicturePath = "chanel_watch.jpg",
+                            PicturePath = "chanel_watch_1.1.jpg",
                             Quantity = 6,
                             Weight = 100
                         });

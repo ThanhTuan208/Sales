@@ -67,6 +67,9 @@ namespace CRUD_asp.netMVC.Data
             // Them du lieu ProductQuantity
             modelBuilder.SeedProductQty();
 
+            // Them du lieu SeedProductImage
+            modelBuilder.SeedProductImage();
+
             // Them du lieu Products, productSeason, productStyle, productColor, productGender
             modelBuilder.SeedProducts_ProductSeason_ProductStyle();
         }
