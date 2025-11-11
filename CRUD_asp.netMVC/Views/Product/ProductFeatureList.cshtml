@@ -30,7 +30,7 @@
 
 <div id="fh5co-product">
     <div class="container">
-        <div class="row animate-box">
+        <div class="row category animate-box" data-cateid="@cateID">
             @foreach (var item in Model.Categories)
             {
                 <div class="col-md-2 text-center animate-box">
@@ -50,7 +50,7 @@
         @if (!Model.Products.Any())
         {
             <div class="row">
-                <p class="text-center p-5 fs-1">@ViewData["Info"]</p>
+                <p class="text-center p-5 fs-1">Không còn sản phẩm ở danh mục này.</p>
             </div>
         }
         else

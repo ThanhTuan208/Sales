@@ -86,28 +86,30 @@ $(document).ready(function () {
     // Biến toàn cục để nhớ bộ lọc hiện tại
     let currentFilter = "sortNew";
     let actionName = $('#name-action').val();
+    let cateID = $('.category').data('cateid');
 
     $(document).off('click', '#sortNew, #sortBest, #sortHighToLow, #sortLowToHigh')
         .on('click', '#sortNew, #sortBest, #sortHighToLow, #sortLowToHigh', function (e) {
             e.preventDefault();
             currentFilter = $(this).attr('id');
-
-            loadProducts(actionName, currentFilter, 1);
+            console.log(cateID);
+            loadProducts(actionName, cateID, currentFilter, 1);
         });
 
     // Khi click phan trang
     $(document).off('click', '.page-btn').on('click', '.page-btn', function () {
         const page = $(this).data('page');
-        loadProducts(actionName, currentFilter, page);
+        loadProducts(actionName, cateID, currentFilter, page);
     });
 
     // load chung
-    function loadProducts(actionName, filter, productPage) {
+    function loadProducts(actionName,cateID, filter, productPage) {
         $.ajax({
             url: "/Product/FilterProduct",
             type: "GET",
             data: {
                 actionName: actionName,
+                cateID: cateID,
                 filter: filter,
                 productPage: productPage
             },

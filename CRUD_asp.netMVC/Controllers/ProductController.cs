@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
 using NuGet.Protocol.Plugins;
 using Org.BouncyCastle.Cms;
+using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Tls;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -121,8 +122,8 @@ namespace CRUD_asp.netMVC.Controllers
 
         }
 
+        // Hien thi danh sach phan trang san pham va phan trang thuong hieu
         [Route("Product"), Route("Product/Index"), HttpGet]
-        /// Hien thi danh sach phan trang san pham va phan trang thuong hieu
         public async Task<IActionResult> Index(int productPage = 1)
         {
             IQueryable<Products> products = _dbContext.Products.AsNoTracking()
@@ -134,10 +135,10 @@ namespace CRUD_asp.netMVC.Controllers
             var productCount = await products.CountAsync();
             ViewBag.ProductCount = productCount;
 
-            var pagProduct = await PaginatedList<Products>.CreatePagAsync(products, productPage, 16);
+            //var pagProduct = await PaginatedList<Products>.CreatePagAsync(products, productPage, 16);
 
             // Pagination truyen tham so cho product, brand, category, cart
-            var ViewModel = await CreatePaginationGeneral(products, productPage, 12);
+            var ViewModel = await CreatePaginationGeneral(products, productPage, 12).ConfigureAwait(false);
 
             return View(ViewModel);
         }
@@ -186,62 +187,71 @@ namespace CRUD_asp.netMVC.Controllers
 
             ViewData["cateID"] = CateID;
 
-            if (cateID == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
+            if (cateID == null) return RedirectToAction(nameof(Index));
 
             bool isSales = true;
             bool isFeatured = true;
-
             IQueryable<Products> getPagProductByCate;
-            if (!featured)
-            {
-                getPagProductByCate = _dbContext.Products.AsNoTracking()
-                   .Include(p => p.Cate)
-                   .Where(p => p.CateID == CateID);
 
-                isFeatured = false;
-                ViewBag.NameAction = "Featured";
-            }
-            else
+            if (featured && !sales)
             {
-                getPagProductByCate = _dbContext.Products.AsNoTracking()
-                                                  .Include(p => p.Brands)
-                                                  .Include(p => p.Cate)
-                                                  .Include(p => p.Gender)
-                                                  .Include(p => p.ProductImages)
-                                                  .Where(p => p.CateID == CateID && p.FeaturedID == 1);
-                ViewBag.NameAction = "Featured";
-            }
+                if (!featured)
+                {
+                    getPagProductByCate = _dbContext.Products.AsNoTracking()
+                       .Include(p => p.Cate)
+                       .Where(p => p.CateID == CateID);
 
-            if (!sales)
+                    isFeatured = false;
+                    ViewBag.NameAction = "Featured";
+                }
+                else
+                {
+                    getPagProductByCate = _dbContext.Products.AsNoTracking()
+                                                      .Include(p => p.Brands)
+                                                      .Include(p => p.Cate)
+                                                      .Include(p => p.Gender)
+                                                      .Include(p => p.ProductImages)
+                                                      .Where(p => p.CateID == CateID && p.FeaturedID == 1);
+                    ViewBag.NameAction = "Featured";
+                }
+            }
+            else if (!featured && sales)
             {
-                getPagProductByCate = _dbContext.Products.AsNoTracking()
-                   .Include(p => p.Cate)
-                   .Where(p => p.CateID == CateID);
+                if (!sales)
+                {
+                    getPagProductByCate = _dbContext.Products.AsNoTracking()
+                       .Include(p => p.Cate)
+                       .Where(p => p.CateID == CateID);
 
-                isSales = false;
-                ViewBag.NameAction = "Sales";
+                    isSales = false;
+                    ViewBag.NameAction = "Sales";
+                }
+                else
+                {
+                    getPagProductByCate = _dbContext.Products.AsNoTracking()
+                                                     .Include(p => p.Brands)
+                                                     .Include(p => p.Cate)
+                                                     .Include(p => p.Gender)
+                                                     .Include(p => p.ProductImages)
+                                                     .Where(p => p.CateID == CateID && p.OldPrice > 0);
+                    ViewBag.NameAction = "Sales";
+                }
             }
-            else
-            {
-                getPagProductByCate = _dbContext.Products.AsNoTracking()
-                                                 .Include(p => p.Brands)
-                                                 .Include(p => p.Cate)
-                                                 .Include(p => p.Gender)
-                                                 .Include(p => p.ProductImages)
-                                                 .Where(p => p.CateID == CateID && p.OldPrice > 0);
-                ViewBag.NameAction = "Sales";
-            }
+            else getPagProductByCate = _dbContext.Products.AsNoTracking()
+                                                       .Include(p => p.Cate)
+                                                       .Where(p => p.CateID == CateID);
 
             var productCount = await getPagProductByCate.CountAsync();
             ViewBag.ProductCount = productCount;
 
             // Pagination truyen tham so cho product, brand, category, cart
             var ViewModel = await CreatePaginationGeneral(getPagProductByCate, productPage, 8);
-            ViewModel.IsFeatured = isFeatured;
-            ViewModel.IsSales = isSales;
+
+            if (featured && !sales)
+            {
+                ViewModel.IsFeatured = isFeatured;
+            }
+            else if (!featured && sales) ViewModel.IsSales = isSales;
 
             return View(ViewModel);
         }
@@ -284,17 +294,21 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpGet] // Loc danh sach san pham nguoi dung
-        public async Task<IActionResult> FilterProduct(string actionName, string filter, int productPage = 1)
+        public async Task<IActionResult> FilterProduct(string actionName, int cateID, string filter, int productPage = 1)
         {
             try
             {
+                IQueryable<Products> productList;
                 var viewModel = new getPaginationByProductViewModel();
-                IQueryable<Products> productList = _dbContext.Products.AsNoTracking();
+                if (cateID < 1)
+                {
+                    productList = _dbContext.Products.AsNoTracking();
+                }
+                else productList = _dbContext.Products.Where(p => p.CateID == cateID).AsNoTracking();
 
                 if (actionName == "Sales")
                 {
-                    productList = _dbContext.Products.AsNoTracking()
-                                                     .Include(p => p.Brands)
+                    productList = productList.Include(p => p.Brands)
                                                      .Include(p => p.Cate)
                                                      .Include(p => p.Gender)
                                                      .Include(p => p.ProductImages)
@@ -302,14 +316,12 @@ namespace CRUD_asp.netMVC.Controllers
                 }
                 else if (actionName == "Featured")
                 {
-                    productList = _dbContext.Products.AsNoTracking()
-                                                      .Include(p => p.Brands)
+                    productList = productList.Include(p => p.Brands)
                                                       .Include(p => p.Cate)
                                                       .Include(p => p.Gender)
                                                       .Include(p => p.ProductImages)
                                                       .Where(p => p.FeaturedID == 1);
                 }
-                else productList = _dbContext.Products.AsNoTracking();
 
                 var orderPaid = await _dbContext.Orders.Where(p => p.Status.Equals("Paid")).ToListAsync().ConfigureAwait(false);
                 var orderListPaid = await _dbContext.OrderDetail.Where(p => orderPaid.Select(s => s.ID).Contains(p.OrderID)).ToListAsync().ConfigureAwait(false);
@@ -411,7 +423,7 @@ namespace CRUD_asp.netMVC.Controllers
             {
                 products = _dbContext.Products.AsNoTracking()
                   .Include(p => p.Brands)
-                  .Include(p => p.Cate) 
+                  .Include(p => p.Cate)
                   .Include(p => p.Gender)
                   .Include(p => p.ProductImages)
                   .Where(p => p.CateID == cateID && p.OldPrice > 0);

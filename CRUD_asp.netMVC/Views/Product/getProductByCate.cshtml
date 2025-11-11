@@ -37,7 +37,7 @@
             </div>
         </div>
 
-        <div class="row animate-box">
+        <div class="row category animate-box" data-cateid="@cateID">
             @foreach (var item in Model.Categories)
             {
                 <div class="col-md-2 text-center animate-box">
@@ -53,7 +53,7 @@
                                     </a>
                                     <h3><a asp-route-cateID="@item.ID" asp-route-productPage="1" asp-route-featured="@Model.IsFeatured" class="btn">@item.Name</a></h3>
                                 }
-                                else
+                                else if(Model.IsSales)
                                 {
                                     <a asp-action="getProductByCate" asp-controller="Product" asp-route-cateID="@item.ID" asp-route-productPage="1"
                                        asp-route-sales="@Model.IsSales">
@@ -62,6 +62,15 @@
                                     </a>
                                     <h3><a asp-route-cateID="@item.ID" asp-route-productPage="1" asp-route-sales="@Model.IsSales" class="btn">@item.Name</a></h3>
                                 }
+                                else
+                                {
+                                    <a asp-action="getProductByCate" asp-controller="Product" asp-route-cateID="@item.ID" asp-route-productPage="1">
+                                        <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow cate-image"
+                                             alt="Categories">
+                                    </a>
+                                    <h3><a asp-route-cateID="@item.ID" asp-route-productPage="1" class="btn">@item.Name</a></h3>
+                                }
+
                             }
                         </div>
                     </div>
@@ -72,7 +81,7 @@
         @if (!Model.Products.Any())
         {
             <div class="row">
-                <p class="text-center p-5 fs-1">@ViewData["Info"]</p>
+                <p class="text-center p-5 fs-1">Không còn sản phẩm ở danh mục này.</p>
             </div>
         }
         else
@@ -114,6 +123,12 @@
                                         <a asp-action="ProductDetail" asp-route-id="@item.ID" class="icon"><i class="icon-eye"></i></a>
                                     </p>
                                 </div>
+                                @if (item.OldPrice > 0)
+                                {
+                                    <div class="discount-badge">
+                                        <span class="price"><s>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.OldPrice)</s> </span>
+                                    </div>
+                                }
                             </div>
                             <div class="desc">
                                 <h3><a asp-action="ProductDetail" asp-route-id="@item.ID">@item.Name</a></h3>
@@ -126,17 +141,17 @@
                 <div class="pagination d-flex justify-content-center animate-box">
                     @if (Model.Products.PreviousPage)
                     {
-                        <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-productPage="@(Model.Products.PageCurrent - 1)" asp-route-brandID="@(ViewContext.RouteData.Values["brandID"] != null ? ViewContext.RouteData.Values["brandID"] : "")">Previous</a>
+                        <a class="btn btn-outline-warning m-1" asp-action="getProductByCate" asp-route-productPage="@(Model.Products.PageCurrent - 1)" asp-route-cateID="@cateID">Previous</a>
                     }
 
                     @for (int i = 1; i <= Model.Products.TotalPage; i++)
                     {
-                        <a asp-action="Index" asp-route-productPage="@i" asp-route-brandID="@(ViewContext.RouteData.Values["brandID"] != null ? ViewContext.RouteData.Values["brandID"] : "")" class="btn btn-outline-warning m-1 @(i == Model.Products.PageCurrent ? "active" : "")">@i</a>
+                        <a asp-action="getProductByCate" asp-route-productPage="@i" asp-route-cateID="@cateID" class="btn btn-outline-warning m-1 @(i == Model.Products.PageCurrent ? "active" : "")">@i</a>
                     }
 
                     @if (Model.Products.NextPage)
                     {
-                        <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-productPage="@(Model.Products.PageCurrent + 1)" asp-route-brandID="@(ViewContext.RouteData.Values["brandID"] != null ? ViewContext.RouteData.Values["brandID"] : "")">Next</a>
+                        <a class="btn btn-outline-warning m-1" asp-action="getProductByCate" asp-route-productPage="@(Model.Products.PageCurrent + 1)" asp-route-cateID="@cateID">Next</a>
                     }
                 </div>
             </div>
@@ -172,4 +187,3 @@
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

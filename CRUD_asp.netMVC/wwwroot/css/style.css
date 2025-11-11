@@ -20,6 +20,18 @@ body {
     background: var(--od-bg); /* giữ đồng bộ */
 }
 
+.fh5co-widget h3 {
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.fh5co-widget a:hover {
+    color: #ff9900;
+    text-decoration: underline;
+}
+
+
 /*button loc san pham gia cao thap*/
 /* Container nút sắp xếp */
 .filter-sort {
