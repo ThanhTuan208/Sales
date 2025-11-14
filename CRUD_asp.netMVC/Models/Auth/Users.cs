@@ -9,7 +9,6 @@ namespace CRUD_asp.netMVC.Models.Auth
 {
     public class Users : IdentityUser<int>
     {
-
         [Required(ErrorMessage = "Cần nhập Tên")]
         [StringLength(50, ErrorMessage = "Họ không được vượt quá 50 ký tự")]
         public string FirstName { get; set; }

@@ -356,7 +356,7 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-        [HttpPost, ValidateAntiForgeryToken] // Cap nhat so luong gio hang
+        [HttpPost] // Cap nhat so luong gio hang
         public async Task<IActionResult> UpdateToCart(int id, int qty, string opera, string accept)
         {
             try
@@ -420,7 +420,7 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> DeleteToCart(int id)
         {
             try

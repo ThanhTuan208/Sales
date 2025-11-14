@@ -4,7 +4,7 @@
 
 @{
     ViewData["Title"] = "Index";
- 
+
 }
 <style>
 
@@ -28,17 +28,17 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-3">
-            <a asp-action="CreateProduct" class="btn btn-outline-success">Tạo mới</a>
+            <a asp-action="CreateProduct" class="bn54"><span class="bn54span"> Tạo mới</span></a>
         </div>
         <div class="col-lg-4 offset-5">
 
-            <form method="post" asp-action="Index">
+            @* <form method="post" asp-action="Index">
                 <div class="d-flex">
                     <input type="text" name="keyword" class="form-control me-2" placeholder="Find Product"
                            oninvalid="this.setCustomValidity('Vui lòng nhập từ khóa để tìm kiếm')" required />
                     <button type="submit" class="btn btn-outline-success">Find</button>
                 </div>
-            </form>
+            </form> *@
         </div>
     </div>
 </div>
@@ -88,9 +88,9 @@
 
                 <td class="text-center">
                     <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-                        <a asp-action="EditProduct" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Edit</span></a>
-                        <a asp-action="DetailProduct" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Details</span></a>
-                        <a asp-action="DeleteProduct" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Delete</span></a>
+                        <a asp-action="EditProduct" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Cập nhật</span></a>
+                        <a asp-action="DetailProduct" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Chi tiết</span></a>
+                        <a asp-action="DeleteProduct" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Xóa</span></a>
                     </div>
                 </td>
             </tr>
@@ -101,7 +101,7 @@
 <div class="pagination d-flex justify-content-center mb-4">
     @if (Model.PreviousPage)
     {
-        <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-page="@(Model.PageCurrent - 1)">Previous</a>
+        <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-page="@(Model.PageCurrent - 1)">Trước</a>
     }
 
     @for (int i = 1; i <= Model.TotalPage; i++)
@@ -111,6 +111,6 @@
 
     @if (Model.NextPage)
     {
-        <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-page="@(Model.PageCurrent + 1)">Next</a>
+        <a class="btn btn-outline-warning m-1" asp-action="Index" asp-route-page="@(Model.PageCurrent + 1)">Sau</a>
     }
 </div>
