@@ -9,10 +9,10 @@ namespace CRUD_asp.netMVC.Models.Product
         public int ID { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập tên. "), StringLength(50)]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập mô tả. "), Column(TypeName = "nvarchar(max)")]
-        public string? Description { get; set; }
+        [Required(ErrorMessage = "Vui lòng nhập mô tả. ")]
+        public string Description { get; set; }
 
         [NotMapped]
         public IFormFile? Picture { get; set; }

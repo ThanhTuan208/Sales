@@ -3,8 +3,10 @@ using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CRUD_asp.netMVC.Data
 {
@@ -16,62 +18,35 @@ namespace CRUD_asp.netMVC.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Thiet lap moi quan he Entity
             modelBuilder.RelationshipEntitys();
 
-            // Them du lieu Featured
+            // khong rang buoc
             modelBuilder.SeedFeatured();
-
-            // Them du lieu Roles
             modelBuilder.SeedRoels();
-
-            // Them du lieu Gender
             modelBuilder.SeedGenders();
-
-            // Them du lieu Material
             modelBuilder.SeedMaterial();
-
-            // Them du lieu Style
             modelBuilder.SeedStyle();
-
-            // Them du lieu Season
             modelBuilder.SeedSeason();
-
-            // Them du lieu Color
             modelBuilder.SeedColor();
-
-            // Them du lieu Size
             modelBuilder.SeedSize();
-
-            // Them du lieu Brand
-            modelBuilder.SeedBrand();
-
-            // Them du lieu Cate
-            modelBuilder.SeedCategory();
-
-            // Them du lieu Tag
             modelBuilder.SeedTag();
 
-            // Them du lieu ProductTags
-            modelBuilder.SeedPoductTag();
 
-            // Them du lieu ProductSize
+            // rang buoc khoa ngoai 1 - n
+            modelBuilder.SeedBrand();
+            modelBuilder.SeedCategory();
+
+            modelBuilder.SeedProducts_ProductSeason_ProductStyle();
+
+            // rang buoc khoa ngoai n - n
             modelBuilder.SeedProductSize();
-
-            // Them du lieu ProductColors
             modelBuilder.SeedProductColor();
-
-            // Them du lieu ProductMaterial
             modelBuilder.SeedProductMaterial();
-
-            // Them du lieu ProductQuantity
+            modelBuilder.SeedPoductTag();
             modelBuilder.SeedProductQty();
 
-            // Them du lieu SeedProductImage
+            // 1-n
             modelBuilder.SeedProductImage();
-
-            // Them du lieu Products, productSeason, productStyle, productColor, productGender
-            modelBuilder.SeedProducts_ProductSeason_ProductStyle();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -79,23 +54,26 @@ namespace CRUD_asp.netMVC.Data
             base.OnConfiguring(optionsBuilder);
         }
 
-        // Relationship entity DBSet
+        // Entity-Relationship DBSet
         //public DbSet<Users>? Users { get; set; }
         //public DbSet<Roles>? Roles { get; set; }
         //public DbSet<Staff> Staff { get; set; }
-        public DbSet<ProductQuantity>? ProductQty { get; set; }
-        public DbSet<Address>? Addresses { get; set; }
-        public DbSet<Featured>? Featured { get; set; }
-        public DbSet<Products>? Products { get; set; }
-        public DbSet<Brand>? Brand { get; set; }
-        public DbSet<Category>? Category { get; set; }
-        public DbSet<AddToCart>? Carts { get; set; }
-        public DbSet<Orders>? Orders { get; set; }
-        public DbSet<OrderDetail>? OrderDetail { get; set; }
-        public DbSet<Payment>? Payment { get; set; }
-        public DbSet<Reviews>? Reviews { get; set; }
+
+        public DbSet<ProductQuantity> ProductQty { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Featured> Featured { get; set; }
+        public DbSet<Products> Products { get; set; }
+        public DbSet<Brand> Brand { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<AddToCart> Carts { get; set; }
+
+        public DbSet<Orders> Orders { get; set; }
+        public DbSet<Payment> Payment { get; set; }
+        public DbSet<Reviews> Reviews { get; set; }
         public DbSet<Manager> Manager { get; set; }
         public DbSet<Customer> Customer { get; set; }
+        public DbSet<OrderDetail> OrderDetail { get; set; }
+
         public DbSet<Season> Season { get; set; }
         public DbSet<Tag> Tag { get; set; }
         public DbSet<Style> Style { get; set; }

@@ -17,7 +17,7 @@ namespace CRUD_asp.netMVC.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -108,7 +108,7 @@ namespace CRUD_asp.netMVC.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserID")
+                    b.Property<int>("UserID")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
@@ -119,8 +119,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("UserID")
-                        .IsUnique()
-                        .HasFilter("[UserID] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Customer");
                 });
@@ -158,7 +157,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserID")
+                    b.Property<int>("UserID")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
@@ -169,8 +168,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("UserID")
-                        .IsUnique()
-                        .HasFilter("[UserID] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Manager");
                 });
@@ -283,7 +281,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<string>("ProfileImage")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleID")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<int?>("RolesId")
@@ -392,7 +390,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<string>("ID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("AddressID")
+                    b.Property<int>("AddressID")
                         .HasColumnType("int");
 
                     b.Property<double?>("Amount")
@@ -13850,10 +13848,12 @@ namespace CRUD_asp.netMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int>("BrandID")
+                    b.Property<int?>("BrandID")
+                        .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int>("CateID")
+                    b.Property<int?>("CateID")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
@@ -13863,10 +13863,12 @@ namespace CRUD_asp.netMVC.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FeaturedID")
+                    b.Property<int?>("FeaturedID")
+                        .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int>("GenderID")
+                    b.Property<int?>("GenderID")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -13874,7 +13876,8 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<double>("NewPrice")
+                    b.Property<double?>("NewPrice")
+                        .IsRequired()
                         .HasColumnType("float");
 
                     b.Property<string>("NormalizedDescription")
@@ -13913,7 +13916,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 1,
                             BrandID = 1,
                             CateID = 1,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Áo khoác nam chính hãng Nike, phong cách thể thao",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -13922,7 +13925,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "ao khoac nam chinh hang nike, phong cach the thao",
                             NormalizedName = "ao khoac nam nike",
                             OldPrice = 1800000.0,
-                            PicturePath = "nike_jacket_1.1_1.1.jpg",
+                            PicturePath = "nike_jacke_1.1.jpg",
                             Quantity = 100,
                             Weight = 300
                         },
@@ -13931,7 +13934,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 2,
                             BrandID = 1,
                             CateID = 2,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Quần thể thao Nike chất liệu thoáng mát, phù hợp tập luyện",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -13949,7 +13952,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 3,
                             BrandID = 1,
                             CateID = 3,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Giày thể thao Nike Air Max thoải mái và bền bỉ",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -13967,7 +13970,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 4,
                             BrandID = 1,
                             CateID = 4,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Váy thể thao nữ năng động, thiết kế hiện đại",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -13985,7 +13988,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 5,
                             BrandID = 1,
                             CateID = 5,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Áo thun nam Nike cổ tròn, chất liệu cotton thoải mái",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14003,7 +14006,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 6,
                             BrandID = 1,
                             CateID = 6,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Đồng hồ thể thao phong cách Nike, chống nước, dây silicon",
                             FeaturedID = 2,
                             GenderID = 3,
@@ -14021,7 +14024,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 7,
                             BrandID = 2,
                             CateID = 1,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế cổ điển, chống gió và giữ ấm tốt",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14039,7 +14042,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 8,
                             BrandID = 2,
                             CateID = 2,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Quần thể thao thoải mái, phù hợp vận động",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14057,10 +14060,10 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 9,
                             BrandID = 2,
                             CateID = 3,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Đệm Boost êm ái, hỗ trợ chạy bộ hiệu quả",
                             FeaturedID = 2,
-                            GenderID = 3,
+                            GenderID = 1,
                             Name = "Giày Adidas Ultraboost",
                             NewPrice = 3200000.0,
                             NormalizedDescription = "đem boost em ai, ho tro chay bo hieu qua",
@@ -14075,7 +14078,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 10,
                             BrandID = 2,
                             CateID = 4,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Váy thể thao nhẹ, thấm hút mồ hôi tốt",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14093,7 +14096,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 11,
                             BrandID = 2,
                             CateID = 5,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Áo thun cổ điển, logo 3 sọc đặc trưng",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14111,7 +14114,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 12,
                             BrandID = 2,
                             CateID = 6,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế năng động, chống nước tốt",
                             FeaturedID = 2,
                             GenderID = 3,
@@ -14129,7 +14132,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 13,
                             BrandID = 3,
                             CateID = 1,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Áo khoác nữ dáng dài thanh lịch",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14147,7 +14150,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 14,
                             BrandID = 3,
                             CateID = 2,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Phong cách hiện đại, thời trang",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14165,7 +14168,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 15,
                             BrandID = 3,
                             CateID = 3,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế sang trọng, phù hợp tiệc tùng",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14174,7 +14177,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke sang trong, phu hop tiec tung",
                             NormalizedName = "giay cao got zara",
                             OldPrice = 1300000.0,
-                            PicturePath = "zara_heels_1.1.jpg",
+                            PicturePath = "zara_shoes_1.1.jpg",
                             Quantity = 55,
                             Weight = 300
                         },
@@ -14183,7 +14186,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 16,
                             BrandID = 3,
                             CateID = 4,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Váy dài thướt tha, thanh lịch",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14201,7 +14204,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 17,
                             BrandID = 3,
                             CateID = 5,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Áo thun đơn giản, dễ phối đồ",
                             FeaturedID = 2,
                             GenderID = 3,
@@ -14219,7 +14222,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 18,
                             BrandID = 3,
                             CateID = 6,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế mặt tròn, dây da tinh tế",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14237,7 +14240,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 19,
                             BrandID = 4,
                             CateID = 1,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Chống gió, nhẹ và gọn",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14246,7 +14249,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "chong gio, nhe va gon",
                             NormalizedName = "ao khoac du h&m",
                             OldPrice = 1000000.0,
-                            PicturePath = "hm_jacket_1.1.jpg",
+                            PicturePath = "h&m_jacket_1.1.jpg",
                             Quantity = 80,
                             Weight = 300
                         },
@@ -14255,7 +14258,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 20,
                             BrandID = 4,
                             CateID = 2,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Phong cách công sở lịch sự",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14264,7 +14267,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "phong cach cong so lich su",
                             NormalizedName = "quan tay h&m",
                             OldPrice = 0.0,
-                            PicturePath = "hm_pants_1.1.jpg",
+                            PicturePath = "h&m_pants_1.1.jpg",
                             Quantity = 65,
                             Weight = 250
                         },
@@ -14273,7 +14276,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 21,
                             BrandID = 4,
                             CateID = 3,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Giày đơn giản, năng động",
                             FeaturedID = 2,
                             GenderID = 3,
@@ -14282,7 +14285,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "giay đon gian, nang đong",
                             NormalizedName = "giay the thao h&m",
                             OldPrice = 900000.0,
-                            PicturePath = "hm_shoes_1.1.jpg",
+                            PicturePath = "h&m_shoes_1.1.jpg",
                             Quantity = 100,
                             Weight = 350
                         },
@@ -14291,7 +14294,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 22,
                             BrandID = 4,
                             CateID = 4,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Váy xinh xắn cho mùa hè",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14300,7 +14303,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "vay xinh xan cho mua he",
                             NormalizedName = "vay ngan hoa nhi h&m",
                             OldPrice = 0.0,
-                            PicturePath = "hm_dress_1.1.jpg",
+                            PicturePath = "h&m_dress_1.1.jpg",
                             Quantity = 45,
                             Weight = 150
                         },
@@ -14309,7 +14312,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 23,
                             BrandID = 4,
                             CateID = 5,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Áo thun trơn giá rẻ",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14318,7 +14321,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "ao thun tron gia re",
                             NormalizedName = "ao thun nam basic h&m",
                             OldPrice = 250000.0,
-                            PicturePath = "hm_tshirt_1.1.jpg",
+                            PicturePath = "h&m_tshirt_1.1.jpg",
                             Quantity = 150,
                             Weight = 150
                         },
@@ -14327,7 +14330,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 24,
                             BrandID = 4,
                             CateID = 6,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế đơn giản, hiện đại",
                             FeaturedID = 2,
                             GenderID = 3,
@@ -14336,7 +14339,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "thiet ke đon gian, hien đai",
                             NormalizedName = "đong ho day silicon h&m",
                             OldPrice = 0.0,
-                            PicturePath = "hm_watch_1.1.jpg",
+                            PicturePath = "h&m_watch_1.1.jpg",
                             Quantity = 40,
                             Weight = 50
                         },
@@ -14345,7 +14348,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 25,
                             BrandID = 5,
                             CateID = 1,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Giữ ấm nhẹ nhàng, tiện lợi",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14363,7 +14366,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 26,
                             BrandID = 5,
                             CateID = 2,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Jean co giãn, phong cách tối giản",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14372,7 +14375,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "jean co gian, phong cach toi gian",
                             NormalizedName = "quan jean uniqlo",
                             OldPrice = 0.0,
-                            PicturePath = "uniqlo_jeans_1.1.jpg",
+                            PicturePath = "uniqlo_pants_1.1.jpg",
                             Quantity = 50,
                             Weight = 300
                         },
@@ -14381,7 +14384,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 27,
                             BrandID = 5,
                             CateID = 3,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế tối giản, thoải mái",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14399,7 +14402,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 28,
                             BrandID = 5,
                             CateID = 4,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế tối giản, thoải mái cho mùa hè",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14417,7 +14420,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 29,
                             BrandID = 5,
                             CateID = 5,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thoáng mát, nhanh khô, thích hợp mùa hè",
                             FeaturedID = 2,
                             GenderID = 3,
@@ -14435,7 +14438,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 30,
                             BrandID = 5,
                             CateID = 6,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Phong cách tối giản, dây da đen",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14453,7 +14456,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 31,
                             BrandID = 6,
                             CateID = 1,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế sang trọng, dành cho thời trang cao cấp",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14471,7 +14474,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 32,
                             BrandID = 6,
                             CateID = 2,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Phong cách lịch lãm, chất liệu cao cấp",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14489,7 +14492,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 33,
                             BrandID = 6,
                             CateID = 3,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế logo đặc trưng, đẳng cấp",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14507,7 +14510,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 34,
                             BrandID = 6,
                             CateID = 4,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Chất liệu mềm mại, sang trọng",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14525,7 +14528,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 35,
                             BrandID = 6,
                             CateID = 5,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Phong cách trẻ trung, thời thượng",
                             FeaturedID = 2,
                             GenderID = 3,
@@ -14543,7 +14546,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 36,
                             BrandID = 6,
                             CateID = 6,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Đồng hồ xa xỉ với thiết kế tinh xảo",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14561,7 +14564,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 37,
                             BrandID = 7,
                             CateID = 1,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Chất liệu jean bền, phong cách cổ điển",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14579,7 +14582,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 38,
                             BrandID = 7,
                             CateID = 2,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Form dáng chuẩn Mỹ, chất lượng cao",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14588,7 +14591,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "form dang chuan my, chat luong cao",
                             NormalizedName = "quan jeans levi's 501",
                             OldPrice = 0.0,
-                            PicturePath = "levis_jeans_1.1.jpg",
+                            PicturePath = "levis_pants_1.1.jpg",
                             Quantity = 60,
                             Weight = 300
                         },
@@ -14597,7 +14600,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 39,
                             BrandID = 7,
                             CateID = 3,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thoải mái và thời trang hàng ngày",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14615,7 +14618,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 40,
                             BrandID = 7,
                             CateID = 4,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế trẻ trung, năng động",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14633,7 +14636,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 41,
                             BrandID = 7,
                             CateID = 5,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Logo cổ điển, phong cách Mỹ",
                             FeaturedID = 2,
                             GenderID = 3,
@@ -14651,7 +14654,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 42,
                             BrandID = 7,
                             CateID = 6,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Đơn giản, mạnh mẽ, cá tính",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14669,7 +14672,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 43,
                             BrandID = 8,
                             CateID = 1,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế năng động, thời trang",
                             FeaturedID = 2,
                             GenderID = 3,
@@ -14687,7 +14690,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 44,
                             BrandID = 8,
                             CateID = 2,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Phong cách thể thao, thoáng mát",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14696,7 +14699,7 @@ namespace CRUD_asp.netMVC.Migrations
                             NormalizedDescription = "phong cach the thao, thoang mat",
                             NormalizedName = "quan short lacoste",
                             OldPrice = 0.0,
-                            PicturePath = "lacoste_short_1.1.jpg",
+                            PicturePath = "lacoste_pants_1.1.jpg",
                             Quantity = 40,
                             Weight = 150
                         },
@@ -14705,7 +14708,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 45,
                             BrandID = 8,
                             CateID = 3,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Chất liệu cao cấp, thiết kế tinh tế",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14723,7 +14726,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 46,
                             BrandID = 8,
                             CateID = 4,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Lịch sự, sang trọng cho nữ",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14741,7 +14744,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 47,
                             BrandID = 8,
                             CateID = 5,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Biểu tượng nổi bật với logo cá sấu",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14759,7 +14762,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 48,
                             BrandID = 8,
                             CateID = 6,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Năng động, trẻ trung, phù hợp với người chơi thể thao",
                             FeaturedID = 2,
                             GenderID = 3,
@@ -14777,7 +14780,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 49,
                             BrandID = 9,
                             CateID = 1,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế hiện đại, năng động",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14795,7 +14798,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 50,
                             BrandID = 9,
                             CateID = 2,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thoải mái, phù hợp vận động",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14813,7 +14816,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 51,
                             BrandID = 9,
                             CateID = 3,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế thể thao, hỗ trợ di chuyển",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14831,7 +14834,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 52,
                             BrandID = 9,
                             CateID = 4,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Phù hợp tập luyện hoặc mặc thường ngày",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14849,7 +14852,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 53,
                             BrandID = 9,
                             CateID = 5,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Chất vải thấm hút, thoáng mát",
                             FeaturedID = 2,
                             GenderID = 3,
@@ -14867,7 +14870,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 54,
                             BrandID = 9,
                             CateID = 6,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thiết kế mạnh mẽ, phong cách",
                             FeaturedID = 2,
                             GenderID = 1,
@@ -14885,7 +14888,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 55,
                             BrandID = 10,
                             CateID = 1,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Đẳng cấp, thời thượng, thiết kế quý phái",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14903,7 +14906,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 56,
                             BrandID = 10,
                             CateID = 2,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Đường may tinh xảo, chất liệu mềm mịn",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14921,7 +14924,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 57,
                             BrandID = 10,
                             CateID = 3,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thanh lịch, sang trọng",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14939,7 +14942,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 58,
                             BrandID = 10,
                             CateID = 4,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Lộng lẫy, thiết kế quyến rũ",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14957,7 +14960,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 59,
                             BrandID = 10,
                             CateID = 5,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Đơn giản nhưng đầy tinh tế",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14975,7 +14978,7 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 60,
                             BrandID = 10,
                             CateID = 6,
-                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Created = new DateTime(2025, 4, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Tinh xảo, sang trọng và nữ tính",
                             FeaturedID = 2,
                             GenderID = 2,
@@ -14992,9 +14995,11 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Reviews", b =>
                 {
-                    b.Property<string>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
@@ -15389,7 +15394,8 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
                         .WithOne("Customer")
                         .HasForeignKey("CRUD_asp.netMVC.Models.Auth.Customer", "UserID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Users");
                 });
@@ -15399,7 +15405,8 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
                         .WithOne("Manager")
                         .HasForeignKey("CRUD_asp.netMVC.Models.Auth.Manager", "UserID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Users");
                 });
@@ -15455,12 +15462,14 @@ namespace CRUD_asp.netMVC.Migrations
                 {
                     b.HasOne("CRUD_asp.netMVC.Models.Auth.Address", "Address")
                         .WithMany("Orders")
-                        .HasForeignKey("AddressID");
+                        .HasForeignKey("AddressID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
                         .WithMany("Orders")
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Address");
@@ -15473,7 +15482,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasOne("CRUD_asp.netMVC.Models.Order.Orders", "Order")
                         .WithOne("Payment")
                         .HasForeignKey("CRUD_asp.netMVC.Models.Product.Payment", "OrderID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -15533,19 +15542,19 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasOne("CRUD_asp.netMVC.Models.Product.Color", "Color")
                         .WithMany("ProductQty")
                         .HasForeignKey("ColorID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CRUD_asp.netMVC.Models.Product.Products", "Product")
                         .WithMany("ProductQty")
                         .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CRUD_asp.netMVC.Models.Product.Size", "Size")
                         .WithMany("ProductQty")
                         .HasForeignKey("SizeID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Color");
@@ -15576,21 +15585,21 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductSize", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Product.Products", "products")
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Products", "Products")
                         .WithMany("ProductSize")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CRUD_asp.netMVC.Models.Product.Size", "size")
+                    b.HasOne("CRUD_asp.netMVC.Models.Product.Size", "Size")
                         .WithMany("ProductSize")
                         .HasForeignKey("SizeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("products");
+                    b.Navigation("Products");
 
-                    b.Navigation("size");
+                    b.Navigation("Size");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductStyle", b =>

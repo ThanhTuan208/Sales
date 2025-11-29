@@ -1,5 +1,6 @@
 ﻿using CRUD_asp.netMVC.Models.Product;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CRUD_asp.netMVC.Models.Order
 {
@@ -9,12 +10,14 @@ namespace CRUD_asp.netMVC.Models.Order
         public int ID { get; set; }
 
         [Required]
+        [ForeignKey("Orders")]
         public string OrderID { get; set; }
-        public Orders? Orders { get; set; }
+        public Orders Orders { get; set; }
 
         [Required]
+        [ForeignKey("Product")]
         public int ProductID { get; set; }
-        public Products? Product { get; set; }
+        public Products Product { get; set; }
 
         [Required]
         public int Quantity { get; set; }

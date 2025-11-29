@@ -82,7 +82,6 @@ $(document).ready(function () {
         })
     });
 
-
     // Biến toàn cục để nhớ bộ lọc hiện tại
     let currentFilter = "sortNew";
     let actionName = $('#name-action').val();
@@ -103,7 +102,7 @@ $(document).ready(function () {
     });
 
     // load chung
-    function loadProducts(actionName,cateID, filter, productPage) {
+    function loadProducts(actionName, cateID, filter, productPage) {
         $.ajax({
             url: "/Product/FilterProduct",
             type: "GET",
@@ -709,6 +708,7 @@ $(document).ready(function () {
 
     // Truyen du lieu dang ki tai khoan
     $(document).off('.bn5.register').on('click', '.bn5.register', function () {
+
         const fname = $('#fname').val();
         const lname = $('#lname').val();
         const uname = $('#uname').val();
@@ -804,10 +804,10 @@ $(document).ready(function () {
                     }
                     else {
                         if (response.role === "Admin") {
-                            window.location.href = "/Admin/Index";
+                            window.location.href = "/Admin/DashBoard";
                         }
                         else {
-                            window.location.href = "/Home/Index";
+                            window.location.href = "/Home/DashBoard";
                         }
                     }
                 }

@@ -1,17 +1,20 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Auth;
 using CRUD_asp.netMVC.Models.Auth;
+using Hangfire;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Caching.Memory;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using IEmailSender = CRUD_asp.netMVC.Service.EmailSender.IEmailSender;
 using Login = CRUD_asp.netMVC.DTO.Auth.Login;
 using Register = CRUD_asp.netMVC.DTO.Auth.Register;
+using IEmailSender = CRUD_asp.netMVC.Service.EmailSender.IEmailSender;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -63,6 +66,12 @@ namespace CRUD_asp.netMVC.Controllers
             }
 
             return builder.ToString().Normalize(NormalizationForm.FormC).Replace(" ", "");
+        }
+
+        [HttpGet]
+        public IActionResult DashBoard()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -163,9 +172,9 @@ namespace CRUD_asp.netMVC.Controllers
                 ViewData["pass"] = pass;
 
                 return View();
-            }           
+            }
 
-            return Redirect("/Auth/Register"); 
+            return Redirect("/Auth/Register");
         }
 
         /// <summary>
@@ -195,6 +204,16 @@ namespace CRUD_asp.netMVC.Controllers
                     });
                 }
 
+                var existEmail = await _userManager.FindByEmailAsync(register.Email.Trim());
+                if (existEmail != null)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Email đã tồn tại",
+                        errors = new { Email = new[] { "Email đã tồn tại, vui lòng kiểm tra lại tải khoản !!!" } }
+                    });
+                }
                 // Kiem tra username co dau
                 if (!HasDiacritics(register.UserName.Trim()))
                 {
@@ -216,18 +235,7 @@ namespace CRUD_asp.netMVC.Controllers
                         message = "Tên của bạn đã bị trùng, bạn cần đổi tên khác. ",
                         errors = new { UserName = new[] { "Tên của bạn đã bị trùng, bạn cần đổi tên khác. " } }
                     });
-                }
-
-                var existEmail = await _userManager.FindByEmailAsync(register.Email.Trim());
-                if (existEmail != null)
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        message = "Email đã tồn tại",
-                        errors = new { Email = new[] { "Email đã tồn tại, vui lòng kiểm tra lại tải khoản !!!" } }
-                    });
-                }
+                } 
 
                 var user = new Users
                 {
@@ -236,7 +244,7 @@ namespace CRUD_asp.netMVC.Controllers
                     LastName = register.LastName,
                     Email = register.Email,
                     PhoneNumber = register.Phone,
-                    RoleID = register.RoleID,
+                    RoleId = register.RoleID,
                     StartDate = register.StartDate,
                     PhoneNumberConfirmed = true, // Xac thuc sdt
                     EmailConfirmed = false, // false email truoc khi gui xac thuc
@@ -256,15 +264,17 @@ namespace CRUD_asp.netMVC.Controllers
                     try
                     {
                         // Gui email xac thuc
-                        await emailSender.SendEmailAsync(
-                            user.Email,
-                            "Xác thực email",
-                            $"<div style='font-family: Arial, sans-serif; text-align: center; padding: 20px; transition: 3s;'>" +
-                            $"<h2>Xác thực tài khoản của bạn</h2>" +
-                            $"<p>Vui lòng nhấn vào nút bên dưới để xác thực email của bạn:</p>" +
-                            $"<a href='{confirmEmail}' style='display: inline-block; padding: 10px 20px; font-size: 16px; font-weight: 400; text-align: center; text-decoration: none; color: #6c757d; border: 1px solid #6c757d; border-radius: 4px; background-color: transparent;'>Xác thực email</a>" +
-                            $"<p>Nếu bạn không đăng ký, vui lòng bỏ qua email này.</p>" +
-                            $"</div>"
+                        BackgroundJob.Enqueue(() =>
+                             emailSender.SendEmailAsync(
+                                user.Email,
+                                "Xác thực email",
+                                $"<div style='font-family: Arial, sans-serif; text-align: center; padding: 20px; transition: 3s;'>" +
+                                $"<h2>Xác thực tài khoản của bạn</h2>" +
+                                $"<p>Vui lòng nhấn vào nút bên dưới để xác thực email của bạn:</p>" +
+                                $"<a href='{confirmEmail}' style='display: inline-block; padding: 10px 20px; font-size: 16px; font-weight: 400; text-align: center; text-decoration: none; color: #6c757d; border: 1px solid #6c757d; border-radius: 4px; background-color: transparent;'>Xác thực email</a>" +
+                                $"<p>Nếu bạn không đăng ký, vui lòng bỏ qua email này.</p>" +
+                                $"</div>"
+                            )
                         );
 
                         // tra ve thong bao xac thuc email
@@ -315,7 +325,7 @@ namespace CRUD_asp.netMVC.Controllers
             {
                 string roleName = "Customer";
 
-                if (user.RoleID == 1)
+                if (user.RoleId == 1)
                 {
                     roleName = "Admin";
                 }
@@ -325,9 +335,9 @@ namespace CRUD_asp.netMVC.Controllers
                     await _roleManager.CreateAsync(new Roles { Name = roleName });
                 }
 
-                var RoleID = await _context.Roles.FirstOrDefaultAsync(p => p.Name == roleName);
-                user.RoleID = RoleID.Id;
+                var role = await _context.Roles.FirstOrDefaultAsync(p => p.Name == roleName);
 
+                await _userManager.UpdateAsync(user);
                 // Tao db giua nguoi dung co vai tro 
                 await _userManager.AddToRoleAsync(user, roleName);
 

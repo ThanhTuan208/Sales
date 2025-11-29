@@ -3,9 +3,9 @@
     public class ProductSize
     {
         public int ProductID { get; set; }
-        public Products? products { get; set; }
+        public Products? Products { get; set; }
 
         public int SizeID { get; set; }
-        public Size? size { get; set; }
+        public Size? Size { get; set; }
     }
 }

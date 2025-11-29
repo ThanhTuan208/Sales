@@ -28,15 +28,15 @@ namespace CRUD_asp.netMVC.Models.Auth
 
         public string? Gender { get; set; }
 
-        public int RoleID { get; set; }
+        public int RoleId { get; set; }
         public Roles? Roles { get; set; }
 
         public Manager? Manager { get; set; }
         public Customer? Customer { get; set; }
 
-        public List<Address>? Addresses { get; set; }
-        public List<AddToCart>? Carts { get; set; }
         public List<Orders>? Orders { get; set; }
+        public List<AddToCart>? Carts { get; set; }
         public List<Reviews>? Reviews { get; set; }
+        public List<Address>? Addresses { get; set; }
     }
 }

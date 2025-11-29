@@ -2,8 +2,5 @@
 
 namespace CRUD_asp.netMVC.Models.Auth
 {
-    public class Roles : IdentityRole<int>
-    {
-
-    }
+    public class Roles : IdentityRole<int> { }
 }

@@ -7,9 +7,9 @@ namespace CRUD_asp.netMVC.Models.Cart
     {
         [Required]
         public int productID { get; set; }
-        public Products? product { get; set; }
+        public Products product { get; set; }
 
         [Required]
-        public required int qty { get; set; }
+        public int qty { get; set; }
     }
 }

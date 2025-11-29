@@ -15,13 +15,13 @@ namespace CRUD_asp.netMVC.Models.Cart
 
         [Required]
         public int ProductID { get; set; }
-        public Products? Product { get; set; }
+        public Products Product { get; set; }
 
         [Required]
-        public string? SelectColor { get; set; }
+        public string SelectColor { get; set; }
 
         [Required]
-        public string? SelectSize { get; set; }
+        public string SelectSize { get; set; }
 
         [Required]
         public int Quantity { get; set; }

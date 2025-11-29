@@ -27,18 +27,18 @@ namespace CRUD_asp.netMVC.Controllers
     {
         private readonly AppDBContext _dbContext;
         private readonly IWebHostEnvironment _environment;
-        private readonly IDbContextFactory<AppDBContext> _dbFactory;
+        //private readonly IDbContextFactory<AppDBContext> _dbFactory;
 
-        public AdminController(AppDBContext context, IWebHostEnvironment environment, IDbContextFactory<AppDBContext> dbFactory)
+        public AdminController(AppDBContext context, IWebHostEnvironment environment)
         {
             _dbContext = context;
             _environment = environment;
-            _dbFactory = dbFactory;
+            //_dbFactory = dbFactory;
         }
 
+        //[Route("Admin"), Route("Admin/Index"), Route("Admin/{page:int}")]
         [HttpGet]
-        [Route("Admin"), Route("Admin/Index"), Route("Admin/{page:int}")]
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> ProductList(int page = 1)
         {
             var product = _dbContext.Products.AsNoTracking()
                        .Include(p => p.Brands)
@@ -50,13 +50,12 @@ namespace CRUD_asp.netMVC.Controllers
 
         // Find Porduct by keyword
         [HttpPost]
-        public async Task<IActionResult> Index(int page = 1, string keyword = "")
+        public async Task<IActionResult> ProductList(int page = 1, string keyword = "")
         {
             var product = _dbContext.Products.AsNoTracking()
                 .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Where(p => p.Description.Contains(keyword) || p.Name.Contains(keyword));
-
 
             var paginationProduct = await PaginatedList<Products>.CreatePagAsync(product, page, 5);
             return View(paginationProduct);
@@ -1434,14 +1433,14 @@ namespace CRUD_asp.netMVC.Controllers
             partial.SelectListSize = new SelectList(sizeBySelectList, "ID", "Name");
             partial.SelectListColor = new SelectList(colorBySelectList, "ID", "Name");
 
-            var tasks = (
-                tag: _dbFactory.CreateDbContext().Tag.ToListAsync(),
-                style: _dbFactory.CreateDbContext().Style.ToListAsync(),
-                season: _dbFactory.CreateDbContext().Season.ToListAsync(),
-                material: _dbFactory.CreateDbContext().Material.ToListAsync()
-            );
+            //var tasks = (
+            //    tag: _dbFactory.CreateDbContext().Tag.ToListAsync(),
+            //    style: _dbFactory.CreateDbContext().Style.ToListAsync(),
+            //    season: _dbFactory.CreateDbContext().Season.ToListAsync(),
+            //    material: _dbFactory.CreateDbContext().Material.ToListAsync()
+            //);
 
-            await Task.WhenAll(tasks.tag, tasks.style, tasks.season, tasks.material);
+            //await Task.WhenAll(tasks.tag, tasks.style, tasks.season, tasks.material);
 
             return partial;
         }
@@ -1509,6 +1508,12 @@ namespace CRUD_asp.netMVC.Controllers
             {
                 throw new Exception();
             }
+        }
+
+        [HttpGet] // Hien thi dashboard
+        public IActionResult DashBoard()
+        {
+            return View();
         }
     }
 }

@@ -24,37 +24,32 @@
         }
 
 </style>
-<h1 style="text-align: center; padding: 20px; text-shadow: 1px 2px 10px rgba(236, 210, 11, 0.6)">Thương hiệu</h1>
-<div class="container">
+@* <h1 style="text-align: center; padding: 20px; text-shadow: 1px 2px 10px rgba(236, 210, 11, 0.6)">Thương hiệu</h1> *@
+@* <div class="container">
     <div class="row">
         <div class="col-lg-3">
             <a asp-action="CreateBrand" class="btn btn-outline-success">Tạo mới</a>
         </div>
         <div class="col-lg-4 offset-5">
 
-            @* <form method="post" asp-action="Index">
+            <form method="post" asp-action="Index">
                 <div class="d-flex">
                     <input type="text" name="keyword" class="form-control me-2" placeholder="Find Product"
                            oninvalid="this.setCustomValidity('Vui lòng nhập từ khóa để tìm kiếm')" required />
                     <button type="submit" class="btn btn-outline-success">Find</button>
                 </div>
-            </form> *@
+            </form> 
         </div>
     </div>
-</div>
+</div> *@
 
 <table class="table table-hover text-center">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model[0].ID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].Name)
-            </th>
-            <th>Picture</th>
-
-            <th>Action</th>
+            <th>Mã thương hiệu</th>
+            <th>Tên thương hiệu</th>
+            <th>Hình ảnh</th>
+            <th>Thao tác</th>
         </tr>
     </thead>
     <tbody>
@@ -76,9 +71,9 @@
 
                 <td class="text-center">
                     <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-                        <a asp-action="EditBrand" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Edit</span></a>
-                        <a asp-action="DetailBrand" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Details</span></a>
-                        <a asp-action="DeleteBrand" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Delete</span></a>
+                        <a asp-action="EditBrand" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Cập nhật</span></a>
+                        <a asp-action="DetailBrand" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Chi tiết</span></a>
+                        <a asp-action="DeleteBrand" asp-route-id="@item.ID" class="bn54"><span class="bn54span">Xóa</span></a>
                     </div>
                 </td>
 
@@ -87,7 +82,7 @@
     </tbody>
 </table>
 
-<div class="pagination d-flex justify-content-center">
+<div class="pagination d-flex justify-content-center my-3">
     @if (Model.PreviousPage)
     {
         <a class="btn btn-outline-warning m-1" asp-action="BrandList" asp-route-page="@(Model.PageCurrent - 1)">Previous</a>

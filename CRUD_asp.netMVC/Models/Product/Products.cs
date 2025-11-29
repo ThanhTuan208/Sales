@@ -21,7 +21,7 @@ namespace CRUD_asp.netMVC.Models.Product
 
         public string? PicturePath { get; set; }
 
-        [Required, Column(TypeName = "nvarchar(max)")]
+        [Required]
         public string? Description { get; set; }
         public string? NormalizedDescription { get; set; }
 

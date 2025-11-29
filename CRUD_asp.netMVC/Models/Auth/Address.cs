@@ -10,7 +10,7 @@ namespace CRUD_asp.netMVC.Models.Auth
 
         [Required]
         public int UserID { get; set; }
-        public Users? User { get; set; }
+        public Users User { get; set; }
 
         [StringLength(100)]
         [Required(ErrorMessage = "Tên người nhận không được để trống")]
@@ -38,7 +38,7 @@ namespace CRUD_asp.netMVC.Models.Auth
 
         public bool IsDefault { get; set; }
 
-        public bool IsDelete { get; set; } 
+        public bool IsDelete { get; set; }
 
         public List<Orders>? Orders { get; set; }
     }

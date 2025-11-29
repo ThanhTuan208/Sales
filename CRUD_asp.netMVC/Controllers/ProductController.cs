@@ -24,12 +24,12 @@ namespace CRUD_asp.netMVC.Controllers
     public class ProductController : Controller
     {
         private readonly AppDBContext _dbContext;
-        private readonly IDbContextFactory<AppDBContext> _dbFactory;
+        //private readonly IDbContextFactory<AppDBContext> _dbFactory;
 
-        public ProductController(AppDBContext _context, IDbContextFactory<AppDBContext> dbFactory)
+        public ProductController(AppDBContext _context)
         {
             _dbContext = _context;
-            _dbFactory = dbFactory;
+            //_dbFactory = dbFactory;
         }
 
         // Ham chuyen doi co dau sang ko dau, chu hoa thanh chu thuong NormalizationFormD, FormC
@@ -369,7 +369,7 @@ namespace CRUD_asp.netMVC.Controllers
                .Include(p => p.ProductImages)
                .Include(p => p.ProductQty).ThenInclude(p => p.Color)
                .Include(p => p.ProductQty).ThenInclude(p => p.Size)
-               .Include(p => p.ProductSize).ThenInclude(p => p.size)
+               .Include(p => p.ProductSize).ThenInclude(p => p.Size)
                .Include(p => p.ProductColor).ThenInclude(p => p.Color)
                .Include(p => p.ProductMaterial).ThenInclude(p => p.Material)
                .Include(p => p.ProductStyles).ThenInclude(p => p.Style)
@@ -380,15 +380,14 @@ namespace CRUD_asp.netMVC.Controllers
                 if (product == null) return NotFound();
 
                 Random rand = new Random();
-                await using var factory = _dbFactory.CreateDbContext();
 
                 var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
 
-                var brandList = await factory.Brand.AsNoTracking().ToListAsync().ConfigureAwait(false);
-                var cateList = await factory.Category.AsNoTracking().ToListAsync().ConfigureAwait(false);
-                var orderPaid = await factory.OrderDetail.Where(p => p.ProductID == id).SumAsync(p => p.Quantity).ConfigureAwait(false);
-                var carts = await factory.Carts.Where(p => p.UserID == userID).ToListAsync().ConfigureAwait(false);
-                var relaterdProducts = await factory.Products.Where(p => p.ID != id && p.CateID == product.CateID).ToListAsync().ConfigureAwait(false);
+                var brandList = await _dbContext.Brand.AsNoTracking().ToListAsync().ConfigureAwait(false);
+                var cateList = await _dbContext.Category.AsNoTracking().ToListAsync().ConfigureAwait(false);
+                var orderPaid = await _dbContext.OrderDetail.Where(p => p.ProductID == id).SumAsync(p => p.Quantity).ConfigureAwait(false);
+                var carts = await _dbContext.Carts.Where(p => p.UserID == userID).ToListAsync().ConfigureAwait(false);
+                var relaterdProducts = await _dbContext.Products.Where(p => p.ID != id && p.CateID == product.CateID).ToListAsync().ConfigureAwait(false);
 
                 if (relaterdProducts.Count > 0)
                 {
@@ -494,22 +493,15 @@ namespace CRUD_asp.netMVC.Controllers
             return View("ProductFeatureList", ViewModel);
         }
 
-        /// <summary>
-        /// Phuong thuc phan trang san pham chung
-        /// </summary>
-        /// <param name="Iqueryable"></param>
-        /// <param name="pageCurrent"></param>
-        /// <param name="pageCount"></param> 
-        /// <param name="carts"></param>
-        /// <returns></returns>
+        // Phuong thuc phan trang san pham chung
         public async Task<getPaginationByProductViewModel> CreatePaginationGeneral(IQueryable<Products> Products, int pageCurrent, int pageCount)
         {
             var brands = _dbContext.Brand.AsNoTracking();
             var cates = _dbContext.Category.AsNoTracking();
 
-            var productPag = await PaginatedList<Products>.CreatePagAsync(Products, pageCurrent, pageCount);
             var brandPag = await PaginatedList<Brand>.CreatePagAsync(brands, 1, brands.Count());
             var catePag = await PaginatedList<Category>.CreatePagAsync(cates, 1, cates.Count());
+            var productPag = await PaginatedList<Products>.CreatePagAsync(Products, pageCurrent, pageCount);
 
             var carts = new List<AddToCart>();
             var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;

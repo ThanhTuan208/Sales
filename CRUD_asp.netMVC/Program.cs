@@ -4,9 +4,11 @@ using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Service.EmailSender;
 using CRUD_asp.netMVC.Service.GHN;
 using CRUD_asp.netMVC.Service.Payment;
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace CRUD_asp.netMVC
 {
@@ -26,9 +28,22 @@ namespace CRUD_asp.netMVC
             //    options.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext"))
             //);
 
-            builder.Services.AddDbContextFactory<AppDBContext>(options =>
+            //Dinh dang DB SQLServer
+            builder.Services.AddDbContext<AppDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext"))
             );
+
+            // Them HangFire => Queue
+            builder.Services.AddHangfire(config =>
+                config.UseSqlServerStorage(builder.Configuration.GetConnectionString("AppDBContext")));
+
+            builder.Services.AddHangfireServer();
+
+            // lay chuoi connect Neon theo dinh dang DB PostgreSQL
+            //builder.Services.AddDbContext<AppDBContext>(options =>
+            //    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+            //);
+
             // Dang ky backgroud service 
             builder.Services.AddHostedService<OrderCleanupService>();
 
@@ -86,6 +101,8 @@ namespace CRUD_asp.netMVC
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            app.UseHangfireDashboard("/hangfire");
 
             app.UseSession();
 

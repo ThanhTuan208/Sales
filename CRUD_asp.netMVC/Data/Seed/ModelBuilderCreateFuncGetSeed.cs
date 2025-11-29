@@ -2,6 +2,7 @@
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text;
@@ -13,32 +14,36 @@ namespace CRUD_asp.netMVC.Data.Seed
         public static void RelationshipEntitys(this ModelBuilder modelBuilder)
         {
             // Mockup du lieu mqh 1 - n
+
+            //modelBuilder.Entity<IdentityUserRole<int>>().HasOne<IdentityUser<int>>().WithMany().HasForeignKey(ur => ur.UserId).OnDelete(DeleteBehavior.NoAction);
+            //modelBuilder.Entity<IdentityUserRole<int>>().HasOne<IdentityRole<int>>().WithMany().HasForeignKey(ur => ur.RoleId).OnDelete(DeleteBehavior.NoAction);
+
             modelBuilder.Entity<Products>().HasOne(m => m.Brands).WithMany(p => p.products).HasForeignKey(mi => mi.BrandID).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Products>().HasOne(t => t.Cate).WithMany(p => p.products).HasForeignKey(ti => ti.CateID).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Products>().HasOne(p => p.Gender).WithMany(p => p.Products).HasForeignKey(p => p.GenderID).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Products>().HasOne(p => p.Featured).WithMany(p => p.products).HasForeignKey(p => p.FeaturedID).OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<AddToCart>().HasOne(p => p.Product).WithMany(c => c.Carts).HasForeignKey(pi => pi.ProductID).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<AddToCart>().HasOne(u => u.Users).WithMany(c => c.Carts).HasForeignKey(ui => ui.UserID).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<AddToCart>().HasOne(p => p.Product).WithMany(c => c.Carts).HasForeignKey(pi => pi.ProductID);
+            modelBuilder.Entity<AddToCart>().HasOne(u => u.Users).WithMany(c => c.Carts).HasForeignKey(ui => ui.UserID);
 
-            modelBuilder.Entity<OrderDetail>().HasOne(o => o.Orders).WithMany(od => od.OrderDetail).HasForeignKey(oi => oi.OrderID).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<OrderDetail>().HasOne(p => p.Product).WithMany(od => od.OrderDetails).HasForeignKey(pi => pi.ProductID).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<OrderDetail>().HasOne(o => o.Orders).WithMany(od => od.OrderDetail).HasForeignKey(oi => oi.OrderID);
+            modelBuilder.Entity<OrderDetail>().HasOne(p => p.Product).WithMany(od => od.OrderDetails).HasForeignKey(pi => pi.ProductID);
 
-            modelBuilder.Entity<Orders>().HasOne(u => u.Users).WithMany(o => o.Orders).HasForeignKey(pi => pi.UserID).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Orders>().HasOne(u => u.Users).WithMany(o => o.Orders).HasForeignKey(pi => pi.UserID).OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Reviews>().HasOne(r => r.Users).WithMany(r => r.Reviews).HasForeignKey(u => u.UserID).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Reviews>().HasOne(r => r.Product).WithMany(r => r.Reviews).HasForeignKey(u => u.ProductID).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Reviews>().HasOne(r => r.Users).WithMany(r => r.Reviews).HasForeignKey(u => u.UserID);
+            modelBuilder.Entity<Reviews>().HasOne(r => r.Product).WithMany(r => r.Reviews).HasForeignKey(u => u.ProductID);
 
             modelBuilder.Entity<ProductQuantity>().HasKey(p => new { p.ProductID, p.SizeID, p.ColorID });
-            modelBuilder.Entity<ProductQuantity>().HasOne(p => p.Product).WithMany(p => p.ProductQty).HasForeignKey(u => u.ProductID).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<ProductQuantity>().HasOne(p => p.Size).WithMany(p => p.ProductQty).HasForeignKey(u => u.SizeID).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<ProductQuantity>().HasOne(p => p.Color).WithMany(p => p.ProductQty).HasForeignKey(u => u.ColorID).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ProductQuantity>().HasOne(p => p.Product).WithMany(p => p.ProductQty).HasForeignKey(u => u.ProductID);
+            modelBuilder.Entity<ProductQuantity>().HasOne(p => p.Size).WithMany(p => p.ProductQty).HasForeignKey(u => u.SizeID);
+            modelBuilder.Entity<ProductQuantity>().HasOne(p => p.Color).WithMany(p => p.ProductQty).HasForeignKey(u => u.ColorID);
 
             // Mockup du lieu mqh 1 - 1
-            modelBuilder.Entity<Payment>().HasOne(o => o.Order).WithOne(p => p.Payment).HasForeignKey<Payment>(o => o.OrderID).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Payment>().HasOne(o => o.Order).WithOne(p => p.Payment).HasForeignKey<Payment>(o => o.OrderID);
 
-            modelBuilder.Entity<Users>().HasOne(r => r.Manager).WithOne(u => u.Users).HasForeignKey<Manager>(mi => mi.UserID).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<Users>().HasOne(r => r.Customer).WithOne(u => u.Users).HasForeignKey<Customer>(mi => mi.UserID).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Users>().HasOne(r => r.Manager).WithOne(u => u.Users).HasForeignKey<Manager>(mi => mi.UserID).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Users>().HasOne(r => r.Customer).WithOne(u => u.Users).HasForeignKey<Customer>(mi => mi.UserID).OnDelete(DeleteBehavior.NoAction);
 
             // Mockup du lieu mqh n - n
             modelBuilder.Entity<ProductSeason>().HasKey(p => new { p.SeasonID, p.ProductID });
@@ -54,8 +59,8 @@ namespace CRUD_asp.netMVC.Data.Seed
             modelBuilder.Entity<ProductStyle>().HasOne(p => p.Style).WithMany(p => p.ProductStyles).HasForeignKey(p => p.StyleID);
 
             modelBuilder.Entity<ProductSize>().HasKey(p => new { p.ProductID, p.SizeID });
-            modelBuilder.Entity<ProductSize>().HasOne(p => p.products).WithMany(p => p.ProductSize).HasForeignKey(p => p.ProductID);
-            modelBuilder.Entity<ProductSize>().HasOne(p => p.size).WithMany(p => p.ProductSize).HasForeignKey(p => p.SizeID);
+            modelBuilder.Entity<ProductSize>().HasOne(p => p.Products).WithMany(p => p.ProductSize).HasForeignKey(p => p.ProductID);
+            modelBuilder.Entity<ProductSize>().HasOne(p => p.Size).WithMany(p => p.ProductSize).HasForeignKey(p => p.SizeID);
 
             modelBuilder.Entity<ProductColors>().HasKey(p => new { p.ProductID, p.ColorID });
             modelBuilder.Entity<ProductColors>().HasOne(p => p.Product).WithMany(p => p.ProductColor).HasForeignKey(p => p.ProductID);
@@ -64,10 +69,6 @@ namespace CRUD_asp.netMVC.Data.Seed
             modelBuilder.Entity<ProductMaterial>().HasKey(p => new { p.ProductID, p.MaterialID });
             modelBuilder.Entity<ProductMaterial>().HasOne(p => p.Product).WithMany(p => p.ProductMaterial).HasForeignKey(p => p.ProductID);
             modelBuilder.Entity<ProductMaterial>().HasOne(p => p.Material).WithMany(p => p.ProductMaterial).HasForeignKey(p => p.MaterialID);
-
-            modelBuilder.Entity<ProductColors>().HasKey(p => new { p.ProductID, p.ColorID });
-            modelBuilder.Entity<ProductColors>().HasOne(p => p.Product).WithMany(p => p.ProductColor).HasForeignKey(p => p.ProductID);
-            modelBuilder.Entity<ProductColors>().HasOne(p => p.Color).WithMany(p => p.ProductColor).HasForeignKey(p => p.ColorID);
 
             modelBuilder.Entity<ProductImages>().HasOne(p => p.Products).WithMany(p => p.ProductImages).HasForeignKey(p => p.ProductID);
 
@@ -506,22 +507,10 @@ namespace CRUD_asp.netMVC.Data.Seed
               new Brand { ID = 6, Name = "Gucci", PicturePath = "images/logo/logo_gucci.jpg", Description = "Thương hiệu cao cấp đến từ Ý với các sản phẩm thời trang xa xỉ" },
               new Brand { ID = 7, Name = "Levi's", PicturePath = "images/logo/logo_levis.png", Description = "Hãng thời trang nổi tiếng với quần jeans và phong cách cổ điển Mỹ" },
               new Brand { ID = 8, Name = "Lacoste", PicturePath = "images/logo/logo_lacoste.png", Description = "Phong cách thể thao thanh lịch đến từ Pháp" },
-              new Products { ID = 9, Name = "Puma", PicturePath = "images/logo/logo_puma.jpg", Description = "Cung cấp thời trang thể thao, giày dép và phụ kiện chất lượng" },
+              new Brand { ID = 9, Name = "Puma", PicturePath = "images/logo/logo_puma.jpg", Description = "Cung cấp thời trang thể thao, giày dép và phụ kiện chất lượng" },
               new Brand { ID = 10, Name = "Chanel", PicturePath = "images/logo/logo_chanel.jpg", Description = "Biểu tượng thời trang xa xỉ với những thiết kế đẳng cấp, cổ điển" }
          );
         }
-
-        //public static void SeedCategory(this ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Category>().HasData(
-        //        new Category { ID = 1, Name = "Áo khoác" },
-        //        new Category { ID = 2, Name = "Quần" },
-        //        new Category { ID = 3, Name = "Giày" },
-        //        new Category { ID = 4, Name = "Váy" },
-        //        new Category { ID = 5, Name = "Áo thun" },
-        //        new Category { ID = 6, Name = "Đồng hồ" }
-        //    );
-        //}
 
         public static void SeedCategory(this ModelBuilder modelBuilder)
         {
@@ -1031,8 +1020,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                     OldPrice = 1800000,
                     NewPrice = 1500000,
                     Quantity = 100,
-                    PicturePath = "nike_jacket_1.1.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    PicturePath = "nike_jacket.jpg",
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 1,  // Nike
                     CateID = 1,   // Áo khoác
                     GenderID = 1, // Nam
@@ -1050,7 +1039,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 900000,
                     Quantity = 80,
                     PicturePath = "nike_pants.webp",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 1,
                     CateID = 2,   // Quần
                     GenderID = 1, // Nam
@@ -1068,7 +1057,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 2800000,
                     Quantity = 60,
                     PicturePath = "nike_shoes.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 1,
                     CateID = 3,   // Giày
                     GenderID = 1, // Nam
@@ -1086,7 +1075,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1100000,
                     Quantity = 40,
                     PicturePath = "nike_dress.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 1,
                     CateID = 4,   // Váy
                     GenderID = 2, // Nữ
@@ -1104,7 +1093,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 590000,
                     Quantity = 200,
                     PicturePath = "nike_tshirt.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 1,
                     CateID = 5,   // Áo thun
                     GenderID = 1, // Nam
@@ -1122,7 +1111,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1900000,
                     Quantity = 25,
                     PicturePath = "nike_watch.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 1,
                     CateID = 6,   // Đồng hồ
                     GenderID = 3, // Unisex
@@ -1140,7 +1129,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1450000,
                     Quantity = 70,
                     PicturePath = "adidas_jacket.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 2,
                     CateID = 1,   // Áo khoác
                     GenderID = 1, // Nam
@@ -1158,7 +1147,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 850000,
                     Quantity = 90,
                     PicturePath = "adidas_pants.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 2,
                     CateID = 2,   // Quần
                     GenderID = 1, // Nam
@@ -1176,10 +1165,10 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 3200000,
                     Quantity = 50,
                     PicturePath = "adidas_shoes.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 2,
                     CateID = 3,   // Giày
-                    GenderID = 3, // Unisex
+                    GenderID = 1, // Nam
                     FeaturedID = 2,
                     Weight = 400
                 },
@@ -1194,7 +1183,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 990000,
                     Quantity = 45,
                     PicturePath = "adidas_dress.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 2,
                     CateID = 4,   // Váy
                     GenderID = 2, // Nữ
@@ -1212,7 +1201,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 650000,
                     Quantity = 150,
                     PicturePath = "adidas_tshirt.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 2,
                     CateID = 5,   // Áo thun
                     GenderID = 1, // Nam
@@ -1230,7 +1219,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1750000,
                     Quantity = 30,
                     PicturePath = "adidas_watch.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 2,
                     CateID = 6,   // Đồng hồ
                     GenderID = 3, // Unisex
@@ -1248,7 +1237,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1900000,
                     Quantity = 60,
                     PicturePath = "zara_jacket.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 3,
                     CateID = 1,   // Áo khoác
                     GenderID = 2, // Nữ
@@ -1266,7 +1255,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 980000,
                     Quantity = 40,
                     PicturePath = "zara_pants.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 3,
                     CateID = 2,   // Quần
                     GenderID = 2, // Nữ
@@ -1283,8 +1272,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                     OldPrice = 1300000,
                     NewPrice = 1200000,
                     Quantity = 55,
-                    PicturePath = "zara_heels.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    PicturePath = "zara_shoes.jpg",
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 3,
                     CateID = 3,   // Giày
                     GenderID = 2, // Nữ
@@ -1302,7 +1291,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1250000,
                     Quantity = 35,
                     PicturePath = "zara_dress.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 3,
                     CateID = 4,   // Váy
                     GenderID = 2, // Nữ
@@ -1320,7 +1309,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 450000,
                     Quantity = 90,
                     PicturePath = "zara_tshirt.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 3,
                     CateID = 5,   // Áo thun
                     GenderID = 3, // Unisex
@@ -1338,7 +1327,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1350000,
                     Quantity = 25,
                     PicturePath = "zara_watch.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 3,
                     CateID = 6,   // Đồng hồ
                     GenderID = 2, // Nữ
@@ -1355,8 +1344,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                     OldPrice = 1000000,
                     NewPrice = 950000,
                     Quantity = 80,
-                    PicturePath = "hm_jacket.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    PicturePath = "h&m_jacket.jpg",
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 4,
                     CateID = 1,   // Áo khoác
                     GenderID = 1, // Nam
@@ -1373,8 +1362,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                     OldPrice = 0,
                     NewPrice = 700000,
                     Quantity = 65,
-                    PicturePath = "hm_pants.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    PicturePath = "h&m_pants.jpg",
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 4,
                     CateID = 2,   // Quần
                     GenderID = 1, // Nam
@@ -1391,8 +1380,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                     OldPrice = 900000,
                     NewPrice = 820000,
                     Quantity = 100,
-                    PicturePath = "hm_shoes.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    PicturePath = "h&m_shoes.jpg",
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 4,
                     CateID = 3,   // Giày
                     GenderID = 3, // Unisex
@@ -1403,14 +1392,14 @@ namespace CRUD_asp.netMVC.Data.Seed
                 {
                     ID = 22,
                     Name = "Váy Ngắn Hoa Nhí H&M",
-                    NormalizedName = RemoveDiacritics("Váy Ngắn Hoa Nhí H&M").ToLower(),
+                    NormalizedName = RemoveDiacritics("Váy Ngắn Hoa Nhí H&m").ToLower(),
                     Description = "Váy xinh xắn cho mùa hè",
                     NormalizedDescription = RemoveDiacritics("Váy xinh xắn cho mùa hè").ToLower(),
                     OldPrice = 0,
                     NewPrice = 600000,
                     Quantity = 45,
-                    PicturePath = "hm_dress.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    PicturePath = "h&m_dress.jpg",
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 4,
                     CateID = 4,   // Váy
                     GenderID = 2, // Nữ
@@ -1427,8 +1416,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                     OldPrice = 250000,
                     NewPrice = 200000,
                     Quantity = 150,
-                    PicturePath = "hm_tshirt.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    PicturePath = "h&m_tshirt.jpg",
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 4,
                     CateID = 5,   // Áo thun
                     GenderID = 1, // Nam
@@ -1445,8 +1434,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                     OldPrice = 0,
                     NewPrice = 550000,
                     Quantity = 40,
-                    PicturePath = "hm_watch.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    PicturePath = "h&m_watch.jpg",
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 4,
                     CateID = 6,   // Đồng hồ
                     GenderID = 3, // Unisex
@@ -1464,7 +1453,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1750000,
                     Quantity = 70,
                     PicturePath = "uniqlo_jacket.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 5,
                     CateID = 1,   // Áo khoác
                     GenderID = 1, // Nam
@@ -1481,8 +1470,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                     OldPrice = 0,
                     NewPrice = 950000,
                     Quantity = 50,
-                    PicturePath = "uniqlo_jeans.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    PicturePath = "uniqlo_pants.jpg",
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 5,
                     CateID = 2,   // Quần
                     GenderID = 1, // Nam
@@ -1496,11 +1485,11 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NormalizedName = RemoveDiacritics("Giày Sneaker Uniqlo").ToLower(),
                     Description = "Thiết kế tối giản, thoải mái",
                     NormalizedDescription = RemoveDiacritics("Thiết kế tối giản, thoải mái").ToLower(),
-                    OldPrice = 1150000,
+                     OldPrice = 1150000,
                     NewPrice = 1050000,
                     Quantity = 60,
                     PicturePath = "uniqlo_shoes.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 5,
                     CateID = 3,   // Giày
                     GenderID = 1, // Nam
@@ -1518,7 +1507,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 850000,
                     Quantity = 40,
                     PicturePath = "uniqlo_dress.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 5,
                     CateID = 4,   // Váy
                     GenderID = 2, // Nữ
@@ -1536,7 +1525,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 400000,
                     Quantity = 120,
                     PicturePath = "uniqlo_tshirt.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 5,
                     CateID = 5,   // Áo thun
                     GenderID = 3, // Unisex
@@ -1554,7 +1543,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 980000,
                     Quantity = 30,
                     PicturePath = "uniqlo_watch.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 5,
                     CateID = 6,   // Đồng hồ
                     GenderID = 1, // Nam
@@ -1572,7 +1561,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 25000000,
                     Quantity = 10,
                     PicturePath = "gucci_jacket.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 6,
                     CateID = 1,   // Áo khoác
                     GenderID = 2, // Nữ
@@ -1590,7 +1579,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 15500000,
                     Quantity = 15,
                     PicturePath = "gucci_pants.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 6,
                     CateID = 2,   // Quần
                     GenderID = 1, // Nam
@@ -1608,7 +1597,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 22000000,
                     Quantity = 12,
                     PicturePath = "gucci_shoes.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 6,
                     CateID = 3,   // Giày
                     GenderID = 1, // Nam
@@ -1626,7 +1615,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 30000000,
                     Quantity = 8,
                     PicturePath = "gucci_dress.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 6,
                     CateID = 4,   // Váy
                     GenderID = 2, // Nữ
@@ -1644,7 +1633,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 9000000,
                     Quantity = 20,
                     PicturePath = "gucci_tshirt.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 6,
                     CateID = 5,   // Áo thun
                     GenderID = 3, // Unisex
@@ -1662,7 +1651,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 45000000,
                     Quantity = 5,
                     PicturePath = "gucci_watch.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 6,
                     CateID = 6,   // Đồng hồ
                     GenderID = 2, // Nữ
@@ -1680,7 +1669,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1450000,
                     Quantity = 40,
                     PicturePath = "levis_jacket.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 7,
                     CateID = 1,   // Áo khoác
                     GenderID = 1, // Nam
@@ -1697,8 +1686,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                     OldPrice = 0,
                     NewPrice = 1250000,
                     Quantity = 60,
-                    PicturePath = "levis_jeans.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    PicturePath = "levis_pants.jpg",
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 7,
                     CateID = 2,   // Quần
                     GenderID = 1, // Nam
@@ -1716,7 +1705,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1150000,
                     Quantity = 35,
                     PicturePath = "levis_shoes.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 7,
                     CateID = 3,   // Giày
                     GenderID = 1, // Nam
@@ -1734,7 +1723,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 980000,
                     Quantity = 20,
                     PicturePath = "levis_dress.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 7,
                     CateID = 4,   // Váy
                     GenderID = 2, // Nữ
@@ -1752,7 +1741,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 500000,
                     Quantity = 100,
                     PicturePath = "levis_tshirt.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 7,
                     CateID = 5,   // Áo thun
                     GenderID = 3, // Unisex
@@ -1770,7 +1759,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 850000,
                     Quantity = 15,
                     PicturePath = "levis_watch.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 7,
                     CateID = 6,   // Đồng hồ
                     GenderID = 1, // Nam
@@ -1788,7 +1777,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 2700000,
                     Quantity = 30,
                     PicturePath = "lacoste_jacket.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 8,
                     CateID = 1,   // Áo khoác
                     GenderID = 3, // Unisex
@@ -1805,8 +1794,8 @@ namespace CRUD_asp.netMVC.Data.Seed
                     OldPrice = 0,
                     NewPrice = 1450000,
                     Quantity = 40,
-                    PicturePath = "lacoste_short.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    PicturePath = "lacoste_pants.jpg",
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 8,
                     CateID = 2,   // Quần
                     GenderID = 1, // Nam
@@ -1824,7 +1813,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 2200000,
                     Quantity = 25,
                     PicturePath = "lacoste_shoes.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 8,
                     CateID = 3,   // Giày
                     GenderID = 1, // Nam
@@ -1842,7 +1831,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1900000,
                     Quantity = 18,
                     PicturePath = "lacoste_dress.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 8,
                     CateID = 4,   // Váy
                     GenderID = 2, // Nữ
@@ -1860,7 +1849,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1100000,
                     Quantity = 55,
                     PicturePath = "lacoste_tshirt.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 8,
                     CateID = 5,   // Áo thun
                     GenderID = 1, // Nam
@@ -1878,7 +1867,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 2600000,
                     Quantity = 20,
                     PicturePath = "lacoste_watch.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 8,
                     CateID = 6,   // Đồng hồ
                     GenderID = 3, // Unisex
@@ -1896,7 +1885,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1550000,
                     Quantity = 50,
                     PicturePath = "puma_jacket.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 9,
                     CateID = 1,   // Áo khoác
                     GenderID = 1, // Nam
@@ -1914,7 +1903,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1100000,
                     Quantity = 70,
                     PicturePath = "puma_pants.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 9,
                     CateID = 2,   // Quần
                     GenderID = 1, // Nam
@@ -1932,7 +1921,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1800000,
                     Quantity = 40,
                     PicturePath = "puma_shoes.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 9,
                     CateID = 3,   // Giày
                     GenderID = 1, // Nam
@@ -1950,7 +1939,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 950000,
                     Quantity = 25,
                     PicturePath = "puma_dress.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 9,
                     CateID = 4,   // Váy
                     GenderID = 2, // Nữ
@@ -1968,7 +1957,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 600000,
                     Quantity = 90,
                     PicturePath = "puma_tshirt.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 9,
                     CateID = 5,   // Áo thun
                     GenderID = 3, // Unisex
@@ -1986,7 +1975,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 1200000,
                     Quantity = 18,
                     PicturePath = "puma_watch.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 9,
                     CateID = 6,   // Đồng hồ
                     GenderID = 1, // Nam
@@ -2004,11 +1993,11 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 9500000,
                     Quantity = 15,
                     PicturePath = "chanel_jacket.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                     Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 10,
                     CateID = 1,   // Áo khoác
                     GenderID = 2, // Nữ
-                    FeaturedID = 2,
+                    FeaturedID = 1,
                     Weight = 450
                 },
                 new Products
@@ -2022,11 +2011,11 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 7200000,
                     Quantity = 12,
                     PicturePath = "chanel_pants.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 10,
                     CateID = 2,   // Quần
                     GenderID = 2, // Nữ
-                    FeaturedID = 2,
+                    FeaturedID = 1,
                     Weight = 250
                 },
                 new Products
@@ -2040,11 +2029,11 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 8300000,
                     Quantity = 10,
                     PicturePath = "chanel_shoes.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                     Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 10,
                     CateID = 3,   // Giày
                     GenderID = 2, // Nữ
-                    FeaturedID = 2,
+                    FeaturedID = 1,
                     Weight = 300
                 },
                 new Products
@@ -2058,11 +2047,11 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 13000000,
                     Quantity = 8,
                     PicturePath = "chanel_dress.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                     Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 10,
                     CateID = 4,   // Váy
                     GenderID = 2, // Nữ
-                    FeaturedID = 2,
+                    FeaturedID = 1,
                     Weight = 200
                 },
                 new Products
@@ -2076,11 +2065,11 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 3200000,
                     Quantity = 20,
                     PicturePath = "chanel_tshirt.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                    Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 10,
                     CateID = 5,   // Áo thun
                     GenderID = 2, // Nữ
-                    FeaturedID = 2,
+                    FeaturedID = 1,
                     Weight = 150
                 },
                 new Products
@@ -2094,20 +2083,23 @@ namespace CRUD_asp.netMVC.Data.Seed
                     NewPrice = 18000000,
                     Quantity = 6,
                     PicturePath = "chanel_watch.jpg",
-                    Created = new DateTime(2025, 4, 18),
+                     Created = DateTime.SpecifyKind(new DateTime(2025, 4, 18), DateTimeKind.Utc),
                     BrandID = 10,
                     CateID = 6,   // Đồng hồ
                     GenderID = 2, // Nữ
-                    FeaturedID = 2,
+                    FeaturedID = 1,
                     Weight = 100
                 },
 
             };
             #endregion
 
+            // Chuyen doi duong dan hinh --> !IMPORTANT
             foreach (var product in products)
             {
                 var baseName = System.IO.Path.GetFileNameWithoutExtension(product.PicturePath);
+
+                //product.PicturePath.Replace("h&m", "h&m");
                 product.PicturePath = $"{baseName}_1.1.jpg";
             }
 

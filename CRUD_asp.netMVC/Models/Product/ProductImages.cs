@@ -5,7 +5,7 @@ namespace CRUD_asp.netMVC.Models.Product
 {
     public class ProductImages
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public int ID { get; set; }
         public string? PathNameImage { get; set; }
 

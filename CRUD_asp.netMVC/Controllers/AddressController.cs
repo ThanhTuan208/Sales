@@ -219,7 +219,7 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> DeleteAddress(int addressId)
         {
             try
@@ -237,7 +237,7 @@ namespace CRUD_asp.netMVC.Controllers
                     var IsAddressExistsOrder = await _dbContext.Orders.FirstOrDefaultAsync(p => p.UserID == userID && p.AddressID == addressId);
                     if (IsAddressExistsOrder != null)
                     {
-                        IsAddressExistsOrder.AddressID = null;
+                        IsAddressExistsOrder.AddressID = 0;
 
                         _dbContext.Orders.Update(IsAddressExistsOrder);
                     }

@@ -6,15 +6,15 @@ namespace CRUD_asp.netMVC.Models.Product
 {
     public class Reviews
     {
-        [Key, Column(TypeName = "nvarchar(10)")]
-        public int? ID { get; set; }
+        [Key]
+        public int ID { get; set; }
 
         [Required]
-        public int? UserID { get; set; }
+        public int UserID { get; set; }
         public Users? Users { get; set; }
 
         [Required]
-        public int? ProductID { get; set; }
+        public int ProductID { get; set; }
         public Products? Product { get; set; }
 
         [Range(1, 5, ErrorMessage = "Loi {0}")]
