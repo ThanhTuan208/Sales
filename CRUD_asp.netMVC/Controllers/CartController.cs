@@ -188,8 +188,10 @@ namespace CRUD_asp.netMVC.Controllers
 
                 if (viewModel.CartItemByIDs.Count > 0)
                 {
-                    var selectList = viewModel.CartItemByIDs.Where(p => arrID.Contains(p.ID.ToString())).ToList();
-                    var totalList = selectList.Sum(p => p.Product != null ? p.Product.NewPrice * p.Quantity : 0);
+                    var convertArrIDToInt = arrID.Select(int.Parse).ToHashSet();
+
+                    var selectList = viewModel.CartItemByIDs.Where(p => convertArrIDToInt.Contains(p.ID)).ToList();
+                    var totalList = (decimal?)selectList.Sum(p => p.Product != null ? p.Product.NewPrice * p.Quantity : 0);
 
                     var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
                     if (userID > 0)
@@ -224,7 +226,7 @@ namespace CRUD_asp.netMVC.Controllers
                             await _dbContext.OrderDetail.AddAsync(orderDetail);
                         });
 
-                        await _dbContext.Carts.Where(p => p.UserID == userID && arrID.Contains(p.ID.ToString()))
+                        await _dbContext.Carts.Where(p => p.UserID == userID && convertArrIDToInt.Contains(p.ID))
                                               .ExecuteUpdateAsync(s => s.SetProperty(sp => sp.IsDelete, true));
 
                         await _dbContext.Orders.AddAsync(order);

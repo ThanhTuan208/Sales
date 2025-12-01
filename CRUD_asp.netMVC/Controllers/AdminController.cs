@@ -1,13 +1,19 @@
-﻿using CRUD_asp.netMVC.Controllers.Extentions;
-using CRUD_asp.netMVC.Data;
+﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.DTO.Admin;
+using CRUD_asp.netMVC.Extensions.Admin;
+using CRUD_asp.netMVC.Extensions.Payments;
+using CRUD_asp.netMVC.Extensions.RenderViewGeneral;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.ViewModels.Admin;
 using CRUD_asp.netMVC.ViewModels.Product;
+using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32.SafeHandles;
+using Org.BouncyCastle.Tls;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
@@ -16,6 +22,7 @@ using System.Data;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Color = CRUD_asp.netMVC.Models.Product.Color;
 using Size = CRUD_asp.netMVC.Models.Product.Size;
 
@@ -1433,15 +1440,6 @@ namespace CRUD_asp.netMVC.Controllers
             partial.SelectListSize = new SelectList(sizeBySelectList, "ID", "Name");
             partial.SelectListColor = new SelectList(colorBySelectList, "ID", "Name");
 
-            //var tasks = (
-            //    tag: _dbFactory.CreateDbContext().Tag.ToListAsync(),
-            //    style: _dbFactory.CreateDbContext().Style.ToListAsync(),
-            //    season: _dbFactory.CreateDbContext().Season.ToListAsync(),
-            //    material: _dbFactory.CreateDbContext().Material.ToListAsync()
-            //);
-
-            //await Task.WhenAll(tasks.tag, tasks.style, tasks.season, tasks.material);
-
             return partial;
         }
 
@@ -1511,9 +1509,31 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpGet] // Hien thi dashboard
-        public IActionResult DashBoard()
+        public async Task<IActionResult> DashBoard()
         {
-            return View();
-        }
+            var userToday = await _dbContext.Users.ByToDayAsync();
+            var userYesterday = await _dbContext.Users.ByToYesterdayAsync();
+            var changePercentUserToday = UserQueryExtensions.CalcChangePercent(userToday, userYesterday);
+
+            int month = DateTime.UtcNow.Date.Month;
+            var usersByQuarters = await _dbContext.Users.ByQuarerAsync();    
+
+            var amountByToday = await _dbContext.Payment.ByToDayAsync();
+            var amountYesterday = await _dbContext.Payment.ByToYesterdayAsync();
+            var changePercentPaymentToday = PaymentQueryExtensions.CalcChangePercentByDay(amountByToday, amountYesterday);
+
+            var amountByMonth = await _dbContext.Payment.ByMonthAsync();
+            var amountLastMonth = await _dbContext.Payment.ByToLastMonthAsync();
+            var changePercentPaymentMonth = PaymentQueryExtensions.CalcChangePercentByMonth(amountByMonth, amountLastMonth);
+
+            var viewModel = new DashBoardViewModel();
+            viewModel.DashBoards.Add(new AmountInTodayDTO(amountByToday, changePercentPaymentToday));
+            viewModel.DashBoards.Add(new TodayUsersDTO(userToday, changePercentUserToday));
+            viewModel.DashBoards.Add(new NewUserByQuarterDTO(month, usersByQuarters));
+            viewModel.DashBoards.Add(new AmountInMonthDTO(amountByMonth, changePercentPaymentMonth));
+
+            return View(viewModel);
+        }   
     }
 }
+

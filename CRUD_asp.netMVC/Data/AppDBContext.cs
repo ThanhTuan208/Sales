@@ -18,6 +18,7 @@ namespace CRUD_asp.netMVC.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Fluent API entity
             modelBuilder.RelationshipEntitys();
 
             // khong rang buoc
@@ -31,22 +32,25 @@ namespace CRUD_asp.netMVC.Data
             modelBuilder.SeedSize();
             modelBuilder.SeedTag();
 
-
-            // rang buoc khoa ngoai 1 - n
+            // Rang buoc khoa ngoai 1 - n
             modelBuilder.SeedBrand();
             modelBuilder.SeedCategory();
 
             modelBuilder.SeedProducts_ProductSeason_ProductStyle();
+            modelBuilder.SeedProductImage();
 
-            // rang buoc khoa ngoai n - n
+            // Rang buoc khoa ngoai n - n
             modelBuilder.SeedProductSize();
             modelBuilder.SeedProductColor();
             modelBuilder.SeedProductMaterial();
             modelBuilder.SeedPoductTag();
             modelBuilder.SeedProductQty();
 
-            // 1-n
-            modelBuilder.SeedProductImage();
+            // Indexing entity user
+            modelBuilder.IndexPropertyUser();
+
+            // Indexing entity payment
+            modelBuilder.IndexPropertyPayment();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

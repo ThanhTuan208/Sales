@@ -1,6 +1,6 @@
 ﻿using AspNetCoreGeneratedDocument;
-using CRUD_asp.netMVC.Controllers.Extentions;
 using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.Extensions.RenderViewGeneral;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.ViewModels.Home;
@@ -162,8 +162,8 @@ namespace CRUD_asp.netMVC.Controllers
             }
 
             IQueryable<Products> getPagProductByBrand = _dbContext.Products.AsNoTracking()
-                .Where(p => p.Brands == brands)
-                .Include(p => p.Brands);
+                                                                            .Include(p => p.Brands)
+                                                                            .Where(p => p.Brands == brands);
 
             var productCount = await getPagProductByBrand.CountAsync();
             ViewBag.ProductCount = productCount;

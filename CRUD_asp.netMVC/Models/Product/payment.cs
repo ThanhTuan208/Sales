@@ -17,8 +17,17 @@ namespace CRUD_asp.netMVC.Models.Product
         public string paymentMethod { get; set; }
 
         [DataType(DataType.Currency)]
-        public double? paidAmount { get; set; }
+        public decimal? paidAmount { get; set; }
 
         public DateTime PaymentDate { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateOnly StartDay { get; private set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public int StartMonth { get; private set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public int StartYear { get; private set; }
     }
 }

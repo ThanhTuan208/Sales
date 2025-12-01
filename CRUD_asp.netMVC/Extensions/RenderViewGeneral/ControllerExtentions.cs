@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace CRUD_asp.netMVC.Controllers.Extentions
+namespace CRUD_asp.netMVC.Extensions.RenderViewGeneral
 {
     public static class ControllerExtensions
     {

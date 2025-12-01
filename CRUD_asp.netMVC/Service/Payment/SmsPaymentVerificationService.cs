@@ -63,14 +63,14 @@ namespace CRUD_asp.netMVC.Service.Payment
             }
         }
 
-        private double ParseAmountFromSms(string smsContent)
+        private decimal ParseAmountFromSms(string smsContent)
         {
             // Regex để tìm số tiền, ví dụ: "1,234,567 VND"
             var amountMatch = Regex.Match(smsContent, @"(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)");
             if (amountMatch.Success)
             {
                 var amountStr = amountMatch.Value.Replace(",", "").Replace(".", "");
-                return double.Parse(amountStr);
+                return decimal.Parse(amountStr);
             }
             return 0;
         }

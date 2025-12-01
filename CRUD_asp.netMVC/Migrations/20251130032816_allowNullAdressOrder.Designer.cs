@@ -4,6 +4,7 @@ using CRUD_asp.netMVC.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUD_asp.netMVC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20251130032816_allowNullAdressOrder")]
+    partial class allowNullAdressOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -293,25 +296,6 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateOnly>("StartDay")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("date")
-                        .HasComputedColumnSql("CONVERT(DATE, [StartDate]) PERSISTED");
-
-                    b.Property<int>("StartMonth")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("int");
-
-                    b.Property<int>("StartQuarter")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("int")
-                        .HasComputedColumnSql("DATEPART(QUARTER, [StartDate]) PERSISTED");
-
-                    b.Property<int>("StartYear")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("int")
-                        .HasComputedColumnSql("DATEPART(YEAR, [StartDate]) PERSISTED");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -330,15 +314,6 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("RolesId");
-
-                    b.HasIndex("StartDay")
-                        .HasDatabaseName("IX_Users_UserByDay");
-
-                    b.HasIndex("StartYear")
-                        .HasDatabaseName("IX_Users_UserByYear");
-
-                    b.HasIndex("StartQuarter", "StartYear")
-                        .HasDatabaseName("IX_Users_UserByQuarter");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -421,8 +396,8 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<int?>("AddressID")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double?>("Amount")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -823,23 +798,8 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateOnly>("StartDay")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("date")
-                        .HasComputedColumnSql("CONVERT(DATE, [PaymentDate]) PERSISTED");
-
-                    b.Property<int>("StartMonth")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("int")
-                        .HasComputedColumnSql("DATEPART(MONTH, [PaymentDate]) PERSISTED");
-
-                    b.Property<int>("StartYear")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("int")
-                        .HasComputedColumnSql("DATEPART(YEAR, [PaymentDate]) PERSISTED");
-
-                    b.Property<decimal?>("paidAmount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double?>("paidAmount")
+                        .HasColumnType("float");
 
                     b.Property<string>("paymentMethod")
                         .IsRequired()
@@ -849,12 +809,6 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.HasIndex("OrderID")
                         .IsUnique();
-
-                    b.HasIndex("StartDay")
-                        .HasDatabaseName("IX_Payment_PaymentByDay");
-
-                    b.HasIndex("StartMonth", "StartYear")
-                        .HasDatabaseName("IX_Payment_PaymentByMonth");
 
                     b.ToTable("Payment");
                 });

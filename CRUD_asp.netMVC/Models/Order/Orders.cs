@@ -15,12 +15,11 @@ namespace CRUD_asp.netMVC.Models.Order
         public int UserID { get; set; }
         public Users? Users { get; set; }
 
-        [Required]
-        public int AddressID { get; set; }
+        public int? AddressID { get; set; }
         public Address? Address { get; set; }
 
         [DataType(DataType.Currency)]
-        public double? Amount { get; set; }
+        public decimal? Amount { get; set; }
 
         [Required]
         public string? Status { get; set; }

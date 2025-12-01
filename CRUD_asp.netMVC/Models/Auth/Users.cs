@@ -1,9 +1,15 @@
-﻿using CRUD_asp.netMVC.Models.Cart;
+﻿using CRUD_asp.netMVC.DTO.Admin;
+using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Numerics;
 
 namespace CRUD_asp.netMVC.Models.Auth
 {
@@ -38,5 +44,18 @@ namespace CRUD_asp.netMVC.Models.Auth
         public List<AddToCart>? Carts { get; set; }
         public List<Reviews>? Reviews { get; set; }
         public List<Address>? Addresses { get; set; }
+
+        // EF Core computed column
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public int StartQuarter { get; private set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateOnly StartDay { get; private set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public int StartMonth { get; private set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public int StartYear { get; private set; }
     }
 }

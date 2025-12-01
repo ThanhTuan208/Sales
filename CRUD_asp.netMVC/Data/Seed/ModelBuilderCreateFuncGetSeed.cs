@@ -4,6 +4,8 @@ using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Tls;
+using System.Drawing.Printing;
 using System.Globalization;
 using System.Text;
 
@@ -13,75 +15,133 @@ namespace CRUD_asp.netMVC.Data.Seed
     {
         public static void RelationshipEntitys(this ModelBuilder modelBuilder)
         {
-            // Mockup du lieu mqh 1 - n
+            var users = modelBuilder.Entity<Users>();
+            var orders = modelBuilder.Entity<Orders>();
+            var carts = modelBuilder.Entity<AddToCart>();
+            var reviews = modelBuilder.Entity<Reviews>();
+            var payments = modelBuilder.Entity<Payment>();
+            var products = modelBuilder.Entity<Products>();
+            var productTags = modelBuilder.Entity<ProductTag>();
+            var productSizes = modelBuilder.Entity<ProductSize>();
+            var orderDetails = modelBuilder.Entity<OrderDetail>();
+            var productQty = modelBuilder.Entity<ProductQuantity>();
+            var productStyles = modelBuilder.Entity<ProductStyle>();
+            var productColors = modelBuilder.Entity<ProductColors>();
+            var productImages = modelBuilder.Entity<ProductImages>();
+            var productSeasons = modelBuilder.Entity<ProductSeason>();
+            var productMaterials = modelBuilder.Entity<ProductMaterial>();
 
-            //modelBuilder.Entity<IdentityUserRole<int>>().HasOne<IdentityUser<int>>().WithMany().HasForeignKey(ur => ur.UserId).OnDelete(DeleteBehavior.NoAction);
-            //modelBuilder.Entity<IdentityUserRole<int>>().HasOne<IdentityRole<int>>().WithMany().HasForeignKey(ur => ur.RoleId).OnDelete(DeleteBehavior.NoAction);
+            // Mockup du lieu mqh 1 - n    
+            products.HasOne(m => m.Brands).WithMany(p => p.products).HasForeignKey(mi => mi.BrandID).OnDelete(DeleteBehavior.Cascade);
+            products.HasOne(t => t.Cate).WithMany(p => p.products).HasForeignKey(ti => ti.CateID).OnDelete(DeleteBehavior.Cascade);
+            products.HasOne(p => p.Gender).WithMany(p => p.Products).HasForeignKey(p => p.GenderID).OnDelete(DeleteBehavior.Cascade);
+            products.HasOne(p => p.Featured).WithMany(p => p.products).HasForeignKey(p => p.FeaturedID).OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Products>().HasOne(m => m.Brands).WithMany(p => p.products).HasForeignKey(mi => mi.BrandID).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Products>().HasOne(t => t.Cate).WithMany(p => p.products).HasForeignKey(ti => ti.CateID).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Products>().HasOne(p => p.Gender).WithMany(p => p.Products).HasForeignKey(p => p.GenderID).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Products>().HasOne(p => p.Featured).WithMany(p => p.products).HasForeignKey(p => p.FeaturedID).OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<AddToCart>().HasOne(p => p.Product).WithMany(c => c.Carts).HasForeignKey(pi => pi.ProductID);
-            modelBuilder.Entity<AddToCart>().HasOne(u => u.Users).WithMany(c => c.Carts).HasForeignKey(ui => ui.UserID);
+            carts.HasOne(p => p.Product).WithMany(c => c.Carts).HasForeignKey(pi => pi.ProductID);
+            carts.HasOne(u => u.Users).WithMany(c => c.Carts).HasForeignKey(ui => ui.UserID);
 
-            modelBuilder.Entity<OrderDetail>().HasOne(o => o.Orders).WithMany(od => od.OrderDetail).HasForeignKey(oi => oi.OrderID);
-            modelBuilder.Entity<OrderDetail>().HasOne(p => p.Product).WithMany(od => od.OrderDetails).HasForeignKey(pi => pi.ProductID);
+            orderDetails.HasOne(o => o.Orders).WithMany(od => od.OrderDetail).HasForeignKey(oi => oi.OrderID);
+            orderDetails.HasOne(p => p.Product).WithMany(od => od.OrderDetails).HasForeignKey(pi => pi.ProductID);
 
-            modelBuilder.Entity<Orders>().HasOne(u => u.Users).WithMany(o => o.Orders).HasForeignKey(pi => pi.UserID).OnDelete(DeleteBehavior.NoAction);
+            orders.HasOne(u => u.Users).WithMany(o => o.Orders).HasForeignKey(pi => pi.UserID).OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Reviews>().HasOne(r => r.Users).WithMany(r => r.Reviews).HasForeignKey(u => u.UserID);
-            modelBuilder.Entity<Reviews>().HasOne(r => r.Product).WithMany(r => r.Reviews).HasForeignKey(u => u.ProductID);
+            reviews.HasOne(r => r.Users).WithMany(r => r.Reviews).HasForeignKey(u => u.UserID);
+            reviews.HasOne(r => r.Product).WithMany(r => r.Reviews).HasForeignKey(u => u.ProductID);
 
-            modelBuilder.Entity<ProductQuantity>().HasKey(p => new { p.ProductID, p.SizeID, p.ColorID });
-            modelBuilder.Entity<ProductQuantity>().HasOne(p => p.Product).WithMany(p => p.ProductQty).HasForeignKey(u => u.ProductID);
-            modelBuilder.Entity<ProductQuantity>().HasOne(p => p.Size).WithMany(p => p.ProductQty).HasForeignKey(u => u.SizeID);
-            modelBuilder.Entity<ProductQuantity>().HasOne(p => p.Color).WithMany(p => p.ProductQty).HasForeignKey(u => u.ColorID);
+            productQty.HasKey(p => new { p.ProductID, p.SizeID, p.ColorID });
+            productQty.HasOne(p => p.Product).WithMany(p => p.ProductQty).HasForeignKey(u => u.ProductID);
+            productQty.HasOne(p => p.Size).WithMany(p => p.ProductQty).HasForeignKey(u => u.SizeID);
+            productQty.HasOne(p => p.Color).WithMany(p => p.ProductQty).HasForeignKey(u => u.ColorID);
 
             // Mockup du lieu mqh 1 - 1
-            modelBuilder.Entity<Payment>().HasOne(o => o.Order).WithOne(p => p.Payment).HasForeignKey<Payment>(o => o.OrderID);
+            payments.HasOne(o => o.Order).WithOne(p => p.Payment).HasForeignKey<Payment>(o => o.OrderID);
 
-            modelBuilder.Entity<Users>().HasOne(r => r.Manager).WithOne(u => u.Users).HasForeignKey<Manager>(mi => mi.UserID).OnDelete(DeleteBehavior.NoAction);
-            modelBuilder.Entity<Users>().HasOne(r => r.Customer).WithOne(u => u.Users).HasForeignKey<Customer>(mi => mi.UserID).OnDelete(DeleteBehavior.NoAction);
+            users.HasOne(r => r.Customer).WithOne(u => u.Users).HasForeignKey<Customer>(mi => mi.UserID).OnDelete(DeleteBehavior.NoAction);
+            users.HasOne(r => r.Manager).WithOne(u => u.Users).HasForeignKey<Manager>(mi => mi.UserID).OnDelete(DeleteBehavior.NoAction);
 
             // Mockup du lieu mqh n - n
-            modelBuilder.Entity<ProductSeason>().HasKey(p => new { p.SeasonID, p.ProductID });
-            modelBuilder.Entity<ProductSeason>().HasOne(p => p.Product).WithMany(p => p.ProductSeasons).HasForeignKey(p => p.ProductID);
-            modelBuilder.Entity<ProductSeason>().HasOne(p => p.Season).WithMany(p => p.ProductSeason).HasForeignKey(p => p.SeasonID);
+            productSeasons.HasKey(p => new { p.SeasonID, p.ProductID });
+            productSeasons.HasOne(p => p.Product).WithMany(p => p.ProductSeasons).HasForeignKey(p => p.ProductID);
+            productSeasons.HasOne(p => p.Season).WithMany(p => p.ProductSeason).HasForeignKey(p => p.SeasonID);
 
-            modelBuilder.Entity<ProductTag>().HasKey(p => new { p.TagID, p.ProductID });
-            modelBuilder.Entity<ProductTag>().HasOne(p => p.Product).WithMany(p => p.ProductTags).HasForeignKey(p => p.ProductID);
-            modelBuilder.Entity<ProductTag>().HasOne(p => p.Tag).WithMany(p => p.ProductTag).HasForeignKey(p => p.TagID);
+            productTags.HasKey(p => new { p.TagID, p.ProductID });
+            productTags.HasOne(p => p.Product).WithMany(p => p.ProductTags).HasForeignKey(p => p.ProductID);
+            productTags.HasOne(p => p.Tag).WithMany(p => p.ProductTag).HasForeignKey(p => p.TagID);
 
-            modelBuilder.Entity<ProductStyle>().HasKey(p => new { p.StyleID, p.ProductID });
-            modelBuilder.Entity<ProductStyle>().HasOne(p => p.Product).WithMany(p => p.ProductStyles).HasForeignKey(p => p.ProductID);
-            modelBuilder.Entity<ProductStyle>().HasOne(p => p.Style).WithMany(p => p.ProductStyles).HasForeignKey(p => p.StyleID);
+            productStyles.HasKey(p => new { p.StyleID, p.ProductID });
+            productStyles.HasOne(p => p.Product).WithMany(p => p.ProductStyles).HasForeignKey(p => p.ProductID);
+            productStyles.HasOne(p => p.Style).WithMany(p => p.ProductStyles).HasForeignKey(p => p.StyleID);
 
-            modelBuilder.Entity<ProductSize>().HasKey(p => new { p.ProductID, p.SizeID });
-            modelBuilder.Entity<ProductSize>().HasOne(p => p.Products).WithMany(p => p.ProductSize).HasForeignKey(p => p.ProductID);
-            modelBuilder.Entity<ProductSize>().HasOne(p => p.Size).WithMany(p => p.ProductSize).HasForeignKey(p => p.SizeID);
+            productSizes.HasKey(p => new { p.ProductID, p.SizeID });
+            productSizes.HasOne(p => p.Products).WithMany(p => p.ProductSize).HasForeignKey(p => p.ProductID);
+            productSizes.HasOne(p => p.Size).WithMany(p => p.ProductSize).HasForeignKey(p => p.SizeID);
 
-            modelBuilder.Entity<ProductColors>().HasKey(p => new { p.ProductID, p.ColorID });
-            modelBuilder.Entity<ProductColors>().HasOne(p => p.Product).WithMany(p => p.ProductColor).HasForeignKey(p => p.ProductID);
-            modelBuilder.Entity<ProductColors>().HasOne(p => p.Color).WithMany(p => p.ProductColor).HasForeignKey(p => p.ColorID);
+            productColors.HasKey(p => new { p.ProductID, p.ColorID });
+            productColors.HasOne(p => p.Product).WithMany(p => p.ProductColor).HasForeignKey(p => p.ProductID);
+            productColors.HasOne(p => p.Color).WithMany(p => p.ProductColor).HasForeignKey(p => p.ColorID);
 
-            modelBuilder.Entity<ProductMaterial>().HasKey(p => new { p.ProductID, p.MaterialID });
-            modelBuilder.Entity<ProductMaterial>().HasOne(p => p.Product).WithMany(p => p.ProductMaterial).HasForeignKey(p => p.ProductID);
-            modelBuilder.Entity<ProductMaterial>().HasOne(p => p.Material).WithMany(p => p.ProductMaterial).HasForeignKey(p => p.MaterialID);
+            productMaterials.HasKey(p => new { p.ProductID, p.MaterialID });
+            productMaterials.HasOne(p => p.Product).WithMany(p => p.ProductMaterial).HasForeignKey(p => p.ProductID);
+            productMaterials.HasOne(p => p.Material).WithMany(p => p.ProductMaterial).HasForeignKey(p => p.MaterialID);
 
-            modelBuilder.Entity<ProductImages>().HasOne(p => p.Products).WithMany(p => p.ProductImages).HasForeignKey(p => p.ProductID);
-
-            //var hashPass1 = new PasswordHasher<Users>().HashPassword(null, "admin123");
-            //var hashPass2 = new PasswordHasher<Users>().HashPassword(null, "123456");
+            productImages.HasOne(p => p.Products).WithMany(p => p.ProductImages).HasForeignKey(p => p.ProductID);
         }
 
+        // Them computed column, indexing entity Payment
+        public static void IndexPropertyPayment(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Payment>(p =>
+            {
+                p.Property<DateOnly>("StartDay").HasComputedColumnSql("CONVERT(DATE, [PaymentDate]) PERSISTED")
+                                                .ValueGeneratedOnAddOrUpdate();
+
+                p.HasIndex("StartDay").HasDatabaseName("IX_Payment_PaymentByDay");
+
+                p.Property<int>("StartMonth").HasComputedColumnSql("DATEPART(MONTH, [PaymentDate]) PERSISTED")
+                                               .ValueGeneratedOnAddOrUpdate();
+
+                p.Property<int>("StartYear").HasComputedColumnSql("DATEPART(YEAR, [PaymentDate]) PERSISTED")
+                                               .ValueGeneratedOnAddOrUpdate();
+
+                p.HasIndex("StartMonth", "StartYear").HasDatabaseName("IX_Payment_PaymentByMonth");
+            });
+        }
+
+        // Them computed column, indexing entity User
+        public static void IndexPropertyUser(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Users>(p =>
+            {
+                p.Property<int>("StartYear").HasComputedColumnSql("DATEPART(YEAR, [StartDate]) PERSISTED")
+                                                .ValueGeneratedOnAddOrUpdate();
+
+                p.HasIndex("StartYear").HasDatabaseName("IX_Users_UserByYear");
+
+                p.Property<int>("StartQuarter").HasComputedColumnSql("DATEPART(QUARTER, [StartDate]) PERSISTED")
+                                                .ValueGeneratedOnAddOrUpdate();
+
+                p.HasIndex("StartQuarter", "StartYear").HasDatabaseName("IX_Users_UserByQuarter");
+
+                p.Property<DateOnly>("StartDay").HasComputedColumnSql("CONVERT(DATE, [StartDate]) PERSISTED")
+                                                .ValueGeneratedOnAddOrUpdate();
+
+                p.HasIndex("StartDay").HasDatabaseName("IX_Users_UserByDay");
+
+                //p.Property<int>("StartMonth").HasComputedColumnSql("DATEPART(MONTH, [StartDate]) PERSISTED")
+                //                                .ValueGeneratedOnAddOrUpdate();
+
+                //p.HasIndex("StartMonth", "StartYear").HasDatabaseName("IX_Users_Month");
+            });
+        }
+
+        // Them du lieu cho color, size, quantity cua san pham
         public static void SeedProductQty(this ModelBuilder modelBuilder)
         {
-            var productQuantities = new List<ProductQuantity>();
-            int productCount = 60;
             int colorCount = 8;
             int sizeCount = 14;
+            int productCount = 60;
+            var productQuantities = new List<ProductQuantity>();
 
             Random rnd = new Random(12345);
 
@@ -119,6 +179,7 @@ namespace CRUD_asp.netMVC.Data.Seed
         }
 
 
+        // Them du lieu hinh anh cho san pham
         public static void SeedProductImage(this ModelBuilder modelBuilder)
         {
 
@@ -402,6 +463,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             );
         }
 
+        // Them du lieu noi bat
         public static void SeedFeatured(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Featured>().HasData(
@@ -411,6 +473,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                  );
         }
 
+        // Them du lieu vai tro
         public static void SeedRoels(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Roles>().HasData(
@@ -420,6 +483,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             );
         }
 
+        // Them du lieu gioi tinh cho san pham
         public static void SeedGenders(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Gender>().HasData(
@@ -429,6 +493,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             );
         }
 
+        // Them du lieu chat loai cho san pham
         public static void SeedMaterial(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Material>().HasData(
@@ -440,6 +505,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             );
         }
 
+        // Them du lieu kieu mau san pham
         public static void SeedStyle(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Style>().HasData(
@@ -452,6 +518,7 @@ namespace CRUD_asp.netMVC.Data.Seed
           );
         }
 
+        // Them du lieu theo mua
         public static void SeedSeason(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Season>().HasData(
@@ -462,6 +529,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             );
         }
 
+        // Them du lieu mau sac cho san pha 
         public static void SeedColor(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Color>().HasData(
@@ -476,6 +544,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             );
         }
 
+        // Them du lieu kich co cho san pham
         public static void SeedSize(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Size>().HasData(
@@ -496,6 +565,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             );
         }
 
+        // Them thuong hieu
         public static void SeedBrand(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Brand>().HasData(
@@ -512,6 +582,7 @@ namespace CRUD_asp.netMVC.Data.Seed
          );
         }
 
+        // Them danh muc
         public static void SeedCategory(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Category>().HasData(
@@ -524,6 +595,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             );
         }
 
+        // Them du lieu nhan dan
         public static void SeedTag(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Tag>().HasData(
@@ -538,6 +610,7 @@ namespace CRUD_asp.netMVC.Data.Seed
            );
         }
 
+        // Them du lieu trung gian Product - Tag
         public static void SeedPoductTag(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ProductTag>().HasData(
