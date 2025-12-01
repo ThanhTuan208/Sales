@@ -3,9 +3,10 @@
 - Built with **ASP.NET Core MVC, C#, and SQL Server**, the platform provides a modern foundation for scalable e-commerce solutions. 
 
 ## Tech Stack
-- **Backend**: ASP.NET Core MVC, C#  
-- **Database**: SQL Server, Entity Framework  
-- **Frontend**: HTML, CSS, SCSS, JavaScript
+- **Backend**: ASP.NET Core 8 MVC, C#  
+- **Database**: SQL Server, Entity Framework Core, Migrations
+- **Frontend**: HTML, CSS, SCSS, Jquery, Bootstrap
+- **SupportTech**: Git, GitHub, Ngrok, Postman
   
 ## Features
 - **Product Management (CRUD)**  
@@ -38,7 +39,16 @@
 ## Setup
 1. Clone the repository: `git clone https://github.com/ThanhTuan208/Sales`
 2. Install .NET SDK and SQL Server
-3. Update connection string in `appsettings.json`
+3. Add appsettings.json:
+ "ConnectionStrings": {
+    "AppDBContext": "Data Source=your_server;Initial Catalog=name_db;Integrated Security=True;Encrypt=True;Trust Server Certificate=True"
+  },
+"Smtp": {
+    "Server": "smtp.gmail.com",
+    "Port": "587",
+    "User": "your_email",
+    "Pass": " your_email_key_pass"
+}
 4. Run migrations: `dotnet ef database update` || `update-database`
 5. Start the application: `dotnet run`
 
