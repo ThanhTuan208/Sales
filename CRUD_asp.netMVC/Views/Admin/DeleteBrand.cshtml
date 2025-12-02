@@ -2,12 +2,12 @@
 @model Brand
 
 @{
-    ViewData["Title"] = "DeleteProduct";
+    ViewData["Title"] = "Delete Brand";
 }
 
 <div class="delete-container">
     <div class="delete-header">
-        <h1>Xóa thương hiệu</h1>
+        <h1 style="color: #2c3e50; margin-bottom: 20px;">Xóa thương hiệu</h1>
         <h3>Tôi cho bạn cơ hội cuối cùng, bạn có chắc là xóa thương hiệu này chưa ?</h3>
         <h3>Vì thương hiệu khi bị xóa sẽ xóa luôn các sản phẩm có trong thương hiệu này.  </h3>
     </div>
@@ -19,11 +19,11 @@
         <div class="delete-info">
             <h4>Product Details</h4>
             <dl>
-                <dt>@Html.DisplayNameFor(model => model.ID)</dt>
+                <dt>Mã thương hiệu</dt>
                 <dd>@Html.DisplayFor(model => model.ID)</dd>
-                <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+                <dt>Tên thương hiệu</dt>
                 <dd>@Html.DisplayFor(model => model.Name)</dd>
-                <dt>@Html.DisplayNameFor(model => model.Description)</dt>
+                <dt>Mô tả</dt>
                 <dd>@Html.DisplayFor(model => model.Description)</dd>
             </dl>
         </div>
@@ -31,7 +31,7 @@
     <form asp-action="DeleteBrandByID" asp-route-id="@Model.ID" method="post">
         <div class="action-buttons">
             <input type="submit" value="Xóa" /> |
-            <a asp-action="BrandList">Quay lai d/s</a>
+            <a asp-action="BrandList">Quay lại</a>
         </div>
     </form>
 </div>

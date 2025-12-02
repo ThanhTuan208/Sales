@@ -1,4 +1,21 @@
-﻿.pagination {
+﻿.product-info dl {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    row-gap: 10px;
+    column-gap: 20px;
+}
+
+.product-info dt {
+    font-weight: bold;
+    color: #34495e;
+}
+
+.product-info dd {
+    margin: 0;
+}
+
+
+.pagination {
     margin-top: 10px;
 }
     .pagination .btn {

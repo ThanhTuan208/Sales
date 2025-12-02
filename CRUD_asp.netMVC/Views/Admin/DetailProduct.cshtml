@@ -1,4 +1,5 @@
 ﻿@using CRUD_asp.netMVC.Models.Product
+@using System.Globalization
 @model Products
 
 @{
@@ -14,25 +15,43 @@
         </div>
         <div class="product-info">
             <dl>
-                <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+                <dt>Tên sản phẩm</dt>
                 <dd>@Html.DisplayFor(model => model.Name)</dd>
-                <dt>@Html.DisplayNameFor(model => model.NewPrice)</dt>
-                <dd>@Html.DisplayFor(model => model.NewPrice)</dd>
-                <dt>@Html.DisplayNameFor(model => model.Created)</dt>
+                <dt>Giá cũ sản phẩm</dt>
+                <dd>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.OldPrice)</dd>
+                <dt>Giá mới sản phẩm</dt>
+                <dd>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.NewPrice)</dd>
+                <dt>Ngáy tạo</dt>
                 <dd>@Html.DisplayFor(model => model.Created)</dd>
-                <dt>@Html.DisplayNameFor(model => model.GenderID)</dt>
+                <dt>Giới tính</dt>
                 <dd>@Html.DisplayFor(model => model.Gender.Name)</dd>
-                <dt>@Html.DisplayNameFor(model => model.BrandID)</dt>
+                <dt>Thương hiệu</dt>
                 <dd>@Html.DisplayFor(model => model.Brands.Name)</dd>
-                <dt>@Html.DisplayNameFor(model => model.CateID)</dt>
+                <dt>Danh mục</dt>
                 <dd>@Html.DisplayFor(model => model.Cate.Name)</dd>
-                <dt>@Html.DisplayNameFor(model => model.ProductMaterial)</dt>
-                <dd>@Html.DisplayFor(model => model.ProductMaterial)</dd>
+                <dt>Số lượng tồn kho</dt>
+                <dd>@Html.DisplayFor(model => model.Quantity)</dd>
+                <dt>Trọng lượng</dt>
+                <dd>@Html.DisplayFor(model => model.Weight)</dd>
+                <dt>Màu sắc</dt>
+                <dd>@string.Join(", ", Model.ProductColor.Select(p => p.Color.Name))</dd>
+                <dt>Kích cỡ</dt>
+                <dd>@string.Join(", ", Model.ProductSize.Select(p => p.Size.Name))</dd>
+                <dt>Chất liệu</dt>
+                <dd>@string.Join(", ", Model.ProductMaterial.Select(p => p.Material.Name))</dd>
+                <dt>Nhãn dán</dt>
+                <dd>@string.Join(", ", Model.ProductTags.Select(p => p.Tag.Name))</dd>
+                <dt>Phong cách</dt>
+                <dd>@string.Join(", ", Model.ProductStyles.Select(p => p.Style.Name))</dd>
+                <dt>Mùa phù hợp</dt>
+                <dd>@string.Join(", ", Model.ProductSeasons.Select(p => p.Season.Name))</dd>
+                
+
             </dl>
         </div>
     </div>
     <div class="action-buttons">
         @* <a asp-action="EditProduct" asp-route-id="@Model.ID">cập nhật</a>  *@
-        <a asp-action="Index">Qiuay lại d/s</a>
+        <a asp-action="ProductList">Qiuay lại</a>
     </div>
 </div>

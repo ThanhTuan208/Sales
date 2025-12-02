@@ -13,6 +13,7 @@ namespace CRUD_asp.netMVC.Extensions.Admin
         {
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
             return await user.CountAsync(p => EF.Property<DateOnly>(p, "StartDay") == today);
+       
         }
 
         public static async Task<int> ByToYesterdayAsync(this DbSet<Users> user)

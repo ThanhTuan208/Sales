@@ -73,7 +73,7 @@ $(document).off('click', '#btnAdminProduct').on('click', '#btnAdminProduct', fun
                 //setTimeout(() => {
 
                 //}, 700);
-                window.location.href = '/Admin/Index';
+                window.location.href = '/Admin/ProductList';
             } else {
 
                 btn.prop('disabled', false).text(!id ? 'Tạo' : 'Cập nhật');
@@ -442,7 +442,6 @@ $(document).off('click', '.form-select.detail').on('click', '.form-select.detail
         }
     });
 });
-
 
 $(document).off('change', '#new-qty, .exist-qty, #newPrice').on('change', '#new-qty, .exist-qty, #newPrice', function () {
 

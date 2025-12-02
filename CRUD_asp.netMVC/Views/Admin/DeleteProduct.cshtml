@@ -1,4 +1,5 @@
 ﻿@using CRUD_asp.netMVC.Models.Product
+@using System.Globalization
 @model Products
 
 @{
@@ -16,17 +17,17 @@
             <img src="@Url.Content("~/images/products/" + Model.PicturePath)" alt="Product Image" />
         </div>
         <div class="delete-info">
-            <h4>Product Details</h4>
+            <h4>Thông tin sản phẩm</h4>
             <dl>
-                <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+                <dt>Tên sản phẩm</dt>
                 <dd>@Html.DisplayFor(model => model.Name)</dd>
-                <dt>@Html.DisplayNameFor(model => model.NewPrice)</dt>
-                <dd>@Html.DisplayFor(model => model.NewPrice)</dd>
-                <dt>@Html.DisplayNameFor(model => model.Created)</dt>
+                <dt>Giá sản phẩm</dt>
+                <dd>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.NewPrice)</dd>
+                <dt>Ngày tạo</dt>
                 <dd>@Html.DisplayFor(model => model.Created)</dd>
-                <dt>@Html.DisplayNameFor(model => model.Brands)</dt>
+                <dt>Thương hiệu</dt>
                 <dd>@Html.DisplayFor(model => model.Brands.Name)</dd>
-                <dt>@Html.DisplayNameFor(model => model.Cate)</dt>
+                <dt>Danh mục</dt>
                 <dd>@Html.DisplayFor(model => model.Cate.Name)</dd>
             </dl>
         </div>
@@ -35,7 +36,7 @@
         <input type="hidden" asp-for="ID" />
         <div class="action-buttons">
             <input type="submit" value="Xóa" /> |
-            <a asp-action="Index">Quay lai d/s</a>
+            <a asp-action="ProductList">Quay lại</a>
         </div>
     </form>
 </div>

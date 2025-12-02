@@ -2,7 +2,7 @@
 @model Brand
 
 @{
-    ViewData["Title"] = "DetailProduct";
+    ViewData["Title"] = "Detail Brand";
 }
 
 <div class="product-detail-container">
@@ -14,17 +14,17 @@
         </div>
         <div class="product-info">
             <dl>
-                <dt>@Html.DisplayNameFor(model => model.ID)</dt>
+                <dt>Mã thương hiệu</dt>
                 <dd>@Html.DisplayFor(model => model.ID)</dd>
-                <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+                <dt>Tên thương hiệu</dt>
                 <dd>@Html.DisplayFor(model => model.Name)</dd>
-                <dt>@Html.DisplayNameFor(model => model.Description)</dt>
+                <dt>Mô tả</dt>
                 <dd>@Html.DisplayFor(model => model.Description)</dd>
             </dl>
         </div>
     </div>
     <div class="action-buttons">
         @* <a asp-action="EditProduct" asp-route-id="@Model.ID">cập nhật</a>  *@
-        <a asp-action="BrandList">Qiuay lại d/s</a>
+        <a asp-action="BrandList">Qiuay lại</a>
     </div>
 </div>

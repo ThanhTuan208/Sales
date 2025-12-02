@@ -3,11 +3,13 @@ using CRUD_asp.netMVC.DTO.Admin;
 using CRUD_asp.netMVC.Extensions.Admin;
 using CRUD_asp.netMVC.Extensions.Payments;
 using CRUD_asp.netMVC.Extensions.RenderViewGeneral;
+using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.ViewModels.Admin;
 using CRUD_asp.netMVC.ViewModels.Product;
 using Humanizer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
@@ -20,6 +22,7 @@ using SixLabors.ImageSharp.Processing;
 using System.Collections.Immutable;
 using System.Data;
 using System.Globalization;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -43,6 +46,35 @@ namespace CRUD_asp.netMVC.Controllers
             //_dbFactory = dbFactory;
         }
 
+        [HttpGet] // Hien thi dashboard
+        public async Task<IActionResult> DashBoard()
+        {
+            int userToday = await _dbContext.Users.ByToDayAsync();
+            int userYesterday = await _dbContext.Users.ByToYesterdayAsync();
+            decimal changePercentUserToday = UserQueryExtensions.CalcChangePercent(userToday, userYesterday);
+
+            int month = DateTime.UtcNow.Date.Month;
+            int usersByQuarters = await _dbContext.Users.ByQuarerAsync();
+
+            decimal amountByToday = await _dbContext.Payment.ByToDayAsync();
+            decimal amountYesterday = await _dbContext.Payment.ByToYesterdayAsync();
+            decimal changePercentPaymentToday = PaymentQueryExtensions.CalcChangePercentByDay(amountByToday, amountYesterday);
+
+            decimal amountByMonth = await _dbContext.Payment.ByMonthAsync();
+            decimal amountLastMonth = await _dbContext.Payment.ByToLastMonthAsync();
+            decimal changePercentPaymentMonth = PaymentQueryExtensions.CalcChangePercentByMonth(amountByMonth, amountLastMonth);
+
+            var viewModel = new DashBoardViewModel();
+            viewModel.DashBoards.Add(new AmountInTodayDTO(amountByToday, changePercentPaymentToday));
+            viewModel.DashBoards.Add(new TodayUsersDTO(userToday, changePercentUserToday));
+            viewModel.DashBoards.Add(new NewUserByQuarterDTO(month, usersByQuarters));
+            viewModel.DashBoards.Add(new AmountInMonthDTO(amountByMonth, changePercentPaymentMonth));
+
+            ViewData["User"] = await UserAdmin();
+
+            return View(viewModel);
+        }
+
         //[Route("Admin"), Route("Admin/Index"), Route("Admin/{page:int}")]
         [HttpGet]
         public async Task<IActionResult> ProductList(int page = 1)
@@ -50,6 +82,8 @@ namespace CRUD_asp.netMVC.Controllers
             var product = _dbContext.Products.AsNoTracking()
                        .Include(p => p.Brands)
                        .Include(p => p.Cate).OrderByDescending(p => p.ID);
+
+            ViewData["User"] = await UserAdmin();
 
             var paginationProduct = await PaginatedList<Products>.CreatePagAsync(product, page, 5);
             return View(paginationProduct);
@@ -64,6 +98,8 @@ namespace CRUD_asp.netMVC.Controllers
                 .Include(p => p.Cate)
                 .Where(p => p.Description.Contains(keyword) || p.Name.Contains(keyword));
 
+            ViewData["User"] = await UserAdmin();
+
             var paginationProduct = await PaginatedList<Products>.CreatePagAsync(product, page, 5);
             return View(paginationProduct);
         }
@@ -74,20 +110,22 @@ namespace CRUD_asp.netMVC.Controllers
             if (id == null) return NotFound();
 
             var Product = await _dbContext.Products.AsNoTracking()
-                    .Include(p => p.Brands)
+                .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)
                 .Include(p => p.Featured)
-                .Include(p => p.ProductMaterial)
-                .Include(p => p.ProductTags)
-                .Include(p => p.ProductStyles)
-                .Include(p => p.ProductColor)
-                .Include(p => p.ProductSeasons)
-                .Include(p => p.ProductSize)
                 .Include(p => p.ProductQty)
+                .Include(p => p.ProductMaterial).ThenInclude(p => p.Material)
+                .Include(p => p.ProductTags).ThenInclude(p => p.Tag)
+                .Include(p => p.ProductStyles).ThenInclude(p => p.Style)
+                .Include(p => p.ProductColor).ThenInclude(p => p.Color)
+                .Include(p => p.ProductSeasons).ThenInclude(p => p.Season)
+                .Include(p => p.ProductSize).ThenInclude(p => p.Size)
                 .FirstOrDefaultAsync(p => p.ID == id);
 
             if (Product == null) return NotFound();
+
+            ViewData["User"] = await UserAdmin();
 
             return View(Product);
         }
@@ -348,6 +386,7 @@ namespace CRUD_asp.netMVC.Controllers
                 SelectedSizeID = Product.ProductSize?.Select(p => p.SizeID).ToArray() ?? [],
             };
 
+            //ViewData["User"] = await UserAdmin();
             return await ReloadViewModel(viewModel);
         }
 
@@ -576,7 +615,8 @@ namespace CRUD_asp.netMVC.Controllers
 
                     _dbContext.Update(Product);
                     await _dbContext.SaveChangesAsync();
-                    //return RedirectToAction(nameof(Index));
+
+                    ViewData["User"] = await UserAdmin();
                     return Json(new { success = true, message = "Thêm sản vào thành công. " });
                 }
                 catch (DbUpdateConcurrencyException)
@@ -614,6 +654,7 @@ namespace CRUD_asp.netMVC.Controllers
             IviewModel.SizeList = new SelectList(await _dbContext.Size.AsNoTracking().ToListAsync(), "ID", "Name");
             IviewModel.ColorList = new SelectList(await _dbContext.Color.AsNoTracking().ToListAsync(), "ID", "Name");
 
+            ViewData["User"] = await UserAdmin();
             return View(IviewModel);
         }
 
@@ -629,12 +670,10 @@ namespace CRUD_asp.netMVC.Controllers
                 .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (products == null)
-            {
-                return NotFound();
-            }
 
-            return View(products);
+            ViewData["User"] = await UserAdmin();
+
+            return products == null ? NotFound() : View(products);
         }
 
         [HttpPost, ActionName("DeleteProduct")]
@@ -668,6 +707,7 @@ namespace CRUD_asp.netMVC.Controllers
         {
             var brand = _dbContext.Brand.AsNoTracking().OrderByDescending(p => p.ID);
 
+            ViewData["User"] = await UserAdmin();
             var paginationBrand = await PaginatedList<Brand>.CreatePagAsync(brand, page, 5);
             return View(paginationBrand);
         }
@@ -760,6 +800,7 @@ namespace CRUD_asp.netMVC.Controllers
                 return View();
             }
 
+            ViewData["User"] = await UserAdmin();
             return View(Brand);
         }
 
@@ -837,6 +878,7 @@ namespace CRUD_asp.netMVC.Controllers
         {
             var brand = await BrandByID(id);
 
+            ViewData["User"] = await UserAdmin();
             return brand != null ? View(brand) : View();
         }
 
@@ -845,6 +887,7 @@ namespace CRUD_asp.netMVC.Controllers
         {
             var brand = await BrandByID(id);
 
+            ViewData["User"] = await UserAdmin();
             return brand != null ? View(brand) : View();
         }
 
@@ -1387,7 +1430,7 @@ namespace CRUD_asp.netMVC.Controllers
         {
             try
             {
-                var productQtyList = _dbContext.ProductQty.ToList();
+                var productQtyList = await _dbContext.ProductQty.ToListAsync();
                 if (idExist.HasValue)
                 {
                     arrColor = productQtyList.Where(p => p.ProductID == idExist).Select(p => p.ColorID.ToString()).ToArray();
@@ -1508,32 +1551,13 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-        [HttpGet] // Hien thi dashboard
-        public async Task<IActionResult> DashBoard()
+        public async Task<Users> UserAdmin()
         {
-            var userToday = await _dbContext.Users.ByToDayAsync();
-            var userYesterday = await _dbContext.Users.ByToYesterdayAsync();
-            var changePercentUserToday = UserQueryExtensions.CalcChangePercent(userToday, userYesterday);
+            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
+            if (userID == 0) return null;
 
-            int month = DateTime.UtcNow.Date.Month;
-            var usersByQuarters = await _dbContext.Users.ByQuarerAsync();    
-
-            var amountByToday = await _dbContext.Payment.ByToDayAsync();
-            var amountYesterday = await _dbContext.Payment.ByToYesterdayAsync();
-            var changePercentPaymentToday = PaymentQueryExtensions.CalcChangePercentByDay(amountByToday, amountYesterday);
-
-            var amountByMonth = await _dbContext.Payment.ByMonthAsync();
-            var amountLastMonth = await _dbContext.Payment.ByToLastMonthAsync();
-            var changePercentPaymentMonth = PaymentQueryExtensions.CalcChangePercentByMonth(amountByMonth, amountLastMonth);
-
-            var viewModel = new DashBoardViewModel();
-            viewModel.DashBoards.Add(new AmountInTodayDTO(amountByToday, changePercentPaymentToday));
-            viewModel.DashBoards.Add(new TodayUsersDTO(userToday, changePercentUserToday));
-            viewModel.DashBoards.Add(new NewUserByQuarterDTO(month, usersByQuarters));
-            viewModel.DashBoards.Add(new AmountInMonthDTO(amountByMonth, changePercentPaymentMonth));
-
-            return View(viewModel);
-        }   
+            return await _dbContext.Users.FirstOrDefaultAsync(p => p.Id == userID) ?? new Users();
+        }
     }
 }
 

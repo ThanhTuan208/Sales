@@ -1,13 +1,18 @@
-﻿<!DOCTYPE html>
+﻿@using CRUD_asp.netMVC.Models.Auth
+@{
+    var users = ViewData["User"] as Users ?? new Users();
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - CRUD_asp.netMVC</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/styleMe.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CRUD_asp.netMVC.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/assets/vendors/feather/feather.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/assets/vendors/mdi/css/materialdesignicons.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/assets/vendors/ti-icons/css/themify-icons.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/assets/vendors/font-awesome/css/font-awesome.min.css" asp-append-version="true" />
@@ -16,7 +21,7 @@
     <link rel="stylesheet" href="~/assets/vendors/css/vendor.bundle.base.css" asp-append-version="true" />
 
     <link rel="stylesheet" href="~/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" asp-append-version="true" />
+
     <!-- Plugin css for this page -->
     <link rel="stylesheet" href="~/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/assets/js/select.dataTables.min.css" asp-append-version="true" />
@@ -24,7 +29,7 @@
     <!-- Main CSS -->
     <link rel="stylesheet" href="~/assets/css/style.css" asp-append-version="true" />
 
-    <link rel="shortcut icon" href="~/assets/images/favicon.png" asp-append-version="true" />
+    <link rel="shortcut icon" href="~/images/icon/logoWeb.png" asp-append-version="true" />
 </head>
 <body class="with-welcome-text">
     <div class="container-scroller">
@@ -51,7 +56,7 @@
                 <ul class="navbar-nav">
                     <li class="nav-item fw-semibold d-none d-lg-block ms-0">
                         <h1 class="welcome-text">
-                            Ngày tốt lành, <span class="text-black fw-bold">@User.Identity.Name</span>
+                            Ngày tốt lành, <span class="text-black fw-bold">@users.UserName</span>
                         </h1>
                         <h3 class="welcome-sub-text">Chào mừng bạn trở lại, chúc bạn làm việc thật năng suất</h3>
                     </li>
@@ -127,8 +132,8 @@
                             <i class="icon-search"></i>
                             <input type="search"
                                    class="form-control"
-                                   placeholder="Search Here"
-                                   title="Search here" />
+                                   placeholder="Tìm kiếm"
+                                   title="Tìm kiếm" />
                         </form>
                     </li>
                     <li class="nav-item dropdown">
@@ -194,9 +199,9 @@
                              aria-labelledby="countDropdown">
                             <a class="dropdown-item py-3">
                                 <p class="mb-0 fw-medium float-start">
-                                    You have 7 unread mails
+                                    Bạn có 7 mail chưa đọc
                                 </p>
-                                <span class="badge badge-pill badge-primary float-end">View all</span>
+                                <span class="badge badge-pill badge-primary float-end">Xem tất cả</span>
                             </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
@@ -214,36 +219,6 @@
                                     </p>
                                 </div>
                             </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="assets/images/faces/face12.jpg"
-                                         alt="image"
-                                         class="img-sm profile-pic" />
-                                </div>
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis fw-medium text-dark">
-                                        David Grey
-                                    </p>
-                                    <p class="fw-light small-text mb-0">
-                                        The meeting is cancelled
-                                    </p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="assets/images/faces/face1.jpg"
-                                         alt="image"
-                                         class="img-sm profile-pic" />
-                                </div>
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis fw-medium text-dark">
-                                        Travis Jenkins
-                                    </p>
-                                    <p class="fw-light small-text mb-0">
-                                        The meeting is cancelled
-                                    </p>
-                                </div>
-                            </a>
                         </div>
                     </li>
                     <li class="nav-item dropdown d-none d-lg-block user-dropdown">
@@ -253,35 +228,35 @@
                            data-bs-toggle="dropdown"
                            aria-expanded="false">
                             <img class="img-xs rounded-circle"
-                                 src="assets/images/faces/face8.jp
-g"
+                                 src="~/@users.ProfileImage"
                                  alt="Profile image" />
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
                              aria-labelledby="UserDropdown">
                             <div class="dropdown-header text-center">
                                 <img class="img-md rounded-circle"
-                                     src="assets/images/faces/face8.jpg"
-                                     alt="Profile image" />
-                                <p class="mb-1 mt-3 fw-semibold">Allen Moreno</p>
-                                <p class="fw-light text-muted mb-0">allenmoreno@gmail.com</p>
+                                     src="~/@users.ProfileImage"
+                                     alt="Profile image"
+                                     style="width: 51px; height:50px" />
+                                <p class="mb-1 mt-3 fw-semibold">@($"{users.FirstName}\n{users.LastName}")</p>
+                                <p class="fw-light text-muted mb-0">@users.Email</p>
                             </div>
                             <a class="dropdown-item">
                                 <i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i>
-                                My Profile
+                                Hồ sơ của tôi
                                 <span class="badge badge-pill badge-danger">1</span>
                             </a>
                             <a class="dropdown-item">
                                 <i class="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i>
-                                Messages
+                                Tin nhắn
                             </a>
                             <a class="dropdown-item">
                                 <i class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i>
-                                Activity
+                                Hoạt động
                             </a>
                             <a class="dropdown-item">
                                 <i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i>
-                                FAQ
+                                Câu hỏi và trả lời
                             </a>
                             <form id="logoutForm" asp-controller="Auth" asp-action="Logout" method="post" style="display: none;"></form>
                             <a class="dropdown-item" href="javascript:void(0);" onclick="document.getElementById('logoutForm').submit();">
@@ -517,8 +492,6 @@ g"
                             </ul>
                         </div>
                     </li>
-
-
                 </ul>
             </nav>
             <!-- partial -->
@@ -535,17 +508,6 @@ g"
             </div>
         </div>
     </div>
-    @* <footer class="footer">
-                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">
-                            Premium
-                            <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a>
-                            from BootstrapDash.
-                        </span>
-                        <span class="float-none float-sm-end d-block mt-1 mt-sm-0 text-center">Copyright © 2023. All rights reserved.</span>
-                    </div>
-                </footer> *@
-
 
     <script src="~/assets/vendors/js/vendor.bundle.base.js" asp-append-version="true"></script>
     <script src="~/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js" asp-append-version="true"></script>
@@ -565,9 +527,9 @@ g"
     <script src="~/assets/js/jquery.cookie.js" asp-append-version="true"></script>
     <script src="~/assets/js/dashboard.js" asp-append-version="true"></script>
 
-    <script src="~/js/jquery-3.7.1.min.js" asp-append-version="true"></script>
-    <script src="~/js/tom-select.complete.min.js" asp-append-version="true"></script>
+    @*<script src="~/js/jquery-3.7.1.min.js" asp-append-version="true"></script>*@
     @* <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script> *@
+    <script src="~/js/tom-select.complete.min.js" asp-append-version="true"></script>
     <script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
     <script src="~/js/signalr.min.js" asp-append-version="true"></script>
     <script type="module" src="~/js/js.js" asp-append-version="true"></script>
@@ -576,3 +538,27 @@ g"
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<script>
+      // JavaScript: skip stylesheets from other origins
+    function isSameOrigin(url) {
+      if (!url) return true; // inline styles have no href
+      try {
+        const sheetUrl = new URL(url, location.href);
+        return sheetUrl.origin === location.origin;
+      } catch {
+        return false;
+      }
+    }
+
+    for (const sheet of document.styleSheets) {
+      if (!isSameOrigin(sheet.href)) continue;
+      try {
+        const rules = sheet.cssRules; // safe for same-origin
+        // process rules...
+      } catch (e) {
+        // still guard against unexpected issues
+        console.warn('Skipping stylesheet:', sheet.href, e);
+      }
+    }
+</script>
