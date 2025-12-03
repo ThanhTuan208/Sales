@@ -1,15 +1,9 @@
-﻿using CRUD_asp.netMVC.DTO.Admin;
-using CRUD_asp.netMVC.Models.Cart;
+﻿using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
-using Org.BouncyCastle.Bcpg.OpenPgp;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Numerics;
 
 namespace CRUD_asp.netMVC.Models.Auth
 {

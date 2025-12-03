@@ -7,15 +7,12 @@ using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.ViewModels.Admin;
 using CRUD_asp.netMVC.ViewModels.Product;
-using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32.SafeHandles;
-using Org.BouncyCastle.Tls;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
@@ -25,7 +22,6 @@ using System.Globalization;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Color = CRUD_asp.netMVC.Models.Product.Color;
 using Size = CRUD_asp.netMVC.Models.Product.Size;
 
@@ -49,19 +45,22 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpGet] // Hien thi dashboard
         public async Task<IActionResult> DashBoard()
         {
-            int userToday = await _dbContext.Users.ByToDayAsync();
-            int userYesterday = await _dbContext.Users.ByToYesterdayAsync();
+            var users = _dbContext.Users;
+            var payments = _dbContext.Payment;
+
+            int userToday = await users.ByToDayAsync();
+            int userYesterday = await users.ByToYesterdayAsync();
             decimal changePercentUserToday = UserQueryExtensions.CalcChangePercent(userToday, userYesterday);
 
             int month = DateTime.UtcNow.Date.Month;
-            int usersByQuarters = await _dbContext.Users.ByQuarerAsync();
+            int usersByQuarters = await users.ByQuarerAsync();
 
-            decimal amountByToday = await _dbContext.Payment.ByToDayAsync();
-            decimal amountYesterday = await _dbContext.Payment.ByToYesterdayAsync();
+            decimal amountByToday = await payments.ByToDayAsync();
+            decimal amountYesterday = await payments.ByToYesterdayAsync();
             decimal changePercentPaymentToday = PaymentQueryExtensions.CalcChangePercentByDay(amountByToday, amountYesterday);
 
-            decimal amountByMonth = await _dbContext.Payment.ByMonthAsync();
-            decimal amountLastMonth = await _dbContext.Payment.ByToLastMonthAsync();
+            decimal amountByMonth = await payments.ByMonthAsync();
+            decimal amountLastMonth = await payments.ByToLastMonthAsync();
             decimal changePercentPaymentMonth = PaymentQueryExtensions.CalcChangePercentByMonth(amountByMonth, amountLastMonth);
 
             var viewModel = new DashBoardViewModel();
@@ -104,30 +103,30 @@ namespace CRUD_asp.netMVC.Controllers
             return View(paginationProduct);
         }
 
-        [HttpGet]// GET: GetProducts/DetailProduct/5
+        [HttpGet]
         public async Task<IActionResult> DetailProduct(int? id)
         {
             if (id == null) return NotFound();
 
-            var Product = await _dbContext.Products.AsNoTracking()
+            var viewModel = await _dbContext.Products.AsNoTracking().AsSplitQuery()
                 .Include(p => p.Brands)
                 .Include(p => p.Cate)
                 .Include(p => p.Gender)
                 .Include(p => p.Featured)
                 .Include(p => p.ProductQty)
-                .Include(p => p.ProductMaterial).ThenInclude(p => p.Material)
                 .Include(p => p.ProductTags).ThenInclude(p => p.Tag)
+                .Include(p => p.ProductQty).ThenInclude(p => p.Size)
+                .Include(p => p.ProductQty).ThenInclude(p => p.Color)
                 .Include(p => p.ProductStyles).ThenInclude(p => p.Style)
-                .Include(p => p.ProductColor).ThenInclude(p => p.Color)
                 .Include(p => p.ProductSeasons).ThenInclude(p => p.Season)
-                .Include(p => p.ProductSize).ThenInclude(p => p.Size)
+                .Include(p => p.ProductMaterial).ThenInclude(p => p.Material)
                 .FirstOrDefaultAsync(p => p.ID == id);
 
-            if (Product == null) return NotFound();
+            if (viewModel == null) return NotFound();
 
             ViewData["User"] = await UserAdmin();
 
-            return View(Product);
+            return View(viewModel);
         }
 
         // Ham chuyen doi co dau sang ko dau, chu hoa thanh chu thuong NormalizationFormD, FormC
@@ -362,7 +361,7 @@ namespace CRUD_asp.netMVC.Controllers
                 .Include(p => p.ProductImages)
                 .FirstOrDefaultAsync(p => p.ID == id);
 
-            // Gan du lieu vao edit thong qua truy van qua id product
+            // Gan du lieu vao edit thong qua truy van qua id viewModel
             var viewModel = new ProductGeneralViewModel()
             {
                 ID = Product.ID,
@@ -471,7 +470,7 @@ namespace CRUD_asp.netMVC.Controllers
                             }
                         });
 
-                        await Task.WhenAll(deleteTask); // dung lai den khi xoa het anh theo id product
+                        await Task.WhenAll(deleteTask); // dung lai den khi xoa het anh theo id viewModel
 
                         _dbContext.ProductImages.RemoveRange(oldImage);
 
@@ -1443,6 +1442,7 @@ namespace CRUD_asp.netMVC.Controllers
                 }
 
                 var partial = await LoadProductQty(idExist, arrColor, arrSize);
+
                 partial.ValueType = "Update";
 
                 partial.Qty = idExist.HasValue ? partial.ProductQty.Sum(p => p.Quantity) : partial.TempProductQty.Sum(p => p.Quantity);
@@ -1453,7 +1453,7 @@ namespace CRUD_asp.netMVC.Controllers
             }
             catch
             {
-                throw new Exception();
+                return NotFound();
             }
         }
 
@@ -1461,6 +1461,7 @@ namespace CRUD_asp.netMVC.Controllers
         public async Task<ProductItemGeneral> LoadProductQty(int? id, string[]? arrColor, string[]? arrSize)
         {
             var ProductQty = HttpContext.Session.GetString("TempProductQty");
+
             var tempDataList = string.IsNullOrEmpty(ProductQty) ? new List<TempProductQty>() : JsonSerializer.Deserialize<List<TempProductQty>>(ProductQty);
 
             ProductItemGeneral partial = new ProductItemGeneral()
@@ -1475,10 +1476,27 @@ namespace CRUD_asp.netMVC.Controllers
             sizeBySelectList = await _dbContext.Size.ToListAsync();
             colorBySelectList = await _dbContext.Color.ToListAsync();
 
-            partial.ProductQty = await _dbContext.ProductQty.Where(p => p.ProductID == id && arrColor.Contains(p.ColorID.ToString()) && arrSize.Contains(p.SizeID.ToString()))
-                                                            .Include(p => p.Color)
-                                                            .Include(p => p.Size)
-                                                            .ToListAsync() ?? new List<ProductQuantity>();
+            var colors = new HashSet<int>();
+            var sizes = new HashSet<int>();
+
+            if (arrColor != null)
+            {
+                colors = arrColor.Select(int.Parse).ToHashSet() ?? new HashSet<int>();
+            }
+            if (arrSize != null)
+            {
+                sizes = arrSize.Select(int.Parse).ToHashSet() ?? new HashSet<int>();
+            }
+
+            if (id != null)
+            {
+                partial.ProductQty = await _dbContext.ProductQty.Where(p => p.ProductID == id && colors.Contains(p.ColorID) && sizes.Contains(p.SizeID))
+                                                                .Include(p => p.Color)
+                                                                .Include(p => p.Size)
+                                                                .ToListAsync() ?? new List<ProductQuantity>();
+            }
+            else partial.ProductQty = new List<ProductQuantity>();
+
 
             partial.SelectListSize = new SelectList(sizeBySelectList, "ID", "Name");
             partial.SelectListColor = new SelectList(colorBySelectList, "ID", "Name");
@@ -1502,40 +1520,42 @@ namespace CRUD_asp.netMVC.Controllers
                     opsValue = Array.Empty<string>();
                 }
 
+                var values = opsValue.Select(int.Parse).ToHashSet() ?? new HashSet<int>();
+
                 switch (nameValue)
                 {
                     case "Material":
-                        var materialList = await _dbContext.Material.Where(p => opsValue.Contains(p.ID.ToString())).ToListAsync();
+                        var materialList = await _dbContext.Material.Where(p => values.Contains(p.ID)).ToListAsync();
                         partial.Items = materialList.Cast<IProductItemGeneral>().ToList();
                         partial.Material = materialList;
                         break;
 
                     case "Color":
-                        var colorList = await _dbContext.Color.Where(p => opsValue.Contains(p.ID.ToString())).ToListAsync();
+                        var colorList = await _dbContext.Color.Where(p => values.Contains(p.ID)).ToListAsync();
                         partial.Items = colorList.Cast<IProductItemGeneral>().ToList();
                         partial.Color = colorList;
                         break;
 
                     case "Size":
-                        var sizeList = await _dbContext.Size.Where(p => opsValue.Contains(p.ID.ToString())).ToListAsync();
+                        var sizeList = await _dbContext.Size.Where(p => values.Contains(p.ID)).ToListAsync();
                         partial.Items = sizeList.Cast<IProductItemGeneral>().ToList();
                         partial.Size = sizeList;
                         break;
 
                     case "Season":
-                        var seasonList = await _dbContext.Season.Where(p => opsValue.Contains(p.ID.ToString())).ToListAsync();
+                        var seasonList = await _dbContext.Season.Where(p => values.Contains(p.ID)).ToListAsync();
                         partial.Items = seasonList.Cast<IProductItemGeneral>().ToList();
                         partial.Season = seasonList;
                         break;
 
                     case "Style":
-                        var styleList = await _dbContext.Style.Where(p => opsValue.Contains(p.ID.ToString())).ToListAsync();
+                        var styleList = await _dbContext.Style.Where(p => values.Contains(p.ID)).ToListAsync();
                         partial.Items = styleList.Cast<IProductItemGeneral>().ToList();
                         partial.Style = styleList;
                         break;
 
                     case "Tag":
-                        var tagList = await _dbContext.Tag.Where(p => opsValue.Contains(p.ID.ToString())).ToListAsync();
+                        var tagList = await _dbContext.Tag.Where(p => values.Contains(p.ID)).ToListAsync();
                         partial.Items = tagList.Cast<IProductItemGeneral>().ToList();
                         partial.Tag = tagList;
                         break;
@@ -1545,12 +1565,10 @@ namespace CRUD_asp.netMVC.Controllers
 
                 return PartialView("_ProductItemPartial", partial);
             }
-            catch
-            {
-                throw new Exception();
-            }
+            finally { }
         }
 
+        // Ham lay nguoi dung chung
         public async Task<Users> UserAdmin()
         {
             var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
@@ -1560,4 +1578,3 @@ namespace CRUD_asp.netMVC.Controllers
         }
     }
 }
-

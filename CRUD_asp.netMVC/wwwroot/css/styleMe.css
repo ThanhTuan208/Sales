@@ -1,4 +1,53 @@
-﻿.product-info dl {
+﻿.form-label, label {
+    font-weight: 600;
+    color: #3a3a3a !important; /* Xám đậm thay vì đen thuần */
+}
+
+.form-control,
+.form-select,
+textarea {
+    color: #3a3a3a !important;
+    font-weight: 500;
+}
+
+option {
+    color: #333 !important; /* Xám rõ, không đen */
+    font-weight: 500;
+}
+
+    /* Option bị disabled → mờ đi */
+    option:disabled {
+        color: #9d9d9d !important;
+        opacity: 0.6 !important;
+    }
+
+/* Select-multiple background nhẹ */
+.form-select.detail {
+    background: #fafafa;
+    border: 1px solid #dcdcdc;
+    color: #333;
+}
+
+
+.text-danger {
+    color: #d9534f !important; /* Đỏ nhẹ */
+}
+
+.display-detail h3 {
+    color: #3b3b3b;
+    font-weight: 700;
+}
+
+#update-qty {
+    color: #4a69ff;
+    font-weight: 600;
+}
+
+    #update-qty:hover {
+        text-decoration: underline;
+    }
+
+.product-info dl {
     display: grid;
     grid-template-columns: 200px 1fr;
     row-gap: 10px;

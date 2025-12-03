@@ -1,12 +1,4 @@
-﻿using CRUD_asp.netMVC.Models.Auth;
-using Microsoft.DiaSymReader;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.Json;
-using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
-using Org.BouncyCastle.Tls;
-using System.Numerics;
-
-namespace CRUD_asp.netMVC.DTO.Admin
+﻿namespace CRUD_asp.netMVC.DTO.Admin
 {
     public record AmountInTodayDTO(decimal Amount, decimal ChangePercent) : BaseDashboardDTO(
         Title: $"Doanh thu hôm nay",

@@ -1,7 +1,5 @@
 ﻿using CRUD_asp.netMVC.DTO.Admin;
 using CRUD_asp.netMVC.Models.Auth;
-using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
-using Org.BouncyCastle.Tls;
 
 namespace CRUD_asp.netMVC.ViewModels.Admin
 {

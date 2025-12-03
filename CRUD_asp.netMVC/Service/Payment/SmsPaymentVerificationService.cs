@@ -1,4 +1,5 @@
 ﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.DTO.Payment;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -75,17 +76,17 @@ namespace CRUD_asp.netMVC.Service.Payment
             return 0;
         }
 
-        private async Task<List<SmsNotification>> ReadSmsNotificationsAsync()
+        private async Task<List<SmsNotificationDTO>> ReadSmsNotificationsAsync()
         {
             // Giả sử SMS được lưu trong file json (thay thế bằng SMS API nếu có)
             var smsFilePath = _configuration["SmsNotificationFilePath"];
             if (!File.Exists(smsFilePath))
             {
-                return new List<SmsNotification>();
+                return new List<SmsNotificationDTO>();
             }
 
             var json = await File.ReadAllTextAsync(smsFilePath);
-            return JsonSerializer.Deserialize<List<SmsNotification>>(json) ?? new List<SmsNotification>();
+            return JsonSerializer.Deserialize<List<SmsNotificationDTO>>(json) ?? new List<SmsNotificationDTO>();
         }
     }
 }

@@ -26,7 +26,7 @@
 
     @if (Model.Items != null && Model.Items.Any())
     {
-        <table class="product-table table-hover w-100">
+        <table class="product-table w-100">
             <thead>
                 <tr>
                     <th style="width: 60%;">Tên</th>
@@ -39,7 +39,7 @@
                     <tr class="new-prop-product">
                         <td class="form-floating mb-3">
                             <input type="hidden" id="id-prop" value="@item.ID" />
-                            <input asp-for="@item.Name" class="form-control name-prop" style="text-align: center;" required placeholder="Nhập tên @nameValue" />
+                            <input asp-for="@item.Name" class="form-control name-prop" style="text-align: center;" required placeholder="Nhập tên @nameValue" maxlength="4" />
                             <span asp-validation-for="@item.Name" class="alert-error-sameval text-danger"></span>
                         </td>
                         <td>
@@ -54,7 +54,7 @@
                 <tr class="new-row" id="new-row-template">
 
                     <td class="form-floating mb-3">
-                        <input id="new-value-prop" class="form-control" style="text-align: center; color: black;" required placeholder="Nhập tên @nameValue" />
+                        <input id="new-value-prop" class="form-control" style="text-align: center; color: black;" required placeholder="Nhập tên @nameValue" maxlength="60"/>
                         <span id="new-value-propName" class="text-danger"></span>
                     </td>
                     <td>
@@ -69,7 +69,7 @@
     }
     else if (Model.Items == null || !Model.Items.Any())
     {
-        <table class="product-table table-hover w-100">
+        <table class="product-table w-100">
             <thead>
                 <tr>
                     <th style="width: 25%;">Màu sắc</th>
@@ -106,7 +106,7 @@
 
                             <td>
                                 <div class="form-floating mb-3">
-                                    <input asp-for="@item.Quantity" class="form-control exist-qty" data-exist-qty="@item.Quantity" type="text" required placeholder="Nhập số lượng" maxlength="3" />
+                                    <input asp-for="@item.Quantity" class="form-control exist-qty" data-exist-qty="@item.Quantity" type="text" required placeholder="Nhập số lượng" maxlength="4" />
                                     <label asp-for="@item.Quantity" class="form-label">Số lượng</label>
                                     @* <span asp-validation-for="@item.Quantity" class="text-danger"></span> *@
                                 </div>
@@ -144,7 +144,7 @@
 
                     <td>
                         <div class="form-floating mb-3">
-                            <input id="new-qty" class="form-control" type="text" value="1" placeholder="Nhập số lượng" maxlength="3" />
+                            <input id="new-qty" class="form-control" type="text" value="1" placeholder="Nhập số lượng" maxlength="4" />
                             <label class="form-label">Số lượng</label>
                         </div>
                     </td>

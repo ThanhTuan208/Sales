@@ -88,6 +88,12 @@ namespace CRUD_asp.netMVC.Data.Seed
             productImages.HasOne(p => p.Products).WithMany(p => p.ProductImages).HasForeignKey(p => p.ProductID);
         }
 
+        // Them indexing site user entity, rang buoc thuoc tinh Date
+        public static void IndexPropertySiteUser(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SiteUsers>().HasIndex(u => u.Date).IsUnique();
+        }
+
         // Them computed column, indexing entity Payment
         public static void IndexPropertyPayment(this ModelBuilder modelBuilder)
         {

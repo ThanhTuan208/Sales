@@ -4,8 +4,31 @@
 @{
     ViewData["Title"] = "Tạo sản phẩm mới";
 }
+<style>
+    
+    .row[style*="border"] {
+        border: 1.5px solid #d3d3d3 !important;
+        border-radius: 10px;
+        background: #fff;
+    }
 
-@* <h1 class="text-center my-4">Tạo sản phẩm mới</h1> *@
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #7a74ff;
+        box-shadow: 0 0 0 0.1rem rgba(122, 116, 255, 0.30);
+    }
+
+
+    .form-control:disabled,
+    .form-select:disabled {
+        background: #f1f1f1 !important;
+        color: #9d9d9d !important;
+        border-color: #e0e0e0 !important;
+        cursor: not-allowed;
+        opacity: .8;
+    }
+</style>
+<h1 class="text-center my-4">Tạo sản phẩm mới</h1>
 <hr />
 
 <div class="container">
@@ -56,9 +79,9 @@
                     <div class="col-lg-6">
                         <div class="form-floating mb-3">
                             <select asp-for="FeaturedID" id="feature" class="form-select" asp-items="Model.FeaturedList ?? new SelectList(Enumerable.Empty<object>())">
-                                <option value="" disabled selected>Chọn nổi bật</option>
+                                <option value="" disabled selected>Chọn hiển thị</option>
                             </select>
-                            <label asp-for="FeaturedID" class="form-label">Nổi bật</label>
+                            <label asp-for="FeaturedID" class="form-label">Hiển thị</label>
                             <span asp-validation-for="FeaturedID" class="text-danger"></span>
                         </div>
                     </div>

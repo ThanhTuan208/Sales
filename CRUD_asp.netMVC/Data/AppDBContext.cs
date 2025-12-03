@@ -51,6 +51,9 @@ namespace CRUD_asp.netMVC.Data
 
             // Indexing entity payment
             modelBuilder.IndexPropertyPayment();
+
+            // Indexing entity site user
+            modelBuilder.IndexPropertySiteUser();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -63,6 +66,8 @@ namespace CRUD_asp.netMVC.Data
         //public DbSet<Roles>? Roles { get; set; }
         //public DbSet<Staff> Staff { get; set; }
 
+
+        public DbSet<SiteUsers> SiteUser { get; set; }
         public DbSet<ProductQuantity> ProductQty { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Featured> Featured { get; set; }

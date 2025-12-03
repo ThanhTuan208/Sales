@@ -4,6 +4,9 @@
 
 @{
     ViewData["Title"] = "DetailProduct";
+
+    var productColor = Model.ProductQty.Select(p => p.Color.Name).Distinct().ToList() ?? new List<string>();
+    var productSize = Model.ProductQty.Select(p => p.Size.Name).Distinct().ToList() ?? new List<string>();
 }
 
 <div class="product-detail-container">
@@ -34,9 +37,9 @@
                 <dt>Trọng lượng</dt>
                 <dd>@Html.DisplayFor(model => model.Weight)</dd>
                 <dt>Màu sắc</dt>
-                <dd>@string.Join(", ", Model.ProductColor.Select(p => p.Color.Name))</dd>
+                <dd>@string.Join(", ", productColor)</dd>
                 <dt>Kích cỡ</dt>
-                <dd>@string.Join(", ", Model.ProductSize.Select(p => p.Size.Name))</dd>
+                <dd>@string.Join(", ", productSize)</dd>
                 <dt>Chất liệu</dt>
                 <dd>@string.Join(", ", Model.ProductMaterial.Select(p => p.Material.Name))</dd>
                 <dt>Nhãn dán</dt>

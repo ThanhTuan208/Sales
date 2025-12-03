@@ -5,6 +5,30 @@
 @{
     ViewData["Title"] = "EditProduct";
 }
+<style>
+
+    .row[style*="border"] {
+        border: 1.5px solid #d3d3d3 !important;
+        border-radius: 10px;
+        background: #fff;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #7a74ff;
+        box-shadow: 0 0 0 0.1rem rgba(122, 116, 255, 0.30);
+    }
+
+
+    .form-control:disabled,
+    .form-select:disabled {
+        background: #f1f1f1 !important;
+        color: #9d9d9d !important;
+        border-color: #e0e0e0 !important;
+        cursor: not-allowed;
+        opacity: .8;
+    }
+</style>
 
 <h1 class="text-center my-4">Cập nhật sản phẩm </h1>
 <hr />
@@ -80,7 +104,7 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="form-floating mb-3">
-                            <input asp-for="NewPrice" type="text" id="newPrice" class="form-control" step="0.01" onforminput="3" required placeholder="Nhập giá mới" />
+                            <input asp-for="NewPrice" type="text" id="newPrice" class="form-control" step="0.01" onforminput="3" required placeholder="Nhập giá mới" maxlength="11"/>
                             <label asp-for="NewPrice" class="form-label">Giá mới</label>
                             <span asp-validation-for="NewPrice" class="text-danger"></span>
                         </div>
@@ -88,7 +112,7 @@
 
                     <div class="col-lg-4">
                         <div class="form-floating mb-3">
-                            <input asp-for="OldPrice" type="text" id="oldPrice" class="form-control" step="0.01" placeholder="Nhập giá cũ" />
+                            <input asp-for="OldPrice" type="text" id="oldPrice" class="form-control" step="0.01" placeholder="Nhập giá cũ" maxlength="11" />
                             <label asp-for="OldPrice" class="form-label">Giá cũ</label>
                             <span asp-validation-for="OldPrice" class="text-danger"></span>
                         </div>

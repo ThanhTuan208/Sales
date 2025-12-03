@@ -1,6 +1,6 @@
 ﻿namespace CRUD_asp.netMVC.Service.Payment
 {
-    public class SmsNotification
+    public class SmsNotificationDTO
     {
         public string TransactionId { get; set; }
         public string Content { get; set; }

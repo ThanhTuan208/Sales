@@ -1,9 +1,11 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.HubRealTime;
+using CRUD_asp.netMVC.Middleware;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Service.EmailSender;
 using CRUD_asp.netMVC.Service.GHN;
 using CRUD_asp.netMVC.Service.Payment;
+using CRUD_asp.netMVC.Service.Payment.SiteVisitService;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +48,9 @@ namespace CRUD_asp.netMVC
 
             // Dang ky backgroud service 
             builder.Services.AddHostedService<OrderCleanupService>();
+
+            // Dang ky service dem va cap nhat so luong nguoi truy cap
+            builder.Services.AddScoped<ISiteUserVisitService, SiteUserVisitService>();
 
             // Dang ky service QrCode
             builder.Services.AddScoped<QrCodeService>();
@@ -101,6 +106,7 @@ namespace CRUD_asp.netMVC
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            app.UseMiddleware<VisitCountUserMiddleware>();
 
             app.UseHangfireDashboard("/hangfire");
 
@@ -114,6 +120,8 @@ namespace CRUD_asp.netMVC
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Dung cho cap nhat va dem so luong nguoi truy cap
 
             app.MapControllerRoute(
                 name: "default",
