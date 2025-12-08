@@ -2,7 +2,7 @@
 {
     public interface ISiteUserVisitService
     {
-        Task IncreaseSiteVisit(HttpContext context);
-        Task<int> GetTodayVisitSiteAsysnc();
+        Task IncreaseSiteVisit();
+        //Task<int> GetTodayVisitSiteAsync();
     }
 }

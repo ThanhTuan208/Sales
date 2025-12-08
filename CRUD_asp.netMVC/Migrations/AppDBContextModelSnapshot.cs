@@ -225,11 +225,17 @@ namespace CRUD_asp.netMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("DailyActiveUsers")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
 
-                    b.Property<int>("TotalView")
-                        .HasColumnType("int");
+                    b.Property<long>("UniqueVisitors")
+                        .HasColumnType("bigint");
 
                     b.HasKey("ID");
 

@@ -2,6 +2,7 @@
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
 using Microsoft.AspNetCore.Identity;
+using Org.BouncyCastle.Bcpg;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -30,10 +31,9 @@ namespace CRUD_asp.netMVC.Models.Auth
 
         public int RoleId { get; set; }
         public Roles? Roles { get; set; }
-
         public Manager? Manager { get; set; }
         public Customer? Customer { get; set; }
-
+        //public List<SiteUsers>? SiteUser { get; set; }
         public List<Orders>? Orders { get; set; }
         public List<AddToCart>? Carts { get; set; }
         public List<Reviews>? Reviews { get; set; }

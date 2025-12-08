@@ -1,55 +1,67 @@
-﻿using AspNetCoreGeneratedDocument;
-using CRUD_asp.netMVC.Data;
-using CRUD_asp.netMVC.Models.Auth;
+﻿using CRUD_asp.netMVC.Data;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using System.Data;
+using System.Security.Claims;
+using StackExchange.Redis;
+using System.Diagnostics;
+using CRUD_asp.netMVC.Models.Auth;
 
 namespace CRUD_asp.netMVC.Service.Payment.SiteVisitService
 {
     public class SiteUserVisitService : ISiteUserVisitService
     {
         private readonly AppDBContext _dbContext;
-        private string cookieKey = $"visited_{DateTime.UtcNow:yyyyMMdd}";
-        public SiteUserVisitService(AppDBContext dbContext) => _dbContext = dbContext;
+        private readonly IConnectionMultiplexer _redis;
 
-        // Dem so luong nguoi truy cap trong ngay
-        public async Task<int> GetTodayVisitSiteAsysnc()
+        public SiteUserVisitService(AppDBContext dbContext, IConnectionMultiplexer redis)
         {
-            var today = DateTime.UtcNow.Date;
-            return await _dbContext.SiteUser.Where(p => p.Date == today)
-                                            .Select(p => p.TotalView)
-                                            .FirstOrDefaultAsync();
+            _redis = redis;
+            _dbContext = dbContext;
         }
 
+        // Dem so luong nguoi truy cap trong ngay
+        //public async Task<int> GetTodayVisitSiteAsync()
+        //{
+        //    var today = DateTime.UtcNow.Date;
+        //    return await _dbContext.SiteUser.Where(p => p.Date == today)
+        //                                    .Select(p => p.TotalView)
+        //                                    .FirstOrDefaultAsync();
+        //}
+
         // Cap nhat so luong nguoi truy cap
-        public async Task IncreaseSiteVisit(HttpContext context)
+        public async Task IncreaseSiteVisit()
         {
-            var path = context.Request.Path.Value?.ToLowerInvariant() ?? "";
-            if (context.Request.Cookies.ContainsKey(cookieKey))
+            var db = _redis.GetDatabase();
+            var yesterday = DateTime.UtcNow.AddDays(-1).ToString("yyyyMMdd");
+
+            var dauKey = $"dau:{yesterday}";
+            var totalKey = $"uv:total:{yesterday}";
+
+            var totalVisits = await db.StringGetAsync(totalKey);
+            var totalCount = await db.SetLengthAsync(dauKey);
+
+            long userVisitor = !totalVisits.IsNullOrEmpty ? (long)totalVisits : 0;
+            long dailyActiveUsers = totalCount;
+
+            bool exists = await _dbContext.SiteUser.AnyAsync(p => p.Date == DateTime.UtcNow.AddDays(-1).Date);
+
+            if (!exists)
             {
-                return;
+                _dbContext.SiteUser.Add(new SiteUsers()
+                {
+                    Date = DateTime.UtcNow.AddDays(-1).Date,
+                    DailyActiveUsers = dailyActiveUsers,
+                    UniqueVisitors = userVisitor,
+                    CreatedAt = DateTime.UtcNow,
+                });
+
+                await _dbContext.SaveChangesAsync();
             }
 
-            var today = DateTime.UtcNow.Date;
-
-            // them indexing cho date truoc roi thuc hien cau lenh !
-            await _dbContext.Database.ExecuteSqlRawAsync(
-                @"
-                UPDATE SiteUser SET TotalView = TotalView + 1 
-                WHERE [Date] = {0};
-
-                IF @@ROWCOUNT = 0
-                    INSERT INTO SiteUser ([Date], TotalView) 
-                    VALUES ({0}, 1);
-                ", today);
-
-          
-            context.Response.Cookies.Append(cookieKey, "true", new CookieOptions
-            {
-                Expires = DateTimeOffset.UtcNow.AddDays(1),
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Lax
-            });
+            // Xóa key cũ để tiết kiệm RAM
+            await db.KeyDeleteAsync(totalKey);
+            await db.KeyDeleteAsync(dauKey);
         }
     }
 }
