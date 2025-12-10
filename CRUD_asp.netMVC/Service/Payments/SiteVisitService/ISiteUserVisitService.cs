@@ -2,7 +2,6 @@
 {
     public interface ISiteUserVisitService
     {
-        Task IncreaseSiteVisit();
-        //Task<int> GetTodayVisitSiteAsync();
+        Task IncreaseSiteVisitAsync();
     }
 }

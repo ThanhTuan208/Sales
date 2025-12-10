@@ -1,17 +1,20 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Filters;
-using CRUD_asp.netMVC.HubRealTime;
+using CRUD_asp.netMVC.Hubs;
 using CRUD_asp.netMVC.Middleware;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Service.EmailSender;
 using CRUD_asp.netMVC.Service.GHN;
 using CRUD_asp.netMVC.Service.Payment;
 using CRUD_asp.netMVC.Service.Payment.SiteVisitService;
+using CRUD_asp.netMVC.Service.Users;
 using Hangfire;
 using Hangfire.Redis.StackExchange;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Pkcs;
 using StackExchange.Redis;
 using System;
 using System.Threading.Tasks;
@@ -27,26 +30,20 @@ namespace CRUD_asp.netMVC
             // them ValidateAntiforgeryToken cho toan project
             builder.Services.AddControllersWithViews(ops => ops.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
             builder.Services.AddRazorPages();
-            builder.Services.AddSignalR(); // Cau hinh SignalR real time
+            //builder.Services.AddSignalR(); // Cau hinh SignalR real time
 
             //Dinh dang DB SQLServer
             builder.Services.AddDbContext<AppDBContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext"))
+                options.UseSqlServer(LoadConnectString(builder, "AppDBContext"))
             );
-
-            //// Them HangFire => Queue
-            //builder.Services.AddHangfire(config =>
-            //    config.UseSqlServerStorage(builder.Configuration.GetConnectionString("AppDBContext")));
-
-            //builder.Services.AddHangfireServer();
 
             // lay chuoi connect Neon theo dinh dang DB PostgreSQL
             //builder.Services.AddDbContext<AppDBContext>(options =>
             //    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
             //);
 
-            // ==================== REDIS CLOUD 30MB + HANGFIRE (KHÔNG MẤT DỮ LIỆU) ====================
-            var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+            // ========= REDIS CLOUD 30MB + HANGFIRE (KHÔNG MẤT DỮ LIỆU) =============
+            var redisConnectionString = LoadConnectString(builder, "Redis");
 
             var options = ConfigurationOptions.Parse(redisConnectionString);
             options.User = "default"; // BẮT BUỘC
@@ -62,6 +59,12 @@ namespace CRUD_asp.netMVC
             // Đăng ký Redis singleton để cả middleware + job dùng chung
             builder.Services.AddSingleton<IConnectionMultiplexer>(sp => multiplexer);
 
+            // SignalR + Redis Backplane (bắt buộc khi deploy nhiều server)
+            builder.Services.AddSignalR().AddStackExchangeRedis(redisConnectionString);
+
+            // Dang ky RedisVisitListenerService 
+            builder.Services.AddHostedService<RedisVisitListenerService>();
+
             // Dùng Redis làm storage cho Hangfire → không mất job khi tắt máy
             builder.Services.AddHangfire(config => config
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
@@ -69,13 +72,40 @@ namespace CRUD_asp.netMVC
                 .UseRecommendedSerializerSettings()
                 .UseRedisStorage(redisConnectionString, new RedisStorageOptions
                 {
-                    Prefix = "hangfire:" // tránh xung đột key
+                    Prefix = "hangfire:sitevisit" // tránh xung đột key
                 }));
 
-            builder.Services.AddHangfireServer();
+            // Redis Hangfire server (queue riêng)
+            builder.Services.AddHangfireServer(options =>
+            {
+                options.ServerName = "RedisServer-SiteVisit";
+                options.Queues = new[] { "sitevisit" };
+            });
 
-            // Dang ky backgroud service 
-            builder.Services.AddHostedService<OrderCleanupService>();
+            // Hangfire cho SQL Server
+            builder.Services.AddHangfire(config =>
+            {
+                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                      .UseSimpleAssemblyNameTypeSerializer()
+                      .UseRecommendedSerializerSettings()
+                      .UseSqlServerStorage(
+                            LoadConnectString(builder, "AppDBContext"), new SqlServerStorageOptions
+                            {
+                                PrepareSchemaIfNecessary = true,
+                                QueuePollInterval = TimeSpan.FromSeconds(15),
+                                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5)
+                            });
+            });
+
+            // SQL Hangfire server (queue riêng)
+            builder.Services.AddHangfireServer(options =>
+            {
+                options.ServerName = "SqlServer-OrderCleanup";
+                options.Queues = new[] { "ordercleanup" };
+            });
+
+            // Dang ky OrderCleanup backgroud service 
+            builder.Services.AddScoped<OrderCleanupService>();
 
             // Dang ky service dem va cap nhat so luong nguoi truy cap
             builder.Services.AddScoped<ISiteUserVisitService, SiteUserVisitService>();
@@ -124,7 +154,8 @@ namespace CRUD_asp.netMVC
 
             builder.Services.AddStackExchangeRedisCache(options =>
             {
-                options.Configuration = builder.Configuration.GetConnectionString("Redis");
+                //options.Configuration = builder.Configuration.GetConnectionString("Redis");
+                options.Configuration = LoadConnectString(builder, "Redis");
             });
 
             var app = builder.Build();
@@ -164,8 +195,11 @@ namespace CRUD_asp.netMVC
 
             // Cau hinh endpoint hub
             app.MapHub<PaymentHub>("/paymentHub");
-            app.MapHub<LoadViewHub>("/changeEmailProfile");
+
             app.MapHub<LoadViewHub>("/lazyLoad");
+            app.MapHub<LoadViewHub>("/changeEmailProfile");
+
+            app.MapHub<DashboardHub>("/dashboard");
 
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
@@ -176,11 +210,23 @@ namespace CRUD_asp.netMVC
             // Job chạy 07:05 sáng giờ Việt Nam mỗi ngày → ghi UV/DAU vào SQL + dọn Redis
             RecurringJob.AddOrUpdate<SiteUserVisitService>(
                 "store-daily-visits",
-                job => job.IncreaseSiteVisit(),
-                "5 7 * * *",
+                job => job.IncreaseSiteVisitAsync(),
+                "5 7 * * *", // 7h05 chay recurringJob
                 new RecurringJobOptions
                 {
                     TimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"),
+                    QueueName = "sitevisit"
+                });
+
+            // Xoa pending order cart
+            RecurringJob.AddOrUpdate<OrderCleanupService>(
+                "order-cleanup",
+                job => job.CleanExpiredOrderAsync(),
+                "*/5 * * * *",
+                new RecurringJobOptions
+                {
+                    TimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"),
+                    QueueName = "ordercleanup"
                 });
 
             app.MapControllerRoute(
@@ -189,6 +235,12 @@ namespace CRUD_asp.netMVC
                 pattern: "{controller=Auth}/{action=Login}/{id?}");
 
             app.Run();
+        }
+
+        // Tao chuoi lay ket noi DB
+        public static string? LoadConnectString(WebApplicationBuilder? bulder, string name)
+        {
+            return bulder.Configuration.GetConnectionString(name);
         }
     }
 }

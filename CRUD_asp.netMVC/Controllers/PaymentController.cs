@@ -1,7 +1,7 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Order.GHN;
 using CRUD_asp.netMVC.DTO.Payment;
-using CRUD_asp.netMVC.HubRealTime;
+using CRUD_asp.netMVC.Hubs;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Service.GHN;

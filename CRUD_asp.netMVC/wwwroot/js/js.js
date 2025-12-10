@@ -35,6 +35,20 @@ $(document).ready(function () {
 
     $(function () { // Loading screen cho thay doi email ho so
         const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/ReceiveCurrentStatus")
+            .build();
+
+        connection.start()
+            .catch(err => console.error(err));
+
+        connection.on("ReceiveCurrentStatus", () => {
+            
+            $('.')
+        })
+    });
+
+    $(function () { // Loading screen cho thay doi email ho so
+        const connection = new signalR.HubConnectionBuilder()
             .withUrl("/changeEmailProfile")
             .build();
 

@@ -1,10 +1,6 @@
 ﻿using CRUD_asp.netMVC.Data;
 using Microsoft.EntityFrameworkCore;
-using SixLabors.ImageSharp;
-using System.Data;
-using System.Security.Claims;
 using StackExchange.Redis;
-using System.Diagnostics;
 using CRUD_asp.netMVC.Models.Auth;
 
 namespace CRUD_asp.netMVC.Service.Payment.SiteVisitService
@@ -20,22 +16,13 @@ namespace CRUD_asp.netMVC.Service.Payment.SiteVisitService
             _dbContext = dbContext;
         }
 
-        // Dem so luong nguoi truy cap trong ngay
-        //public async Task<int> GetTodayVisitSiteAsync()
-        //{
-        //    var today = DateTime.UtcNow.Date;
-        //    return await _dbContext.SiteUser.Where(p => p.Date == today)
-        //                                    .Select(p => p.TotalView)
-        //                                    .FirstOrDefaultAsync();
-        //}
-
         // Cap nhat so luong nguoi truy cap
-        public async Task IncreaseSiteVisit()
+        public async Task IncreaseSiteVisitAsync()
         {
             var db = _redis.GetDatabase();
             var yesterday = DateTime.UtcNow.AddDays(-1).ToString("yyyyMMdd");
 
-            var dauKey = $"dau:{yesterday}";
+            var dauKey = $"hll:dau:{yesterday}";
             var totalKey = $"uv:total:{yesterday}";
 
             var totalVisits = await db.StringGetAsync(totalKey);
@@ -60,8 +47,8 @@ namespace CRUD_asp.netMVC.Service.Payment.SiteVisitService
             }
 
             // Xóa key cũ để tiết kiệm RAM
-            await db.KeyDeleteAsync(totalKey);
             await db.KeyDeleteAsync(dauKey);
+            await db.KeyDeleteAsync(totalKey);
         }
     }
 }

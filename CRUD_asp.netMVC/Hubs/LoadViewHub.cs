@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace CRUD_asp.netMVC.HubRealTime
+namespace CRUD_asp.netMVC.Hubs
 {
     public class LoadViewHub : Hub
     {

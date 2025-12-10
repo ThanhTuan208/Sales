@@ -21,6 +21,7 @@ namespace CRUD_asp.netMVC.Extensions.Admin
             var yesterday = DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-1));
             return await user.CountAsync(p => EF.Property<DateOnly>(p, "StartDay") == yesterday);
         }
+
         public static async Task<int> ByQuarerAsync(this DbSet<Users> user)
         {
             var quarter = (DateTime.UtcNow.Month - 1) / 3 + 1;

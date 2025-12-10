@@ -45,34 +45,41 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpGet] // Hien thi dashboard
         public async Task<IActionResult> DashBoard()
         {
-            var users = _dbContext.Users;
-            var payments = _dbContext.Payment;
-
-            int userToday = await users.ByToDayAsync();
-            int userYesterday = await users.ByToYesterdayAsync();
-            decimal changePercentUserToday = UserQueryExtensions.CalcChangePercent(userToday, userYesterday);
-
-            int month = DateTime.UtcNow.Date.Month;
-            int usersByQuarters = await users.ByQuarerAsync();
-
-            decimal amountByToday = await payments.ByToDayAsync();
-            decimal amountYesterday = await payments.ByToYesterdayAsync();
-            decimal changePercentPaymentToday = PaymentQueryExtensions.CalcChangePercentByDay(amountByToday, amountYesterday);
-
-            decimal amountByMonth = await payments.ByMonthAsync();
-            decimal amountLastMonth = await payments.ByToLastMonthAsync();
-            decimal changePercentPaymentMonth = PaymentQueryExtensions.CalcChangePercentByMonth(amountByMonth, amountLastMonth);
-
-            var viewModel = new DashBoardViewModel();
-            viewModel.DashBoards.Add(new AmountInTodayDTO(amountByToday, changePercentPaymentToday));
-            viewModel.DashBoards.Add(new TodayUsersDTO(userToday, changePercentUserToday));
-            viewModel.DashBoards.Add(new NewUserByQuarterDTO(month, usersByQuarters));
-            viewModel.DashBoards.Add(new AmountInMonthDTO(amountByMonth, changePercentPaymentMonth));
-
             ViewData["User"] = await UserAdmin();
-
-            return View(viewModel);
+            return View();
         }
+
+        //[HttpGet] // Hien thi dashboard
+        //public async Task<IActionResult> DashBoard()
+        //{
+        //    var users = _dbContext.Users;
+        //    var payments = _dbContext.Payment;
+
+        //    int userToday = await users.ByToDayAsync();
+        //    int userYesterday = await users.ByToYesterdayAsync();
+        //    decimal changePercentUserToday = UserQueryExtensions.CalcChangePercent(userToday, userYesterday);
+
+        //    int month = DateTime.UtcNow.Date.Month;
+        //    int usersByQuarters = await users.ByQuarerAsync();
+
+        //    decimal amountByToday = await payments.ByToDayAsync();
+        //    decimal amountYesterday = await payments.ByToYesterdayAsync();
+        //    decimal changePercentPaymentToday = PaymentQueryExtensions.CalcChangePercentByDay(amountByToday, amountYesterday);
+
+        //    decimal amountByMonth = await payments.ByMonthAsync();
+        //    decimal amountLastMonth = await payments.ByToLastMonthAsync();
+        //    decimal changePercentPaymentMonth = PaymentQueryExtensions.CalcChangePercentByMonth(amountByMonth, amountLastMonth);
+
+        //    var viewModel = new DashBoardViewModel();
+        //    viewModel.DashBoards.Add(new AmountInTodayDTO(amountByToday, changePercentPaymentToday));
+        //    viewModel.DashBoards.Add(new TodayUsersDTO(userToday, changePercentUserToday));
+        //    viewModel.DashBoards.Add(new NewUserByQuarterDTO(month, usersByQuarters));
+        //    viewModel.DashBoards.Add(new AmountInMonthDTO(amountByMonth, changePercentPaymentMonth));
+
+        //    ViewData["User"] = await UserAdmin();
+
+        //    return View(viewModel);
+        //}
 
         //[Route("Admin"), Route("Admin/Index"), Route("Admin/{page:int}")]
         [HttpGet]

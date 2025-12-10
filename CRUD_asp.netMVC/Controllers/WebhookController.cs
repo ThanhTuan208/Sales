@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRUD_asp.netMVC.Controllers
 {
-    public class WebhookController : Controller
+    public class WebHookController : Controller
     {
         private readonly AppDBContext _dbContext;
 
-        public WebhookController(AppDBContext dbContext)
+        public WebHookController(AppDBContext dbContext)
         {
             _dbContext = dbContext;
         }

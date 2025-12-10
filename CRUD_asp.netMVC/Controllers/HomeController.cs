@@ -1,6 +1,6 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Home;
-using CRUD_asp.netMVC.HubRealTime;
+using CRUD_asp.netMVC.Hubs;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.ViewModels.Home;
 using Microsoft.AspNetCore.Identity;
