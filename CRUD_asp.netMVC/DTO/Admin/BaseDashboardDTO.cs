@@ -3,7 +3,9 @@
     public abstract record BaseDashboardDTO
     (
         string Title,
+        string IdValue,
         string Value,
+        string IdChangetext,
         string ChangeText,
         string ChangeClass,
         string Icon,

@@ -33,17 +33,20 @@ $(document).ready(function () {
     });
 
 
-    $(function () { // Loading screen cho thay doi email ho so
+    $(function () { // Cap nhat real-time cho Dashboard View (DAU,UV)
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/ReceiveCurrentStatus")
+            .withUrl("/DashboardHub", {
+                withCredentials: true
+            })
+            .withAutomaticReconnect()
             .build();
 
-        connection.start()
-            .catch(err => console.error(err));
+        connection.start().catch(err => console.error(err));
 
-        connection.on("ReceiveCurrentStatus", () => {
-            
-            $('.')
+        connection.on("ReceiveCurrentStatus", (data) => {
+
+            $('#uv strong').text(data.totalVisits.toLocaleString());
+            $('#dau strong').text(data.dailyActiveUsers.toLocaleString());
         })
     });
 
@@ -68,7 +71,6 @@ $(document).ready(function () {
                 window.location.href = `/Home/MyProfile`;
 
             }, 3000);
-
         })
     });
 
@@ -821,7 +823,7 @@ $(document).ready(function () {
                             window.location.href = "/Admin/DashBoard";
                         }
                         else {
-                            window.location.href = "/Home/DashBoard";
+                            window.location.href = "/Home/Index";
                         }
                     }
                 }

@@ -56,7 +56,6 @@ namespace CRUD_asp.netMVC.Data.Seed
 
             // Mockup du lieu mqh 1 - 1
             payments.HasOne(o => o.Order).WithOne(p => p.Payment).HasForeignKey<Payment>(o => o.OrderID);
-
             users.HasOne(r => r.Customer).WithOne(u => u.Users).HasForeignKey<Customer>(mi => mi.UserID).OnDelete(DeleteBehavior.NoAction);
             users.HasOne(r => r.Manager).WithOne(u => u.Users).HasForeignKey<Manager>(mi => mi.UserID).OnDelete(DeleteBehavior.NoAction);
 
@@ -91,7 +90,14 @@ namespace CRUD_asp.netMVC.Data.Seed
         // Them indexing site user entity, rang buoc thuoc tinh Date
         public static void IndexPropertySiteUser(this ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SiteUsers>().HasIndex(u => u.Date).IsUnique();
+            modelBuilder.Entity<SiteUsers>().HasIndex(p => p.Date).IsUnique();
+            modelBuilder.Entity<SiteUsers>(p =>
+            {
+                p.Property<DateOnly>("Day").HasComputedColumnSql("CONVERT(DATE, [Date]) PERSISTED")
+                                                    .ValueGeneratedOnAddOrUpdate();
+
+                p.HasIndex("Day").HasDatabaseName("IX_SiteUsers_Day");
+            });
         }
 
         // Them computed column, indexing entity Payment
@@ -119,25 +125,20 @@ namespace CRUD_asp.netMVC.Data.Seed
         {
             modelBuilder.Entity<Users>(p =>
             {
-                p.Property<int>("StartYear").HasComputedColumnSql("DATEPART(YEAR, [StartDate]) PERSISTED")
-                                                .ValueGeneratedOnAddOrUpdate();
+                //p.Property<int>("StartYear").HasComputedColumnSql("DATEPART(YEAR, [StartDate]) PERSISTED")
+                //                                .ValueGeneratedOnAddOrUpdate();
 
-                p.HasIndex("StartYear").HasDatabaseName("IX_Users_UserByYear");
+                //p.HasIndex("StartYear").HasDatabaseName("IX_Users_UserByYear");
 
-                p.Property<int>("StartQuarter").HasComputedColumnSql("DATEPART(QUARTER, [StartDate]) PERSISTED")
-                                                .ValueGeneratedOnAddOrUpdate();
+                //p.Property<int>("StartQuarter").HasComputedColumnSql("DATEPART(QUARTER, [StartDate]) PERSISTED")
+                //                                .ValueGeneratedOnAddOrUpdate();
 
-                p.HasIndex("StartQuarter", "StartYear").HasDatabaseName("IX_Users_UserByQuarter");
+                //p.HasIndex("StartQuarter", "StartYear").HasDatabaseName("IX_Users_UserByQuarter");
 
                 p.Property<DateOnly>("StartDay").HasComputedColumnSql("CONVERT(DATE, [StartDate]) PERSISTED")
                                                 .ValueGeneratedOnAddOrUpdate();
 
                 p.HasIndex("StartDay").HasDatabaseName("IX_Users_UserByDay");
-
-                //p.Property<int>("StartMonth").HasComputedColumnSql("DATEPART(MONTH, [StartDate]) PERSISTED")
-                //                                .ValueGeneratedOnAddOrUpdate();
-
-                //p.HasIndex("StartMonth", "StartYear").HasDatabaseName("IX_Users_Month");
             });
         }
 
@@ -213,8 +214,6 @@ namespace CRUD_asp.netMVC.Data.Seed
             new ProductImages { ID = 20, PathNameImage = "nike_tshirt_1.4.jpg", ProductID = 5 },
             new ProductImages { ID = 21, PathNameImage = "nike_watch_1.1.jpg", ProductID = 6 },
             new ProductImages { ID = 22, PathNameImage = "nike_watch_1.2.jpg", ProductID = 6 },
-            //new ProductImages { ID = 23, PathNameImage = "nike_watch_1.3.jpg", ProductID = 6 },
-            //new ProductImages { ID = 24, PathNameImage = "nike_watch_1.4.jpg", ProductID = 6 },
 
             // Adidas
             new ProductImages { ID = 25, PathNameImage = "adidas_jacket_1.1.jpg", ProductID = 7 },

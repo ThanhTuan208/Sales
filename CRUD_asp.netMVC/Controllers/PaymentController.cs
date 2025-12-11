@@ -26,7 +26,6 @@ namespace CRUD_asp.netMVC.Controllers
         private readonly QrCodeService _qrCodeService;
         private readonly ISmsPaymentVerificationService _smsPaymentVerificationService;
 
-
         public PaymentController(QrCodeService qrCodeService, ISmsPaymentVerificationService smsPaymentVerificationService, AppDBContext dbContext, GhnService ghn, IConfiguration config)
         {
             _ghn = ghn;

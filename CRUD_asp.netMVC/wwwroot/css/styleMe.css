@@ -1,4 +1,19 @@
-﻿.form-label, label {
+﻿.badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-weight: bold;
+        animation: bounceIn 0.8s ease-out;
+    }
+    .badge-success { background: #28a745; color: white; }
+    .badge-danger  { background: #dc3545; color: white; }
+
+    @keyframes bounceIn {
+        0%   { opacity: 0; transform: scale(0.3) translateY(20px); }
+        60%  { opacity: 1; transform: scale(1.1) translateY(-10px); }
+        100% { transform: scale(1) translateY(0); }
+    }
+.form-label, label {
     font-weight: 600;
     color: #3a3a3a !important; /* Xám đậm thay vì đen thuần */
 }

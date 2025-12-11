@@ -1,14 +1,14 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Admin;
-using CRUD_asp.netMVC.Extensions.Admin;
+using CRUD_asp.netMVC.Extensions.Admins;
 using CRUD_asp.netMVC.Extensions.Payments;
 using CRUD_asp.netMVC.Extensions.RenderViewGeneral;
+using CRUD_asp.netMVC.Extensions.SiteUsers;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.ViewModels.Admin;
 using CRUD_asp.netMVC.ViewModels.Product;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
+using StackExchange.Redis;
 using System.Collections.Immutable;
 using System.Data;
 using System.Globalization;
@@ -32,56 +33,51 @@ namespace CRUD_asp.netMVC.Controllers
     public class AdminController : Controller
     {
         private readonly AppDBContext _dbContext;
+        private readonly IConnectionMultiplexer _redis;
         private readonly IWebHostEnvironment _environment;
-        //private readonly IDbContextFactory<AppDBContext> _dbFactory;
 
-        public AdminController(AppDBContext context, IWebHostEnvironment environment)
+        public AdminController(AppDBContext context, IWebHostEnvironment environment, IConnectionMultiplexer redis)
         {
+            _redis = redis;
             _dbContext = context;
             _environment = environment;
-            //_dbFactory = dbFactory;
         }
 
         [HttpGet] // Hien thi dashboard
         public async Task<IActionResult> DashBoard()
         {
+            var db = _redis.GetDatabase();
+
+            var users = _dbContext.Users;   
+            var payments = _dbContext.Payment;
+            var siteUsers = _dbContext.SiteUser;
+
+            long userVisitors = await siteUsers.UVTodayAsync(db);
+            long userVisitorsYesterday = await siteUsers.UVYesterdayAsync(db);
+            decimal changePercentUVToday = SiteUserQueryExtensions.CalChangePercentByDay(userVisitors, userVisitorsYesterday);
+
+            long dailyActivityUsers = await siteUsers.DAUTodayAsync(db);
+            long dailyActivityUsersYesterday = await siteUsers.DAUYesterdayAsync(db);
+            decimal changePercentDAUToday = SiteUserQueryExtensions.CalChangePercentByDay(userVisitors, userVisitorsYesterday);
+
+            decimal amountByToday = await payments.ByToDayAsync();
+            decimal amountYesterday = await payments.ByToYesterdayAsync();
+            decimal changePercentPaymentToday = PaymentQueryExtensions.CalChangePercentByDay(amountByToday, amountYesterday);
+
+            decimal amountByMonth = await payments.ByMonthAsync();
+            decimal amountLastMonth = await payments.ByToLastMonthAsync();
+            decimal changePercentPaymentMonth = PaymentQueryExtensions.CalChangePercentByMonth(amountByMonth, amountLastMonth);
+
+            var viewModel = new DashBoardViewModel();
+            viewModel.DashBoards.Add(new AmountInTodayDTO(amountByToday, changePercentPaymentToday));
+            viewModel.DashBoards.Add(new TodayUserVisitorDTO(userVisitors, changePercentUVToday));
+            viewModel.DashBoards.Add(new TodayUserLoginDTO(dailyActivityUsers, changePercentDAUToday));
+            viewModel.DashBoards.Add(new AmountInMonthDTO(amountByMonth, changePercentPaymentMonth));
+
             ViewData["User"] = await UserAdmin();
-            return View();
+            return View(viewModel);
         }
-
-        //[HttpGet] // Hien thi dashboard
-        //public async Task<IActionResult> DashBoard()
-        //{
-        //    var users = _dbContext.Users;
-        //    var payments = _dbContext.Payment;
-
-        //    int userToday = await users.ByToDayAsync();
-        //    int userYesterday = await users.ByToYesterdayAsync();
-        //    decimal changePercentUserToday = UserQueryExtensions.CalcChangePercent(userToday, userYesterday);
-
-        //    int month = DateTime.UtcNow.Date.Month;
-        //    int usersByQuarters = await users.ByQuarerAsync();
-
-        //    decimal amountByToday = await payments.ByToDayAsync();
-        //    decimal amountYesterday = await payments.ByToYesterdayAsync();
-        //    decimal changePercentPaymentToday = PaymentQueryExtensions.CalcChangePercentByDay(amountByToday, amountYesterday);
-
-        //    decimal amountByMonth = await payments.ByMonthAsync();
-        //    decimal amountLastMonth = await payments.ByToLastMonthAsync();
-        //    decimal changePercentPaymentMonth = PaymentQueryExtensions.CalcChangePercentByMonth(amountByMonth, amountLastMonth);
-
-        //    var viewModel = new DashBoardViewModel();
-        //    viewModel.DashBoards.Add(new AmountInTodayDTO(amountByToday, changePercentPaymentToday));
-        //    viewModel.DashBoards.Add(new TodayUsersDTO(userToday, changePercentUserToday));
-        //    viewModel.DashBoards.Add(new NewUserByQuarterDTO(month, usersByQuarters));
-        //    viewModel.DashBoards.Add(new AmountInMonthDTO(amountByMonth, changePercentPaymentMonth));
-
-        //    ViewData["User"] = await UserAdmin();
-
-        //    return View(viewModel);
-        //}
-
-        //[Route("Admin"), Route("Admin/Index"), Route("Admin/{page:int}")]
+         
         [HttpGet]
         public async Task<IActionResult> ProductList(int page = 1)
         {
@@ -1579,7 +1575,7 @@ namespace CRUD_asp.netMVC.Controllers
         public async Task<Users> UserAdmin()
         {
             var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
-            if (userID == 0) return null;
+            if (userID == 0) return new Users();
 
             return await _dbContext.Users.FirstOrDefaultAsync(p => p.Id == userID) ?? new Users();
         }

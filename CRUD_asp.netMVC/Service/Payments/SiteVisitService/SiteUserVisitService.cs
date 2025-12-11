@@ -1,4 +1,4 @@
-﻿using CRUD_asp.netMVC.Data;
+﻿    using CRUD_asp.netMVC.Data;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using CRUD_asp.netMVC.Models.Auth;
@@ -9,6 +9,9 @@ namespace CRUD_asp.netMVC.Service.Payment.SiteVisitService
     {
         private readonly AppDBContext _dbContext;
         private readonly IConnectionMultiplexer _redis;
+
+        private const string DAU_KEY_PREFIX = "hll:dau:";
+        private const string TOTAL_KEY_PREFIX = "uv:total:";
 
         public SiteUserVisitService(AppDBContext dbContext, IConnectionMultiplexer redis)
         {
@@ -22,11 +25,11 @@ namespace CRUD_asp.netMVC.Service.Payment.SiteVisitService
             var db = _redis.GetDatabase();
             var yesterday = DateTime.UtcNow.AddDays(-1).ToString("yyyyMMdd");
 
-            var dauKey = $"hll:dau:{yesterday}";
-            var totalKey = $"uv:total:{yesterday}";
+            var dauKey = $"{DAU_KEY_PREFIX + yesterday}";
+            var totalKey = $"{TOTAL_KEY_PREFIX + yesterday}";
 
             var totalVisits = await db.StringGetAsync(totalKey);
-            var totalCount = await db.SetLengthAsync(dauKey);
+            var totalCount = await db.HyperLogLogLengthAsync(dauKey);
 
             long userVisitor = !totalVisits.IsNullOrEmpty ? (long)totalVisits : 0;
             long dailyActiveUsers = totalCount;

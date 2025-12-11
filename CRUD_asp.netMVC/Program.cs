@@ -62,7 +62,7 @@ namespace CRUD_asp.netMVC
             // SignalR + Redis Backplane (bắt buộc khi deploy nhiều server)
             builder.Services.AddSignalR().AddStackExchangeRedis(redisConnectionString);
 
-            // Dang ky RedisVisitListenerService 
+            // Dang ky RedisVisitListenerService
             builder.Services.AddHostedService<RedisVisitListenerService>();
 
             // Dùng Redis làm storage cho Hangfire → không mất job khi tắt máy
@@ -199,7 +199,7 @@ namespace CRUD_asp.netMVC
             app.MapHub<LoadViewHub>("/lazyLoad");
             app.MapHub<LoadViewHub>("/changeEmailProfile");
 
-            app.MapHub<DashboardHub>("/dashboard");
+            app.MapHub<DashboardHub>("/DashboardHub");
 
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
@@ -231,7 +231,6 @@ namespace CRUD_asp.netMVC
 
             app.MapControllerRoute(
                 name: "default",
-                /*pattern: "{controller=Home}/{action=Index}/{id?}");*/
                 pattern: "{controller=Auth}/{action=Login}/{id?}");
 
             app.Run();

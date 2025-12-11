@@ -1,7 +1,6 @@
 ﻿using CRUD_asp.netMVC.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using StackExchange.Redis;
-using System.Timers;
 
 namespace CRUD_asp.netMVC.Service.Users
 {
@@ -11,50 +10,100 @@ namespace CRUD_asp.netMVC.Service.Users
         private readonly IHubContext<DashboardHub> _hub;
         private readonly ILogger<RedisVisitListenerService> _logger;
 
+        private const string DAU_KEY_PREFIX = "hll:dau:";
+        private const string TOTAL_KEY_PREFIX = "uv:total:";
         private const string ChannelName = "site:updates";
 
         public RedisVisitListenerService(
-                IConnectionMultiplexer redis, 
-                IHubContext<DashboardHub> hub, 
-                ILogger<RedisVisitListenerService> logger)
+            IConnectionMultiplexer redis,
+            IHubContext<DashboardHub> hub,
+            ILogger<RedisVisitListenerService> logger)
         {
-            _hub = hub;
             _redis = redis;
+            _hub = hub;
             _logger = logger;
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var subcriber = _redis.GetSubscriber();
-            return subcriber.SubscribeAsync(ChannelName, async (channel, dateString) =>
+            _logger.LogWarning("RedisVisitListenerService BẮT ĐẦU – sẵn sàng nhận publish");
+
+            while (!stoppingToken.IsCancellationRequested)
             {
-                _ = Task.Run(async () =>
+                ISubscriber? subscriber = null;
+                try
                 {
-                    try
+                    // 1. Luôn lấy subscriber MỚI mỗi lần reconnect
+                    subscriber = _redis.GetSubscriber();
+
+                    // 2. Subscribe với handler
+                    subscriber.Subscribe(ChannelName, async (channel, dateString) =>
                     {
-                        var db = _redis.GetDatabase();
-                        string? today = dateString.HasValue ? (string?)dateString : DateTime.UtcNow.ToString("yyyyMMdd");
+                        _logger.LogInformation($"NHẬN ĐƯỢC PUBLISH: {dateString}");
 
-                        var totalVisitors = await db.StringGetAsync($"uv:total:{today}");
-                        var totalCounts = await db.SetLengthAsync($"hll:dau:{today}");
-
-                        var starts = new
+                        _ = Task.Run(async () =>
                         {
-                            TotalVisits = totalVisitors.IsNullOrEmpty ? 0 : (long)totalVisitors,
-                            DailyActiveUsers = totalCounts,
-                            Date = DateTime.UtcNow.AddHours(7).ToString("dd/MM/yyyy HH:mm:ss")
-                        };
+                            try
+                            {
+                                var db = _redis.GetDatabase();
+                                string? today = dateString.HasValue ? (string?)dateString : DateTime.UtcNow.ToString("yyyyMMdd");
 
-                        await _hub.Clients.All.SendAsync("ReceiveCurrentStatus", starts, stoppingToken);
+                                var total = await db.StringGetAsync($"{TOTAL_KEY_PREFIX + today}");
+                                long dau = await db.HyperLogLogLengthAsync($"{DAU_KEY_PREFIX + today}");
 
-                    }
-                    catch (Exception ex)
+                                var stats = new
+                                {
+                                    TotalVisits = total.IsNullOrEmpty ? 0L : (long)total,
+                                    DailyActiveUsers = dau,
+                                    Date = DateTime.UtcNow.AddHours(7).ToString("dd/MM/yyyy HH:mm:ss")
+                                };
+
+                                await _hub.Clients.All.SendAsync("ReceiveCurrentStatus", stats);
+                                _logger.LogInformation("ĐÃ GỬI REALTIME: Visits={V}, DAU={D}", stats.TotalVisits, stats.DailyActiveUsers);
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, "Lỗi xử lý realtime trong callback");
+                            }
+                        }, stoppingToken);
+                    });
+
+                    _logger.LogWarning("SUBSCRIBE THÀNH CÔNG kênh '{Channel}' – đang lắng nghe...", ChannelName);
+
+                    // 3. Giữ sống cho đến khi Redis chết HOẶC app shutdown
+                    while (_redis.IsConnected && !stoppingToken.IsCancellationRequested)
                     {
-                        _logger.LogError("Lỗi chạy real-time RedisVisitListenerService Class", ex.Message, ex.InnerException?.Message ?? string.Empty);
+                        await Task.Delay(1000, stoppingToken);
                     }
 
-                }, stoppingToken);
-            });
+                    _logger.LogWarning("Redis mất kết nối hoặc app shutdown → thoát vòng lặp để reconnect...");
+                }
+                catch (Exception ex) when (!(ex is TaskCanceledException))
+                {
+                    _logger.LogError(ex, "Lỗi nghiêm trọng khi subscribe Redis");
+                }
+                finally
+                {
+                    // 4. Dọn dẹp sạch sẽ trước khi reconnect
+                    if (subscriber != null)
+                    {
+                        try { await subscriber.UnsubscribeAsync(ChannelName); }
+                        catch (Exception ex) { _logger.LogError(ex, "Lỗi unsubscribe"); }
+                    }
+                }
+
+                // 5. Nếu app đang shutdown → thoát luôn
+                if (stoppingToken.IsCancellationRequested)
+                {
+                    _logger.LogWarning("App đang shutdown → dừng RedisVisitListenerService");
+                    break;
+                }
+
+                _logger.LogWarning("Đang thử kết nối lại Redis sau 5 giây...");
+                await Task.Delay(5000, stoppingToken);
+            }
+
+            _logger.LogWarning("RedisVisitListenerService ĐÃ DỪNG HOÀN TOÀN");
         }
     }
 }

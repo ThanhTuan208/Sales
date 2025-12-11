@@ -43,14 +43,14 @@ namespace CRUD_asp.netMVC.Extensions.Payments
         }
 
         // Tinh ty le phan tram thay doi nguoi dung hom qua, hom nay
-        public static decimal CalcChangePercentByDay(decimal today, decimal yesterday)
+        public static decimal CalChangePercentByDay(decimal today, decimal yesterday)
         {
             if (yesterday == 0) return today == 0 ? 0m : 100m;
             return ((today - yesterday) / yesterday) * 100m;
         }
 
         // Tinh ty le phan tram thay doi nguoi dung hom truoc, thang hien tai
-        public static decimal CalcChangePercentByMonth(decimal month, decimal lastMonth)
+        public static decimal CalChangePercentByMonth(decimal month, decimal lastMonth)
         {
             if (lastMonth == 0) return month == 0 ? 0m : 100m;
             return ((month - lastMonth) / lastMonth) * 100m;

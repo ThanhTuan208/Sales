@@ -47,7 +47,7 @@ namespace CRUD_asp.netMVC.Middleware
                 });
 
                 // Set TTL(Time To Live) cho key
-                await db.KeyExpireAsync(totalKey, expires - DateTime.UtcNow);
+                await db.KeyExpireAsync(totalKey, TimeSpan.FromDays(2));
 
                 // Publish event (payload nhẹ: chỉ ngày)
                 await subscriber.PublishAsync(ChannelName, today);

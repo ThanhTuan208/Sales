@@ -1,4 +1,23 @@
-﻿// Truyen du lieu san pham, ktra dkien them hoac sua
+﻿//$(function () { // Cap nhat real-time cho Dashboard View (DAU,UV)
+//    const connection = new signalR.HubConnectionBuilder()
+//        .withUrl("/DashboardHub", {
+//            withCredentials: true
+//        })
+//        .withAutomaticReconnect()
+//        .build();
+
+//    connection.start().catch(err => alert(err));
+
+//    connection.on("ReceiveCurrentStatus", (data) => {
+
+//        let s = data.TotalVisits.toLocaleString();
+//        $('#uv').text(data.TotalVisits.toLocaleString());
+//        let f = $('#dau').text(data.DailyActiveUsers.toLocaleString());
+//        alert("In ra dum tao", s);
+//    })
+//});
+
+// Truyen du lieu san pham, ktra dkien them hoac sua
 $(document).off('click', '#btnAdminProduct').on('click', '#btnAdminProduct', function (e) {
 
     e.preventDefault();
@@ -188,7 +207,7 @@ $(document).off('click', '.btn-update-val').on('click', '.btn-update-val', funct
             if (!data.success) {
                 if (data.errors) {
                     $('.text-danger').text('');
-      
+
                     data.errors.forEach(function (err) {
                         const message = err.errors[0];
 
@@ -203,7 +222,7 @@ $(document).off('click', '.btn-update-val').on('click', '.btn-update-val', funct
 
             if (data.propList) {
 
-                const $select = $(`#${data.typeVal}`); 
+                const $select = $(`#${data.typeVal}`);
                 $select.empty();
 
                 $select.append(`<option value="" class="text-center" disabled>Chọn ${data.nameType} </option>`);

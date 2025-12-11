@@ -82,7 +82,7 @@ namespace CRUD_asp.netMVC.Controllers
         /// </summary>
         /// <param name="login"></param>
         /// <returns></returns>
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> Login(Login login)
         {
             try

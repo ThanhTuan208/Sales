@@ -41,15 +41,6 @@ namespace CRUD_asp.netMVC.Models.Auth
 
         // EF Core computed column
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public int StartQuarter { get; private set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateOnly StartDay { get; private set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public int StartMonth { get; private set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public int StartYear { get; private set; }
     }
 }

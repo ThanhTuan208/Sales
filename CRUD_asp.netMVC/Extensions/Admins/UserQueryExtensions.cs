@@ -1,11 +1,7 @@
-﻿using CRUD_asp.netMVC.DTO.Admin;
-using CRUD_asp.netMVC.Models.Auth;
+﻿using CRUD_asp.netMVC.Models.Auth;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
-using System.Globalization;
-using System.Numerics;
 
-namespace CRUD_asp.netMVC.Extensions.Admin
+namespace CRUD_asp.netMVC.Extensions.Admins
 {
     public static class UserQueryExtensions
     {
@@ -13,7 +9,6 @@ namespace CRUD_asp.netMVC.Extensions.Admin
         {
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
             return await user.CountAsync(p => EF.Property<DateOnly>(p, "StartDay") == today);
-       
         }
 
         public static async Task<int> ByToYesterdayAsync(this DbSet<Users> user)
@@ -22,15 +17,15 @@ namespace CRUD_asp.netMVC.Extensions.Admin
             return await user.CountAsync(p => EF.Property<DateOnly>(p, "StartDay") == yesterday);
         }
 
-        public static async Task<int> ByQuarerAsync(this DbSet<Users> user)
-        {
-            var quarter = (DateTime.UtcNow.Month - 1) / 3 + 1;
-            var year = DateTime.UtcNow.Year;
+        //public static async Task<int> ByQuarerAsync(this DbSet<Users> user)
+        //{
+        //    var quarter = (DateTime.UtcNow.Month - 1) / 3 + 1;
+        //    var year = DateTime.UtcNow.Year;
 
-            return await user.CountAsync(p =>
-                        EF.Property<int>(p, "StartQuarter") == quarter &&
-                        EF.Property<int>(p, "StartYear") == year);
-        }
+        //    return await user.CountAsync(p =>
+        //                EF.Property<int>(p, "StartQuarter") == quarter &&
+        //                EF.Property<int>(p, "StartYear") == year);
+        //}
 
         // Tinh ty le phan tram thay doi nguoi dung hom qua, hom nay
         public static decimal CalcChangePercent(int today, int yesterday)
