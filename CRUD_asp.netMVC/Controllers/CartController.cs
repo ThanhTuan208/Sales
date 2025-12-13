@@ -251,7 +251,6 @@ namespace CRUD_asp.netMVC.Controllers
 
                         viewModel.QrPayment = qrPaymentModel;
 
-
                         if (resetQR)
                         {
                             return PartialView("_ModalPaymentPartialRight", viewModel);

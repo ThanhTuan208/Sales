@@ -11,7 +11,7 @@ namespace CRUD_asp.netMVC.Extensions.SiteUsers
     {
         private const string DAU_KEY_PREFIX = "hll:dau:";
         private const string TOTAL_KEY_PREFIX = "uv:total:";
-        public static async Task<long> DAUTodayAsync(this DbSet<SiteUser> siteUsers, Redis? db)
+        public static async Task<long> DAUTodayAsync(this DbSet<SiteUser> siteUsers, Redis db)
         {
             var today = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyyMMdd");
             var dauKey = $"{DAU_KEY_PREFIX + today}";
@@ -19,7 +19,7 @@ namespace CRUD_asp.netMVC.Extensions.SiteUsers
             var DAUDay = await db.HyperLogLogLengthAsync(dauKey);
             return DAUDay;
         }
-        public static async Task<long> DAUYesterdayAsync(this DbSet<SiteUser> siteUsers, Redis? db)
+        public static async Task<long> DAUYesterdayAsync(this DbSet<SiteUser> siteUsers, Redis db)
         {
             var yesterday = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1)).ToString("yyyyMMdd");
             var dauKey = $"{DAU_KEY_PREFIX + yesterday}";
@@ -28,7 +28,7 @@ namespace CRUD_asp.netMVC.Extensions.SiteUsers
             return DAUYesterday;
         }
 
-        public static async Task<long> UVTodayAsync(this DbSet<SiteUser> siteUsers, Redis? db)
+        public static async Task<long> UVTodayAsync(this DbSet<SiteUser> siteUsers, Redis db)
         {
             var today = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyyMMdd");
             var totalKey = $"{TOTAL_KEY_PREFIX + today}";
@@ -36,7 +36,7 @@ namespace CRUD_asp.netMVC.Extensions.SiteUsers
             var UVDay = await db.StringGetAsync(totalKey);
             return UVDay.HasValue ? (long)UVDay : 0;
         }
-        public static async Task<long> UVYesterdayAsync(this DbSet<SiteUser> siteUsers, Redis? db)
+        public static async Task<long> UVYesterdayAsync(this DbSet<SiteUser> siteUsers, Redis db)
         {
             var yesterday = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1)).ToString("yyyyMMdd");
             var totalKey = $"{TOTAL_KEY_PREFIX + yesterday}";
@@ -52,6 +52,12 @@ namespace CRUD_asp.netMVC.Extensions.SiteUsers
             return ((today - yesterday) / yesterday) * 100m;
         }
 
+        public static string InputPercents(decimal percent)
+        {
+            return percent == 0
+                    ? "0%\nkhông có thay đổi"
+                    : $"{(percent > 0 ? "+" : "")}{percent:F1}% so với hôm qua";
+        }
         #region Lay database SQLServer (Old Code)
         //public static async Task<long> DAUTodayAsync(this DbSet<SiteUser> siteUsers)
         //{

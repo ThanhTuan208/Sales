@@ -13,7 +13,7 @@ namespace CRUD_asp.netMVC.Extensions.Payments
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
             return await payment.Where(p => EF.Property<DateOnly>(p, "StartDay") == today)
                                 .SumAsync(s => s.paidAmount) ?? 0;
-        }
+        }   
 
         public static async Task<decimal> ByToYesterdayAsync(this DbSet<Payment> payment)
         {

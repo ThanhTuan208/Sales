@@ -166,7 +166,6 @@ namespace CRUD_asp.netMVC
                 app.UseHsts();
             }
 
-            app.UseSession();
 
             // 1. Ở môi trường Production thì bắt buộc dùng HTTPS
             app.UseHttpsRedirection();
@@ -180,18 +179,23 @@ namespace CRUD_asp.netMVC
             app.UseRouting();
             // → Quyết định request này sẽ đi vào Controller nào
 
+            app.UseSession();
+
             // 4. Xác thực người dùng (đọc JWT, cookie authentication, v.v.)
             app.UseAuthentication();
             // → Sau dòng này thì context.User mới có thông tin (đã login hay chưa)
 
             // 5. Phân quyền (Admin chỉ được vào /admin, User thường không được, v.v.)
             app.UseAuthorization();
-            // → Phải đứng sau UseAuthentication
 
+            app.UseMiddleware<VisitCountUserMiddleware>();
+
+            app.MapControllers();
+
+            // → Phải đứng sau UseAuthentication
             app.MapRazorPages();
 
             // Dung cho cap nhat va dem so luong nguoi truy cap
-            app.UseMiddleware<VisitCountUserMiddleware>();
 
             // Cau hinh endpoint hub
             app.MapHub<PaymentHub>("/paymentHub");

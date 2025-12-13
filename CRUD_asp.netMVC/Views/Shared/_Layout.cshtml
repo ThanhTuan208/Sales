@@ -515,6 +515,8 @@
     @* <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script> *@
     <script src="~/js/tom-select.complete.min.js" asp-append-version="true"></script>
     <script src="~/js/signalr.min.js" asp-append-version="true"></script>
+
+
     <script type="module" src="~/js/js.js" asp-append-version="true"></script>
     <script type="module" src="~/js/admin.js" asp-append-version="true"></script>
 
@@ -538,30 +540,7 @@
 
     <script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
 
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
-<script>
-      // JavaScript: skip stylesheets from other origins
-    function isSameOrigin(url) {
-      if (!url) return true; // inline styles have no href
-      try {
-        const sheetUrl = new URL(url, location.href);
-        return sheetUrl.origin === location.origin;
-      } catch {
-        return false;
-      }
-    }
-
-    for (const sheet of document.styleSheets) {
-      if (!isSameOrigin(sheet.href)) continue;
-      try {
-        const rules = sheet.cssRules; // safe for same-origin
-        // process rules...
-      } catch (e) {
-        // still guard against unexpected issues
-        console.warn('Skipping stylesheet:', sheet.href, e);
-      }
-    }
-</script>

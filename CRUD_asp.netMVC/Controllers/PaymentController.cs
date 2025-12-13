@@ -9,61 +9,73 @@ using CRUD_asp.netMVC.Service.Payment;
 using CRUD_asp.netMVC.ViewModels.Order;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using System.Globalization;
 using System.Security.Claims;
 using System.Text;
 
 namespace CRUD_asp.netMVC.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class PaymentController : Controller
     {
-
         private readonly GhnService _ghn;
-
         private readonly AppDBContext _dbContext;
-        private readonly QrCodeService _qrCodeService;
+        private readonly IHubContext<PaymentHub> _hub;
+        //private readonly QrCodeService _qrCodeService;
+        private readonly IConnectionMultiplexer _reids;
         private readonly ISmsPaymentVerificationService _smsPaymentVerificationService;
 
-        public PaymentController(QrCodeService qrCodeService, ISmsPaymentVerificationService smsPaymentVerificationService, AppDBContext dbContext, GhnService ghn, IConfiguration config)
+        private const string AMOUNT_TODAY_PREFIX = "amt:today:";
+        private const string AMOUNT_MONTH_PREFIX = "amt:month:";
+
+        public PaymentController
+            (
+                    GhnService ghn,
+                    AppDBContext dbContext,
+                    IConnectionMultiplexer reids,
+                    ISmsPaymentVerificationService smsPaymentVerificationService,
+                    IHubContext<PaymentHub> hub)
         {
             _ghn = ghn;
-            _qrCodeService = qrCodeService;
-            _smsPaymentVerificationService = smsPaymentVerificationService;
+            _reids = reids;
             _dbContext = dbContext;
+            //_qrCodeService = qrCodeService;
+            _smsPaymentVerificationService = smsPaymentVerificationService;
+            _hub = hub;
+
             //_token = config["GHN:Token"] ?? "";
             //_httpClient = httpClient;
             //_httpClient.DefaultRequestHeaders.Add("Token", _token);
             //_httpClient.DefaultRequestHeaders.Add("_dbContext-Type", "application/json"); 
         }
 
-        // Thay doi name co cac ki tu co dau thanh khong dau
-        public string RemoveDiacritics(string text)
+        [HttpGet]
+        public async Task<IActionResult> InfoPayment()
         {
-            if (string.IsNullOrEmpty(text)) return string.Empty;
-
-            var normalized = text.ToLowerInvariant().Normalize(NormalizationForm.FormD);
-            var builder = new StringBuilder();
-
-            foreach (char c in normalized)
+            var s = await _dbContext.Payment.ToListAsync();
+            if (s.Any())
             {
-                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-                    builder.Append(c);
+                return Ok(s);
             }
-
-            return builder.ToString().Replace(" ", "").Replace("đ", "d");
+            return BadRequest();
         }
 
-
-        [HttpPost,IgnoreAntiforgeryToken] // Nhan sms tu dien thoai
-        public async Task<IActionResult> SmsReceive([FromBody] SmsMessage sms, [FromServices] IHubContext<PaymentHub> hub)
+        [HttpPost("SmsReceive"), IgnoreAntiforgeryToken]// Nhan sms tu dien thoai
+        public async Task<IActionResult> SmsReceive([FromBody] SmsMessage sms)
         {
-            //Mở 1 giao dịch(transaction). -> thuc hien cho kieu toi uu sql "raw sql bulk update"
+            // Mo transaction -> thuc hien cho kieu toi uu sql "raw sql bulk update"
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
             try
             {
+                IDatabase db = _reids.GetDatabase();
+
+                if (!sms.Message.Contains("ND:"))
+                    return BadRequest("Không đúng định dạng banking sms !");
+
                 var NDMessage = sms.Message.Split("ND:")[1].Trim();
                 var transactionCode = NDMessage.Split('-')[1];
 
@@ -73,11 +85,11 @@ namespace CRUD_asp.netMVC.Controllers
                 var formartTransaction = transactionCode.Split("ORD")[1];
 
                 var order = await _dbContext.Orders
-                    .AsNoTracking()
-                    .Include(p => p.Address)
-                    .Include(p => p.Users)
-                    .Include(p => p.OrderDetail).ThenInclude(p => p.Product)
-                    .FirstOrDefaultAsync(p => p.TransactionId == formartTransaction);
+                                    .AsNoTracking()
+                                    .Include(p => p.Address)
+                                    .Include(p => p.Users)
+                                    .Include(p => p.OrderDetail).ThenInclude(p => p.Product)
+                                    .FirstOrDefaultAsync(p => p.TransactionId == formartTransaction);
 
                 if (order == null) return NotFound();
 
@@ -132,7 +144,33 @@ namespace CRUD_asp.netMVC.Controllers
 
                 await _dbContext.SaveChangesAsync();
 
-                await hub.Clients.All.SendAsync("ReceivePaymentStatus", order.ID, formartTransaction);
+                _ = Task.Run(async () =>
+                {
+                    var date = DateTime.UtcNow.Date;
+                    var month = date.ToString("yyyyMM");
+                    var today = date.ToString("yyyyMMdd");
+
+                    string amtTodayKey = AMOUNT_TODAY_PREFIX + today;
+                    string amtMonthKey = AMOUNT_MONTH_PREFIX + month;
+
+                    var todayAmounts = await db.StringIncrementAsync(amtTodayKey, (long)order.Amount);
+                    var monthAmounts = await db.StringIncrementAsync(amtMonthKey, (long)order.Amount);
+
+                    var tasks = new
+                    {
+                        TodayMonth = todayAmounts,
+                        MonthAmount = monthAmounts
+                    };
+
+                    var s = ExpiredTime("today");
+                    var f = ExpiredTime("month");
+                    await db.KeyExpireAsync(amtTodayKey, ExpiredTime("today"));
+                    await db.KeyExpireAsync(amtMonthKey, ExpiredTime("month"));
+
+                    await _hub.Clients.All.SendAsync("ReceivePaymentStatus", tasks);
+                });
+
+                await _hub.Clients.All.SendAsync("ReceivePaymentStatus", order.ID, formartTransaction);
 
                 // Tao van don GHN sau khi thanh toan
                 //await RequestGHN(order);
@@ -300,6 +338,17 @@ namespace CRUD_asp.netMVC.Controllers
             }
 
             return Json(new { success = false, message = "Thanh toán thất bại" });
+        }
+
+        public TimeSpan ExpiredTime(string time)
+        {
+            var dateCurrent = DateTime.UtcNow;
+            var chooseTime = dateCurrent.Date.AddDays(1);
+            if (time == "month")
+            {
+                chooseTime = dateCurrent.Date.AddMonths(1);
+            }
+            return chooseTime - dateCurrent;
         }
     }
 }

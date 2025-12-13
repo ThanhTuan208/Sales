@@ -1,4 +1,4 @@
-﻿    using CRUD_asp.netMVC.Data;
+﻿using CRUD_asp.netMVC.Data;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using CRUD_asp.netMVC.Models.Auth;
@@ -12,6 +12,9 @@ namespace CRUD_asp.netMVC.Service.Payment.SiteVisitService
 
         private const string DAU_KEY_PREFIX = "hll:dau:";
         private const string TOTAL_KEY_PREFIX = "uv:total:";
+
+        private const string AMOUNT_TODAY_PREFIX = "amt:today:"; 
+        private const string AMOUNT_MONTH_PREFIX = "amt:month:";
 
         public SiteUserVisitService(AppDBContext dbContext, IConnectionMultiplexer redis)
         {
@@ -43,15 +46,17 @@ namespace CRUD_asp.netMVC.Service.Payment.SiteVisitService
                     Date = DateTime.UtcNow.AddDays(-1).Date,
                     DailyActiveUsers = dailyActiveUsers,
                     UniqueVisitors = userVisitor,
+                    TodayAmounts = 0,
+                    MonthAmounts = 0,
                     CreatedAt = DateTime.UtcNow,
                 });
 
                 await _dbContext.SaveChangesAsync();
             }
 
-            // Xóa key cũ để tiết kiệm RAM
-            await db.KeyDeleteAsync(dauKey);
-            await db.KeyDeleteAsync(totalKey);
+            //// Xóa key cũ để tiết kiệm RAM
+            //await db.KeyDeleteAsync(dauKey);
+            //await db.KeyDeleteAsync(totalKey);
         }
     }
 }

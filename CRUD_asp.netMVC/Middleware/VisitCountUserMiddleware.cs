@@ -1,8 +1,12 @@
-﻿using StackExchange.Redis;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.FileSystemGlobbing.Internal.PatternContexts;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
+using StackExchange.Redis;
 using System.Security.Claims;
 
 namespace CRUD_asp.netMVC.Middleware
 {
+
     public class VisitCountUserMiddleware
     {
         private readonly RequestDelegate _next;
@@ -11,6 +15,10 @@ namespace CRUD_asp.netMVC.Middleware
         private const string COOKIE_NAME_PREFIX = "uv_"; // cookie user visitors
         private const string TOTAL_KEY_PREFIX = "uv:total:"; // total visits
         private const string DAU_KEY_PREFIX = "hll:dau:"; // daily active users
+
+        private const string AMOUNT_TODAY_PREFIX = "amt:today:"; // amount in day
+        private const string AMOUNT_MONTH_PREFIX = "amt:month:"; // amount in month
+
         private const string ChannelName = "site:updates";
 
         public VisitCountUserMiddleware(RequestDelegate next, IConnectionMultiplexer redis)
@@ -23,11 +31,14 @@ namespace CRUD_asp.netMVC.Middleware
         {
             var db = _redis.GetDatabase();
             var subscriber = _redis.GetSubscriber();
+            
+            var pathLink = context.Request.Path.ToString();
 
             var today = DateTime.UtcNow.ToString("yyyyMMdd");
+            var month = DateTime.UtcNow.ToString("yyyyMM");
 
             var dauKey = DAU_KEY_PREFIX + today; // Key de luu danh sach user da login hom nay
-            var totalKey = TOTAL_KEY_PREFIX + today; // Key de luu so luong truy cap hom nay
+            var totalKey = TOTAL_KEY_PREFIX + today; // Key de luu so luong truy cap hom na
             var cookieName = COOKIE_NAME_PREFIX + today; // Ten cookie danh dau user da truy cap hom nay
 
             if (!context.Request.Cookies.ContainsKey(cookieName))
@@ -46,7 +57,7 @@ namespace CRUD_asp.netMVC.Middleware
                                                  //Giúp giảm rủi ro CSRF.
                 });
 
-                // Set TTL(Time To Live) cho key
+                // Set TTL(Time To Live) cho uv
                 await db.KeyExpireAsync(totalKey, TimeSpan.FromDays(2));
 
                 // Publish event (payload nhẹ: chỉ ngày)
@@ -55,14 +66,16 @@ namespace CRUD_asp.netMVC.Middleware
 
             // Dem DAU neu user da login
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (!string.IsNullOrEmpty(userId))
+            var isAdmin = context.User.FindFirst(ClaimTypes.Role)?.Value.ToLower();
+
+            if (!string.IsNullOrEmpty(userId) && isAdmin != "admin")
             {
                 // DÙNG PFADD THAY SADD (nhanh, tiet kiem dung luong hon db.SetAddAsync())
                 var isDau = await db.HyperLogLogAddAsync(dauKey, userId); // +1 nguoi dung da login
                 if (isDau)
                 {
                     // Set TTL 2 ngay de so sanh DAU hom nay voi hom qua (co the mo rong de so sanh tuan, thang)
-                    await db.KeyExpireAsync(dauKey, TimeSpan.FromDays(2)); 
+                    await db.KeyExpireAsync(dauKey, TimeSpan.FromDays(2));
                     await subscriber.PublishAsync(ChannelName, today);
                 }
             }

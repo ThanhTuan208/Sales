@@ -58,7 +58,7 @@ namespace CRUD_asp.netMVC.Controllers
 
             long dailyActivityUsers = await siteUsers.DAUTodayAsync(db);
             long dailyActivityUsersYesterday = await siteUsers.DAUYesterdayAsync(db);
-            decimal changePercentDAUToday = SiteUserQueryExtensions.CalChangePercentByDay(userVisitors, userVisitorsYesterday);
+            decimal changePercentDAUToday = SiteUserQueryExtensions.CalChangePercentByDay(dailyActivityUsers, dailyActivityUsersYesterday);
 
             decimal amountByToday = await payments.ByToDayAsync();
             decimal amountYesterday = await payments.ByToYesterdayAsync();
@@ -69,9 +69,9 @@ namespace CRUD_asp.netMVC.Controllers
             decimal changePercentPaymentMonth = PaymentQueryExtensions.CalChangePercentByMonth(amountByMonth, amountLastMonth);
 
             var viewModel = new DashBoardViewModel();
-            viewModel.DashBoards.Add(new AmountInTodayDTO(amountByToday, changePercentPaymentToday));
             viewModel.DashBoards.Add(new TodayUserVisitorDTO(userVisitors, changePercentUVToday));
             viewModel.DashBoards.Add(new TodayUserLoginDTO(dailyActivityUsers, changePercentDAUToday));
+            viewModel.DashBoards.Add(new AmountInTodayDTO(amountByToday, changePercentPaymentToday));
             viewModel.DashBoards.Add(new AmountInMonthDTO(amountByMonth, changePercentPaymentMonth));
 
             ViewData["User"] = await UserAdmin();

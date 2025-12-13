@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CRUD_asp.netMVC.Extensions.SiteUsers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using MimeKit;
 using StackExchange.Redis;
@@ -22,14 +23,26 @@ namespace CRUD_asp.netMVC.Hubs
         {
             var db = _redis.GetDatabase();
             var today = DateTime.UtcNow.ToString("yyyyMMdd");
+            var yesterday = DateTime.UtcNow.AddDays(-1).ToString("yyyyMMdd");
 
-            var totalVisits = await db.StringGetAsync("uv:total:" + today);
-            var totalCount = await db.HyperLogLogLengthAsync("hll:dau:" + today);
+            var uvRedisValTodays = await db.StringGetAsync("uv:total:" + today);
+            var uvRedisValYesterdays = await db.StringGetAsync("uv:total:" + yesterday);
+
+            var totalCountTodays = await db.HyperLogLogLengthAsync("hll:dau:" + today);
+            var totalCountYesterdays = await db.HyperLogLogLengthAsync("hll:dau:" + yesterday);
+
+            long totalVisitTodays = uvRedisValTodays.HasValue ? (long)uvRedisValTodays : 0;
+            long totalVisitYesterdays = uvRedisValYesterdays.HasValue ? (long)uvRedisValYesterdays : 0;
+
+            var uvPercents = SiteUserQueryExtensions.CalChangePercentByDay(totalVisitTodays, totalVisitYesterdays);
+            var dauPercents = SiteUserQueryExtensions.CalChangePercentByDay(totalCountTodays, totalCountYesterdays);
 
             return new
             {
-                DailyActiveUsers = totalCount,
-                TotalVisits = !totalVisits.IsNullOrEmpty ? (long)totalVisits : 0,
+                TotalVisits = totalVisitTodays,
+                DailyActiveUsers = totalCountTodays,
+                UVPercents = SiteUserQueryExtensions.InputPercents(uvPercents),
+                DAUPercents= SiteUserQueryExtensions.InputPercents(dauPercents),
                 Date = DateTime.UtcNow.AddHours(7).ToString("dd/MM/yyyy") // Gio VietNam
             };
         }

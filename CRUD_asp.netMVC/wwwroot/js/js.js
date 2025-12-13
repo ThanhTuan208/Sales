@@ -47,6 +47,10 @@ $(document).ready(function () {
 
             $('#uv strong').text(data.totalVisits.toLocaleString());
             $('#dau strong').text(data.dailyActiveUsers.toLocaleString());
+
+            $('#uv-percents').text(data.uvPercents.toLocaleString());
+            $('#dau-percents').text(data.dauPercents.toLocaleString());
+
         })
     });
 
