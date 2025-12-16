@@ -1,4 +1,7 @@
 ﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.DTO.Payments;
+using CRUD_asp.netMVC.EventHandlers;
+using CRUD_asp.netMVC.EventHandlers.Payments;
 using CRUD_asp.netMVC.Filters;
 using CRUD_asp.netMVC.Hubs;
 using CRUD_asp.netMVC.Middleware;
@@ -6,7 +9,7 @@ using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Service.EmailSender;
 using CRUD_asp.netMVC.Service.GHN;
 using CRUD_asp.netMVC.Service.Payment;
-using CRUD_asp.netMVC.Service.Payment.SiteVisitService;
+using CRUD_asp.netMVC.Service.Payments;
 using CRUD_asp.netMVC.Service.Users;
 using Hangfire;
 using Hangfire.Redis.StackExchange;
@@ -17,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Pkcs;
 using StackExchange.Redis;
 using System;
+using System.ComponentModel.Design;
 using System.Threading.Tasks;
 
 namespace CRUD_asp.netMVC
@@ -118,7 +122,11 @@ namespace CRUD_asp.netMVC
             builder.Services.AddScoped<GhnService>();
             builder.Services.AddHttpClient<IGhnService, GhnService>();
 
-            // Dabg ky Session
+            builder.Services.AddScoped<IEventBus, InMemoryEventBus>();
+            builder.Services.AddScoped<IEventHandler<OrderPaidEvent>, NotifyPaymentHandler>();
+            builder.Services.AddScoped<IEventHandler<OrderPaidEvent>, OrderPaidDashboardHandler>();
+
+            // Dang ky Session
             builder.Services.AddSession(options =>
             {
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Chỉ gui qua HTTPS
@@ -165,7 +173,6 @@ namespace CRUD_asp.netMVC
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
 
             // 1. Ở môi trường Production thì bắt buộc dùng HTTPS
             app.UseHttpsRedirection();
@@ -233,9 +240,16 @@ namespace CRUD_asp.netMVC
                     QueueName = "ordercleanup"
                 });
 
+            // Trang chủ trỏ về Auth/Login
+            app.MapControllerRoute(
+                name: "root",
+                pattern: "",
+                defaults: new { controller = "Auth", action = "Login" });
+
+            // Route mặc định chuẩn để tất cả controller hoạt động
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Auth}/{action=Login}/{id?}");
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }

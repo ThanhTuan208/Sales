@@ -13,7 +13,7 @@ namespace CRUD_asp.netMVC.Data.Seed
 {
     public static class ModelBuilderCreateFuncGetSeed
     {
-        public static void RelationshipEntitys(this ModelBuilder modelBuilder)
+        public static void RelationshipEntities(this ModelBuilder modelBuilder)
         {
             var users = modelBuilder.Entity<Users>();
             var orders = modelBuilder.Entity<Orders>();

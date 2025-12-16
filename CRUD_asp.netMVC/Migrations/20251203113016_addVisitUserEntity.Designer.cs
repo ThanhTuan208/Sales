@@ -830,7 +830,7 @@ namespace CRUD_asp.netMVC.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Payment", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Payments", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -878,7 +878,7 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasIndex("StartMonth", "StartYear")
                         .HasDatabaseName("IX_Payment_PaymentByMonth");
 
-                    b.ToTable("Payment");
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductColors", b =>
@@ -15546,11 +15546,11 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Payment", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Payments", b =>
                 {
                     b.HasOne("CRUD_asp.netMVC.Models.Order.Orders", "Order")
-                        .WithOne("Payment")
-                        .HasForeignKey("CRUD_asp.netMVC.Models.Product.Payment", "OrderID")
+                        .WithOne("Payments")
+                        .HasForeignKey("CRUD_asp.netMVC.Models.Product.Payments", "OrderID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -15838,7 +15838,7 @@ namespace CRUD_asp.netMVC.Migrations
                 {
                     b.Navigation("OrderDetail");
 
-                    b.Navigation("Payment");
+                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Brand", b =>

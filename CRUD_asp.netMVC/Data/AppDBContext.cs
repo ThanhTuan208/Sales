@@ -19,7 +19,7 @@ namespace CRUD_asp.netMVC.Data
             base.OnModelCreating(modelBuilder);
 
             // Fluent API entity
-            modelBuilder.RelationshipEntitys();
+            modelBuilder.RelationshipEntities();
 
             // khong rang buoc
             modelBuilder.SeedFeatured();
@@ -65,7 +65,6 @@ namespace CRUD_asp.netMVC.Data
         //public DbSet<Users>? Users { get; set; }
         //public DbSet<Roles>? Roles { get; set; }
         //public DbSet<Staff> Staff { get; set; }
-
 
         public DbSet<SiteUsers> SiteUser { get; set; }
         public DbSet<ProductQuantity> ProductQty { get; set; }

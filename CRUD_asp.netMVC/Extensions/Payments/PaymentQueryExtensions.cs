@@ -3,43 +3,49 @@ using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Product;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Redis = StackExchange.Redis.IDatabase;
 
 namespace CRUD_asp.netMVC.Extensions.Payments
 {
     public static class PaymentQueryExtensions
     {
-        public static async Task<decimal> ByToDayAsync(this DbSet<Payment> payment)
-        {
-            var today = DateOnly.FromDateTime(DateTime.UtcNow);
-            return await payment.Where(p => EF.Property<DateOnly>(p, "StartDay") == today)
-                                .SumAsync(s => s.paidAmount) ?? 0;
-        }   
+        private const string AMOUNT_TODAY_PREFIX = "amt:today:";
+        private const string AMOUNT_MONTH_PREFIX = "amt:month:";
 
-        public static async Task<decimal> ByToYesterdayAsync(this DbSet<Payment> payment)
+        public static async Task<decimal> ByToDayAsync(this DbSet<Payment> payment, Redis db)
         {
-            var today = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
-            return await payment.Where(p => EF.Property<DateOnly>(p, "StartDay") == today)
-                                .SumAsync(s => s.paidAmount) ?? 0;
+            var today = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyyMMdd");
+            var todayAmountKey = $"{AMOUNT_TODAY_PREFIX + today}";
+
+            var todayAmount = await db.StringGetAsync(todayAmountKey);
+            return todayAmount.HasValue ? (long)todayAmount : 0;
         }
 
-        public static async Task<decimal> ByToLastMonthAsync(this DbSet<Payment> payment)
+        public static async Task<decimal> ByToYesterdayAsync(this DbSet<Payment> payment, Redis db)
         {
-            var year = DateTime.UtcNow.Year;
-            var lastMonth = DateTime.UtcNow.AddMonths(-1).Month;
+            var yesterday = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1)).ToString("yyyyMMdd");
+            var yesterdayAmountKey = $"{AMOUNT_TODAY_PREFIX + yesterday}";
 
-            return await payment.Where(p => EF.Property<int>(p, "StartMonth") == lastMonth
-                                            && EF.Property<int>(p, "StartYear") == year)
-                                .SumAsync(s => s.paidAmount) ?? 0;
+            var yesterdayAmount = await db.StringGetAsync(yesterdayAmountKey);
+            return yesterdayAmount.HasValue ? (long)yesterdayAmount : 0;
         }
 
-        public static async Task<decimal> ByMonthAsync(this DbSet<Payment> payment)
+        public static async Task<decimal> ByToLastMonthAsync(this DbSet<Payment> payment, Redis db)
         {
-            var month = DateTime.UtcNow.Month;
-            var year = DateTime.UtcNow.Year;
+            var lastMonth = DateOnly.FromDateTime(DateTime.UtcNow.AddMonths(-1)).ToString("yyyyMM");
+            var lastMonthAmountKey = $"{AMOUNT_MONTH_PREFIX + lastMonth}";
 
-            return await payment.Where(p => EF.Property<int>(p, "StartMonth") == month
-                                            && EF.Property<int>(p, "StartYear") == year)
-                                .SumAsync(s => s.paidAmount) ?? 0;
+            var lastMonthAmount = await db.StringGetAsync(lastMonthAmountKey);
+            return lastMonthAmount.HasValue ? (long)lastMonthAmount : 0;
+        }
+
+        public static async Task<decimal> ByMonthAsync(this DbSet<Payment> payment, Redis db)
+        {
+            var month = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyyMM");
+            var monthAmountKey = $"{AMOUNT_MONTH_PREFIX + month}";
+
+            var monthAmount = await db.StringGetAsync(monthAmountKey);
+            return monthAmount.HasValue ? (long)monthAmount : 0;
         }
 
         // Tinh ty le phan tram thay doi nguoi dung hom qua, hom nay

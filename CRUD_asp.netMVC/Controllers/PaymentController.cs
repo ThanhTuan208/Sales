@@ -5,13 +5,12 @@ using CRUD_asp.netMVC.Hubs;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Service.GHN;
-using CRUD_asp.netMVC.Service.Payment;
+using CRUD_asp.netMVC.Service.Payments;
 using CRUD_asp.netMVC.ViewModels.Order;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
-using System.Globalization;
 using System.Security.Claims;
 using System.Text;
 
@@ -28,23 +27,21 @@ namespace CRUD_asp.netMVC.Controllers
         private readonly IConnectionMultiplexer _reids;
         private readonly ISmsPaymentVerificationService _smsPaymentVerificationService;
 
-        private const string AMOUNT_TODAY_PREFIX = "amt:today:";
-        private const string AMOUNT_MONTH_PREFIX = "amt:month:";
-
         public PaymentController
             (
                     GhnService ghn,
                     AppDBContext dbContext,
                     IConnectionMultiplexer reids,
                     ISmsPaymentVerificationService smsPaymentVerificationService,
-                    IHubContext<PaymentHub> hub)
+                    IHubContext<PaymentHub> hub
+            )
         {
             _ghn = ghn;
+            _hub = hub;
             _reids = reids;
             _dbContext = dbContext;
             //_qrCodeService = qrCodeService;
             _smsPaymentVerificationService = smsPaymentVerificationService;
-            _hub = hub;
 
             //_token = config["GHN:Token"] ?? "";
             //_httpClient = httpClient;
@@ -52,7 +49,7 @@ namespace CRUD_asp.netMVC.Controllers
             //_httpClient.DefaultRequestHeaders.Add("_dbContext-Type", "application/json"); 
         }
 
-        [HttpGet]
+        [HttpGet("InfoPayment")]
         public async Task<IActionResult> InfoPayment()
         {
             var s = await _dbContext.Payment.ToListAsync();
@@ -66,127 +63,18 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpPost("SmsReceive"), IgnoreAntiforgeryToken]// Nhan sms tu dien thoai
         public async Task<IActionResult> SmsReceive([FromBody] SmsMessage sms)
         {
-            // Mo transaction -> thuc hien cho kieu toi uu sql "raw sql bulk update"
-            using var transaction = await _dbContext.Database.BeginTransactionAsync();
-
-            try
+            if (sms.Message == null || string.IsNullOrEmpty(sms.Message))
             {
-                IDatabase db = _reids.GetDatabase();
-
-                if (!sms.Message.Contains("ND:"))
-                    return BadRequest("Không đúng định dạng banking sms !");
-
-                var NDMessage = sms.Message.Split("ND:")[1].Trim();
-                var transactionCode = NDMessage.Split('-')[1];
-
-                if (!transactionCode.Contains("ORD")) return BadRequest();
-
-                // lay ma giao dich
-                var formartTransaction = transactionCode.Split("ORD")[1];
-
-                var order = await _dbContext.Orders
-                                    .AsNoTracking()
-                                    .Include(p => p.Address)
-                                    .Include(p => p.Users)
-                                    .Include(p => p.OrderDetail).ThenInclude(p => p.Product)
-                                    .FirstOrDefaultAsync(p => p.TransactionId == formartTransaction);
-
-                if (order == null) return NotFound();
-
-                var payment = new Payment()
-                {
-                    OrderID = order.ID,
-                    paidAmount = order.Amount,
-                    PaymentDate = DateTime.Now,
-                    paymentMethod = order.PaymentMethod
-                };
-
-                // Cap nhat lai trang thai sau khi chuyen khoan thanh cong
-                _dbContext.Attach(order); // huy asnotracking()
-                order.Payment = payment; // add data payment
-                order.Status = "Paid";
-                order.PaidAt = DateTime.Now;
-
-                var productIDList = order.OrderDetail.Where(p => p.OrderID == order.ID).Select(p => p.ProductID).ToList();
-
-                var productQtyList = order.OrderDetail
-                    .GroupBy(x => x.ProductID)
-                    .Select(p => new { PorductID = p.Key, ToTalQty = p.Sum(s => s.Quantity) })
-                    .ToList();
-
-                StringBuilder build = new StringBuilder();
-                foreach (var product in productQtyList)
-                {
-                    build.AppendLine($"WHEN {product.PorductID} THEN Quantity - {product.ToTalQty}");
-                }
-
-                var caseWhen = build.ToString();
-                string productIDSelected = string.Join(", ", productQtyList.Select(p => p.PorductID));
-
-                string sqlUpdateQty = $@"
-                        UPDATE Products
-                        SET Quantity = CASE ID
-                            {caseWhen}
-                            ELSE Quantity
-                        END
-                        WHERE ID IN ({productIDSelected});";
-
-                var affectRow = await _dbContext.Database.ExecuteSqlRawAsync(sqlUpdateQty);
-
-                if (affectRow > 0)
-                {
-                    await _dbContext.Carts
-                        .Where(p => p.UserID == order.UserID && productIDList.Contains(p.ProductID) && p.IsDelete)
-                        .ExecuteDeleteAsync();
-                }
-
-                _dbContext.Orders.Update(order);
-
-                await _dbContext.SaveChangesAsync();
-
-                _ = Task.Run(async () =>
-                {
-                    var date = DateTime.UtcNow.Date;
-                    var month = date.ToString("yyyyMM");
-                    var today = date.ToString("yyyyMMdd");
-
-                    string amtTodayKey = AMOUNT_TODAY_PREFIX + today;
-                    string amtMonthKey = AMOUNT_MONTH_PREFIX + month;
-
-                    var todayAmounts = await db.StringIncrementAsync(amtTodayKey, (long)order.Amount);
-                    var monthAmounts = await db.StringIncrementAsync(amtMonthKey, (long)order.Amount);
-
-                    var tasks = new
-                    {
-                        TodayMonth = todayAmounts,
-                        MonthAmount = monthAmounts
-                    };
-
-                    var s = ExpiredTime("today");
-                    var f = ExpiredTime("month");
-                    await db.KeyExpireAsync(amtTodayKey, ExpiredTime("today"));
-                    await db.KeyExpireAsync(amtMonthKey, ExpiredTime("month"));
-
-                    await _hub.Clients.All.SendAsync("ReceivePaymentStatus", tasks);
-                });
-
-                await _hub.Clients.All.SendAsync("ReceivePaymentStatus", order.ID, formartTransaction);
-
-                // Tao van don GHN sau khi thanh toan
-                //await RequestGHN(order);
-
-                //Nếu không có lỗi → commit, lưu thay đổi.
-                await transaction.CommitAsync();
-
-                return Json(new { sucess = true, message = "Thanh toán thành công." });
+                return BadRequest(new { success = false, message = "Tin nhắn không hợp lệ" });
             }
-            catch (Exception ex)
+
+            var verifyPayemt = await _smsPaymentVerificationService.ProcessResultAsync(sms.Message);
+            if (!verifyPayemt.Success)
             {
-                //Nếu có lỗi ở bất kỳ bước nào → rollback, đảm bảo dữ liệu không bị nửa vời.
-                await transaction.RollbackAsync();
-
-                return Json(new { sucess = false, message = "Thanh toán thất bại: " + ex.Message });
+                return BadRequest(new { success = false, message = verifyPayemt.Message });
             }
+
+            return Ok(new { success = true, message = sms.Message });
         }
 
         #region CallWardAPIGHN
@@ -280,8 +168,8 @@ namespace CRUD_asp.netMVC.Controllers
         //}
         #endregion
 
-        [HttpGet] // Goi trang thanh toan thanh cong
-        public async Task<IActionResult> PaymentSuccess(string orderID, string transactionCode)
+        [HttpGet("~/Payment/PaymentSuccess")] // Goi trang thanh toan thanh cong
+        public async Task<IActionResult> PaymentSuccess([FromQuery] string orderID, [FromQuery] string transactionCode)
         {
             if (string.IsNullOrEmpty(orderID) || string.IsNullOrEmpty(transactionCode))
             {
@@ -327,18 +215,17 @@ namespace CRUD_asp.netMVC.Controllers
             return View(viewModel);
         }
 
+        //[HttpGet("check-status/{orderId}")] // kiem tra 
+        //public async Task<IActionResult> CheckPaymentStatus(string orderId)
+        //{
+        //    var isPaid = await _smsPaymentVerificationService.CheckPaymentAsync(orderId);
+        //    if (isPaid)
+        //    {
+        //        return Json(new { success = true, message = "Kiểm tra thanh toán true" });
+        //    }
 
-        [HttpGet("check-status/{orderId}")] // kiem tra 
-        public async Task<IActionResult> CheckPaymentStatus(string orderId)
-        {
-            var isPaid = await _smsPaymentVerificationService.CheckPaymentAsync(orderId);
-            if (isPaid)
-            {
-                return Json(new { success = true, message = "Kiểm tra thanh toán true" });
-            }
-
-            return Json(new { success = false, message = "Thanh toán thất bại" });
-        }
+        //    return Json(new { success = false, message = "Thanh toán thất bại" });
+        //}
 
         public TimeSpan ExpiredTime(string time)
         {

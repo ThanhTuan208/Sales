@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using CRUD_asp.netMVC.Models.Auth;
 
-namespace CRUD_asp.netMVC.Service.Payment.SiteVisitService
+namespace CRUD_asp.netMVC.Service.Users
 {
     public class SiteUserVisitService : ISiteUserVisitService
     {
@@ -31,10 +31,20 @@ namespace CRUD_asp.netMVC.Service.Payment.SiteVisitService
             var dauKey = $"{DAU_KEY_PREFIX + yesterday}";
             var totalKey = $"{TOTAL_KEY_PREFIX + yesterday}";
 
-            var totalVisits = await db.StringGetAsync(totalKey);
+            var amtTodayKey = $"{AMOUNT_TODAY_PREFIX + yesterday}";
+            var amtMonthKey = $"{AMOUNT_MONTH_PREFIX + DateTime.UtcNow.ToString("yyyyMM")}";
+
             var totalCount = await db.HyperLogLogLengthAsync(dauKey);
 
+            var totalVisits = await db.StringGetAsync(totalKey);
             long userVisitor = !totalVisits.IsNullOrEmpty ? (long)totalVisits : 0;
+
+            var dayAmounts = await db.StringGetAsync(amtTodayKey);
+            long dayValue = dayAmounts.HasValue ? (long)dayAmounts : 0;
+
+            var monthAmounts = await db.StringGetAsync(amtMonthKey);
+            long monthValue = monthAmounts.HasValue ? (long)monthAmounts : 0;
+
             long dailyActiveUsers = totalCount;
 
             bool exists = await _dbContext.SiteUser.AnyAsync(p => p.Date == DateTime.UtcNow.AddDays(-1).Date);
@@ -46,8 +56,8 @@ namespace CRUD_asp.netMVC.Service.Payment.SiteVisitService
                     Date = DateTime.UtcNow.AddDays(-1).Date,
                     DailyActiveUsers = dailyActiveUsers,
                     UniqueVisitors = userVisitor,
-                    TodayAmounts = 0,
-                    MonthAmounts = 0,
+                    TodayAmounts = dayValue,
+                    MonthAmounts = monthValue,
                     CreatedAt = DateTime.UtcNow,
                 });
 

@@ -45,14 +45,34 @@ $(document).ready(function () {
 
         connection.on("ReceiveCurrentStatus", (data) => {
 
-            $('#uv strong').text(data.totalVisits.toLocaleString());
-            $('#dau strong').text(data.dailyActiveUsers.toLocaleString());
+            if (data.totalVisits !== undefined && data.totalVisits !== null) {
 
-            $('#uv-percents').text(data.uvPercents.toLocaleString());
-            $('#dau-percents').text(data.dauPercents.toLocaleString());
+                $('#uv strong').text(data.totalVisits.toLocaleString());
+                $('#uv-percents').text(data.uvPercents.toLocaleString());
 
+                $('#dau strong').text(data.dailyActiveUsers.toLocaleString());
+                $('#dau-percents').text(data.dauPercents.toLocaleString());
+            }
+
+            if (data.todayAmount !== undefined && data.todayAmount !== null) {
+
+                $('#today-revenues strong').text(formatVND(data.todayAmount));
+                $('#day-revenue-percents').text(data.taPercents.toLocaleString());
+
+                $('#month-revenues strong').text(formatVND(data.monthAmount));
+                $('#month-revenue-percents').text(data.maPercents.toLocaleString());
+            }
         })
     });
+
+    function formatVND(amount) {
+        if (amount === undefined || amount === null) return '0 ₫';
+
+        return amount.toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
+    }
 
     $(function () { // Loading screen cho thay doi email ho so
         const connection = new signalR.HubConnectionBuilder()

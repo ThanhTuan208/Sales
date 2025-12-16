@@ -1,8 +1,8 @@
 ﻿import { updateQtyAfterCheck, GetArrIDChecked, LoadView } from './js.js';
 import { startCountdown } from './globalGeneralFunc.js';
 
-$(document).ready(function () {
 
+$(document).ready(function () {
     LoadView();
 
     // chay timer ban dau
@@ -71,42 +71,70 @@ $(document).ready(function () {
     $(function () {
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/paymentHub")
+            .withAutomaticReconnect([0, 2000, 5000, 10000]) // Thử lại ngay, sau 2s, 5s, 10s...
             .build();
 
-        connection.start()
-            .catch(err => console.error(err));
+        // Hàm đăng ký handler - gọi lại mỗi khi connect/reconnect thành công
+        function registerPaymentHandler() {
+            connection.on("ReceivePaymentStatus", (orderId, transactionCode) => {
+                console.log("Nhận tín hiệu thanh toán thành công:", orderId, transactionCode);
 
-        connection.on("ReceivePaymentStatus", (orderId, transactionCode) => {
-            const overlay = $("#overlayStatus");
-            const spinner = overlay.find(".spinner");
-            const successIcon = overlay.find(".success-icon");
-            const successText = overlay.find(".success-text");
+                const overlay = $("#overlayStatus");
+                const spinner = overlay.find(".spinner");
+                const successIcon = overlay.find(".success-icon");
+                const successText = overlay.find(".success-text");
 
-            overlay.show();
-            spinner.show();
-            successIcon.hide();
-            successText.hide();
+                overlay.show();
+                spinner.show();
+                successIcon.hide();
+                successText.hide();
 
-            setTimeout(() => {
-                spinner.fadeOut(300, function () {
-                    successIcon.fadeIn(300);
-                    successText.fadeIn(300);
-                });
-
-                // Ẩn modal và overlay sau 3s
                 setTimeout(() => {
+                    spinner.fadeOut(300, () => {
+                        successIcon.fadeIn(300);
+                        successText.fadeIn(300);
+                    });
 
-                    overlay.fadeOut();
-                    $(".modal-overlay").fadeOut(200);
-                    $(".modal").removeClass("active").fadeOut(200);
+                    setTimeout(() => {
+                        overlay.fadeOut();
+                        $(".modal-overlay").fadeOut(200);
+                        $(".modal").removeClass("active").fadeOut(200);
 
-                    window.location.replace(`/Payment/PaymentSuccess?orderID=${encodeURIComponent(orderId)}&transactionCode=${encodeURIComponent(transactionCode)}`);
-                }, 3000);
+                        // Ưu tiên dùng redirect thay vì AJAX để tránh lỗi routing/session
+                        //window.location.href = `/Payment/ErrorVal`;
+                        window.location.href = `/Payment/PaymentSuccess?orderID=${encodeURIComponent(orderId)}&transactionCode=${encodeURIComponent(transactionCode)}`;
+                    }, 3000);
+                }, 2000);
+            });
+        }
 
-            }, 2000);
-        })
+        // Hàm khởi động connection
+        function startConnection() {
+            connection.start()
+                .then(() => {
+                    console.log("SignalR connected successfully");
+                    registerPaymentHandler(); // Đăng ký lại handler
+                })
+                .catch(err => {
+                    console.error("SignalR connection failed:", err);
+                    setTimeout(startConnection, 5000);
+                });
+        }
+
+        // Xử lý khi connection bị đóng
+        connection.onclose(() => {
+            console.warn("SignalR connection closed. Reconnecting...");
+        });
+
+        // Xử lý khi reconnect thành công (rất quan trọng!)
+        connection.onreconnected(() => {
+            console.log("SignalR reconnected successfully!");
+            registerPaymentHandler(); // Đăng ký lại handler sau reconnect
+        });
+
+        // Bắt đầu kết nối
+        startConnection();
     });
-
 
     // Xu ly chuc nang, giao dien trang thai thanh toan //
     $(function () {

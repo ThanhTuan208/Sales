@@ -16,9 +16,6 @@ namespace CRUD_asp.netMVC.Middleware
         private const string TOTAL_KEY_PREFIX = "uv:total:"; // total visits
         private const string DAU_KEY_PREFIX = "hll:dau:"; // daily active users
 
-        private const string AMOUNT_TODAY_PREFIX = "amt:today:"; // amount in day
-        private const string AMOUNT_MONTH_PREFIX = "amt:month:"; // amount in month
-
         private const string ChannelName = "site:updates";
 
         public VisitCountUserMiddleware(RequestDelegate next, IConnectionMultiplexer redis)

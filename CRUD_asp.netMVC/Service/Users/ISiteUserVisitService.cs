@@ -1,4 +1,4 @@
-﻿namespace CRUD_asp.netMVC.Service.Payment.SiteVisitService
+﻿namespace CRUD_asp.netMVC.Service.Users
 {
     public interface ISiteUserVisitService
     {
