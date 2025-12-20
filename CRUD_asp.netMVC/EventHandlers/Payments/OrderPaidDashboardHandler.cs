@@ -76,7 +76,6 @@ namespace CRUD_asp.netMVC.EventHandlers.Payments
             await db.KeyExpireAsync(amtTodayKey, ExpiredTime("today"));
             await db.KeyExpireAsync(amtMonthKey, ExpiredTime("month"));
 
-
             await _hub.Clients.All.SendAsync("ReceiveCurrentStatus", tasks);
         }
 
@@ -86,9 +85,9 @@ namespace CRUD_asp.netMVC.EventHandlers.Payments
 
             DateTime expireAt = type switch
             {
-                "today" => now.Date.AddDays(1),
+                "today" => now.Date.AddDays(2),
                 "month" => new DateTime(now.Year, now.Month, 1).AddMonths(1),
-                _ => now.AddDays(1)
+                _ => now.AddDays(2)
             };
 
             return expireAt - now;

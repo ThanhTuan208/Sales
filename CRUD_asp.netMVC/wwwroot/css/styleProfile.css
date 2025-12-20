@@ -1,0 +1,362 @@
+﻿:root {
+    --bg: #fffaf0;
+    --card-bg: #fffdf7;
+    --text: #1a1a1a;
+    --muted: #4b5563;
+    --primary: #d4af37;
+    --gradient-start: #fff9e6;
+    --gradient-end: #ffe8a3;
+    --shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+    --card-border: rgba(212, 175, 55, 0.2);
+    --glow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+[data-theme="dark"] {
+    --bg: #1e2a3f;
+    --card-bg: #25334a;
+    --text: #f1f5f9;
+    --muted: #cbd5e1;
+    --primary: #ffd700;
+    --gradient-start: #25334a;
+    --gradient-end: #4f46e5;
+    --shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+    --card-border: rgba(255, 215, 0, 0.35);
+    --glow: 0 0 20px rgba(255, 215, 0, 0.45);
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, sans-serif;
+    transition: all 0.4s ease;
+    min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--text) !important;
+}
+
+.text-muted {
+    color: var(--muted) !important;
+}
+
+.amount-positive {
+    color: #10b981 !important;
+}
+
+[data-theme="dark"] .amount-positive {
+    color: #4ade80 !important;
+}
+
+.amount-negative {
+    color: #ef4444 !important;
+}
+
+[data-theme="dark"] .amount-negative {
+    color: #f87171 !important;
+}
+
+.container {
+    max-width: 1400px;
+    padding: 2.5rem 1rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+.balance-card {
+    background: linear-gradient( 135deg, var(--gradient-start), var(--gradient-end) );
+    background-size: 200% 200%;
+    animation: gradientFlow 16s ease infinite;
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: var(--shadow);
+    text-align: center;
+    border: 1px solid var(--card-border);
+    transition: all 0.4s ease;
+}
+
+    .balance-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--glow), var(--shadow);
+    }
+
+@keyframes gradientFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.balance-amount {
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--text);
+}
+
+.stats-grid {
+    display: flex;
+    gap: 1rem;
+}
+
+.stats-item {
+    flex: 1;
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    text-align: center;
+    border: 1px solid var(--card-border);
+    transition: all 0.3s ease;
+}
+
+    .stats-item:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--glow), var(--shadow);
+    }
+
+.stats-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 0.8rem;
+}
+
+/* Timeline giao dịch */
+.timeline {
+    position: relative;
+    padding-left: 2.5rem;
+}
+
+    .timeline::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 1.2rem;
+        width: 2px;
+        background: var(--primary);
+        opacity: 0.3;
+    }
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 1.3rem;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    border: 1px solid var(--card-border);
+}
+
+    .timeline-item:hover {
+        transform: translateX(8px);
+        box-shadow: var(--glow), var(--shadow);
+    }
+
+    .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -2.2rem;
+        top: 1.5rem;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--primary);
+        border: 3px solid var(--card-bg);
+        box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+    }
+
+.withdraw-btn {
+    background-color: transparent;
+    border: 2px solid #dc3545;
+    color: #dc3545;
+    font-weight: bold;
+    padding: 0.8rem 2.5rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    margin-top: 1.5rem;
+}
+
+    .withdraw-btn:hover {
+        background-color: #dc3545;
+        color: white;
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+    }
+
+.view-all-btn {
+    background-color: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    font-weight: bold;
+    padding: 0.7rem 2rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    display: inline-block;
+}
+
+    .view-all-btn:hover {
+        background-color: var(--primary);
+        color: white;
+        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    }
+
+.theme-toggle {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--text);
+    transition: transform 0.3s;
+}
+
+    .theme-toggle:hover {
+        transform: rotate(20deg);
+    }
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.9s forwards;
+}
+
+.view-all-link {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+    .view-all-link:hover {
+        color: var(--primary-dark);
+        text-decoration: underline;
+    }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .balance-card {
+        height: auto;
+        padding: 2rem;
+    }
+
+    .timeline {
+        padding-left: 1.5rem;
+    }
+
+        .timeline::before {
+            left: 0.8rem;
+        }
+
+    .timeline-item::before {
+        left: -1.4rem;
+    }
+
+    .balance-amount {
+        font-size: 2.8rem;
+    }
+
+    .stats-icon {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 1.5rem 1rem;
+    }
+
+    .header {
+        margin-bottom: 1.5rem;
+    }
+
+    .balance-amount {
+        font-size: 2.2rem;
+    }
+
+    .balance-card {
+        padding: 1.8rem 1rem;
+        border-radius: 1rem;
+    }
+
+    .timeline-item {
+        padding: 1rem;
+    }
+
+    .withdraw-btn,
+    .view-all-btn {
+        width: 100%;
+        padding: 0.8rem;
+    }
+
+    .row.g-4 {
+        gap: 1rem !important;
+    }
+
+    /* Giữ stats-grid ngang 50-50 trên mobile */
+    .stats-grid {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .stats-item {
+        flex: 1 1 45%;
+        max-width: 48%;
+        min-width: 45%;
+        padding: 1.2rem;
+    }
+
+        /* Tối ưu chữ nhỏ hơn cho mobile */
+        .stats-item h6 {
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-item h4 {
+            font-size: 1.25rem;
+        }
+
+    .stats-icon {
+        font-size: 1.8rem;
+        margin-bottom: 0.6rem;
+    }
+
+    /* Timeline */
+    .timeline {
+        padding-left: 1.2rem;
+    }
+
+        .timeline::before {
+            left: 0.6rem;
+        }
+
+    .timeline-item::before {
+        left: -1.2rem;
+        top: 1.2rem;
+    }
+}

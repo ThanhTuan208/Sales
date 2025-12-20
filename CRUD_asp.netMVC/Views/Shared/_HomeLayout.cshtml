@@ -16,13 +16,13 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styleProfile.css" asp-append-version="true" />
 
     <!-- Animate.css -->
     <link rel="stylesheet" href="~/css/animate.css" asp-append-version="true">
     <!-- Icomoon Icon Fonts-->
     <link rel="stylesheet" href="~/css/icomoon.css" asp-append-version="true">
     <!-- Bootstrap  -->
-
     <link rel="stylesheet" href="~/css/bootstrap.css" asp-append-version="true">
     <!-- Flexslider  -->
     <link rel="stylesheet" href="~/css/flexslider.css" asp-append-version="true">
@@ -41,9 +41,10 @@
     <div id="page">
         <nav class="fh5co-nav fixed-top" role="navigation">
             <div class="container">
-                <div class="row">
+                <div class="row">   
                     <div class="col-md-2 col-xs-2">
-                        <div id="fh5co-logo"><a asp-action="Index" asp-controller="Home">E-commerce.</a></div>
+                        <div id="fh5co-logo"><a href="@Url.Content($"~/Home/Index")">Ecommerce</a></div>
+
                     </div>
                     <div class="col-md-5 col-xs-5 text-center menu-1">
                         <ul>

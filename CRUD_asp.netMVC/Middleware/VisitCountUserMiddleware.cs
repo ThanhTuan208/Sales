@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
+﻿using CRUD_asp.netMVC.Data;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.FileSystemGlobbing.Internal.PatternContexts;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
 using StackExchange.Redis;
+using System.IO;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 
 namespace CRUD_asp.netMVC.Middleware
@@ -28,8 +31,13 @@ namespace CRUD_asp.netMVC.Middleware
         {
             var db = _redis.GetDatabase();
             var subscriber = _redis.GetSubscriber();
-            
-            var pathLink = context.Request.Path.ToString();
+
+            var path = context.Request.Path.Value?.ToLower();
+            if (!string.IsNullOrEmpty(path) && IsPath(path))
+            {
+                await _next(context);
+                return;
+            }
 
             var today = DateTime.UtcNow.ToString("yyyyMMdd");
             var month = DateTime.UtcNow.ToString("yyyyMM");
@@ -40,6 +48,8 @@ namespace CRUD_asp.netMVC.Middleware
 
             if (!context.Request.Cookies.ContainsKey(cookieName))
             {
+                var count = await db.StringGetAsync(totalKey);
+
                 await db.StringIncrementAsync(totalKey);
                 var expires = DateTime.UtcNow.Date.AddDays(1).AddMinutes(-1); // thoi gian het han
 
@@ -59,12 +69,13 @@ namespace CRUD_asp.netMVC.Middleware
 
                 // Publish event (payload nhẹ: chỉ ngày)
                 await subscriber.PublishAsync(ChannelName, today);
+                
             }
 
             // Dem DAU neu user da login
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var isAdmin = context.User.FindFirst(ClaimTypes.Role)?.Value.ToLower();
-
+            var s = await db.StringGetAsync(totalKey);
             if (!string.IsNullOrEmpty(userId) && isAdmin != "admin")
             {
                 // DÙNG PFADD THAY SADD (nhanh, tiet kiem dung luong hon db.SetAddAsync())
@@ -78,6 +89,16 @@ namespace CRUD_asp.netMVC.Middleware
             }
 
             await _next(context);
+        }
+
+        public bool IsPath(string path)
+        {
+            return path.StartsWith("/css")
+                 || path.StartsWith("/js")
+                 || path.StartsWith("/lib")
+                 || path.StartsWith("/favicon")
+                 || path.StartsWith("/images")
+                 || path.StartsWith("/assets");
         }
     }
 }

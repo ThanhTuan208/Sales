@@ -1,0 +1,110 @@
+﻿@using CRUD_asp.netMVC.ViewModels.Home
+@using System.Globalization
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "_HomeLayout";
+}
+
+<div class="container">
+      <div class="header fade-in">
+        <h2 class="mb-0 fw-semibold">Ví Điện Tử</h2>
+        <button class="theme-toggle" id="themeToggle">
+          <i class="bi bi-moon-stars-fill"></i>
+        </button>
+      </div>
+
+      <div class="row g-4">
+        <!-- Bên trái 60% -->
+        <div class="col-lg-7 fade-in">
+          <!-- Số dư hiện tại (trên) -->
+          <div class="balance-card mb-4">
+            <h5 class="fw-light text-muted mb-3">Số tiền dư hiện tại</h5>
+            <div class="balance-amount">
+              12.450.000 <span class="fs-4">VND</span>
+            </div>
+            <p class="mt-4 mb-0 text-muted small">
+              Cập nhật: 20/12/2025 - 14:30
+            </p>
+          </div>
+
+          <!-- Thống kê (dưới, chia 50-50) -->
+          <div class="stats-grid">
+            <div class="stats-item">
+              <i class="bi bi-arrow-up-circle-fill stats-icon"></i>
+              <h6 class="text-muted mb-1">Đã nạp tháng này</h6>
+              <h4 class="fw-bold text-success">+5.200.000 ₫</h4>
+            </div>
+            <div class="stats-item">
+              <i class="bi bi-arrow-down-circle-fill stats-icon"></i>
+              <h6 class="text-muted mb-1">Đã chi</h6>
+              <h4 class="fw-bold text-danger">-3.850.000 ₫</h4>
+            </div>
+          </div>
+
+          <!-- Nút rút tiền dư -->
+          <div class="text-center mt-4">
+            <button class="withdraw-btn">Yêu cầu hoàn tiền</button>
+          </div>
+        </div>
+
+        <!-- Bên phải 40%: Giao dịch gần đây -->
+        <div class="col-lg-5 fade-in">
+          <div
+            class="card rounded-4 h-100"
+            style="
+              background: var(--card-bg);
+              box-shadow: var(--shadow);
+              border: none;
+            "
+          >
+            <div class="card-header bg-transparent border-bottom py-3">
+              <h5 class="mb-0">Giao dịch gần đây</h5>
+            </div>
+            <div class="card-body timeline">
+              <div
+                class="timeline-item d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <h6 class="mb-1">Chuyển khoản cho Trần Thị B</h6>
+                  <small class="text-muted">20/12/2025 - 13:45</small>
+                </div>
+                <span class="amount-negative fw-bold">-450.000 ₫</span>
+              </div>
+              <div
+                class="timeline-item d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <h6 class="mb-1">Nạp từ Vietcombank</h6>
+                  <small class="text-muted">19/12/2025 - 09:30</small>
+                </div>
+                <span class="amount-positive fw-bold">+2.000.000 ₫</span>
+              </div>
+              <div
+                class="timeline-item d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <h6 class="mb-1">Thanh toán Shopee</h6>
+                  <small class="text-muted">18/12/2025 - 18:20</small>
+                </div>
+                <span class="amount-negative fw-bold">-1.250.000 ₫</span>
+              </div>
+              <div
+                class="timeline-item d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <h6 class="mb-1">Nhận tiền từ bạn bè</h6>
+                  <small class="text-muted">17/12/2025 - 14:10</small>
+                </div>
+                <span class="amount-positive fw-bold">+800.000 ₫</span>
+              </div>
+            </div>
+
+            <!-- Nút Xem tất cả giao dịch -->
+            <div class="card-footer bg-transparent text-center py-3">
+              <a href="#" class="view-all-link">Xem tất cả giao dịch</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

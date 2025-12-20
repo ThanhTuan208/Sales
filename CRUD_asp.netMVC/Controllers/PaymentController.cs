@@ -16,15 +16,11 @@ using System.Text;
 
 namespace CRUD_asp.netMVC.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController, Route("api/[controller]")]
     public class PaymentController : Controller
     {
         private readonly GhnService _ghn;
         private readonly AppDBContext _dbContext;
-        private readonly IHubContext<PaymentHub> _hub;
-        //private readonly QrCodeService _qrCodeService;
-        private readonly IConnectionMultiplexer _reids;
         private readonly ISmsPaymentVerificationService _smsPaymentVerificationService;
 
         public PaymentController
@@ -37,8 +33,6 @@ namespace CRUD_asp.netMVC.Controllers
             )
         {
             _ghn = ghn;
-            _hub = hub;
-            _reids = reids;
             _dbContext = dbContext;
             //_qrCodeService = qrCodeService;
             _smsPaymentVerificationService = smsPaymentVerificationService;
@@ -68,10 +62,10 @@ namespace CRUD_asp.netMVC.Controllers
                 return BadRequest(new { success = false, message = "Tin nhắn không hợp lệ" });
             }
 
-            var verifyPayemt = await _smsPaymentVerificationService.ProcessResultAsync(sms.Message);
-            if (!verifyPayemt.Success)
+            var verifyPayment = await _smsPaymentVerificationService.ProcessResultAsync(sms.Message);
+            if (!verifyPayment.Success)
             {
-                return BadRequest(new { success = false, message = verifyPayemt.Message });
+                return BadRequest(new { success = false, message = verifyPayment.Message });
             }
 
             return Ok(new { success = true, message = sms.Message });
@@ -214,18 +208,6 @@ namespace CRUD_asp.netMVC.Controllers
 
             return View(viewModel);
         }
-
-        //[HttpGet("check-status/{orderId}")] // kiem tra 
-        //public async Task<IActionResult> CheckPaymentStatus(string orderId)
-        //{
-        //    var isPaid = await _smsPaymentVerificationService.CheckPaymentAsync(orderId);
-        //    if (isPaid)
-        //    {
-        //        return Json(new { success = true, message = "Kiểm tra thanh toán true" });
-        //    }
-
-        //    return Json(new { success = false, message = "Thanh toán thất bại" });
-        //}
 
         public TimeSpan ExpiredTime(string time)
         {

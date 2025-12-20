@@ -19,8 +19,8 @@ namespace CRUD_asp.netMVC.Service.Payments
 {
     public class SmsPaymentVerificationService : ISmsPaymentVerificationService
     {
-        private readonly AppDBContext _dbContext;
         private readonly IEventBus _event;
+        private readonly AppDBContext _dbContext;
 
         public SmsPaymentVerificationService(AppDBContext dbContext, IEventBus @event)
         {
@@ -35,16 +35,27 @@ namespace CRUD_asp.netMVC.Service.Payments
                 return ResultDTO.Fail("Tin nhắn không được null hoặc rỗng!");
             }
 
-            var regex = Regex.Match(message, @"ORD([^-]+)");
-            if (!regex.Success)
+            var transactionCode = Regex.Match(message, @"ORD([^-]+)");
+            var amountPayment = Regex.Match(message, @"GD\s*\+([\d,]+)VND");
+
+            if (!transactionCode.Success)
             {
                 return ResultDTO.Fail("Mã đơn hàng được gửi đến không hợp lệ (giữ mã giao dịch ORD...)!");
             }
 
             using var transactions = await _dbContext.Database.BeginTransactionAsync();
+
             try
             {
-                var transactionId = regex.Groups[1].Value;
+                var transactionId = transactionCode.Groups[1].Value;
+
+                if (decimal.TryParse(amountPayment.Groups[1].Value, out decimal amountRecive))
+                {
+                    if (amountRecive == 0)
+                    {
+                        return ResultDTO.Fail("Thành toán đơn hàng thất bại!");
+                    }
+                }
 
                 var order = await _dbContext.Orders
                                         .AsNoTracking()
@@ -61,6 +72,12 @@ namespace CRUD_asp.netMVC.Service.Payments
                 if (order.Status == "Paid")
                 {
                     return ResultDTO.OK("Đơn hàng đã được thanh toán trước đó!");
+                }
+
+                if (order.Amount != amountRecive)
+                {
+
+                    return ResultDTO.Fail("Số tiền thanh toán không đúng giá trị đơn hàng!");
                 }
 
                 _dbContext.Payment.Add(new PaymentModel()
@@ -93,7 +110,7 @@ namespace CRUD_asp.netMVC.Service.Payments
                 await _dbContext.SaveChangesAsync();
                 await transactions.CommitAsync();
 
-                await _event.PublishAsync(new OrderPaidEvent(order.ID, order.TransactionId));
+                await _event.PublishAsync(new OrderPaidEvent(order.ID, order.TransactionId, true));
 
                 return ResultDTO.OK("Thanh toán thành công.");
             }

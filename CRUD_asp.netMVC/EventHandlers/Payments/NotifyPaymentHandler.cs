@@ -13,7 +13,7 @@ namespace CRUD_asp.netMVC.EventHandlers.Payments
 
         public async Task HandleAsync(OrderPaidEvent evt)
         {
-            await _hub.Clients.All.SendAsync("ReceivePaymentStatus", evt.OrderId, evt.TransactionId);
+            await _hub.Clients.All.SendAsync("ReceivePaymentStatus", evt.OrderId, evt.TransactionId, evt.IsSuccess);
         }
     }
 }

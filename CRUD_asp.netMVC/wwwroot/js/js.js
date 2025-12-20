@@ -27,11 +27,35 @@ $(document).ready(function () {
         }
     });
 
+    // Xu ly wallet profile
+    const $toggleBtn = $("#themeToggle");
+    const $body = $("body");
+    const $icon = $toggleBtn.find("i");
+
+    // Kiểm tra theme lúc load trang
+    if (localStorage.getItem("theme") === "dark") {
+        $body.attr("data-theme", "dark");
+        $icon.removeClass("bi-moon-stars-fill").addClass("bi-sun-fill");
+    }
+
+    // Click toggle
+    $toggleBtn.on("click", function () {
+        if ($body.attr("data-theme") === "dark") {
+            $body.removeAttr("data-theme");
+            $icon.removeClass("bi-sun-fill").addClass("bi-moon-stars-fill");
+            localStorage.setItem("theme", "light");
+        } else {
+            $body.attr("data-theme", "dark");
+            $icon.removeClass("bi-moon-stars-fill").addClass("bi-sun-fill");
+            localStorage.setItem("theme", "dark");
+        }
+    });
+    // Xu ly wallet profile
+
     $('.sort-btn').on('click', function () {
         $('.sort-btn').removeClass('active');
         $(this).addClass('active');
     });
-
 
     $(function () { // Cap nhat real-time cho Dashboard View (DAU,UV)
         const connection = new signalR.HubConnectionBuilder()

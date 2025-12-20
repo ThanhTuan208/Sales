@@ -76,7 +76,7 @@ $(document).ready(function () {
 
         // Hàm đăng ký handler - gọi lại mỗi khi connect/reconnect thành công
         function registerPaymentHandler() {
-            connection.on("ReceivePaymentStatus", (orderId, transactionCode) => {
+            connection.on("ReceivePaymentStatus", (orderId, transactionCode, isSuccess) => {
                 console.log("Nhận tín hiệu thanh toán thành công:", orderId, transactionCode);
 
                 const overlay = $("#overlayStatus");
@@ -100,9 +100,12 @@ $(document).ready(function () {
                         $(".modal-overlay").fadeOut(200);
                         $(".modal").removeClass("active").fadeOut(200);
 
-                        // Ưu tiên dùng redirect thay vì AJAX để tránh lỗi routing/session
-                        //window.location.href = `/Payment/ErrorVal`;
-                        window.location.href = `/Payment/PaymentSuccess?orderID=${encodeURIComponent(orderId)}&transactionCode=${encodeURIComponent(transactionCode)}`;
+                        if (isSuccess) {
+
+                            window.location.href = `/Payment/PaymentSuccess?orderID=${encodeURIComponent(orderId)}&transactionCode=${encodeURIComponent(transactionCode)}`;
+                        }
+                        else window.location.href = `/Payment/PaymentFail?orderID=${encodeURIComponent(orderId)}&transactionCode=${encodeURIComponent(transactionCode)}`;
+
                     }, 3000);
                 }, 2000);
             });
@@ -395,7 +398,7 @@ $(document).ready(function () {
                                 resetQR: true,
                                 PaymentMethod: ArrChecked.paymentMethod
                             },
-                            traditional: true, 
+                            traditional: true,
                             success: function (response) {
                                 $(".modal-right").html(response);
 
@@ -476,7 +479,7 @@ $(document).ready(function () {
             success: function (response) {
                 console.log("Hiển thị modal thêm địa chỉ thành công. ");
 
-                $(".modal-left").html(response); 
+                $(".modal-left").html(response);
                 updateQtyAfterCheck();
                 LoadDataAddress(); // hien thi json address VN
             },
@@ -500,9 +503,9 @@ $(document).ready(function () {
             url: "/Cart/ShowQrModalCart",
             type: "GET",
             data: { arrID: ids },
-            traditional: true, 
+            traditional: true,
             success: function (response) {
-                $(".modal-left").html(response); 
+                $(".modal-left").html(response);
                 updateQtyAfterCheck();
             },
 

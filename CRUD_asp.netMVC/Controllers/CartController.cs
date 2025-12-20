@@ -158,7 +158,6 @@ namespace CRUD_asp.netMVC.Controllers
 
                         }
                         else return PartialView("_ListAddressPartial", viewModel);
-
                     }
                     else
                     {
@@ -198,7 +197,7 @@ namespace CRUD_asp.netMVC.Controllers
                     {
                         var address = await _dbContext.Addresses.FirstOrDefaultAsync(p => p.UserID == userID && p.IsDefault);
 
-                        string timeID = Regex.Replace(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), @"[/:\s]", "") + "VN_NTT";
+                        string timeID = Regex.Replace(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss:fff"), @"[/:\s]", "") + "VN_NTT";
 
                         var order = new Orders
                         {

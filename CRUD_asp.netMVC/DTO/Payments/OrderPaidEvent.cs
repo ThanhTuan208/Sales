@@ -2,13 +2,15 @@
 {
     public class OrderPaidEvent
     {
-        public OrderPaidEvent(string orderId, string transactionId)
+        public OrderPaidEvent(string orderId, string transactionId, bool isSuccess)
         {
             OrderId = orderId;
             TransactionId = transactionId;
+            IsSuccess = isSuccess;
         }
 
         public string OrderId { get; set; }
         public string TransactionId { get; set; }
+        public bool IsSuccess { get; set; }
     }
 }

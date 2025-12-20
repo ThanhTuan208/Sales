@@ -38,12 +38,13 @@ public class HomeController : Controller
         _environment = environment;
     }
 
-    [HttpPost] // Cap nhat trang thai don hang
-    //public async Task<IActionResult> UpdateStatus()
-    //{
-
-    //}
-
+    [HttpGet()] // Hien thi so du thanh toan
+    public async Task<IActionResult> SurplusManager()
+    {
+        var viewModel = await MethodGeneralAsync();
+        return View(viewModel);
+    }
+   
     [HttpGet] // Lazy load du lieu cho sp da thanh toan
     public async Task<IActionResult> LoadMoreOrders(int offset = 0, int limit = 5)
     {
@@ -95,7 +96,7 @@ public class HomeController : Controller
                 orderDetailList.Where(p => p.OrderID == item.OrderID).ToList();
             }
 
-            var viewModel = await MethodGeneral();
+            var viewModel = await MethodGeneralAsync();
             viewModel.OrderPayList = orderDetailList;
             viewModel.PaymentList = paymentOrderList;
 
@@ -233,7 +234,7 @@ public class HomeController : Controller
         }
     }
 
-    [HttpPost, ValidateAntiForgeryToken] // Gui ma email de doi gmail moi
+    [HttpPost] // Gui ma email de doi gmail moi
     public async Task<IActionResult> UpdateEmailProfile(string Email, [FromServices] IEmailSender emailSender)
     {
         var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
@@ -307,7 +308,7 @@ public class HomeController : Controller
         });
     }
 
-    [HttpPost, ValidateAntiForgeryToken] // Quay lai trang modal 
+    [HttpPost] // Quay lai trang modal 
     public async Task<IActionResult> ConfirmEmail(string NewEmail, string UserID, string OTPCode)
     {
         try
@@ -359,7 +360,7 @@ public class HomeController : Controller
     {
         try
         {
-            var viewModel = await MethodGeneral();
+            var viewModel = await MethodGeneralAsync();
             return PartialView("_ModalChangeProfilePartial", viewModel);
         }
         catch (Exception ex)
@@ -369,13 +370,36 @@ public class HomeController : Controller
         }
     }
 
+    [HttpGet] // Hien thi giao dien trang chu
+    public async Task<IActionResult> DisplayInfo(string option)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(option))
+            {
+                return NotFound();
+            }
+            var viewModel = await MethodGeneralAsync();
+
+            if (viewModel.User == null) return NotFound();
+
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+
+            return BadRequest(ex.Message);
+        }
+        
+    }
 
     [HttpGet] // Hien thi giao dien trang chu
     public async Task<IActionResult> MyProfile()
     {
         try
         {
-            var viewModel = await MethodGeneral();
+            var viewModel = await MethodGeneralAsync();
+
             if (viewModel.User == null) return NotFound();
 
             return View(viewModel);
@@ -392,7 +416,7 @@ public class HomeController : Controller
     {
         try
         {
-            var viewModel = await MethodGeneral();
+            var viewModel = await MethodGeneralAsync();
             return View(viewModel);
         }
         catch (Exception ex)
@@ -407,7 +431,7 @@ public class HomeController : Controller
     {
         try
         {
-            var viewModel = await MethodGeneral();
+            var viewModel = await MethodGeneralAsync();
             return View(viewModel);
         }
         catch (Exception ex)
@@ -422,7 +446,7 @@ public class HomeController : Controller
     {
         try
         {
-            var viewModel = await MethodGeneral();
+            var viewModel = await MethodGeneralAsync();
             return View(viewModel);
         }
         catch (Exception ex)
@@ -503,7 +527,7 @@ public class HomeController : Controller
     }
 
     // Phuong thuc load du lieu chung
-    public async Task<HomeViewModel> MethodGeneral()
+    public async Task<HomeViewModel> MethodGeneralAsync()
     {
         var product = await _dbContext.Products.AsNoTracking()
             .Include(p => p.Brands)
