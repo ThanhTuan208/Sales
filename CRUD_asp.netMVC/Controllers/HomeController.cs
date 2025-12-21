@@ -1,7 +1,9 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Home;
+using CRUD_asp.netMVC.Extensions.RenderViewGeneral;
 using CRUD_asp.netMVC.Hubs;
 using CRUD_asp.netMVC.Models.Auth;
+using CRUD_asp.netMVC.Service.Home;
 using CRUD_asp.netMVC.ViewModels.Home;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,8 +29,18 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly IHubContext<LoadViewHub> _hub;
     private readonly IWebHostEnvironment _environment;
+    private readonly IDisplayProfileUserService _profile;
 
-    public HomeController(ILogger<HomeController> logger, AppDBContext _context, UserManager<Users> userManager, IMemoryCache cache, IHubContext<LoadViewHub> hub, IWebHostEnvironment environment)
+    public HomeController
+        (
+            ILogger<HomeController> logger,
+            AppDBContext _context,
+            UserManager<Users> userManager,
+            IMemoryCache cache,
+            IHubContext<LoadViewHub> hub,
+            IWebHostEnvironment environment,
+            IDisplayProfileUserService profile
+        )
     {
         _logger = logger;
         _dbContext = _context;
@@ -36,15 +48,16 @@ public class HomeController : Controller
         _cache = cache;
         _hub = hub;
         _environment = environment;
+        _profile = profile;
     }
 
-    [HttpGet()] // Hien thi so du thanh toan
+    [HttpGet()] // Hien thi so du thanh toan    
     public async Task<IActionResult> SurplusManager()
     {
         var viewModel = await MethodGeneralAsync();
         return View(viewModel);
     }
-   
+
     [HttpGet] // Lazy load du lieu cho sp da thanh toan
     public async Task<IActionResult> LoadMoreOrders(int offset = 0, int limit = 5)
     {
@@ -375,22 +388,23 @@ public class HomeController : Controller
     {
         try
         {
-            if (string.IsNullOrEmpty(option))
+            var viewModel = await _profile.HandleProfileDisplayAsync(option);
+
+            var model = await MethodGeneralAsync();
+
+            if (model.User == null)
             {
                 return NotFound();
             }
-            var viewModel = await MethodGeneralAsync();
 
-            if (viewModel.User == null) return NotFound();
-
-            return View(viewModel);
+            var html = await this.RenderViewAsync(viewModel, model, true);
+            return Json(new { success = true, html = html });
         }
         catch (Exception ex)
         {
-
+            _logger.LogError(ex, "Không hiển thị được giao diện /Home/DisplayInfo");
             return BadRequest(ex.Message);
         }
-        
     }
 
     [HttpGet] // Hien thi giao dien trang chu

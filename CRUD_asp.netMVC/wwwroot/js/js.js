@@ -27,6 +27,17 @@ $(document).ready(function () {
         }
     });
 
+    // Hien thi SurplusManager
+    $(document).off('click', 'a[id]').on('click', 'a[id]', function (e) {
+
+        const value = $(this).attr('id');
+
+        $.get('/Home/DisplayInfo', { option: value }, function (response) {
+
+            $('.profile-content').html(response.html);
+        });
+    });
+
     // Xu ly wallet profile
     const $toggleBtn = $("#themeToggle");
     const $body = $("body");
@@ -39,7 +50,8 @@ $(document).ready(function () {
     }
 
     // Click toggle
-    $toggleBtn.on("click", function () {
+    $(document).off('click', '#themeToggle').on('click', '#themeToggle', function () {
+    
         if ($body.attr("data-theme") === "dark") {
             $body.removeAttr("data-theme");
             $icon.removeClass("bi-sun-fill").addClass("bi-moon-stars-fill");

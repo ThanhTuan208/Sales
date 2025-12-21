@@ -1,6 +1,6 @@
 ﻿using CRUD_asp.netMVC.DTO.Admin;
 using CRUD_asp.netMVC.Models.Auth;
-using CRUD_asp.netMVC.Models.Product;
+using CRUD_asp.netMVC.Models.Payments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Redis = StackExchange.Redis.IDatabase;

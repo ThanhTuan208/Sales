@@ -507,6 +507,239 @@ namespace CRUD_asp.netMVC.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Payments.ExcessPayment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("ExcessAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("OriginalAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PaidAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("ExcessPayments");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Payments.MoneyFlowLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("BalanceSnapshot")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("RelatedId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MoneyFlowLogs");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Payments.Payment", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("OrderID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateOnly>("StartDay")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("date")
+                        .HasComputedColumnSql("CONVERT(DATE, [PaymentDate]) PERSISTED");
+
+                    b.Property<int>("StartMonth")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("int")
+                        .HasComputedColumnSql("DATEPART(MONTH, [PaymentDate]) PERSISTED");
+
+                    b.Property<int>("StartYear")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("int")
+                        .HasComputedColumnSql("DATEPART(YEAR, [PaymentDate]) PERSISTED");
+
+                    b.Property<decimal?>("paidAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("paymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("OrderID")
+                        .IsUnique();
+
+                    b.HasIndex("StartDay")
+                        .HasDatabaseName("IX_Payment_PaymentByDay");
+
+                    b.HasIndex("StartMonth", "StartYear")
+                        .HasDatabaseName("IX_Payment_PaymentByMonth");
+
+                    b.ToTable("Payment");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Payments.RefundRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<long?>("AdminId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("AdminNote")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("ApprovedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("BankAccount")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("BankName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("BankOwner")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("ExcessPaymentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("RequestAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("RequestedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExcessPaymentId");
+
+                    b.ToTable("RefundRequests");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Payments.UnderpaidOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("MissingAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("OrderAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("PaidAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("UnderpaidOrders");
+                });
+
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Brand", b =>
                 {
                     b.Property<int>("ID")
@@ -828,57 +1061,6 @@ namespace CRUD_asp.netMVC.Migrations
                             ID = 5,
                             Name = "Wool"
                         });
-                });
-
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Payments", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("OrderID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateOnly>("StartDay")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("date")
-                        .HasComputedColumnSql("CONVERT(DATE, [PaymentDate]) PERSISTED");
-
-                    b.Property<int>("StartMonth")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("int")
-                        .HasComputedColumnSql("DATEPART(MONTH, [PaymentDate]) PERSISTED");
-
-                    b.Property<int>("StartYear")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("int")
-                        .HasComputedColumnSql("DATEPART(YEAR, [PaymentDate]) PERSISTED");
-
-                    b.Property<decimal?>("paidAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("paymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("OrderID")
-                        .IsUnique();
-
-                    b.HasIndex("StartDay")
-                        .HasDatabaseName("IX_Payment_PaymentByDay");
-
-                    b.HasIndex("StartMonth", "StartYear")
-                        .HasDatabaseName("IX_Payment_PaymentByMonth");
-
-                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.ProductColors", b =>
@@ -15541,11 +15723,44 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Payments", b =>
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Payments.ExcessPayment", b =>
                 {
                     b.HasOne("CRUD_asp.netMVC.Models.Order.Orders", "Order")
-                        .WithOne("Payments")
-                        .HasForeignKey("CRUD_asp.netMVC.Models.Product.Payments", "OrderID")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Payments.Payment", b =>
+                {
+                    b.HasOne("CRUD_asp.netMVC.Models.Order.Orders", "Order")
+                        .WithOne("Payment")
+                        .HasForeignKey("CRUD_asp.netMVC.Models.Payments.Payment", "OrderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Payments.RefundRequest", b =>
+                {
+                    b.HasOne("CRUD_asp.netMVC.Models.Payments.ExcessPayment", "ExcessPayment")
+                        .WithMany("RefundRequests")
+                        .HasForeignKey("ExcessPaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ExcessPayment");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Payments.UnderpaidOrder", b =>
+                {
+                    b.HasOne("CRUD_asp.netMVC.Models.Order.Orders", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -15833,7 +16048,12 @@ namespace CRUD_asp.netMVC.Migrations
                 {
                     b.Navigation("OrderDetail");
 
-                    b.Navigation("Payments");
+                    b.Navigation("Payment");
+                });
+
+            modelBuilder.Entity("CRUD_asp.netMVC.Models.Payments.ExcessPayment", b =>
+                {
+                    b.Navigation("RefundRequests");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Product.Brand", b =>

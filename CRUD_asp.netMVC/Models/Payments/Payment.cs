@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CRUD_asp.netMVC.Models.Product
+namespace CRUD_asp.netMVC.Models.Payments
 {
     public class Payment
     {

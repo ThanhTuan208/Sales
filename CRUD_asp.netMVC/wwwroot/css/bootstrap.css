@@ -901,7 +901,8 @@ pre {
     }
 
 @media (min-width: 768px) {
-    .container {
+    .container,
+    .container.surplus{
         width: 750px;
     }
 }

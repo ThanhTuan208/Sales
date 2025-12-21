@@ -936,7 +936,7 @@ header .meta {
 }
 /* Container chính */
 .profile-container {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 20px auto;
     padding: 30px;
     background: rgba(255, 255, 255, 0.85);

@@ -1,5 +1,5 @@
 ﻿using CRUD_asp.netMVC.Models.Auth;
-using CRUD_asp.netMVC.Models.Product;
+using CRUD_asp.netMVC.Models.Payments;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Permissions;

@@ -1,4 +1,4 @@
-﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Payments;
 using CRUD_asp.netMVC.EventHandlers;
 using CRUD_asp.netMVC.EventHandlers.Payments;
@@ -8,6 +8,7 @@ using CRUD_asp.netMVC.Middleware;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Service.EmailSender;
 using CRUD_asp.netMVC.Service.GHN;
+using CRUD_asp.netMVC.Service.Home;
 using CRUD_asp.netMVC.Service.Payment;
 using CRUD_asp.netMVC.Service.Payments;
 using CRUD_asp.netMVC.Service.Users;
@@ -125,6 +126,9 @@ namespace CRUD_asp.netMVC
             builder.Services.AddScoped<IEventBus, InMemoryEventBus>();
             builder.Services.AddScoped<IEventHandler<OrderPaidEvent>, NotifyPaymentHandler>();
             builder.Services.AddScoped<IEventHandler<OrderPaidEvent>, OrderPaidDashboardHandler>();
+
+            // Dang ky service DisplayProfileUserService
+            builder.Services.AddScoped<IDisplayProfileUserService, DisplayProfileUserService>();
 
             // Dang ky Session
             builder.Services.AddSession(options =>

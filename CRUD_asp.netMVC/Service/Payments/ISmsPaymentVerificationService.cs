@@ -1,10 +1,11 @@
-﻿using CRUD_asp.netMVC.DTO.Payment;
+﻿using CRUD_asp.netMVC.Common;
+using CRUD_asp.netMVC.DTO.Generic;
+using CRUD_asp.netMVC.DTO.Payments;
 
 namespace CRUD_asp.netMVC.Service.Payments
 {
     public interface ISmsPaymentVerificationService
     {
-        //Task<bool> CheckPaymentAsync(string orderId);
-        Task<ResultDTO> ProcessResultAsync(string message);
+        Task<Result<Unit>> ProcessResultAsync(string message);
     }
 }

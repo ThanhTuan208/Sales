@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Components.Forms.Mapping;
+using Microsoft.Extensions.Logging;
 
 namespace CRUD_asp.netMVC.EventHandlers
 {
@@ -9,7 +10,11 @@ namespace CRUD_asp.netMVC.EventHandlers
 
         public InMemoryEventBus(IServiceProvider provide) => _provide = provide;
 
-        public async Task PublishAsync<TEvent>(TEvent @event)
+        public async Task PaymentVerificationAsync<TEvent>(TEvent @event) => await GeneralMethod(@event);
+
+        public async Task PublishAsync<TEvent>(TEvent @event) => await GeneralMethod(@event);
+
+        public async Task GeneralMethod<TEvent>(TEvent @event)
         {
             var scope = _provide.CreateScope();
             var handlers = scope.ServiceProvider.GetServices<IEventHandler<TEvent>>();

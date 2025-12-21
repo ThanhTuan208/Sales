@@ -2,6 +2,7 @@
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
+using CRUD_asp.netMVC.Models.Payments;
 using CRUD_asp.netMVC.Models.Product;
 
 namespace CRUD_asp.netMVC.ViewModels.Home

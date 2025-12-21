@@ -2,6 +2,7 @@
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
+using CRUD_asp.netMVC.Models.Payments;
 using CRUD_asp.netMVC.Models.Product;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -66,6 +67,10 @@ namespace CRUD_asp.netMVC.Data
         //public DbSet<Roles>? Roles { get; set; }
         //public DbSet<Staff> Staff { get; set; }
 
+        public DbSet<ExcessPayment> ExcessPayments { get; set; }
+        public DbSet<UnderpaidOrder> UnderpaidOrders { get; set; }
+        public DbSet<RefundRequest> RefundRequests { get; set; }
+        public DbSet<MoneyFlowLog> MoneyFlowLogs { get; set; }
         public DbSet<SiteUsers> SiteUser { get; set; }
         public DbSet<ProductQuantity> ProductQty { get; set; }
         public DbSet<Address> Addresses { get; set; }
@@ -74,14 +79,12 @@ namespace CRUD_asp.netMVC.Data
         public DbSet<Brand> Brand { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<AddToCart> Carts { get; set; }
-
         public DbSet<Orders> Orders { get; set; }
         public DbSet<Payment> Payment { get; set; }
         public DbSet<Reviews> Reviews { get; set; }
         public DbSet<Manager> Manager { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<OrderDetail> OrderDetail { get; set; }
-
         public DbSet<Season> Season { get; set; }
         public DbSet<Tag> Tag { get; set; }
         public DbSet<Style> Style { get; set; }
