@@ -3,9 +3,9 @@
 @model HomeViewModel
 @{
     ViewData["Title"] = "Home Page";
-    var User = Model.User;
-    var IsMale = Model.User.Gender == "Nam" ? "checked" : "";
-    var IsFeMale = Model.User.Gender == "Nữ" ? "checked" : "";
+    var User = Model.Users;
+    var IsMale = Model.Users.Gender == "Nam" ? "checked" : "";
+    var IsFeMale = Model.Users.Gender == "Nữ" ? "checked" : "";
 }
 
 @Html.AntiForgeryToken()

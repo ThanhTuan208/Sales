@@ -16,7 +16,7 @@ namespace CRUD_asp.netMVC.Service.EmailSender
         {
             _smptServer = configuration["Smtp:Server"];
             _smptPort = int.Parse(configuration["Smtp:Port"]);
-            _smptUser = configuration["Smtp:User"];
+            _smptUser = configuration["Smtp:Users"];
             _smptPass = configuration["Smtp:Pass"];
         }
 

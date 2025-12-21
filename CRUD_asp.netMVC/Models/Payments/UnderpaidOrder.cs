@@ -17,13 +17,13 @@ namespace CRUD_asp.netMVC.Models.Payments
         public string OrderId { get; set; } = null!;
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal OrderAmount { get; set; }
+        public decimal? OrderAmount { get; set; } // So tien don hang
+
+        [Column(TypeName = "decimal(18,2)")] 
+        public decimal PaidAmount { get; set; } // So tien da tra
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal PaidAmount { get; set; }
-
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal MissingAmount { get; set; }
+        public decimal MissingAmount { get; set; } // So tien thieu
 
         [Required, MaxLength(30)]
         public string Status { get; set; } = "Pending";

@@ -4,10 +4,10 @@ namespace CRUD_asp.netMVC.DTO.Payments
 {
     public class PaymentVerificationEvent
     {
-        public Orders? Order { get; set; }
+        public Orders Order { get; set; } = null!;
         public decimal? AmountRecive { get; set; }
 
-        public PaymentVerificationEvent(Orders? order, decimal? amountRecive)
+        public PaymentVerificationEvent(Orders order, decimal? amountRecive)
         {
             Order = order;
             AmountRecive = amountRecive;

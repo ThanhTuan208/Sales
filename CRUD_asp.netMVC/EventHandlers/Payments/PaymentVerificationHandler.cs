@@ -1,9 +1,9 @@
-﻿using CRUD_asp.netMVC.Common;
-using CRUD_asp.netMVC.Data;
-using CRUD_asp.netMVC.DTO.Generic;
+﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Payments;
+using CRUD_asp.netMVC.Models.Auth;
+using CRUD_asp.netMVC.Models.Payments;
 using Microsoft.EntityFrameworkCore;
-using StackExchange.Redis;
+using System.Security.Claims;
 using PaymentModel = CRUD_asp.netMVC.Models.Payments.Payment;
 
 namespace CRUD_asp.netMVC.EventHandlers.Payments
@@ -24,53 +24,89 @@ namespace CRUD_asp.netMVC.EventHandlers.Payments
             using var transactions = await _dbContext.Database.BeginTransactionAsync();
             try
             {
+                var order = evt.Order;
+                ExcessPayment? excess = null;
+                UnderpaidOrder? underPaid = null;
 
-                if (evt.Order.Amount > evt.AmountRecive)
+                if (order.Amount > evt.AmountRecive) // thieu tien
                 {
+                    underPaid = new UnderpaidOrder()
+                    {
+                        OrderId = order.ID,
+                        UserId = order.UserID,
+                        OrderAmount = order.Amount,
+                        PaidAmount = evt.AmountRecive ?? 0,
+                        MissingAmount = order.Amount - evt.AmountRecive ?? 0,
+                        Status = "Pending",
+                        CreatedAt = DateTime.UtcNow.AddHours(7)
+                    };
 
+                    _dbContext.UnderpaidOrders.Add(underPaid);
                 }
-                else if (evt.Order.Amount < evt.AmountRecive || evt.Order.Amount == evt.AmountRecive)
+                else if (order.Amount < evt.AmountRecive) // du hoac du tien
                 {
-                    decimal? remainingAmount = 0;
-
-                    if (evt.Order.Amount < evt.AmountRecive)
+                    excess = new ExcessPayment()
                     {
-                        remainingAmount = evt.AmountRecive - evt.Order.Amount;
-                    }
+                        UserId = order.UserID,
+                        OrderId = order.ID,
+                        OriginalAmount = order.Amount,
+                        PaidAmount = evt.AmountRecive ?? 0,
+                        ExcessAmount = evt.AmountRecive - order.Amount ?? 0,
+                        Status = "Available",
+                        CreatedAt = DateTime.UtcNow.AddHours(7)
+                    };
 
-                    _dbContext.Payment.Add(new PaymentModel()
-                    {
-                        OrderID = evt.Order.ID,
-                        paidAmount = evt.Order.Amount,
-                        PaymentDate = DateTime.Now,
-                        paymentMethod = evt.Order.PaymentMethod
-                    });
-
-                    foreach (var item in evt.Order.OrderDetail)
-                    {
-                        var affectRow = await _dbContext.Products
-                       .Where(p => p.ID == item.ProductID && p.Quantity >= item.Quantity)
-                       .ExecuteUpdateAsync(s => s.SetProperty(p => p.Quantity, p => p.Quantity - item.Quantity));
-
-                        if (affectRow > 0)
-                        {
-                            await _dbContext.Carts
-                            .Where(p => p.UserID == evt.Order.UserID && p.ProductID == item.ProductID && p.IsDelete)
-                            .ExecuteDeleteAsync();
-                        }
-                    }
-                    ;
-
-                    _dbContext.Attach(evt.Order);
-                    evt.Order.Status = "Paid";
-                    evt.Order.PaidAt = DateTime.UtcNow.AddHours(7);
-                    _dbContext.Orders.Update(evt.Order);
-
-                    await _dbContext.SaveChangesAsync();
+                    _dbContext.ExcessPayments.Add(excess);
                 }
 
+                await _dbContext.SaveChangesAsync();
+
+                _dbContext.MoneyFlowLogs.Add(new MoneyFlowLog()
+                {
+                    UserId = order.UserID,
+                    RelatedId = excess != null ? excess.Id : underPaid.Id,
+                    Type = excess != null ? "ExcessCreated" : "UnderpaidCreated",
+                    CreatedAt = DateTime.UtcNow.AddHours(7),
+                    Description = $"Lịch sử cho đơn hàng {order.ID}",
+                    Amount = excess != null
+                            ? excess.ExcessAmount
+                            : underPaid.MissingAmount,
+                });
+
+                _dbContext.Payment.Add(new PaymentModel()
+                {
+                    OrderID = order.ID,
+                    paidAmount = order.Amount,
+                    PaymentDate = DateTime.Now,
+                    paymentMethod = order.PaymentMethod
+                });
+
+                _dbContext.Attach(order);
+                order.Status = "Paid";
+                order.PaidAt = DateTime.UtcNow.AddHours(7);
+                _dbContext.Orders.Update(order);
+
+                foreach (var item in order.OrderDetail)
+                {
+                    var affectRow = await _dbContext.Products
+                   .Where(p => p.ID == item.ProductID && p.Quantity >= item.Quantity)
+                   .ExecuteUpdateAsync(s => s.SetProperty(p => p.Quantity, p => p.Quantity - item.Quantity));
+
+                    if (affectRow > 0)
+                    {
+                        await _dbContext.Carts
+                        .Where(p => p.UserID == evt.Order.UserID && p.ProductID == item.ProductID && p.IsDelete)
+                        .ExecuteDeleteAsync();
+                    }
+                }
+
+                await _dbContext.SaveChangesAsync();
                 await transactions.CommitAsync();
-                await _event.PublishAsync(new OrderPaidEvent(evt.Order.ID, evt.Order.TransactionId, true));
+
+                if (excess != null)
+                {
+                    await _event.PublishAsync(new OrderPaidEvent(order.ID, order.TransactionId, true));
+                }
             }
             catch
             {

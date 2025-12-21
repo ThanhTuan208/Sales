@@ -121,7 +121,7 @@ namespace CRUD_asp.netMVC.Data.Seed
             });
         }
 
-        // Them computed column, indexing entity User
+        // Them computed column, indexing entity Users
         public static void IndexPropertyUser(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Users>(p =>

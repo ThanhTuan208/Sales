@@ -58,6 +58,6 @@ namespace CRUD_asp.netMVC.Models.Order
 
         public Payment? Payment { get; set; }
 
-        public List<OrderDetail>? OrderDetail { get; set; }
+        public List<OrderDetail> OrderDetail { get; set; } = null!;
     }
 }

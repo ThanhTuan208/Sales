@@ -5,6 +5,7 @@ using CRUD_asp.netMVC.EventHandlers.Payments;
 using CRUD_asp.netMVC.Filters;
 using CRUD_asp.netMVC.Hubs;
 using CRUD_asp.netMVC.Middleware;
+using CRUD_asp.netMVC.Migrations;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Service.EmailSender;
 using CRUD_asp.netMVC.Service.GHN;
@@ -127,6 +128,8 @@ namespace CRUD_asp.netMVC
             builder.Services.AddScoped<IEventHandler<OrderPaidEvent>, NotifyPaymentHandler>();
             builder.Services.AddScoped<IEventHandler<OrderPaidEvent>, OrderPaidDashboardHandler>();
 
+            builder.Services.AddScoped<IEventHandler<PaymentVerificationEvent>, PaymentVerificationHandler>();
+
             // Dang ky service DisplayProfileUserService
             builder.Services.AddScoped<IDisplayProfileUserService, DisplayProfileUserService>();
 
@@ -216,6 +219,8 @@ namespace CRUD_asp.netMVC
 
             app.MapHub<DashboardHub>("/DashboardHub");
 
+            app.MapHub<SurplusMoneyHub>("/SurplusMoney");
+
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
                 Authorization = new[] { new HangfireAuthFilter() },
@@ -259,7 +264,7 @@ namespace CRUD_asp.netMVC
         }
 
         // Tao chuoi lay ket noi DB
-        public static string? LoadConnectString(WebApplicationBuilder? bulder, string name)
+        public static string? LoadConnectString(WebApplicationBuilder bulder, string name)
         {
             return bulder.Configuration.GetConnectionString(name);
         }

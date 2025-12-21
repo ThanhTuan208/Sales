@@ -15423,13 +15423,13 @@ namespace CRUD_asp.netMVC.Migrations
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Address", b =>
                 {
-                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "User")
+                    b.HasOne("CRUD_asp.netMVC.Models.Auth.Users", "Users")
                         .WithMany("Addresses")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Auth.Customer", b =>

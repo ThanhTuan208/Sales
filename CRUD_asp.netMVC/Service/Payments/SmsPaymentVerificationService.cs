@@ -21,7 +21,7 @@ namespace CRUD_asp.netMVC.Service.Payments
 
         public async Task<Result<Unit>> ProcessResultAsync(string message)
         {
-            if (string.IsNullOrEmpty(message))
+           if (string.IsNullOrEmpty(message))
             {
                 return Result<Unit>.Fail("Tin nhắn không được null hoặc rỗng!");
             }
@@ -64,16 +64,7 @@ namespace CRUD_asp.netMVC.Service.Payments
                     return Result<Unit>.OK("Đơn hàng đã được thanh toán trước đó!");
                 }
 
-                //if (order.Amount > amountRecive)
-                //{
-
-                //    return Result<Unit>.Fail("Số tiền thanh toán nhỏ hơn giá trị đơn hàng!");
-                //    //return Result<Unit>.Fail("Số tiền thanh toán không đúng giá trị đơn hàng!");
-                //}
-
                 await _event.PaymentVerificationAsync(new PaymentVerificationEvent(order, amountRecive));
-
-                //await _event.PublishAsync(new OrderPaidEvent(order.ID, order.TransactionId, true));
 
                 return Result<Unit>.OK("Thanh toán thành công.");
             }

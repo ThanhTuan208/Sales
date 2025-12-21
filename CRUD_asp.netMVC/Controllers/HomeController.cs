@@ -390,9 +390,9 @@ public class HomeController : Controller
         {
             var viewModel = await _profile.HandleProfileDisplayAsync(option);
 
-            var model = await MethodGeneralAsync();
+            var model = await _profile.DisplayViewModel(option);
 
-            if (model.User == null)
+            if (model.Users == null)
             {
                 return NotFound();
             }
@@ -414,7 +414,7 @@ public class HomeController : Controller
         {
             var viewModel = await MethodGeneralAsync();
 
-            if (viewModel.User == null) return NotFound();
+            if (viewModel.Users == null) return NotFound();
 
             return View(viewModel);
         }
@@ -567,7 +567,7 @@ public class HomeController : Controller
             Brands = brand,
             Categories = categories,
             Carts = carts,
-            User = user
+            Users = user
         };
 
         ViewData["cart"] = carts.Count;

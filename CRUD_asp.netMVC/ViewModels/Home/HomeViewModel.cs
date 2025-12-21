@@ -7,7 +7,7 @@ using CRUD_asp.netMVC.Models.Product;
 
 namespace CRUD_asp.netMVC.ViewModels.Home
 {
-    public class HomeViewModel
+    public class HomeViewModel : IBaseProfileViewModel
     {
         public List<Products>? Products { get; set; }
         public List<Products>? OldPriceProducts { get; set; }
@@ -17,6 +17,6 @@ namespace CRUD_asp.netMVC.ViewModels.Home
         public List<OrderDetail>? OrderPayList { get; set; }
         public List<Payment>? PaymentList { get; set; }
         public MailContactDTO? MailContact { get; set; }
-        public Users? User { get; set; }
+        public Users? Users { get; set; }
     }
 }
