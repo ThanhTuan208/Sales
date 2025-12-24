@@ -27,8 +27,118 @@ $(document).ready(function () {
         }
     });
 
+    // Mở Modal
+    $(document).ready(function () {
+        // Mở Modal
+        $(document).off('click', '.view-all-link').on('click', '.view-all-link', function (e) {
+            e.preventDefault();
+
+            // Hiện overlay và chặn cuộn body
+            $('.modal-overlay').fadeIn(300).css('display', 'flex');
+            $('body').addClass('modal-open');
+
+            setTimeout(function () {
+                $('.modal-box').addClass('active');
+                animateItems();
+            }, 50);
+        });
+
+        // Đóng Modal
+        $(document).on('click', '.close-btn, .modal-overlay', function (e) {
+            // Nếu click vào bên trong modal-box thì không đóng
+            if ($(e.target).closest('.modal-box').length && !$(e.target).closest('.close-btn').length) {
+                return;
+            }
+
+            $('.modal-box').removeClass('active');
+            setTimeout(function () {
+                $('.modal-overlay').fadeOut(300, function () {
+                    $('body').removeClass('modal-open');
+                    $('.payment-item').removeClass('show'); // Reset animation
+                });
+            }, 200);
+        });
+
+        function animateItems() {
+            $('.payment-item').each(function (i) {
+                setTimeout(function () {
+                    $('.payment-item').eq(i).addClass('show');
+                }, 100 * (i + 1));
+            });
+        }
+    });
+
+
+    // Xu ly hien thi form chi tiet ma don hang
+    // Template chi tiết giao dịch
+    function getDetailHTML(data) {
+
+        let status = "Dư thừa";
+        if (data.type === 'UnderpaidCreated') {
+            status = "Thiếu";
+        }
+        return `
+            <div class="transaction-detail-card">
+                <div class="card-header">
+                    <h3>Chi tiết giao dịch</h3>
+                    <span class="close-btn" title="Đóng">&times;</span>
+                </div>
+                <div class="detail-content">
+                    <div class="detail-row"><div class="label">Mã giao dịch</div><div class="value">${data.id}</div></div>
+                    <div class="detail-row"><div class="label">Loại</div><div class="value">${data.type} <span class="badge badge-excess">${status}</span></div></div>
+                    <div class="detail-row"><div class="label">Số tiền</div><div class="value amount ${data.amount > 0 ? 'positive' : 'negative'}">${parseFloat(data.amount).toLocaleString('vi-VN')} ₫</div></div>
+                    <div class="detail-row"><div class="label">Số dư sau</div><div class="value">${data.balance ? parseFloat(data.balance).toLocaleString('vi-VN') + ' ₫' : 'Không có'}</div></div>
+                    <div class="detail-row"><div class="label">Thời gian</div><div class="value">${data.date}</div></div>
+                    <div class="detail-row"><div class="label">Mô tả</div><div class="value">${data.description || 'Không có'}</div></div>
+                    <div class="detail-row"><div class="label">ID liên quan</div><div class="value">${data.relatedId || 'Không có'}</div></div>
+                    <div class="detail-row"><div class="label">User ID</div><div class="value">${data.userId || 'Không xác định'}</div></div>
+                </div>
+                <div class="gradient-accent"></div>
+            </div>
+        `;
+    }
+
+    // Xử lý click vào item giao dịch
+    $(document).off('click', '.transaction-item').on('click', '.transaction-item', function (e) {
+
+        e.preventDefault();
+        const $this = $(this);
+        const data = {
+            id: $this.data('id'),
+            type: $this.data('type'),
+            amount: $this.data('amount'),
+            balance: $this.data('balance'),
+            description: $this.data('description'),
+            date: $this.data('date'),
+            relatedId: $this.data('related-id'),
+            userId: $this.data('user-id')
+        };
+
+        const $profileContainer = $('#profileContainer');
+        // Render form chi tiết
+        console.log(getDetailHTML(data));
+        $('.detail-placeholder').html(getDetailHTML(data));
+
+        // Hiển thị panel chi tiết và di chuyển container sang trái
+        $profileContainer.removeClass('close-detail');
+        $profileContainer.addClass('show-detail');
+
+        // Xử lý nút đóng (dấu X)
+        $(document).off('click', '.close-btn').on('click', '.close-btn  ', function (e) {
+
+            $profileContainer.removeClass('show-detail');
+            $profileContainer.addClass('close-detail');
+
+            // Sau khi animation hoàn tất, reset placeholder
+            setTimeout(() => {
+                $('.detail-placeholder').html('<div class="detail-placeholder">Chọn một giao dịch để xem chi tiết</div>');
+            }, 400);
+        });
+    });
+    // Xu ly hien thi form chi tiet ma don hang
+
     // Hien thi SurplusManager
-    $(document).off('click', 'a[id]').on('click', 'a[id]', function (e) {
+    $(document).off('click', 'a[id]').on('click', 'a[id]', function () {
 
         const value = $(this).attr('id');
 
@@ -37,6 +147,7 @@ $(document).ready(function () {
             $('.profile-content').html(response.html);
         });
     });
+    // Hien thi SurplusManager
 
     // Xu ly wallet profile
     const $toggleBtn = $("#themeToggle");
@@ -51,7 +162,7 @@ $(document).ready(function () {
 
     // Click toggle
     $(document).off('click', '#themeToggle').on('click', '#themeToggle', function () {
-    
+
         if ($body.attr("data-theme") === "dark") {
             $body.removeAttr("data-theme");
             $icon.removeClass("bi-sun-fill").addClass("bi-moon-stars-fill");
@@ -167,7 +278,6 @@ $(document).ready(function () {
         .on('click', '#sortNew, #sortBest, #sortHighToLow, #sortLowToHigh', function (e) {
             e.preventDefault();
             currentFilter = $(this).attr('id');
-            console.log(cateID);
             loadProducts(actionName, cateID, currentFilter, 1);
         });
 

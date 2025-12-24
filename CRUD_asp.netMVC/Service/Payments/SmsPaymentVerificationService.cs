@@ -21,21 +21,21 @@ namespace CRUD_asp.netMVC.Service.Payments
 
         public async Task<Result<Unit>> ProcessResultAsync(string message)
         {
-           if (string.IsNullOrEmpty(message))
-            {
-                return Result<Unit>.Fail("Tin nhắn không được null hoặc rỗng!");
-            }
-
-            var transactionCode = Regex.Match(message, @"ORD([^-]+)");
-            var amountPayment = Regex.Match(message, @"GD\s*\+([\d,]+)VND");
-
-            if (!transactionCode.Success)
-            {
-                return Result<Unit>.Fail("Mã đơn hàng được gửi đến không hợp lệ (giữ mã giao dịch ORD...)!");
-            }
-
             try
             {
+                if (string.IsNullOrEmpty(message))
+                {
+                    return Result<Unit>.Fail("Tin nhắn không được null hoặc rỗng!");
+                }
+
+                var transactionCode = Regex.Match(message, @"ORD([^-]+)");
+                var amountPayment = Regex.Match(message, @"GD\s*\+([\d,]+)VND");
+
+                if (!transactionCode.Success)
+                {
+                    return Result<Unit>.Fail("Mã đơn hàng được gửi đến không hợp lệ (giữ mã giao dịch ORD...)!");
+                }
+
                 var transactionId = transactionCode.Groups[1].Value;
                 var amountPaymentMatch = amountPayment.Groups[1].Value.Replace(",", "");
 
@@ -73,6 +73,6 @@ namespace CRUD_asp.netMVC.Service.Payments
                 return Result<Unit>.Fail(ex.Message);
             }
         }
-      
+
     }
 }

@@ -4,11 +4,11 @@
 @{
     ViewData["Title"] = "Home Page";
     Layout = "_HomeLayout";
+    Html.AntiForgeryToken();
 }
 
-@Html.AntiForgeryToken()
 <div class="profile-wrapper">
-    <div class="profile-container">
+    <div class="profile-container" id="profileContainer">
         <aside class="sidebar">
             <nav>
                 <ul>
@@ -25,8 +25,9 @@
             </nav>
         </aside>
 
-        <main class="profile-content">
-            
+        <!-- Nội dung chính -->
+        <main class="profile-content" id="profileContent">
+
         </main>
     </div>
 </div>

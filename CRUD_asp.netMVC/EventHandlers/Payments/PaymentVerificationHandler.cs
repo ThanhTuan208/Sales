@@ -1,8 +1,10 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Payments;
+using CRUD_asp.netMVC.Migrations;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Payments;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Security.Claims;
 using PaymentModel = CRUD_asp.netMVC.Models.Payments.Payment;
 
@@ -27,6 +29,7 @@ namespace CRUD_asp.netMVC.EventHandlers.Payments
                 var order = evt.Order;
                 ExcessPayment? excess = null;
                 UnderpaidOrder? underPaid = null;
+                PaymentModel? payment = null;
 
                 if (order.Amount > evt.AmountRecive) // thieu tien
                 {
@@ -43,20 +46,33 @@ namespace CRUD_asp.netMVC.EventHandlers.Payments
 
                     _dbContext.UnderpaidOrders.Add(underPaid);
                 }
-                else if (order.Amount < evt.AmountRecive) // du hoac du tien
+                else if (order.Amount <= evt.AmountRecive) // du hoac du tien
                 {
-                    excess = new ExcessPayment()
+                    if (order.Amount < evt.AmountRecive)
                     {
-                        UserId = order.UserID,
-                        OrderId = order.ID,
-                        OriginalAmount = order.Amount,
-                        PaidAmount = evt.AmountRecive ?? 0,
-                        ExcessAmount = evt.AmountRecive - order.Amount ?? 0,
-                        Status = "Available",
-                        CreatedAt = DateTime.UtcNow.AddHours(7)
+                        excess = new ExcessPayment()
+                        {
+                            UserId = order.UserID,
+                            OrderId = order.ID,
+                            OriginalAmount = order.Amount,
+                            PaidAmount = evt.AmountRecive ?? 0,
+                            ExcessAmount = evt.AmountRecive - order.Amount ?? 0,
+                            Status = "Available",
+                            CreatedAt = DateTime.UtcNow.AddHours(7)
+                        };
+
+                        _dbContext.ExcessPayments.Add(excess);
+                    }
+
+                    payment = new PaymentModel()
+                    {
+                        OrderID = order.ID,
+                        paidAmount = order.Amount,
+                        PaymentDate = DateTime.Now,
+                        paymentMethod = order.PaymentMethod
                     };
 
-                    _dbContext.ExcessPayments.Add(excess);
+                    _dbContext.Payment.Add(payment);
                 }
 
                 await _dbContext.SaveChangesAsync();
@@ -64,21 +80,20 @@ namespace CRUD_asp.netMVC.EventHandlers.Payments
                 _dbContext.MoneyFlowLogs.Add(new MoneyFlowLog()
                 {
                     UserId = order.UserID,
-                    RelatedId = excess != null ? excess.Id : underPaid.Id,
-                    Type = excess != null ? "ExcessCreated" : "UnderpaidCreated",
-                    CreatedAt = DateTime.UtcNow.AddHours(7),
-                    Description = $"Lịch sử cho đơn hàng {order.ID}",
-                    Amount = excess != null
-                            ? excess.ExcessAmount
-                            : underPaid.MissingAmount,
-                });
+                    RelatedId = excess != null
+                                    ? excess.Id
+                                    : underPaid != null
+                                        ? underPaid.Id
+                                        : payment.ID,
+                    Type = excess != null
+                                ? "ExcessCreated"
+                                : underPaid != null
+                                    ? "UnderpaidCreated"
+                                    : "NormalCreated",
 
-                _dbContext.Payment.Add(new PaymentModel()
-                {
-                    OrderID = order.ID,
-                    paidAmount = order.Amount,
-                    PaymentDate = DateTime.Now,
-                    paymentMethod = order.PaymentMethod
+                    Amount = evt.AmountRecive ?? 0,
+                    CreatedAt = DateTime.UtcNow.AddHours(7),
+                    Description = $"{order.ID}",
                 });
 
                 _dbContext.Attach(order);

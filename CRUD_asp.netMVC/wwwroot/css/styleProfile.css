@@ -9,7 +9,201 @@
     --shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
     --card-border: rgba(212, 175, 55, 0.2);
     --glow: 0 0 20px rgba(212, 175, 55, 0.4);
+    --primary-gold: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+    --bg-gradient: linear-gradient(145deg, #ffffff, #fff9e6);
+    --accent-gold: #b38728;
+    --text-dark: #2c3e50;
 }
+
+/*danh sach form thanh toan*/
+/* Quan trọng: Sửa lại Overlay bao phủ toàn màn hình */
+/* Lớp phủ mờ toàn màn hình */
+.modal-overlay {
+    position: fixed; /* Bắt buộc là fixed để đè lên toàn bộ viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Hiệu ứng mờ Glassmorphism */
+    background: rgba(255, 255, 255, 0.1); /* Nền trắng cực loãng */
+    backdrop-filter: blur(15px); /* Độ mờ background */
+    -webkit-backdrop-filter: blur(15px); /* Hỗ trợ trình duyệt Safari */
+    /* Căn giữa tuyệt đối */
+    display: none; /* jQuery sẽ điều khiển hiển thị flex */
+    justify-content: center;
+    align-items: center;
+    z-index: 999999; /* Đảm bảo nằm trên cùng của mọi thành phần */
+}
+
+/* Modal Box */
+.modal-box {
+    /* Loại bỏ các margin tự thân có thể gây lệch */
+    margin: 0;
+    width: 90%;
+    max-width: 500px;
+    background: #ffffff;
+    border-radius: 30px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1); /* Đổ bóng nhẹ nhàng */
+    /* Animation nảy từ giữa */
+    transform: scale(0.8);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+    .modal-box.active {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+/* Ngăn cuộn trang body */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Header với Gradient Line */
+.modal-header-modal {
+    padding: 25px;
+    text-align: center;
+    position: relative;
+}
+
+    .modal-header-modal h2.history-modal-title {
+        margin: 0;
+        font-size: 22px;
+        color: var(--text-dark);
+        font-weight: 700;
+    }
+
+.header-line {
+    height: 3px;
+    width: 60px;
+    background: var(--primary-gold);
+    margin: 10px auto 0;
+    border-radius: 10px;
+}
+
+/* Close Button */
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+    .close-btn:hover {
+        color: var(--accent-gold);
+    }
+
+/* Payment List & Scrollbar */
+.payment-list {
+    padding: 10px 25px 25px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+    /* Tinh chỉnh Scrollbar */
+    .payment-list::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .payment-list::-webkit-scrollbar-thumb {
+        background: #e0e0e0;
+        border-radius: 10px;
+    }
+
+/* Payment Item */
+.payment-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(179, 135, 40, 0.1);
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+    .payment-item:hover {
+        transform: scale(1.03) !important;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        border-color: var(--accent-gold);
+    }
+
+    .payment-item.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+/* Icon Wrapper */
+.icon-box {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: var(--primary-gold);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+    margin-right: 15px;
+}
+
+.item-info {
+    flex-grow: 1;
+}
+
+    .item-info .title {
+        font-weight: 700;
+        color: var(--text-dark);
+        margin: 0;
+        font-size: 15px;
+    }
+
+    .item-info .date {
+        font-size: 12px;
+        color: #888;
+        margin: 0;
+    }
+
+.item-amount {
+    text-align: right;
+    font-weight: 700;
+    color: var(--accent-gold);
+}
+
+/* Modal Footer */
+.modal-footer {
+    padding: 20px 25px;
+    background: white;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+.total-box {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.btn-confirm {
+    width: 100%;
+    padding: 12px;
+    border-radius: 15px;
+    border: none;
+    background: var(--primary-gold);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(179, 135, 40, 0.2);
+}
+/*danh sach form thanh toan*/
 
 [data-theme="dark"] {
     --bg: #1e2a3f;
@@ -27,7 +221,7 @@
 body {
     background: var(--bg);
     color: var(--text);
-    font-family: "Segoe UI", system-ui, sans-serif;
+    font-family: 'Inter', sans-serif;
     transition: all 0.4s ease;
     min-height: 100vh;
 }

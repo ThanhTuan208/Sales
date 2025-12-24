@@ -7,11 +7,11 @@
     var User = Model.Users;
     var IsMale = Model.Users.Gender == "Nam" ? "checked" : "";
     var IsFeMale = Model.Users.Gender == "Nữ" ? "checked" : "";
+    Html.AntiForgeryToken();
 }
 
-@Html.AntiForgeryToken()
 <div class="profile-wrapper">
-    <div class="profile-container">
+    <div class="profile-container" id="profileContainer">
         <aside class="sidebar">
             <nav>
                 <ul>
@@ -27,7 +27,7 @@
             </nav>
         </aside>
 
-        <main class="profile-content">
+        <main class="profile-content" id="profileContent">
             <h2 style="font-weight: 600">Hồ Sơ Của Tôi</h2>
 
             <div class="profile-main">
@@ -79,5 +79,9 @@
                 </section>
             </div>
         </main>
+        <!-- Panel chi tiết bên phải -->
+        <div class="transaction-detail-panel" id="detailPanel">
+            <div class="detail-placeholder">Chọn một giao dịch để xem chi tiết</div>
+        </div>
     </div>
 </div>

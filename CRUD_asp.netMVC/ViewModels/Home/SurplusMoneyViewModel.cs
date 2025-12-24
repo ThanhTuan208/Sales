@@ -7,12 +7,16 @@ namespace CRUD_asp.netMVC.ViewModels.Home
 {
     public class SurplusMoneyViewModel : IBaseProfileViewModel
     {
-        public List<Brand>? Brands { get; set; }
-        public List<Category>? Categories { get; set; }
-        public Users? Users { get; set; }
-        public List<ExcessPayment>? ExcessPayments { get; set; }
-        public List<UnderpaidOrder>? UnderpaidOrders { get; set; }
+        public Users? Users { get; set; } = null!;
+        public List<Brand>? Brands { get; set; } = null!;
+        public List<Category>? Categories { get; set; } = null!;
+        public List<ExcessPayment> ExcessPayments { get; set; } = null!;
+        public List<UnderpaidOrder> UnderpaidOrders { get; set; } = null!;
+        public List<MoneyFlowLog> MoneyFlowLogs { get; set; } = null!;
 
         public decimal TotalAmountInMonth { get; set; }
+        public decimal ExcessMoney { get; set; }
+        public decimal PaidMoney { get; set; }
+        public string UpdateAt { get; set; } = null!;
     }
 }

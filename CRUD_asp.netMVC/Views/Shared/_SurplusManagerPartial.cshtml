@@ -3,101 +3,118 @@
 @model SurplusMoneyViewModel
 @{
     ViewData["Title"] = "Home Page";
-    var s = Model.TotalAmountInMonth;
 }
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" asp-append-version="true"   />
 
-<div class="profile-main">
-<div class="container surplus">
-    <div class="header">
-        <h2 class="mb-0 fw-semibold">Túi tiền của tôi</h2>
-        <button class="theme-toggle" id="themeToggle">
-            <i class="bi bi-moon-stars-fill"></i>
-        </button>
-    </div>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" asp-append-version="true" />
 
-    <div class="row g-4">
-        <!-- Bên trái 60% -->
-        <div class="col-lg-6">
-            <!-- Số dư hiện tại (trên) -->
-            <div class="balance-card mb-4">
-                <h5 class="fw-light text-muted mb-3">Số tiền dư hiện tại</h5>
-                <div class="balance-amount">
-                    @Model.TotalAmountInMonth <span class="fs-4">VND</span>
-                </div>
-                <p class="mt-4 mb-0 text-muted small">
-                    Cập nhật: 20/12/2025 - 14:30
-                </p>
+<div class="transaction-list" id="transactionList">
+    <div class="profile-main">
+        <div class="container surplus">
+            <div class="header">
+                <h2 class="mb-0 fw-semibold">Túi tiền của tôi</h2>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="bi bi-moon-stars-fill"></i>
+                </button>
             </div>
 
-            <!-- Thống kê (dưới, chia 50-50) -->
-            <div class="stats-grid">
-                <div class="stats-item">
-                    <i class="bi bi-arrow-up-circle-fill stats-icon"></i>
-                    <h6 class="text-muted mb-1">Đã nạp tháng này</h6>
-                    <h4 class="fw-bold text-success">+5.200.000 ₫</h4>
-                </div>
-                <div class="stats-item">
-                    <i class="bi bi-arrow-down-circle-fill stats-icon"></i>
-                    <h6 class="text-muted mb-1">Đã chi</h6>
-                    <h4 class="fw-bold text-danger">-3.850.000 ₫</h4>
-                </div>
-            </div>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="balance-card mb-4">
+                        <h5 class="fw-light text-muted mb-3">Số tiền dư hiện tại</h5>
+                        <div class="balance-amount">
+                            @string.Format(new CultureInfo("vi-VN"), "{0:N0}", Model.ExcessMoney) <span class="fs-4">VND</span>
+                        </div>
+                        <p class="mt-4 mb-0 text-muted small">
+                            Cập nhật: @Model.UpdateAt
+                        </p>
+                    </div>
 
-            <!-- Nút rút tiền dư -->
-            <div class="text-center mt-4">
-                <button class="withdraw-btn">Yêu cầu hoàn tiền</button>
+                    <div class="stats-grid">
+                        <div class="stats-item">
+                            <i class="bi bi-arrow-up-circle-fill stats-icon"></i>
+                            <h6 class="text-muted mb-1">Tiền vào tháng này</h6>
+                            <h4 class="fw-bold text-success">+@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.TotalAmountInMonth)</h4>
+                        </div>
+                        <div class="stats-item">
+                            <i class="bi bi-arrow-down-circle-fill stats-icon"></i>
+                            <h6 class="text-muted mb-1">Đã chi</h6>
+                            <h4 class="fw-bold text-danger">-@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.PaidMoney)</h4>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="withdraw-btn">Yêu cầu hoàn tiền</button>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card rounded-4 h-100"
+                         style="background: var(--card-bg);box-shadow: var(--shadow);border: none;">
+                        <div class="card-header-detail bg-transparent border-bottom py-3" style="text-align: center">
+                            <h5 class="mb-0">
+                                <strong>Giao dịch gần đây</strong>
+                            </h5>
+                        </div>
+                        <div class="card-body timeline m-2">
+                            @foreach (var item in Model.MoneyFlowLogs.Take(4))
+                            {
+                                <div class="timeline-item transaction-item d-flex justify-content-between align-items-center"
+                                     data-id="@item.Id"
+                                     data-type="@item.Type"
+                                     data-amount="@item.Amount"
+                                     data-balance="@(item.BalanceSnapshot?.ToString("N0", CultureInfo.InvariantCulture) ?? "")"
+                                     data-description="@item.Description"
+                                     data-date="@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")"
+                                     data-related-id="@item.RelatedId"
+                                     data-user-id="@item.UserId">
+                                    <div>
+                                        <h5 class="mb-1"> <strong>Mã đơn hàng:</strong> </h5>
+                                        <h6 class="mb-1">@item.Description</h6>
+                                        <small class="text-muted">@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                                    </div>
+                                    <span class="amount-@(item.Type.ToLower().Contains("underpaid") ? "negative" : "positive") fw-bold">
+                                        @(item.Type.ToLower().Contains("underpaid") ? "-" : "+") @string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Amount)
+                                    </span>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="card-footer bg-transparent text-center py-3">
+                            <a href="#" class="view-all-link">Xem tất cả giao dịch</a>
+                        </div>
+
+                        <div class="modal-overlay">
+                            <div class="modal-box">
+                                <span class="close-btn"><i class="bi bi-x-lg"></i></span>
+
+                                <div class="modal-header-modal">
+                                    <h2 id="history-modal-title">Lịch Sử Giao Dịch</h2>
+                                    <div class="header-line"></div>
+                                </div>
+
+                                <div class="payment-list custom-scrollbar">
+                                    <div class="payment-item">
+                                        <div class="icon-box"><i class="bi bi-cart-check"></i></div>
+                                        <div class="item-info">
+                                            <p class="title">Mua sắm thiết bị điện tử</p>
+                                            <p class="date">24/12/2025 - 14:30</p>
+                                        </div>
+                                        <div class="item-amount">- 15,200,000đ</div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <div class="total-box">
+                                        <span>Tổng chi tiêu (Tháng 12)</span>
+                                        <span style="color: #e74c3c;">- 16,570,000đ</span>
+                                    </div>
+                                    <button class="btn-confirm">Xuất Báo Cáo PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- Bên phải 40%: Giao dịch gần đây -->
-        <div class="col-lg-6 ">
-            <div class="card rounded-4 h-100"
-                 style="
-              background: var(--card-bg);
-              box-shadow: var(--shadow);
-              border: none;
-            ">
-                <div class="card-header bg-transparent border-bottom py-3">
-                    <h5 class="mb-0">Giao dịch gần đây</h5>
-                </div>
-                <div class="card-body timeline m-2">
-                    <div class="timeline-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-1">Chuyển khoản cho Trần Thị B</h6>
-                            <small class="text-muted">20/12/2025 - 13:45</small>
-                        </div>
-                        <span class="amount-negative fw-bold">-450.000 ₫</span>
-                    </div>
-                    <div class="timeline-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-1">Nạp từ Vietcombank</h6>
-                            <small class="text-muted">19/12/2025 - 09:30</small>
-                        </div>
-                        <span class="amount-positive fw-bold">+2.000.000 ₫</span>
-                    </div>
-                    <div class="timeline-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-1">Thanh toán Shopee</h6>
-                            <small class="text-muted">18/12/2025 - 18:20</small>
-                        </div>
-                        <span class="amount-negative fw-bold">-1.250.000 ₫</span>
-                    </div>
-                    <div class="timeline-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-1">Nhận tiền từ bạn bè</h6>
-                            <small class="text-muted">17/12/2025 - 14:10</small>
-                        </div>
-                        <span class="amount-positive fw-bold">+800.000 ₫</span>
-                    </div>
-                </div>
-
-                <!-- Nút Xem tất cả giao dịch -->
-                <div class="card-footer bg-transparent text-center py-3">
-                    <a href="#" class="view-all-link">Xem tất cả giao dịch</a>
-                </div>
-            </div>
-        </div>
-    </div>
     </div>
 </div>

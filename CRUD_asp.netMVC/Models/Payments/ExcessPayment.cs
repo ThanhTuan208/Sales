@@ -23,7 +23,7 @@ namespace CRUD_asp.netMVC.Models.Payments
         public string OrderId { get; set; } = null!;
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal? OriginalAmount { get; set; }   // Giá trị đơn hàng
+        public decimal? OriginalAmount { get; set; }  // Giá trị đơn hàng
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal PaidAmount { get; set; }       // Số tiền user chuyển
