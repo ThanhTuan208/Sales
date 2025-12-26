@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CRUD_asp.netMVC.Migrations
 {
     /// <inheritdoc />
-    public partial class addEntityforPaymentHandle : Migration
+    public partial class addEntityPaymentHandler : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,11 +15,10 @@ namespace CRUD_asp.netMVC.Migrations
                 name: "ExcessPayments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    OriginalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OriginalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     PaidAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ExcessAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
@@ -42,10 +41,9 @@ namespace CRUD_asp.netMVC.Migrations
                 name: "MoneyFlowLogs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    RelatedId = table.Column<int>(type: "int", nullable: false),
+                    RelatedId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     BalanceSnapshot = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
@@ -61,11 +59,10 @@ namespace CRUD_asp.netMVC.Migrations
                 name: "UnderpaidOrders",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    OrderAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OrderAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     PaidAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     MissingAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
@@ -87,9 +84,8 @@ namespace CRUD_asp.netMVC.Migrations
                 name: "RefundRequests",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ExcessPaymentId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ExcessPaymentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     RequestAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     BankName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),

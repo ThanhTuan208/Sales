@@ -6,12 +6,12 @@ namespace CRUD_asp.netMVC.Models.Payments
     public class MoneyFlowLog
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; } = null!;
 
         [Required]
         public int UserId { get; set; }
 
-        public int RelatedId { get; set; }
+        public string RelatedId { get; set; } = null!;
         // ExcessPaymentId | RefundRequestId | UnderpaidOrderId
 
         [Required, MaxLength(50)]
@@ -23,6 +23,7 @@ namespace CRUD_asp.netMVC.Models.Payments
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal? BalanceSnapshot { get; set; }
+        public bool AffectBalance { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

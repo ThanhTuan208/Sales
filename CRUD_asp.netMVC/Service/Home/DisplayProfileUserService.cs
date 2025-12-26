@@ -61,7 +61,6 @@ namespace CRUD_asp.netMVC.Service.Home
 
         public async Task SurplusMoneyMethodAsync(IBaseProfileViewModel model, SurplusMoneyViewModel surplusMoney)
         {
-            var totalInMonth = 0M;
             var excess = _dbContext.ExcessPayments;
 
             surplusMoney.TotalAmountInMonth = await excess.Where(p => p.UserId == model.Users.Id && p.CreatedAt.Date.Month == DateTime.UtcNow.Date.Month)

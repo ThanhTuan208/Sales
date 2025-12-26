@@ -67,6 +67,7 @@ namespace CRUD_asp.netMVC.Data
         //public DbSet<Roles>? Roles { get; set; }
         //public DbSet<Staff> Staff { get; set; }
 
+        public DbSet<UserWallet> UserWallets { get; set; }
         public DbSet<ExcessPayment> ExcessPayments { get; set; }
         public DbSet<UnderpaidOrder> UnderpaidOrders { get; set; }
         public DbSet<RefundRequest> RefundRequests { get; set; }

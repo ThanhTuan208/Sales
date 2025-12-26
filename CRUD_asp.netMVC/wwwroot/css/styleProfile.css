@@ -135,7 +135,7 @@ body.modal-open {
         border-color: var(--accent-gold);
     }
 
-    .payment-item.show {
+    .payment-item.show-list-payment {
         opacity: 1;
         transform: translateX(0);
     }

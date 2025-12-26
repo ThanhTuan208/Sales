@@ -68,12 +68,12 @@
                                      data-related-id="@item.RelatedId"
                                      data-user-id="@item.UserId">
                                     <div>
-                                        <h5 class="mb-1"> <strong>Mã đơn hàng:</strong> </h5>
+                                        <h5 class="mb-1"> <strong>Mã đơn:</strong> </h5>
                                         <h6 class="mb-1">@item.Description</h6>
                                         <small class="text-muted">@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
                                     </div>
-                                    <span class="amount-@(item.Type.ToLower().Contains("underpaid") ? "negative" : "positive") fw-bold">
-                                        @(item.Type.ToLower().Contains("underpaid") ? "-" : "+") @string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Amount)
+                                    <span class="item-amount fw-bold">
+                                        @string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Amount)
                                     </span>
                                 </div>
                             }
@@ -93,14 +93,27 @@
                                 </div>
 
                                 <div class="payment-list custom-scrollbar">
-                                    <div class="payment-item">
-                                        <div class="icon-box"><i class="bi bi-cart-check"></i></div>
-                                        <div class="item-info">
-                                            <p class="title">Mua sắm thiết bị điện tử</p>
-                                            <p class="date">24/12/2025 - 14:30</p>
+                                    @foreach (var log in Model.MoneyFlowLogs)
+                                    {
+                                        <div class="payment-item transaction-item"
+                                             data-id="@log.Id"
+                                             data-type="@log.Type"
+                                             data-amount="@log.Amount"
+                                             data-balance="@(log.BalanceSnapshot?.ToString("N0", CultureInfo.InvariantCulture) ?? "")"
+                                             data-description="@log.Description"
+                                             data-date="@log.CreatedAt.ToString("dd/MM/yyyy HH:mm")"
+                                             data-related-id="@log.RelatedId"
+                                             data-user-id="@log.UserId">
+
+                                            <div class="icon-box"><i class="bi bi-cart-check"></i></div>
+                                            <div class="item-info">
+                                                <p class="title">Mua sắm thiết bị điện tử</p>
+                                                <p class="date">@log.CreatedAt.ToString("dd/MM/yyyy - HH:mm")</p>
+                                            </div>
+                                            <div class="item-amount">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", log.Amount)</div>
                                         </div>
-                                        <div class="item-amount">- 15,200,000đ</div>
-                                    </div>
+                                    }
+
                                 </div>
 
                                 <div class="modal-footer">

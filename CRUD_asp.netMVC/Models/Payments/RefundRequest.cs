@@ -6,10 +6,10 @@ namespace CRUD_asp.netMVC.Models.Payments
     public class RefundRequest
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; } = null!;
 
         [Required]
-        public int ExcessPaymentId { get; set; }
+        public string ExcessPaymentId { get; set; } = null!;
 
         [Required]
         public int UserId { get; set; }

@@ -8,7 +8,7 @@ namespace CRUD_asp.netMVC.Models.Payments
     public class UnderpaidOrder
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; } = null!;
 
         [Required]
         public int UserId { get; set; }

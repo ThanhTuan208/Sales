@@ -46,7 +46,7 @@ $(document).ready(function () {
         // Đóng Modal
         $(document).on('click', '.close-btn, .modal-overlay', function (e) {
             // Nếu click vào bên trong modal-box thì không đóng
-            if ($(e.target).closest('.modal-box').length && !$(e.target).closest('.close-btn').length) {
+            if (!$(e.target).closest('.close-btn').length) {
                 return;
             }
 
@@ -54,7 +54,7 @@ $(document).ready(function () {
             setTimeout(function () {
                 $('.modal-overlay').fadeOut(300, function () {
                     $('body').removeClass('modal-open');
-                    $('.payment-item').removeClass('show'); // Reset animation
+                    $('.payment-item').removeClass('show-list-payment'); // Reset animation
                 });
             }, 200);
         });
@@ -62,21 +62,21 @@ $(document).ready(function () {
         function animateItems() {
             $('.payment-item').each(function (i) {
                 setTimeout(function () {
-                    $('.payment-item').eq(i).addClass('show');
+                    $('.payment-item').eq(i).addClass('show-list-payment');
                 }, 100 * (i + 1));
             });
         }
     });
 
-
     // Xu ly hien thi form chi tiet ma don hang
     // Template chi tiết giao dịch
     function getDetailHTML(data) {
 
-        let status = "Dư thừa";
+        let status = "Dư";
         if (data.type === 'UnderpaidCreated') {
             status = "Thiếu";
         }
+
         return `
             <div class="transaction-detail-card">
                 <div class="card-header">
@@ -87,7 +87,7 @@ $(document).ready(function () {
                     <div class="detail-row"><div class="label">Mã giao dịch</div><div class="value">${data.id}</div></div>
                     <div class="detail-row"><div class="label">Loại</div><div class="value">${data.type} <span class="badge badge-excess">${status}</span></div></div>
                     <div class="detail-row"><div class="label">Số tiền</div><div class="value amount ${data.amount > 0 ? 'positive' : 'negative'}">${parseFloat(data.amount).toLocaleString('vi-VN')} ₫</div></div>
-                    <div class="detail-row"><div class="label">Số dư sau</div><div class="value">${data.balance ? parseFloat(data.balance).toLocaleString('vi-VN') + ' ₫' : 'Không có'}</div></div>
+                    <div class="detail-row"><div class="label">Tiền ${status.toLowerCase()}</div><div class="value">${data.balance ? parseFloat(data.balance).toLocaleString('vi-VN') + ' ₫' : 'Không có'}</div></div>
                     <div class="detail-row"><div class="label">Thời gian</div><div class="value">${data.date}</div></div>
                     <div class="detail-row"><div class="label">Mô tả</div><div class="value">${data.description || 'Không có'}</div></div>
                     <div class="detail-row"><div class="label">ID liên quan</div><div class="value">${data.relatedId || 'Không có'}</div></div>
@@ -124,7 +124,7 @@ $(document).ready(function () {
         $profileContainer.addClass('show-detail');
 
         // Xử lý nút đóng (dấu X)
-        $(document).off('click', '.close-btn').on('click', '.close-btn  ', function (e) {
+        $(document).off('click', '.close-btn').on('click', '.close-btn', function (e) {
 
             $profileContainer.removeClass('show-detail');
             $profileContainer.addClass('close-detail');
