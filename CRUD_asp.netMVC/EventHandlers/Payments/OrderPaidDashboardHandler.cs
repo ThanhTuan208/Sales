@@ -76,7 +76,7 @@ namespace CRUD_asp.netMVC.EventHandlers.Payments
             await db.KeyExpireAsync(amtTodayKey, ExpiredTime("today"));
             await db.KeyExpireAsync(amtMonthKey, ExpiredTime("month"));
 
-            await _hub.Clients.All.SendAsync("ReceiveCurrentStatus", tasks);
+            await _hub.Clients.User(evt.UserId).SendAsync("ReceiveCurrentStatus", tasks);
         }
 
         public TimeSpan ExpiredTime(string type)

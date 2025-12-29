@@ -1,6 +1,7 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Order.GHN;
 using CRUD_asp.netMVC.DTO.Payment;
+using CRUD_asp.netMVC.DTO.Payments;
 using CRUD_asp.netMVC.Hubs;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
@@ -71,6 +72,84 @@ namespace CRUD_asp.netMVC.Controllers
             return Ok(new { success = true, message = sms.Message });
         }
 
+        [HttpPost("~/Payment/PaymentConfirmWallet"), IgnoreAntiforgeryToken]
+        public async Task<IActionResult> PaymentConfirmWalletAsync([FromBody] PaymentVerificationEvent evt)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .Select(x => new { x.Key, x.Value.Errors });
+
+                return BadRequest(errors);
+            }
+
+            var result = await _smsPaymentVerificationService.UserConfirmWalletAsync(evt);
+            if (!result.Success)
+            {
+                return BadRequest(new { success = false, message = result.Message });
+            }
+
+            return Ok(new { success = true, message = "Thanh toán thành công." });
+        }
+
+        [HttpGet("~/Payment/PaymentSuccess")] // Goi trang thanh toan thanh cong
+        public async Task<IActionResult> PaymentSuccess([FromQuery] string orderID, [FromQuery] string transactionCode)
+        {
+            if (string.IsNullOrEmpty(orderID) || string.IsNullOrEmpty(transactionCode))
+            {
+                return BadRequest();
+            }
+
+            var order = await _dbContext.Orders
+                .AsNoTracking()
+                .Include(p => p.OrderDetail).ThenInclude(p => p.Product)
+                .FirstOrDefaultAsync(p => p.ID == orderID && p.TransactionId == transactionCode && p.Status == "Paid");
+
+            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
+            if (userID > 0)
+            {
+                var Address = await _dbContext.Addresses.FirstOrDefaultAsync(p => p.UserID == userID && p.IsDefault);
+
+                order.AddressID = Address.ID;
+                order.ShipRecipientName = Address.RecipientName;
+                order.ShipPhoneNumber = Address.PhoneNumber;
+                order.ShipStreet = Address.Street;
+                order.ShipProvince = Address.Province;
+                order.ShipWard = Address.Ward;
+
+                _dbContext.Orders.Update(order);
+                await _dbContext.SaveChangesAsync();
+            }
+
+            var cateID = await _dbContext.OrderDetail.Where(p => p.OrderID == order.ID).Select(p => p.Product.CateID).FirstOrDefaultAsync();
+
+            var product = await _dbContext.Products.Where(p => p.CateID == cateID).ToListAsync();
+
+            Random rand = new Random();
+            var shuffledProduct = product.OrderBy(p => rand.Next()).Take(4).ToList();
+
+            var viewModel = new GeneralOrderViewModel()
+            {
+                Product = shuffledProduct,
+                Order = order
+            };
+
+            if (viewModel == null) return BadRequest();
+
+            return View(viewModel);
+        }
+
+        public TimeSpan ExpiredTime(string time)
+        {
+            var dateCurrent = DateTime.UtcNow;
+            var chooseTime = dateCurrent.Date.AddDays(1);
+            if (time == "month")
+            {
+                chooseTime = dateCurrent.Date.AddMonths(1);
+            }
+            return chooseTime - dateCurrent;
+        }
         #region CallWardAPIGHN
         public async Task<string> RequestGHN(Orders order)
         {
@@ -161,64 +240,6 @@ namespace CRUD_asp.netMVC.Controllers
         //    return null; // không tìm thấy
         //}
         #endregion
-
-        [HttpGet("~/Payment/PaymentSuccess")] // Goi trang thanh toan thanh cong
-        public async Task<IActionResult> PaymentSuccess([FromQuery] string orderID, [FromQuery] string transactionCode)
-        {
-            if (string.IsNullOrEmpty(orderID) || string.IsNullOrEmpty(transactionCode))
-            {
-                return BadRequest();
-            }
-
-            var order = await _dbContext.Orders
-                .AsNoTracking()
-                .Include(p => p.OrderDetail).ThenInclude(p => p.Product)
-                .FirstOrDefaultAsync(p => p.ID == orderID && p.TransactionId == transactionCode && p.Status == "Paid");
-
-            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
-            if (userID > 0)
-            {
-                var Address = await _dbContext.Addresses.FirstOrDefaultAsync(p => p.UserID == userID && p.IsDefault);
-
-                order.AddressID = Address.ID;
-                order.ShipRecipientName = Address.RecipientName;
-                order.ShipPhoneNumber = Address.PhoneNumber;
-                order.ShipStreet = Address.Street;
-                order.ShipProvince = Address.Province;
-                order.ShipWard = Address.Ward;
-
-                _dbContext.Orders.Update(order);
-                await _dbContext.SaveChangesAsync();
-            }
-
-            var cateID = await _dbContext.OrderDetail.Where(p => p.OrderID == order.ID).Select(p => p.Product.CateID).FirstOrDefaultAsync();
-
-            var product = await _dbContext.Products.Where(p => p.CateID == cateID).ToListAsync();
-
-            Random rand = new Random();
-            var shuffledProduct = product.OrderBy(p => rand.Next()).Take(4).ToList();
-
-            var viewModel = new GeneralOrderViewModel()
-            {
-                Product = shuffledProduct,
-                Order = order
-            };
-
-            if (viewModel == null) return BadRequest();
-
-            return View(viewModel);
-        }
-
-        public TimeSpan ExpiredTime(string time)
-        {
-            var dateCurrent = DateTime.UtcNow;
-            var chooseTime = dateCurrent.Date.AddDays(1);
-            if (time == "month")
-            {
-                chooseTime = dateCurrent.Date.AddMonths(1);
-            }
-            return chooseTime - dateCurrent;
-        }
     }
 }
 

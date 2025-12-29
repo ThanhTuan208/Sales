@@ -736,10 +736,7 @@ namespace CRUD_asp.netMVC.Migrations
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Payments.UserWallet", b =>
                 {
                     b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)");

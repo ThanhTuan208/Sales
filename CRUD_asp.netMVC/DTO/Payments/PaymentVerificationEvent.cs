@@ -1,16 +1,19 @@
-﻿using CRUD_asp.netMVC.Models.Order;
+﻿using CRUD_asp.netMVC.DTO.Order;
+using CRUD_asp.netMVC.Models.Order;
 
 namespace CRUD_asp.netMVC.DTO.Payments
 {
     public class PaymentVerificationEvent
     {
-        public Orders Order { get; set; } = null!;
-        public decimal? AmountRecive { get; set; }
+        public decimal? AmountReceive { get; set; }
+        public PaymentVerificationByOrderDTO Order { get; set; } = null!;
 
-        public PaymentVerificationEvent(Orders order, decimal? amountRecive)
+        public PaymentVerificationEvent() { }
+
+        public PaymentVerificationEvent(PaymentVerificationByOrderDTO order, decimal? amountRecive)
         {
             Order = order;
-            AmountRecive = amountRecive;
+            AmountReceive = amountRecive;
         }
     }
 }

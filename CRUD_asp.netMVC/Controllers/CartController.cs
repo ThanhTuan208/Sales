@@ -207,7 +207,7 @@ namespace CRUD_asp.netMVC.Controllers
                             Amount = totalList > 1000000 ? totalList : totalList + 30000,
                             Status = "Pending",
                             PaymentMethod = PaymentMethod ?? string.Empty,
-                            OrderDate = DateTime.Now,
+                            OrderDate = DateTime.UtcNow,
                             TrackingNumber = "Đang tạo mã vận đơn",
                             TransactionId = Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper()
                         };

@@ -14,7 +14,7 @@ namespace CRUD_asp.netMVC.Extensions.Payments
 
         public static async Task<decimal> ByToDayAsync(this DbSet<Payment> payment, Redis db)
         {
-            var today = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyyMMdd");
+            var today =DateTime.UtcNow.ToString("yyyyMMdd");
             var todayAmountKey = $"{AMOUNT_TODAY_PREFIX + today}";
 
             var todayAmount = await db.StringGetAsync(todayAmountKey);

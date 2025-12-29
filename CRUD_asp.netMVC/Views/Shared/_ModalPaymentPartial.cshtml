@@ -4,7 +4,8 @@
 @{
 }
 <link rel="stylesheet" href="~/css/load_address.css" asp-append-version="true" />
- 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" asp-append-version="true">
+
 @Html.AntiForgeryToken()
 
 <section class="modal-left">
@@ -19,9 +20,31 @@
     <div class="status-box">
         <div class="spinner"></div>
         <div class="success-icon" style="display:none;">✔</div>
-        <div class="success-text" style="display:none;">Thanh toán thành công !</div>
+        <div class="success-text" style="display:none;">Thanh toán thành công!</div>
+    </div>
+</div>
+
+<div id="paymentModal" class="modal-overlay-wallet">
+    <div class="modal-card">
+        <div class="modal-header-wallet">
+            <div class="icon-wrapper"><i class="fa-solid fa-wallet"></i></div>
+            <h2>Xác nhận ví</h2>
+        </div>
+        <div class="modal-body">
+            <p>Số dư không đủ. Dùng <b>Ví điện tử</b> để thanh toán phần thiếu?</p>
+            <div class="info-card">
+              <div class="info-row"><span>Tiền đơn hàng</span><span class="order-amount">0đ</span></div>
+                <div class="info-row"><span>Tiền chuyển khoản</span><span class="receive-amount">0đ</span></div>
+                <div class="info-row"><span>Số dư hiện tại</span><span class="excess-amount">0đ</span></div>
+                <div class="info-row amount-highlight"><span>Còn thiếu</span><span class="missing-amount">0đ</span></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="btnPay" class="btn-confirm">Thanh toán bằng Ví</button>
+            <button id="btnCancel" class="btn-cancel">Hủy giao dịch</button>
+        </div>
     </div>
 </div>
 
 <script src="~/js/signalr.min.js" asp-append-version="true"></script>
-<script type="module" src="~/js/load_address.js" asp-append-version="true" ></script>
+<script type="module" src="~/js/load_address.js" asp-append-version="true"></script>

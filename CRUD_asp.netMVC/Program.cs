@@ -221,6 +221,8 @@ namespace CRUD_asp.netMVC
 
             app.MapHub<SurplusMoneyHub>("/SurplusMoney");
 
+            app.MapHub<QuestionResHub>("/questionRes");
+
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
                 Authorization = new[] { new HangfireAuthFilter() },

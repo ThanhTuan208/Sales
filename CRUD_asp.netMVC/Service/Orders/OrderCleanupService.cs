@@ -12,7 +12,7 @@ public class OrderCleanupService
     {
         var expiredOrders = await _dbContext.Orders
             .Where(o => o.Status == "Pending" 
-                    && o.OrderDate < DateTime.Now.AddMinutes(-5))
+                    && o.OrderDate < DateTime.UtcNow.AddMinutes(-5))
             .ToListAsync();
 
         if (expiredOrders.Any())

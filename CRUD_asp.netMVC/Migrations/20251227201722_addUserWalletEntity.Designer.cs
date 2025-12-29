@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUD_asp.netMVC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20251226163658_addUserWalletEntity")]
+    [Migration("20251227201722_addUserWalletEntity")]
     partial class addUserWalletEntity
     {
         /// <inheritdoc />
@@ -739,10 +739,7 @@ namespace CRUD_asp.netMVC.Migrations
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Payments.UserWallet", b =>
                 {
                     b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)");

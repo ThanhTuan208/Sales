@@ -22,7 +22,7 @@
 
     <div style="text-align: center; margin-top: 8px">
         <a asp-controller="Home" asp-action="Index" class="btn" id="btnHome">Trang chủ</a>
-        <a asp-controller="" asp-action="" class="btn" id="btnCartFollow">Theo dõi đơn hàng</a>
+        <a asp-controller="Home" asp-action="OrderTracking" class="btn" id="btnCartFollow">Theo dõi đơn hàng</a>
     </div>
 </div>
 
@@ -42,7 +42,7 @@
         }
     </div>
 </div>
-<script src="~/js/jquery-3.7.1.min.js" asp-append-version="true"></script>
+<script src="~/js/jquery-3.7.1.js" asp-append-version="true"></script>
 <script src="~/js/signalr.min.js" asp-append-version="true"></script>
 <script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
 <script type="module" src="~/js/load_address.js" asp-append-version="true"></script>

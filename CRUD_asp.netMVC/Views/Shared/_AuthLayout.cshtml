@@ -36,13 +36,14 @@
         </div>
     </footer>
 
-    <script src="~/js/jquery-3.7.1.min.js" asp-append-version="true"></script>
+    @* <script src="https://code.jquery.com/jquery-3.7.1.js" crossorigin="anonymous" asp-append-version="true"></script> *@
+    @* <script src="~/js/jquery-3.7.1.min.js" asp-append-version="true"></script>  *@
+    <script src="~/js/jquery-3.7.1.js" asp-append-version="true"></script> 
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.js" asp-append-version="true"></script>
     <script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="~/js/signalr.min.js" asp-append-version="true"></script>
     <script type="module" src="~/js/js.js" asp-append-version="true"></script>
 
-    @* <script src="~/assets/jquery-3.6.0.min.js"></script> *@
-    @await RenderSectionAsync("Scripts", required: false)
+    @* @await RenderSectionAsync("Scripts", required: false) *@
 </body>
 </html>

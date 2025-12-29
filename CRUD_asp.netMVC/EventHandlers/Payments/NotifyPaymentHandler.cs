@@ -7,13 +7,13 @@ namespace CRUD_asp.netMVC.EventHandlers.Payments
 {
     public class NotifyPaymentHandler : IEventHandler<OrderPaidEvent>
     {
-        private readonly IHubContext<PaymentHub>? _hub;
+        private readonly IHubContext<PaymentHub> _hub;
 
-        public NotifyPaymentHandler(IHubContext<PaymentHub>? hub) => _hub = hub;
+        public NotifyPaymentHandler(IHubContext<PaymentHub> hub) => _hub = hub;
 
         public async Task HandleAsync(OrderPaidEvent evt)
         {
-            await _hub.Clients.All.SendAsync("ReceivePaymentStatus", evt.OrderId, evt.TransactionId, evt.IsSuccess);
+            await _hub.Clients.User(evt.UserId).SendAsync("ReceivePaymentStatus", evt.OrderId, evt.TransactionId, evt.IsSuccess);
         }
     }
 }

@@ -1,13 +1,140 @@
 ﻿import { updateQtyAfterCheck, GetArrIDChecked, LoadView } from './js.js';
 import { startCountdown } from './globalGeneralFunc.js';
-
-
 $(document).ready(function () {
     LoadView();
 
+    // Xu ly su kien thong bao user dung vi thanh toan san pham
+    const $btnPay = $('#btnPay');
+    const $modal = $('#paymentModal');
+    const $btnCancel = $('#btnCancel');
+    let amountReceiveHub = 0;
+    let orderData = null;
+
+    // Mở modal với hiệu ứng fadeIn
+    $('#triggerModal').on('click', function () {
+        $modal.css('display', 'flex').hide().fadeIn(400);
+    });
+
+    // Đóng modal (Chỉ cho phép đóng qua nút Hủy)
+    $btnCancel.on('click', function () {
+        $modal.fadeOut(300);
+
+        let evt = {
+            amountReceive: amountReceiveHub,
+            order: orderData
+        };
+        console.log(evt);
+        console.log("Json: " + JSON.stringify(evt));
+
+        $.ajax({
+            url: `/Payment/PaymentConfirmWallet`,
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(evt),
+            success: function (res) {
+                console.log(res);
+                alert(res.message);
+            },
+            error: function (err) {
+                console.error(err);
+                alert("Error Send Data" || err.responseJSON.message);
+            }
+        });
+    });
+
+    // Xử lý thanh toán
+    $btnPay.on('click', function () {
+        // 1. Ngăn người dùng thao tác lần 2
+        $(this).prop('disabled', true);
+        $btnCancel.prop('disabled', true);
+
+        // 2. Thay đổi nội dung nút (Loading)
+        $(this).html('<i class="fas fa-circle-notch fa-spin"></i> Đang xử lý...');
+
+        // 3. Giả lập gọi API thanh toán
+        setTimeout(function () {
+            alert("Thanh toán thành công qua ví!");
+
+            // 4. Reset và đóng modal
+            $modal.fadeOut(300, function () {
+                // Reset lại trạng thái ban đầu sau khi hiệu ứng ẩn kết thúc
+                $btnPay.prop('disabled', false).text('Thanh toán bằng Ví');
+                $btnCancel.prop('disabled', false);
+            });
+        }, 2500);
+    });
+
+    // Gui cau hoi thanh toan trong vi dung cho user  //
+    $(function () {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/questionRes")
+            .withAutomaticReconnect([0, 2000, 5000, 10000])
+            .build();
+
+        // Hàm đăng ký handler - gọi lại mỗi khi connect/reconnect thành công
+        function registerPaymentHandler() {
+            connection.on("QuestionResquestUser", (orderId, userId, orderAmount, amountReceive, missingAmount, userWallet, paymentMethod, status, transactionCode) => {
+                console.log("Nhận tín hiệu thanh toán thành công:", orderId, missingAmount);
+
+                $('.modal-overlay-wallet').css('display', 'flex');
+                $('.order-amount').text(formatVND(orderAmount));
+                $('.receive-amount').text(formatVND(amountReceive));
+                $('.excess-amount').text(formatVND(userWallet));
+                $('.missing-amount').text(formatVND(missingAmount));
+
+                amountReceiveHub = amountReceive;
+
+                orderData = {
+                    id: orderId,
+                    userID: userId,
+                    amount: orderAmount,
+                    paymentMethod: paymentMethod,
+                    status: status,
+                    transactionId: transactionCode,
+                    missingAmount: missingAmount
+                };
+            })
+        };
+        function formatVND(amount) {
+            if (amount === undefined || amount === null) return '0 ₫';
+
+            return amount.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
+        }
+
+        // Hàm khởi động connection
+        function startConnection() {
+            connection.start()
+                .then(() => {
+                    console.log("SignalR connected successfully");
+                    registerPaymentHandler(); // Đăng ký lại handler
+                })
+                .catch(err => {
+                    console.error("SignalR connection failed:", err);
+                    setTimeout(startConnection, 5000);
+                });
+        }
+
+        // Xử lý khi connection bị đóng
+        connection.onclose(() => {
+            console.warn("SignalR connection closed. Reconnecting...");
+        });
+
+        // Xử lý khi reconnect thành công (rất quan trọng!)
+        connection.onreconnected(() => {
+            console.log("SignalR reconnected successfully!");
+            registerPaymentHandler(); // Đăng ký lại handler sau reconnect
+        });
+
+        // Bắt đầu kết nối
+        startConnection();
+    });
+
+
     // chay timer ban dau
     //startCountdown(expireSeconds);
-
     // Tao lai QR
     $(document).off('click', '#resetQR').on('click', '#resetQR', function () {
 
