@@ -1,17 +1,18 @@
 ﻿using CRUD_asp.netMVC.Models.Auth;
 using Microsoft.EntityFrameworkCore;
+using User = CRUD_asp.netMVC.Models.Auth.Users;
 
 namespace CRUD_asp.netMVC.Extensions.Admins
 {
-    public static class UserQueryExtensions
+    public static class AdminQueryExtensions
     {
-        public static async Task<int> ByToDayAsync(this DbSet<Users> user)
+        public static async Task<int> ByToDayAsync(this DbSet<User> user)
         {
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
             return await user.CountAsync(p => EF.Property<DateOnly>(p, "StartDay") == today);
         }
 
-        public static async Task<int> ByToYesterdayAsync(this DbSet<Users> user)
+        public static async Task<int> ByToYesterdayAsync(this DbSet<User> user)
         {
             var yesterday = DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-1));
             return await user.CountAsync(p => EF.Property<DateOnly>(p, "StartDay") == yesterday);

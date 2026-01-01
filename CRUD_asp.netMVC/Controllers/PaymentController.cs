@@ -118,6 +118,7 @@ namespace CRUD_asp.netMVC.Controllers
                 order.ShipProvince = Address.Province;
                 order.ShipWard = Address.Ward;
 
+                _dbContext.Attach(order);
                 _dbContext.Orders.Update(order);
                 await _dbContext.SaveChangesAsync();
             }

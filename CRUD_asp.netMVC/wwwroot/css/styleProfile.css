@@ -554,3 +554,69 @@ h6 {
         top: 1.2rem;
     }
 }
+
+/* Container con */
+.transaction-children {
+    margin-top: 10px;
+    margin-left: 28px;
+    padding-left: 15px;
+    border-left: 2px dashed rgba(212, 175, 55, 0.3);
+}
+
+/* Item con */
+.transaction-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    margin-top: 6px;
+    background: rgba(0,0,0,0.02);
+}
+
+/* Index 1.1 */
+.child-index {
+    font-weight: 700;
+    color: var(--muted);
+    min-width: 28px;
+}
+
+/* Label */
+.child-label {
+    flex: 1;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+/* Amount */
+.child-amount {
+    font-weight: 700;
+}
+
+/* Dư tiền */
+.transaction-child.positive {
+    border-left: 3px solid #10b981;
+}
+
+    .transaction-child.positive .child-amount {
+        color: #10b981;
+    }
+
+/* Thiếu tiền */
+.transaction-child.negative {
+    border-left: 3px solid #ef4444;
+}
+
+    .transaction-child.negative .child-amount {
+        color: #ef4444;
+    }
+
+/* Dark mode */
+[data-theme="dark"] .transaction-child {
+    background: rgba(255,255,255,0.04);
+}
+
+[data-theme="dark"] .child-label {
+    color: var(--text);
+}

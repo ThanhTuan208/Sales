@@ -5,7 +5,6 @@ using CRUD_asp.netMVC.EventHandlers.Payments;
 using CRUD_asp.netMVC.Filters;
 using CRUD_asp.netMVC.Hubs;
 using CRUD_asp.netMVC.Middleware;
-using CRUD_asp.netMVC.Migrations;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Service.EmailSender;
 using CRUD_asp.netMVC.Service.GHN;
@@ -19,11 +18,7 @@ using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Pkcs;
 using StackExchange.Redis;
-using System;
-using System.ComponentModel.Design;
-using System.Threading.Tasks;
 
 namespace CRUD_asp.netMVC
 {

@@ -36,12 +36,26 @@ namespace CRUD_asp.netMVC.EventHandlers.Payments
             decimal orderAmount = order.Amount ?? 0;
             decimal? missingAmount = order.Amount - evt.AmountReceive;
 
+            DateTime orderDate = order.OrderDate;
+
             var walletBalance = await _dbContext.UserWallets.Where(p => p.UserId == order.UserId).SumAsync(p => p.Balance);
 
             // Thieu tien nhung vi du
             if (evt.AmountReceive < orderAmount && walletBalance >= (orderAmount - evt.AmountReceive))
             {
-                await _hub.Clients.User(userId.ToString()).SendAsync("QuestionResquestUser", orderId, userId, orderAmount, amountReceive, missingAmount, walletBalance, paymentMethod, status, transactionCode);
+                await _hub.Clients.User(userId.ToString()).SendAsync(
+                    "QuestionResquestUser",
+                        orderId,
+                        userId,
+                        orderAmount,
+                        amountReceive,
+                        missingAmount,
+                        walletBalance,
+                        paymentMethod,
+                        status,
+                        transactionCode,
+                        orderDate
+                    );
                 return;
             }
 

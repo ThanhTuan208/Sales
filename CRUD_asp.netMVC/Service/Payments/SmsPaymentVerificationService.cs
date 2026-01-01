@@ -62,14 +62,15 @@ namespace CRUD_asp.netMVC.Service.Payments
                                         .Include(p => p.OrderDetail).ThenInclude(p => p.Product)
                                         .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
 
-                PaymentVerificationByOrderDTO orderDTO = new PaymentVerificationByOrderDTO()
+                PaymentVerificationByOrderDTO orderDTO = new ()
                 {
                     Id = order.ID,
                     UserId = order.UserID,
                     Amount = order.Amount,
                     PaymentMethod = order.PaymentMethod,
                     Status = order.Status ?? string.Empty,
-                    TransactionId = order.TransactionId
+                    TransactionId = order.TransactionId,
+                    OrderDate = order.OrderDate
                 };
 
                 if (order == null)
@@ -107,6 +108,7 @@ namespace CRUD_asp.netMVC.Service.Payments
                     Status = orderDto.Status,
                     TransactionId = orderDto.TransactionId,
                     TrackingNumber = string.Empty,
+                    OrderDate = orderDto.OrderDate,
                     OrderDetail = _dbContext.OrderDetail.Where(p => p.OrderID == orderDto.Id).ToList()
                 };
 
@@ -115,7 +117,6 @@ namespace CRUD_asp.netMVC.Service.Payments
                 PaymentModel? payment = null;
                 UnderpaidOrder? underPaid = null;
 
-                // Can tao them messageBox UI hoi xem nguoi dung co muon thanh toan so tien du ca nhan neu so tien thanh toan don hang ko du khong ?
                 var checkExcessPayment = await CheckExcessPaymentAsync(evt.AmountReceive, order.Amount, order.UserID);
                 // Hoi nguoi dung co muon lay so du trong vi bu vao so tien ck thieu hay ko ?
                 if (checkExcessPayment)
@@ -226,7 +227,7 @@ namespace CRUD_asp.netMVC.Service.Payments
                     decimal[] amounts = { payment.paidAmount ?? 0, excess.ExcessAmount };
                     decimal[] balanceSnapshots = { beforeUpdateWallet ?? 0, userWalletExist?.Balance ?? 0 };
                     bool[] isAffectBalance = { false, true };
-                    string[] descriptions = { $"Thanh toán từ đơn {order.ID}", $"Tiền dư từ đơn {order.ID}" };
+                    string[] descriptions = { $"Thanh toán đủ", $"Tiền dư từ đơn hàng" };
 
                     for (int i = 0; i < 2; i++)
                     {
@@ -234,9 +235,38 @@ namespace CRUD_asp.netMVC.Service.Payments
                         {
                             Id = Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper(),
                             UserId = order.UserID,
+                            OrderId = order.ID,
                             RelatedId = relatedIds[i],
                             Type = types[i],
                             Amount = amounts[i],
+                            PaidAmount = evt.AmountReceive,
+                            BalanceSnapshot = balanceSnapshots[i],
+                            AffectBalance = isAffectBalance[i],
+                            Description = descriptions[i],
+                            CreatedAt = DateTime.UtcNow,
+                        });
+                    }
+                }
+                else if (checkExcessPayment)
+                {
+                    string[] types = { "PaymentCompleted", "ExcessCreated" };
+                    string[] relatedIds = { $"PaymentId_{payment?.ID}", excess.Id };
+                    decimal[] amounts = { payment.paidAmount ?? 0, excess.ExcessAmount };
+                    decimal[] balanceSnapshots = { beforeUpdateWallet ?? 0, userWalletExist?.Balance ?? 0 };
+                    bool[] isAffectBalance = { false, true };
+                    string[] descriptions = { $"Thanh toán đủ", $"Tiền dư từ đơn hàng" };
+
+                    for (int i = 0; i < 2; i++)
+                    {
+                        _dbContext.MoneyFlowLogs.Add(new MoneyFlowLog()
+                        {
+                            Id = Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper(),
+                            UserId = order.UserID,
+                            OrderId = order.ID,
+                            RelatedId = relatedIds[i],
+                            Type = types[i],
+                            Amount = amounts[i],
+                            PaidAmount = evt.AmountReceive,
                             BalanceSnapshot = balanceSnapshots[i],
                             AffectBalance = isAffectBalance[i],
                             Description = descriptions[i],
@@ -250,6 +280,7 @@ namespace CRUD_asp.netMVC.Service.Payments
                     {
                         Id = Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper(),
                         UserId = order.UserID,
+                        OrderId = order.ID,
                         RelatedId = underPaid != null
                                             ? underPaid.Id
                                             : $"paymentId_{payment?.ID}",
@@ -261,11 +292,12 @@ namespace CRUD_asp.netMVC.Service.Payments
                                         ? underPaid.PaidAmount
                                         : order.Amount ?? 0,
 
+                        PaidAmount = evt.AmountReceive,
                         BalanceSnapshot = userWalletExist.Balance,
                         AffectBalance = checkExcessPayment ? true : false,
                         Description = underPaid != null
-                                        ? $"Thanh toán thiếu từ đơn {order.ID}"
-                                        : checkExcessPayment ? $"Thanh toán bù ví từ đơn {order.ID}" : $"Thanh toán từ đơn {order.ID}",
+                                        ? $"Thanh toán thiếu từ đơn hàng"
+                                        : checkExcessPayment ? $"Thanh toán bù từ ví" : $"Thanh toán đủ",
 
                         CreatedAt = DateTime.UtcNow,
                     });

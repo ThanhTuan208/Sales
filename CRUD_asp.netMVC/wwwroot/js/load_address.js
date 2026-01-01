@@ -33,7 +33,6 @@ $(document).ready(function () {
             data: JSON.stringify(evt),
             success: function (res) {
                 console.log(res);
-                alert(res.message);
             },
             error: function (err) {
                 console.error(err);
@@ -73,7 +72,7 @@ $(document).ready(function () {
 
         // Hàm đăng ký handler - gọi lại mỗi khi connect/reconnect thành công
         function registerPaymentHandler() {
-            connection.on("QuestionResquestUser", (orderId, userId, orderAmount, amountReceive, missingAmount, userWallet, paymentMethod, status, transactionCode) => {
+            connection.on("QuestionResquestUser", (orderId, userId, orderAmount, amountReceive, missingAmount, userWallet, paymentMethod, status, transactionCode, orderDate) => {
                 console.log("Nhận tín hiệu thanh toán thành công:", orderId, missingAmount);
 
                 $('.modal-overlay-wallet').css('display', 'flex');
@@ -91,7 +90,8 @@ $(document).ready(function () {
                     paymentMethod: paymentMethod,
                     status: status,
                     transactionId: transactionCode,
-                    missingAmount: missingAmount
+                    missingAmount: missingAmount,
+                    orderDate: orderDate
                 };
             })
         };

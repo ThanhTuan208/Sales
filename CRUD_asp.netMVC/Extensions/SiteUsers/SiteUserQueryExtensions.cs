@@ -1,9 +1,7 @@
-﻿using StackExchange.Redis;
-using CRUD_asp.netMVC.Models.Auth;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore;
 using SiteUser = CRUD_asp.netMVC.Models.Auth.SiteUsers;
 using Redis = StackExchange.Redis.IDatabase;
+using CRUD_asp.netMVC.Data;
 
 namespace CRUD_asp.netMVC.Extensions.SiteUsers
 {
@@ -58,32 +56,5 @@ namespace CRUD_asp.netMVC.Extensions.SiteUsers
                     ? "0%\nkhông có thay đổi"
                     : $"{(percent > 0 ? "+" : "")}{percent:F1}% so với hôm qua";
         }
-        #region Lay database SQLServer (Old Code)
-        //public static async Task<long> DAUTodayAsync(this DbSet<SiteUser> siteUsers)
-        //{
-        //    var yesterday = DateOnly.FromDateTime(DateTime.UtcNow);
-        //    var DAUYesterday = await siteUsers.FirstOrDefaultAsync(p => EF.Property<DateOnly>(p, "Day") == yesterday);
-        //    return DAUYesterday != null ? DAUYesterday.DailyActiveUsers : 0;
-        //}   
-        //public static async Task<long> DAUYesterdayAsync(this DbSet<SiteUser> siteUsers)
-        //{
-        //    var yesterday = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
-        //    var DAUYesterday = await siteUsers.FirstOrDefaultAsync(p => EF.Property<DateOnly>(p, "Day") == yesterday);
-        //    return DAUYesterday != null ? DAUYesterday.DailyActiveUsers : 0;
-        //}   
-
-        //public static async Task<long> UVTodayAsync(this DbSet<SiteUser> siteUsers, Redis? db)
-        //{
-        //    var yesterday = DateOnly.FromDateTime(DateTime.UtcNow);
-        //    var DAUYesterday = await siteUsers.FirstOrDefaultAsync(p => EF.Property<DateOnly>(p, "Day") == yesterday);
-        //    return DAUYesterday != null ? DAUYesterday.UniqueVisitors : 0;
-        //}
-        //public static async Task<long> UVYesterdayAsync(this DbSet<SiteUser> siteUsers, Redis? db)
-        //{
-        //    var yesterday = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
-        //    var DAUYesterday = await siteUsers.FirstOrDefaultAsync(p => EF.Property<DateOnly>(p, "Day") == yesterday);
-        //    return DAUYesterday != null ? DAUYesterday.UniqueVisitors : 0;
-        //}
-        #endregion 
     }
 }

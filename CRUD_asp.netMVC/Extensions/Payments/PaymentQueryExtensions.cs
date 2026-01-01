@@ -1,8 +1,7 @@
-﻿using CRUD_asp.netMVC.DTO.Admin;
-using CRUD_asp.netMVC.Models.Auth;
+﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Models.Payments;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Org.BouncyCastle.Bcpg;
 using Redis = StackExchange.Redis.IDatabase;
 
 namespace CRUD_asp.netMVC.Extensions.Payments
@@ -60,6 +59,32 @@ namespace CRUD_asp.netMVC.Extensions.Payments
         {
             if (lastMonth == 0) return month == 0 ? 0m : 100m;
             return ((month - lastMonth) / lastMonth) * 100m;
+        }
+
+        public static string ConvertTimeAsia(this DateTime? date)
+        {
+            var utcTime = date.Value; // DateTime UTC
+
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime vnTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, vnTimeZone);
+
+            return vnTime.ToString("dd/MM/yyyy HH:mm");
+        }
+
+        public static decimal GetAmount(AppDBContext _dbContext, decimal? isMissing, string relatedId)
+        {
+            if (!isMissing.HasValue) return 0M;
+
+            if (isMissing == 1M)
+            {
+                return _dbContext.UnderpaidOrders.FirstOrDefault(p => p.Id == relatedId)?.MissingAmount ?? 0M;
+            }
+            else return _dbContext.ExcessPayments.FirstOrDefault(p => p.Id == relatedId)?.ExcessAmount ?? 0M;
+        }
+
+        public static decimal? GetWalletAmountByUserId(DbSet<UserWallet> wallet, int userId)
+        {
+            return wallet.Where(p => p.UserId == userId).Sum(p => p.Balance);
         }
     }
 }

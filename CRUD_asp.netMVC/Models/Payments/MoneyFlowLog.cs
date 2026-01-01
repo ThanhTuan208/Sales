@@ -11,6 +11,9 @@ namespace CRUD_asp.netMVC.Models.Payments
         [Required]
         public int UserId { get; set; }
 
+        [Required]
+        public string OrderId { get; set; } = null!;
+
         public string RelatedId { get; set; } = null!;
         // ExcessPaymentId | RefundRequestId | UnderpaidOrderId
 
@@ -20,6 +23,9 @@ namespace CRUD_asp.netMVC.Models.Payments
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Amount { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")] 
+        public decimal? PaidAmount { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal? BalanceSnapshot { get; set; }

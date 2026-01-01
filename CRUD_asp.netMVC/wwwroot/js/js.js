@@ -72,9 +72,34 @@ $(document).ready(function () {
     // Template chi tiết giao dịch
     function getDetailHTML(data) {
 
-        let status = "Dư";
-        if (data.type === 'UnderpaidCreated') {
-            status = "Thiếu";
+        console.log(data);
+        let status = "";
+        let statusUpdate = "";
+        let typeMoney = 0.00;
+
+        if (data.type === 'PaymentCompleted') {
+
+            status = "Thanh toán đủ";
+            statusUpdate = "Biên động số tiền";
+            typeMoney = false;
+        }
+        else if (data.type === 'UnderpaidCreated') {
+
+            status = "Thanh toán thiếu";
+            statusUpdate = "Số tiền thiếu";
+            typeMoney = data.miss;
+        }
+        else if (data.type === 'ExcessCreated' || data.paid > data.amount) {
+
+            status = "Thanh toán dư";
+            statusUpdate = "Số tiền dư";
+            typeMoney = data.excess;
+        }
+        else if (data.type === 'WalletCompleted') {
+
+            statusUpdate = "Số tiền bù";
+            status = "Thanh toán bù từ ví";
+            typeMoney = data.amount - data.paid;
         }
 
         return `
@@ -85,12 +110,11 @@ $(document).ready(function () {
                 </div>
                 <div class="detail-content">
                     <div class="detail-row"><div class="label">Mã giao dịch</div><div class="value">${data.id}</div></div>
-                    <div class="detail-row"><div class="label">Loại</div><div class="value">${data.type} <span class="badge badge-excess">${status}</span></div></div>
-                    <div class="detail-row"><div class="label">Số tiền</div><div class="value amount ${data.amount > 0 ? 'positive' : 'negative'}">${parseFloat(data.amount).toLocaleString('vi-VN')} ₫</div></div>
-                    <div class="detail-row"><div class="label">Tiền ${status.toLowerCase()}</div><div class="value">${data.balance ? parseFloat(data.balance).toLocaleString('vi-VN') + ' ₫' : 'Không có'}</div></div>
+                    <div class="detail-row"><div class="label">Trạng thái</div><div class="value"><span class="badge badge-excess">${status}</span></div></div>
+                    <div class="detail-row"><div class="label">Tiền đơn hàng</div><div class="value amount ${data.amount > 0 ? 'positive' : 'negative'}">${parseFloat(data.amount).toLocaleString('vi-VN')} ₫</div></div>
+                    <div class="detail-row"><div class="label">${statusUpdate}</div><div class="value">${typeMoney ? typeMoney.toLocaleString('vi-VN') + ' ₫' : 'Không'}</div></div>
                     <div class="detail-row"><div class="label">Thời gian</div><div class="value">${data.date}</div></div>
                     <div class="detail-row"><div class="label">Mô tả</div><div class="value">${data.description || 'Không có'}</div></div>
-                    <div class="detail-row"><div class="label">ID liên quan</div><div class="value">${data.relatedId || 'Không có'}</div></div>
                     <div class="detail-row"><div class="label">User ID</div><div class="value">${data.userId || 'Không xác định'}</div></div>
                 </div>
                 <div class="gradient-accent"></div>
@@ -106,7 +130,10 @@ $(document).ready(function () {
         const data = {
             id: $this.data('id'),
             type: $this.data('type'),
-            amount: $this.data('amount'),
+            amount: parseFloat($this.data('amount')),
+            paid: parseFloat($this.data('paid')),
+            miss: parseFloat($this.data('miss')),
+            excess: parseFloat($this.data('excess')),
             balance: $this.data('balance'),
             description: $this.data('description'),
             date: $this.data('date'),
@@ -116,7 +143,6 @@ $(document).ready(function () {
 
         const $profileContainer = $('#profileContainer');
         // Render form chi tiết
-        console.log(getDetailHTML(data));
         $('.detail-placeholder').html(getDetailHTML(data));
 
         // Hiển thị panel chi tiết và di chuyển container sang trái
