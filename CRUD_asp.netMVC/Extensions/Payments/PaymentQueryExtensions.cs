@@ -13,7 +13,7 @@ namespace CRUD_asp.netMVC.Extensions.Payments
 
         public static async Task<decimal> ByToDayAsync(this DbSet<Payment> payment, Redis db)
         {
-            var today =DateTime.UtcNow.ToString("yyyyMMdd");
+            var today = DateTime.UtcNow.ToString("yyyyMMdd");
             var todayAmountKey = $"{AMOUNT_TODAY_PREFIX + today}";
 
             var todayAmount = await db.StringGetAsync(todayAmountKey);
@@ -85,6 +85,11 @@ namespace CRUD_asp.netMVC.Extensions.Payments
         public static decimal? GetWalletAmountByUserId(DbSet<UserWallet> wallet, int userId)
         {
             return wallet.Where(p => p.UserId == userId).Sum(p => p.Balance);
+        }
+
+        public static string GetRealatedIdByExcessEntity(DbSet<ExcessPayment> excess, string orderId)
+        {
+            return excess.First(p => p.OrderId == orderId).Id;
         }
     }
 }

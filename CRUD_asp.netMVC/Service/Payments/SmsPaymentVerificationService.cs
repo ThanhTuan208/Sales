@@ -247,33 +247,6 @@ namespace CRUD_asp.netMVC.Service.Payments
                         });
                     }
                 }
-                else if (checkExcessPayment)
-                {
-                    string[] types = { "PaymentCompleted", "ExcessCreated" };
-                    string[] relatedIds = { $"PaymentId_{payment?.ID}", excess.Id };
-                    decimal[] amounts = { payment.paidAmount ?? 0, excess.ExcessAmount };
-                    decimal[] balanceSnapshots = { beforeUpdateWallet ?? 0, userWalletExist?.Balance ?? 0 };
-                    bool[] isAffectBalance = { false, true };
-                    string[] descriptions = { $"Thanh toán đủ", $"Tiền dư từ đơn hàng" };
-
-                    for (int i = 0; i < 2; i++)
-                    {
-                        _dbContext.MoneyFlowLogs.Add(new MoneyFlowLog()
-                        {
-                            Id = Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper(),
-                            UserId = order.UserID,
-                            OrderId = order.ID,
-                            RelatedId = relatedIds[i],
-                            Type = types[i],
-                            Amount = amounts[i],
-                            PaidAmount = evt.AmountReceive,
-                            BalanceSnapshot = balanceSnapshots[i],
-                            AffectBalance = isAffectBalance[i],
-                            Description = descriptions[i],
-                            CreatedAt = DateTime.UtcNow,
-                        });
-                    }
-                }
                 else
                 {
                     _dbContext.MoneyFlowLogs.Add(new MoneyFlowLog()

@@ -24,7 +24,7 @@
                     <div class="balance-card mb-4">
                         <h5 class="fw-light text-muted mb-3">Số tiền dư hiện tại</h5>
                         <div class="balance-amount">
-                            @string.Format(new CultureInfo("vi-VN"), "{0:N0}", Model.ExcessMoney) <span class="fs-4">VND</span>
+                            @string.Format(new CultureInfo("vi-VN"), "{0:N0}", Model.ExcessMoneyNow) <span class="fs-4">VND</span>
                         </div>
                         <p class="mt-4 mb-0 text-muted small">
                             Cập nhật: @Model.UpdateAt
@@ -35,12 +35,12 @@
                         <div class="stats-item">
                             <i class="bi bi-arrow-up-circle-fill stats-icon"></i>
                             <h6 class="text-muted mb-1">Tiền vào tháng này</h6>
-                            <h4 class="fw-bold text-success">+@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.TotalAmountInMonth)</h4>
+                            <h4 class="fw-bold text-success">@(Model.TotalAmountInMonth > 0 ? "+" : "")@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.TotalAmountInMonth)</h4>
                         </div>
                         <div class="stats-item">
                             <i class="bi bi-arrow-down-circle-fill stats-icon"></i>
                             <h6 class="text-muted mb-1">Đã chi</h6>
-                            <h4 class="fw-bold text-danger">-@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.PaidMoney)</h4>
+                            <h4 class="fw-bold text-danger">@(Model.PaidMoney > 0 ? "-" : "")@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.PaidMoney)</h4>
                         </div>
                     </div>
 
@@ -63,15 +63,14 @@
                                 <div class="timeline-item transaction-item"
                                      data-id="@item.Id"
                                      data-type="@item.Type"
-                                     data-amount="@item.AmountOrder"
+                                     data-userid="@item.User"
                                      data-paid="@item.PaidAmount"
+                                     data-amount="@item.OrderAmount"
+                                     data-relatedid="@item.RelatedId"
                                      data-excess="@item.ExcessAmount"
                                      data-miss="@item.MissingAmount"
-                                     data-balance="@(item.BalanceSnapshot?.ToString("N0", CultureInfo.InvariantCulture) ?? "")"
-                                     data-description="@item.Description"
                                      data-date="@item.CreatedAt"
-                                     data-related-id="@item.RelatedId"
-                                     data-userid="@item.User">
+                                     data-balance="@(item.BalanceSnapshot?.ToString("N0", CultureInfo.InvariantCulture) ?? "")">
 
                                     <!-- HEADER -->
                                     <div class="d-flex justify-content-between align-items-center">
@@ -82,11 +81,11 @@
                                         </div>
 
                                         @{
-                                            typeDefault = item.Type.ToLower().Contains("excess")
-                                            ? "amount-positive"
-                                            : item.Type.ToLower().Contains("underpaid")
-                                            ? "amount-negative"
-                                            : "item-amount";
+                                            // typeDefault = item.Type.ToLower().Contains("excess")
+                                            // ? "amount-positive"
+                                            // : item.Type.ToLower().Contains("underpaid")
+                                            // ? "amount-negative"
+                                            // : "item-amount";
 
                                             amount = typeDefault.Contains("positive")
                                             ? $"+{item.Amount}"
@@ -98,9 +97,9 @@
                                         </span>
                                     </div>
 
-                                    @* xet truong hop cho du, thieu, bu vi *@
                                     @{
-                                        bool walletAmount = item.PaidAmount < item.AmountOrder && item.WalletBalance >= (item.AmountOrder - item.PaidAmount);
+                                        @* xet truong hop cho du, thieu, bu vi *@
+                                        bool walletAmount = item.PaidAmount < item.OrderAmount && item.WalletBalance >= (item.OrderAmount - item.PaidAmount);
                                         if (item.ExcessAmount > 0 || item.MissingAmount > 0 || walletAmount)
                                         {
                                             <div class="transaction-children">
@@ -117,9 +116,9 @@
                                                 @if (item.MissingAmount > 0 || walletAmount)
                                                 {
                                                     <div class="transaction-child negative">
-                                                        <span class="child-label">@(walletAmount ?  "Túi tiền" : "Cần bù")</span>
+                                                        <span class="child-label">@(walletAmount ? "Túi tiền" : "Cần bù")</span>
                                                         <span class="child-amount">
-                                                            -@string.Format(new CultureInfo("vi-VN"), "{0:C0}",(walletAmount ? item.AmountOrder - item.PaidAmount : item.MissingAmount))
+                                                            -@string.Format(new CultureInfo("vi-VN"), "{0:C0}", (walletAmount ? item.OrderAmount - item.PaidAmount : item.MissingAmount))
                                                         </span>
                                                     </div>
                                                 }
@@ -136,11 +135,11 @@
 
                         <div class="modal-overlay">
                             <div class="modal-box">
-                                <span class="close-btn"><i class="bi bi-x-lg"></i></span>
 
                                 <div class="modal-header-modal">
                                     <h2 id="history-modal-title">Lịch Sử Giao Dịch</h2>
                                     <div class="header-line"></div>
+                                    <span class="close-btn-trans"><i class="bi bi-x-lg"></i></span>
                                 </div>
 
                                 <div class="payment-list custom-scrollbar">
@@ -149,13 +148,15 @@
                                         <div class="payment-item transaction-item"
                                              data-id="@log.Id"
                                              data-type="@log.Type"
-                                             data-amount="@log.Amount"
+                                             data-amount="@log.OrderAmount"
                                              data-paid="@log.PaidAmount"
+                                             data-excess="@log.ExcessAmount"
+                                             data-miss="@log.MissingAmount"
                                              data-balance="@(log.BalanceSnapshot?.ToString("N0", CultureInfo.InvariantCulture) ?? "")"
-                                             data-description="@log.Description"
                                              data-date="@log.CreatedAt"
                                              data-related-id="@log.RelatedId"
-                                             data-user-id="@log.User">
+                                             data-userid="@log.User">
+
 
                                             <div class="icon-box"><i class="bi bi-cart-check"></i></div>
                                             <div class="item-info">
@@ -168,13 +169,13 @@
 
                                 </div>
 
-                                <div class="modal-footer">
+                                @* <div class="modal-footer">
                                     <div class="total-box">
                                         <span>Tổng chi tiêu (Tháng 12)</span>
                                         <span style="color: #e74c3c;">- 16,570,000đ</span>
                                     </div>
                                     <button class="btn-confirm">Xuất Báo Cáo PDF</button>
-                                </div>
+                                </div> *@
                             </div>
                         </div>
                     </div>

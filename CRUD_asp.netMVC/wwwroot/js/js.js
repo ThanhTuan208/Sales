@@ -28,78 +28,101 @@ $(document).ready(function () {
     });
 
     // Mở Modal
-    $(document).ready(function () {
-        // Mở Modal
-        $(document).off('click', '.view-all-link').on('click', '.view-all-link', function (e) {
-            e.preventDefault();
+    $(document).off('click', '.view-all-link').on('click', '.view-all-link', function (e) {
+        e.preventDefault();
 
-            // Hiện overlay và chặn cuộn body
-            $('.modal-overlay').fadeIn(300).css('display', 'flex');
-            $('body').addClass('modal-open');
+        // Hiện overlay và chặn cuộn body
+        $('.modal-overlay').fadeIn(300).css('display', 'flex');
+        //$('body').addClass('modal-open');
 
-            setTimeout(function () {
-                $('.modal-box').addClass('active');
-                animateItems();
-            }, 50);
-        });
+        setTimeout(function () {
+            $('.modal-box').addClass('active');
+            animateItems();
+        }, 50);
+    });
 
-        // Đóng Modal
-        $(document).on('click', '.close-btn, .modal-overlay', function (e) {
-            // Nếu click vào bên trong modal-box thì không đóng
-            if (!$(e.target).closest('.close-btn').length) {
-                return;
-            }
-
-            $('.modal-box').removeClass('active');
-            setTimeout(function () {
-                $('.modal-overlay').fadeOut(300, function () {
-                    $('body').removeClass('modal-open');
-                    $('.payment-item').removeClass('show-list-payment'); // Reset animation
-                });
-            }, 200);
-        });
-
-        function animateItems() {
-            $('.payment-item').each(function (i) {
-                setTimeout(function () {
-                    $('.payment-item').eq(i).addClass('show-list-payment');
-                }, 100 * (i + 1));
-            });
+    // Đóng Modal
+    $(document).on('click', '.close-btn-trans, .close-btn-trans *', function (e) {
+        console.log(1);
+        e.stopPropagation(); // chặn event bubble
+        const $modalOverlay = $(this).closest('.modal-overlay');
+        if ($modalOverlay.length) {
+            closeModal($modalOverlay);
         }
     });
+
+    // Click bên trong modal-box → không đóng modal
+    $(document).on('click', '.modal-box', function (e) {
+        e.stopPropagation();
+    });
+
+    //// Click overlay → đóng modal
+    //$(document).on('click', '.modal-overlay', function () {
+    //    closeModal($(this));
+    //});
+
+    // Hàm đóng modal
+    function closeModal($modalOverlay) {
+        $modalOverlay.find('.modal-box').removeClass('active');
+        setTimeout(function () {
+            $modalOverlay.fadeOut(300, function () {
+                $('body').removeClass('modal-open');
+                $modalOverlay.find('.payment-item').removeClass('show-list-payment');
+            });
+        }, 200);
+    }
+
+    function animateItems() {
+        $('.payment-item').each(function (i) {
+            setTimeout(function () {
+                $('.payment-item').eq(i).addClass('show-list-payment');
+            }, 100 * (i + 1));
+        });
+    }
 
     // Xu ly hien thi form chi tiet ma don hang
     // Template chi tiết giao dịch
     function getDetailHTML(data) {
 
         console.log(data);
-        let status = "";
-        let statusUpdate = "";
         let typeMoney = 0.00;
 
-        if (data.type === 'PaymentCompleted') {
+        let description = "";
+        let statusUpdate = "";
+        let statusPayment = "";
+        let statusTransaction = "Thành công";
 
-            status = "Thanh toán đủ";
-            statusUpdate = "Biên động số tiền";
-            typeMoney = false;
+        if (!isNaN(data.miss)) {
+
+            if (data.miss === 0) {
+
+                statusUpdate = "Số tiền bù";
+                statusPayment = "Bù từ ví";
+                description = "bù từ ví người dùng";
+                typeMoney = data.amount - data.paid;
+            }
+            else {
+
+                typeMoney = data.miss;
+                statusPayment = "Thiếu";
+                statusUpdate = "Số tiền thiếu";
+                description = "thiếu từ người dùng";
+                statusTransaction = "Thất bại";
+            }
         }
-        else if (data.type === 'UnderpaidCreated') {
+        else if (!isNaN(data.excess)) {
 
-            status = "Thanh toán thiếu";
-            statusUpdate = "Số tiền thiếu";
-            typeMoney = data.miss;
-        }
-        else if (data.type === 'ExcessCreated' || data.paid > data.amount) {
-
-            status = "Thanh toán dư";
+            statusPayment = "Dư";
             statusUpdate = "Số tiền dư";
+            description = "dư từ người dùng";
             typeMoney = data.excess;
         }
-        else if (data.type === 'WalletCompleted') {
+        else if (data.type === 'PaymentCompleted') {
 
-            statusUpdate = "Số tiền bù";
-            status = "Thanh toán bù từ ví";
-            typeMoney = data.amount - data.paid;
+            statusPayment = "Đủ";
+            statusUpdate = "Biên động số tiền";
+            description = "đủ từ nguời dùng";
+            typeMoney = false;
         }
 
         return `
@@ -110,12 +133,13 @@ $(document).ready(function () {
                 </div>
                 <div class="detail-content">
                     <div class="detail-row"><div class="label">Mã giao dịch</div><div class="value">${data.id}</div></div>
-                    <div class="detail-row"><div class="label">Trạng thái</div><div class="value"><span class="badge badge-excess">${status}</span></div></div>
+                    <div class="detail-row"><div class="label">Trạng thái thanh toán</div><div class="value"><span class="badge badge-excess">${statusPayment}</span></div></div>
+                    <div class="detail-row"><div class="label">Trạng thái giao dịch</div><div class="value"><span class="transaction-status"><strong>${statusTransaction}</strong></span></div></div>
                     <div class="detail-row"><div class="label">Tiền đơn hàng</div><div class="value amount ${data.amount > 0 ? 'positive' : 'negative'}">${parseFloat(data.amount).toLocaleString('vi-VN')} ₫</div></div>
                     <div class="detail-row"><div class="label">${statusUpdate}</div><div class="value">${typeMoney ? typeMoney.toLocaleString('vi-VN') + ' ₫' : 'Không'}</div></div>
                     <div class="detail-row"><div class="label">Thời gian</div><div class="value">${data.date}</div></div>
-                    <div class="detail-row"><div class="label">Mô tả</div><div class="value">${data.description || 'Không có'}</div></div>
-                    <div class="detail-row"><div class="label">User ID</div><div class="value">${data.userId || 'Không xác định'}</div></div>
+                    <div class="detail-row"><div class="label">Mô tả</div><div class="value">Thanh toán ${description}</div></div>
+                    <div class="detail-row"><div class="label">Người thanh toán</div><div class="value">${data.userId || 'Không xác định'}</div></div>
                 </div>
                 <div class="gradient-accent"></div>
             </div>
@@ -137,8 +161,8 @@ $(document).ready(function () {
             balance: $this.data('balance'),
             description: $this.data('description'),
             date: $this.data('date'),
-            relatedId: $this.data('related-id'),
-            userId: $this.data('user-id')
+            relatedId: $this.data('relatedid'),
+            userId: $this.data('userid')
         };
 
         const $profileContainer = $('#profileContainer');

@@ -7,8 +7,8 @@
         public string OrderId { get; set; } = null!;
         public string RelatedId { get; set; } = null!;
         public string Type { get; set; } = null!;
-        public decimal Amount { get; set; }
-        public decimal? AmountOrder { get; set; }
+        public decimal? Amount { get; set; }
+        public decimal? OrderAmount { get; set; }
         public decimal? PaidAmount { get; set; }
         public decimal? MissingAmount { get; set; }
         public decimal? ExcessAmount { get; set; }

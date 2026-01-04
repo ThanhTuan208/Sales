@@ -89,7 +89,7 @@ namespace CRUD_asp.netMVC.Middleware
             }
 
             await _next(context);
-        }
+            }
 
         public bool IsPath(string path)
         {

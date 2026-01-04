@@ -102,7 +102,6 @@ namespace CRUD_asp.netMVC.Controllers
             }
 
             var order = await _dbContext.Orders
-                .AsNoTracking()
                 .Include(p => p.OrderDetail).ThenInclude(p => p.Product)
                 .FirstOrDefaultAsync(p => p.ID == orderID && p.TransactionId == transactionCode && p.Status == "Paid");
 
@@ -118,7 +117,6 @@ namespace CRUD_asp.netMVC.Controllers
                 order.ShipProvince = Address.Province;
                 order.ShipWard = Address.Ward;
 
-                _dbContext.Attach(order);
                 _dbContext.Orders.Update(order);
                 await _dbContext.SaveChangesAsync();
             }

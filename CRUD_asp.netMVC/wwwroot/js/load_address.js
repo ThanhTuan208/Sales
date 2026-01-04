@@ -18,14 +18,23 @@ $(document).ready(function () {
     // Đóng modal (Chỉ cho phép đóng qua nút Hủy)
     $btnCancel.on('click', function () {
         $modal.fadeOut(300);
+    });
 
+    // Xử lý thanh toán
+    $btnPay.on('click', function () {
+        // 1. Ngăn người dùng thao tác lần 2
+        $(this).prop('disabled', true);
+        $btnCancel.prop('disabled', true);
+
+        // 2. Thay đổi nội dung nút (Loading)
+        $(this).html('<i class="fas fa-circle-notch fa-spin"></i> Đang xử lý...');
         let evt = {
             amountReceive: amountReceiveHub,
             order: orderData
         };
-        console.log(evt);
-        console.log("Json: " + JSON.stringify(evt));
 
+        //console.log(evt);
+        //console.log("Json: " + JSON.stringify(evt));
         $.ajax({
             url: `/Payment/PaymentConfirmWallet`,
             type: 'POST',
@@ -39,28 +48,18 @@ $(document).ready(function () {
                 alert("Error Send Data" || err.responseJSON.message);
             }
         });
-    });
-
-    // Xử lý thanh toán
-    $btnPay.on('click', function () {
-        // 1. Ngăn người dùng thao tác lần 2
-        $(this).prop('disabled', true);
-        $btnCancel.prop('disabled', true);
-
-        // 2. Thay đổi nội dung nút (Loading)
-        $(this).html('<i class="fas fa-circle-notch fa-spin"></i> Đang xử lý...');
-
         // 3. Giả lập gọi API thanh toán
         setTimeout(function () {
-            alert("Thanh toán thành công qua ví!");
 
             // 4. Reset và đóng modal
-            $modal.fadeOut(300, function () {
+            $modal.fadeOut(function () {
                 // Reset lại trạng thái ban đầu sau khi hiệu ứng ẩn kết thúc
                 $btnPay.prop('disabled', false).text('Thanh toán bằng Ví');
                 $btnCancel.prop('disabled', false);
             });
-        }, 2500);
+        }, 1500);
+
+        //$modal.fadeOut(10);
     });
 
     // Gui cau hoi thanh toan trong vi dung cho user  //

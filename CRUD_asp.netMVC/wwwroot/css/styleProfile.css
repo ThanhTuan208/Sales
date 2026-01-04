@@ -57,9 +57,9 @@
     }
 
 /* Ngăn cuộn trang body */
-body.modal-open {
+/*body.modal-open {
     overflow: hidden;
-}
+}*/
 
 /* Header với Gradient Line */
 .modal-header-modal {
@@ -84,19 +84,23 @@ body.modal-open {
 }
 
 /* Close Button */
-.close-btn {
+.close-btn-trans {
     position: absolute;
     top: 20px;
     right: 20px;
     font-size: 24px;
     color: #999;
     cursor: pointer;
-    transition: color 0.3s;
+    transition: color 0.3s ease;
 }
 
-    .close-btn:hover {
-        color: var(--accent-gold);
+    .close-btn-trans:hover {
+        color: #ffd700;
     }
+.bi {
+    pointer-events: auto; /* chắc chắn icon nhận click */
+}
+
 
 /* Payment List & Scrollbar */
 .payment-list {

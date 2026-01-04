@@ -1,12 +1,16 @@
 ﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.DTO.Admin;
 using CRUD_asp.netMVC.DTO.Payments;
 using CRUD_asp.netMVC.Extensions.Admins;
 using CRUD_asp.netMVC.Extensions.Payments;
 using CRUD_asp.netMVC.Extensions.SiteUsers;
 using CRUD_asp.netMVC.Extensions.Users;
+using CRUD_asp.netMVC.Migrations;
 using CRUD_asp.netMVC.ViewModels.Home;
 using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.IsisMtt.X509;
+using Org.BouncyCastle.Tls.Crypto.Impl.BC;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 
@@ -67,26 +71,14 @@ namespace CRUD_asp.netMVC.Service.Home
 
         public async Task SurplusMoneyMethodAsync(IBaseProfileViewModel model, SurplusMoneyViewModel surplusMoney)
         {
+            string relatedid = "";
             var excess = _dbContext.ExcessPayments;
-
-            surplusMoney.TotalAmountInMonth = await excess.Where(p => p.UserId == model.Users.Id && p.CreatedAt.Date.Month == DateTime.UtcNow.Date.Month)
-                                                            .SumAsync(p => p.PaidAmount);
-            surplusMoney.TotalAmountInMonth += await _dbContext.UnderpaidOrders.Where(p => p.UserId == model.Users.Id && p.CreatedAt.Date.Month == DateTime.UtcNow.Date.Month && p.Status != "Pending")
-                                                                            .SumAsync(p => p.PaidAmount);
-
-            surplusMoney.ExcessMoney = await excess.Where(p => p.UserId == model.Users.Id)
-                                                        .SumAsync(p => p.ExcessAmount);
-
-            surplusMoney.PaidMoney = await excess.Where(p => p.UserId == model.Users.Id)
-                                                        .SumAsync(p => p.OriginalAmount.Value);
-
-            surplusMoney.PaidMoney += await _dbContext.UnderpaidOrders.Where(p => p.UserId == model.Users.Id && p.Status != "Pending")
-                                                        .SumAsync(p => p.PaidAmount);
-
-            var lastUpdateAt = await excess.Where(p => p.UpdatedAt != null)
-                                           .OrderByDescending(p => p.UpdatedAt)
-                                           .Select(p => p.UpdatedAt)
-                                           .FirstOrDefaultAsync();
+            var paidAmountForOrders = new Dictionary<string, decimal?>()
+            {
+                { "wallet", 0m },
+                { "payment", 0m },
+                { "under", 0m },
+            };
 
             var rawLogs = await _dbContext.MoneyFlowLogs
                 .Where(m => m.UserId == model.Users.Id)
@@ -100,22 +92,19 @@ namespace CRUD_asp.netMVC.Service.Home
                     m.Amount,
                     m.PaidAmount,
                     m.BalanceSnapshot,
-                    m.Description,
+                    //m.Description,
                     m.CreatedAt,
                     m.AffectBalance,
                     OrderAmount = _dbContext.Orders.Where(o => o.ID == m.OrderId)
                                                     .Select(o => o.Amount)
                                                     .FirstOrDefault()
-                })
-                .ToListAsync();
+                }).ToListAsync();
 
-            var MoneyFlowLogs = rawLogs
+
+            var moneyFlowLogs = rawLogs
                 .GroupBy(x => x.OrderId)
-                .Select(g => g
-                    .OrderByDescending(x => x.AffectBalance)
-                    .ThenByDescending(x => x.CreatedAt)
-                    .First()
-                )
+                .Select(g => g.FirstOrDefault(p => !p.Type.ToLower().Contains("excess")))
+                .Where(x => x != null)
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new MoneyFlowLogDTO
                 {
@@ -126,33 +115,53 @@ namespace CRUD_asp.netMVC.Service.Home
                     Type = x.Type,
                     Amount = x.Amount,
                     PaidAmount = x.PaidAmount,
-                    AmountOrder = x.OrderAmount,
-                    MissingAmount = x.PaidAmount == x.Amount ? 1 : null,
+                    OrderAmount = x.OrderAmount,
+                    MissingAmount = x.PaidAmount < x.OrderAmount ? 1 : null,
                     ExcessAmount = x.PaidAmount > x.Amount ? 2 : null,
                     BalanceSnapshot = x.BalanceSnapshot,
-                    Description = x.Description,
                     CreatedAtRaw = x.CreatedAt,
                     AffectBalance = x.AffectBalance
                 })
                 .ToList();
 
-            MoneyFlowLogs.ForEach(p =>
+            moneyFlowLogs.ForEach(p =>
             {
                 p.CreatedAt = PaymentQueryExtensions.ConvertTimeAsia(p.CreatedAtRaw);
-                p.WalletBalance = PaymentQueryExtensions.GetWalletAmountByUserId(_dbContext.UserWallets,int.Parse(p.User));
+                p.WalletBalance = PaymentQueryExtensions.GetWalletAmountByUserId(_dbContext.UserWallets, int.Parse(p.User));
                 p.User = UserQueryExtensions.GetNameByUserId(_dbContext.Users, int.Parse(p.User));
 
                 if (p.MissingAmount.HasValue)
                 {
                     p.MissingAmount = PaymentQueryExtensions.GetAmount(_dbContext, p.MissingAmount, p.RelatedId);
                 }
-                else if (p.ExcessAmount.HasValue)
+
+                if (p.ExcessAmount.HasValue)
                 {
-                    p.ExcessAmount = PaymentQueryExtensions.GetAmount(_dbContext, p.ExcessAmount, p.RelatedId);
+                    relatedid = PaymentQueryExtensions.GetRealatedIdByExcessEntity(_dbContext.ExcessPayments, p.OrderId);
+                    p.ExcessAmount = PaymentQueryExtensions.GetAmount(_dbContext, p.ExcessAmount, relatedid);
+                }
+
+                if (p.Type.Contains("Wallet"))
+                {
+                    paidAmountForOrders["wallet"] += p.PaidAmount;
+                }
+                else if (p.Type.Contains("Payment"))
+                {
+                    paidAmountForOrders["payment"] += p.Amount;
+                }
+                else if (p.Type.Contains("Under"))
+                {
+                    paidAmountForOrders["under"] += p.Amount;
                 }
             });
-        
-            surplusMoney.MoneyFlowLogs = MoneyFlowLogs;
+
+
+            surplusMoney.MoneyFlowLogs = moneyFlowLogs;
+
+            var lastUpdateAt = await excess.Where(p => p.UpdatedAt != null)
+                                           .OrderByDescending(p => p.UpdatedAt)
+                                           .Select(p => p.UpdatedAt)
+                                           .FirstOrDefaultAsync();
 
             if (lastUpdateAt.HasValue)
             {
@@ -163,6 +172,14 @@ namespace CRUD_asp.netMVC.Service.Home
                 var dateExcess = excess.OrderByDescending(p => p.CreatedAt).Select(p => p.CreatedAt).FirstOrDefault();
                 surplusMoney.UpdateAt = PaymentQueryExtensions.ConvertTimeAsia(dateExcess);
             }
+
+            DateTime date = DateTime.UtcNow;
+            surplusMoney.PaidMoney = paidAmountForOrders.Sum(p => p.Value) ?? 0m;
+
+            surplusMoney.TotalAmountInMonth = moneyFlowLogs.Where(p => p.CreatedAtRaw.Month == date.Date.Month && p.CreatedAtRaw.Year == date.Date.Year)
+                                                            .Sum(p => p.PaidAmount ?? 0M) ;
+
+            surplusMoney.ExcessMoneyNow = _dbContext.UserWallets.FirstOrDefault(p => p.UserId == model.Users.Id)?.Balance ?? 0M;
         }
 
         private string GetOrderIdByMoneyFlowLogEntity(string text)
