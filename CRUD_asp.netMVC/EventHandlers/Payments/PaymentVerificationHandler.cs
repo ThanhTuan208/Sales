@@ -27,7 +27,7 @@ namespace CRUD_asp.netMVC.EventHandlers.Payments
             var order = evt.Order;
             string orderId = order.Id;
             int userId = order.UserId;
-
+                    
             string status = order.Status;
             string transactionCode = order.TransactionId;
             string paymentMethod = order.PaymentMethod;

@@ -530,7 +530,7 @@ header .meta {
     --track-muted: #6b7280;
     --track-radius: 20px;
     --track-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
-    --track-progress: 0px; /* giá trị progress line */
+    --track-progress: 0px;
 }
 
 .tracking-theme {
@@ -540,7 +540,7 @@ header .meta {
 }
 
     .tracking-theme .tracking-container {
-        margin-top: 50px;
+/*        margin-top: 50px;*/
         display: flex;
         justify-content: center;
         align-items: center;
@@ -931,8 +931,8 @@ header .meta {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px 20px; /* thêm padding để khi mobile không bị dính sát mép */
-    margin-top: 50px;
+    padding: 30px 20px; /* thêm padding để khi mobile không bị dính sát mép */
+/*    margin-top: 50px;*/
 }
 /* Container chính */
 .profile-container {
@@ -1818,7 +1818,7 @@ h1, h2, h3, h4, h5, h6, figure {
 
 .fh5co-nav .menu-2 li.search {
     float: left;
-    width: 70%;
+    width: 76%;
     font-family: "Playfair Display", serif;
     -webkit-transition: 0.3s;
     -o-transition: 0.3s;

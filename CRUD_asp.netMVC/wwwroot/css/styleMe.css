@@ -1021,6 +1021,9 @@ h1 {
     z-index: 0;
     border-radius: 10px;
 }
+    .bn5.register {
+        margin-top: 10px;
+    }
 
     .bn5:before {
         content: "";
@@ -1158,4 +1161,93 @@ h1 {
 
 table td, table th {
     vertical-align: middle !important;
+}
+
+.form-control {
+    box-shadow: none;
+    /* background: transparent; */
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    /* height: 54px; */
+    /* font-size: 18px; */
+    /* font-weight: 300; */
+}
+.form1 h1 {
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 1px 2px 8px rgba(236, 210, 10, 0.5);
+}
+
+/* ===== INPUT ===== */
+.form-floating > .form-control {
+    border-radius: 12px;
+    border: 1.8px solid rgba(0, 0, 0, 0.15);
+    transition: 0.3s ease;
+}
+
+    .form-floating > .form-control:focus {
+        border-color: #f4c430;
+        box-shadow: 0 0 0 0.2rem rgba(244, 196, 48, 0.35);
+    }
+
+/* label */
+.form-floating label {
+    color: #555;
+    font-size: 14px;
+}
+
+/* ===== REMEMBER + FORGOT ===== */
+.form-check-label {
+    font-size: 14px;
+}
+
+.forget a {
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.forget a:hover {
+    color: darkcyan;
+    text-decoration: underline;
+}
+
+/* ===== LOGIN BUTTON ===== */
+/*.bn5 {
+    width: 100%;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+*/
+/* ===== REGISTER LINK ===== */
+.d-flex p {
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+.d-flex a span {
+    color: #000;
+    transition: 0.3s;
+}
+
+.d-flex a span:hover {
+    text-decoration: underline;
+}
+
+/* ===== SOCIAL LOGIN ===== */
+.copyright img {
+    width: 32px;
+    height: 32px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.copyright img:hover {
+    transform: scale(1.15);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 576px) {
+    .form1 {
+        height: 100vh;
+        padding: 24px 20px;
+    }
 }

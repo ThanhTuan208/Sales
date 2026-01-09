@@ -56,7 +56,7 @@ namespace CRUD_asp.netMVC.Service.Home
             var userIdClaim = _http.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
             {
-                model.Users = await _dbContext.Users.FirstOrDefaultAsync(p => p.Id == userId);
+                model.Users = await _dbContext.Users.FirstOrDefaultAsync(p => p.Id == userId) ?? new Models.Auth.Users();
             }
             model.Brands = await _dbContext.Brand.ToListAsync();
             model.Categories = await _dbContext.Category.ToListAsync();
@@ -154,7 +154,6 @@ namespace CRUD_asp.netMVC.Service.Home
                     paidAmountForOrders["under"] += p.Amount;
                 }
             });
-
 
             surplusMoney.MoneyFlowLogs = moneyFlowLogs;
 

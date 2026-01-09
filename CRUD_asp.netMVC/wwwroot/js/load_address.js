@@ -207,18 +207,39 @@ $(document).ready(function () {
 
                 const overlay = $("#overlayStatus");
                 const spinner = overlay.find(".spinner");
-                const successIcon = overlay.find(".success-icon");
-                const successText = overlay.find(".success-text");
 
-                overlay.show();
-                spinner.show();
-                successIcon.hide();
-                successText.hide();
+                let successIcon, successText, failureIcon, failureText;
+                if (isSuccess) {
+
+                    successIcon = overlay.find(".success-icon");
+                    successText = overlay.find(".success-text");
+                    overlay.show();
+                    spinner.show();
+                    successIcon.hide();
+                    successText.hide();
+                }
+                else {
+
+                    failureIcon = overlay.find(".failure-icon");
+                    failureText = overlay.find(".failure-text");
+                    overlay.show();
+                    spinner.show();
+                    failureIcon.hide();
+                    failureText.hide();
+                }
 
                 setTimeout(() => {
                     spinner.fadeOut(300, () => {
-                        successIcon.fadeIn(300);
-                        successText.fadeIn(300);
+                        if (isSuccess) {
+
+                            successIcon.fadeIn(300);
+                            successText.fadeIn(300);
+                        }
+                        else {
+
+                            failureIcon.fadeIn(300);
+                            failureText.fadeIn(300);
+                        }
                     });
 
                     setTimeout(() => {
@@ -230,7 +251,8 @@ $(document).ready(function () {
 
                             window.location.href = `/Payment/PaymentSuccess?orderID=${encodeURIComponent(orderId)}&transactionCode=${encodeURIComponent(transactionCode)}`;
                         }
-                        else window.location.href = `/Payment/PaymentFail?orderID=${encodeURIComponent(orderId)}&transactionCode=${encodeURIComponent(transactionCode)}`;
+                        else window.location.href = `/Home/Ordertracking`;
+                        //else alert("Failure");
 
                     }, 3000);
                 }, 2000);

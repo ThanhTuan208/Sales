@@ -14,29 +14,29 @@
                     <h3>Trạng thái đơn hàng</h3>
                     <button>Chi tiết</button>
                 </div>
-                <h2>Đơn hàng #12345</h2>
-                <p>Ngày đặt: 15 Mar 2025 | Dự kiến: 21 Mar 2025</p>
+                <h2>Đơn hàng: ...</h2>
+                <p>Ngày đặt: ... | Dự kiến: ...</p>
             </div>  
 
             <div class="tracking-timeline" id="tracking-timeline">
                 <div class="tracking-step">
-                    <div class="circle done"><i class="fa fa-cart-shopping"></i></div>
+                    <div id="order" class="circle"><i class="fa fa-cart-shopping"></i></div>
                     <span>15 Mar<br />Đặt hàng</span>
                 </div>
                 <div class="tracking-step">
-                    <div class="circle done"><i class="fa fa-check"></i></div>
+                    <div id="verify" class="circle"><i class="fa fa-check"></i></div>
                     <span>15 Mar<br />Xác nhận</span>
                 </div>
                 <div class="tracking-step">
-                    <div class="circle active"><i class="fa fa-truck"></i></div>
+                    <div id="delivery-truck" class="circle"><i class="fa fa-truck"></i></div>
                     <span>15 Mar<br />Gửi hàng</span>
                 </div>
                 <div class="tracking-step">
-                    <div class="circle"><i class="fa fa-motorcycle"></i></div>
+                    <div id="delivery-motorcycle" class="circle"><i class="fa fa-motorcycle"></i></div>
                     <span>16 Mar<br />Đang giao hàng</span>
                 </div>
                 <div class="tracking-step">
-                    <div class="circle"><i class="fa fa-box"></i></div>
+                    <div id="order-done" class="circle"><i class="fa fa-box"></i></div>
                     <span>21 Mar<br />Đã giao</span>
                 </div>
             </div>
@@ -58,7 +58,7 @@
     </div>
 </div>
 
-<script src="~/js/jquery-3.7.1.min.js" asp-append-version="true"></script>
+<script src="~/js/jquery-3.7.1.js" asp-append-version="true"></script>
 <script src="~/js/order_tracking.js" asp-append-version="true"></script>
 @section Scripts {
     <script>

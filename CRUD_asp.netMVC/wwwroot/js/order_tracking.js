@@ -1,6 +1,4 @@
-﻿
-
-// Xu ly logic lazy load san pham da mua //
+﻿// Xu ly logic lazy load san pham da mua //
 let offset = 0;
 let limit = 5;
 let isLoading = false;
@@ -47,7 +45,7 @@ function loadMoreOrders() {
                 $("#loading").hide(); // đảm bảo spinner tắt
             },
         });
-    }, 2000); // 2s
+    }, 2000);
 }
 // Xu ly logic lazy load san pham da mua //
 

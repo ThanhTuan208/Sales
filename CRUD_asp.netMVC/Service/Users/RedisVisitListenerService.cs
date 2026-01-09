@@ -88,7 +88,7 @@ namespace CRUD_asp.netMVC.Service.Users
                     while (_redis.IsConnected && !stoppingToken.IsCancellationRequested)
                     {
                         await Task.Delay(1000, stoppingToken);
-                        }
+                    }
 
                     _logger.LogWarning("Redis mất kết nối hoặc app shutdown → thoát vòng lặp để reconnect...");
                 }

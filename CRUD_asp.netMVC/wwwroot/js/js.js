@@ -3,7 +3,7 @@
 $(document).ready(function () {
     $('.owl-clients').owlCarousel({
         loop: true, // Vòng lặp carousel
-        margin: 10, // Khoảng cách giữa các phần tử
+        margin: 60, // Khoảng cách giữa các phần tử
         /*nav: true, // Hiển thị nút điều hướng*/
         dots: true, // Hiển thị chấm điều hướng
         autoplay: true, // Tự động chạy
@@ -27,6 +27,26 @@ $(document).ready(function () {
         }
     });
 
+
+    // Toggle menu
+
+    $(function () {
+
+        $('.js-nav-toggle').on('click', function (e) {
+            e.preventDefault();
+            $('body').toggleClass('offcanvas');
+        });
+
+        // click ngoài để đóng
+        $(document).on('click', function (e) {
+            if ($('body').hasClass('offcanvas') &&
+                !$(e.target).closest('#fh5co-offcanvas, .js-nav-toggle').length) {
+                $('body').removeClass('offcanvas');
+            }
+        });
+    });
+
+
     // Mở Modal
     $(document).off('click', '.view-all-link').on('click', '.view-all-link', function (e) {
         e.preventDefault();
@@ -44,7 +64,7 @@ $(document).ready(function () {
     // Đóng Modal
     $(document).on('click', '.close-btn-trans, .close-btn-trans *', function (e) {
         console.log(1);
-        e.stopPropagation(); // chặn event bubble
+        e.stopPropagation();
         const $modalOverlay = $(this).closest('.modal-overlay');
         if ($modalOverlay.length) {
             closeModal($modalOverlay);
@@ -98,7 +118,7 @@ $(document).ready(function () {
 
                 statusUpdate = "Số tiền bù";
                 statusPayment = "Bù từ ví";
-                description = "bù từ ví người dùng";
+                description = "bù từ ví người dùng, số tiền thiếu sẽ được bù trừ vào dơn hàng.";
                 typeMoney = data.amount - data.paid;
             }
             else {
@@ -106,7 +126,7 @@ $(document).ready(function () {
                 typeMoney = data.miss;
                 statusPayment = "Thiếu";
                 statusUpdate = "Số tiền thiếu";
-                description = "thiếu từ người dùng";
+                description = "thiếu, người dùng cần thanh toán số tiền còn lại.";
                 statusTransaction = "Thất bại";
             }
         }
@@ -114,7 +134,7 @@ $(document).ready(function () {
 
             statusPayment = "Dư";
             statusUpdate = "Số tiền dư";
-            description = "dư từ người dùng";
+            description = "dư từ người dùng, số tiền dư được chuyển vào ví.";
             typeMoney = data.excess;
         }
         else if (data.type === 'PaymentCompleted') {

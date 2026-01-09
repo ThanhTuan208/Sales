@@ -5,17 +5,17 @@
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
-
+    
 <aside id="fh5co-hero" class="js-fullheight">
-    <div class="flexslider js-fullheight" style="height: 90vh;">
+    <div class="flexslider js-fullheight" style="height: 100vh;">
         <ul class="slides" style="height: 100%;">
             @foreach (var item in Model.Products.Take(4))
             {
-                <li style="background: url(@Url.Content($"~/images/products/{item.PicturePath}")) no-repeat 80% center; background-size: contain; height: 100vh; ">
+                <li style="background: url(@Url.Content($"~/images/products/{item.PicturePath}")) no-repeat 80% center; background-size: contain; height: 70vh;">
                     <div class="container h-100">
                         <div class="col-md-6 col-md-offset-3 col-md-pull-3 js-fullheight slider-text">
                             <div class="slider-text-inner d-flex align-items-center h-100">
-                                <div class="desc" style="background-color: #fef6e4">
+                                <div class="desc" style="background-color: #fef6e4;">
                                     <h2>@item.Name</h2>
                                     <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.NewPrice)</span>
                                     <p>@item.Description</p>
@@ -96,7 +96,7 @@
                              alt="@item.Name">
 
                         <div class="discount-badge">
-                            <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.OldPrice)</span>
+                            <span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.NewPrice)</span>
                         </div>
 
                     </a>

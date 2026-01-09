@@ -259,9 +259,20 @@ h6 {
     color: #f87171 !important;
 }
 
+#page {
+    overflow: visible !important;
+}
+
+.fh5co-nav {
+    position: sticky !important;
+    top: 0;
+    z-index: 1020;
+}
+
 .container {
     max-width: 1400px;
-    padding: 2.5rem 1rem;
+    padding: 1.8rem 10px;
+    
 }
 
 .header {

@@ -62,7 +62,7 @@ namespace CRUD_asp.netMVC.Service.Payments
                                         .Include(p => p.OrderDetail).ThenInclude(p => p.Product)
                                         .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
 
-                PaymentVerificationByOrderDTO orderDTO = new ()
+                PaymentVerificationByOrderDTO orderDTO = new()
                 {
                     Id = order.ID,
                     UserId = order.UserID,
@@ -277,10 +277,10 @@ namespace CRUD_asp.netMVC.Service.Payments
                 }
 
                 _dbContext.Attach(order);
-                order.Status = underPaid != null ? "PartiallyPaid": "Paid";
+                order.Status = underPaid != null ? "PartiallyPaid" : "Paid";
                 order.PaidAt = underPaid != null ? null : DateTime.UtcNow;
                 _dbContext.Orders.Update(order);
-                    
+
                 foreach (var item in order.OrderDetail)
                 {
                     var affectRow = await _dbContext.Products
@@ -302,6 +302,7 @@ namespace CRUD_asp.netMVC.Service.Payments
                 {
                     await _event.PublishAsync(new OrderPaidEvent(orderId: order.ID, userId: order.UserID.ToString(), transactionId: order.TransactionId, true));
                 }
+                else await _event.PublishAsync(new OrderPaidEvent(orderId: order.ID, userId: order.UserID.ToString(), transactionId: order.TransactionId, false));
 
                 return Result<Unit>.OK("Thanh toán thành công.");
             }

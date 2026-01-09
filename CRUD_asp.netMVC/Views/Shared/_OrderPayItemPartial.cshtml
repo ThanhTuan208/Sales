@@ -19,7 +19,6 @@
         _ => "Chưa đủ thanh toán"
     };
 
-    // var address = payment.Order.Address;
     var orderPayList = new List<OrderDetail>();
     if (ViewData["OrderPayListPartial"] != null)
     {
@@ -80,7 +79,7 @@
                 <div class="actions" role="group" aria-label="Hành động đơn hàng">
                     <button class="btn-actions btn-primary-od">Đánh giá</button>
                     <button class="btn-actions btn-outline-od">Theo dõi</button>
-                    <button class="btn-actions btn-ghost-od">Xem chi tiết</button>
+                    @*<button class="btn-actions btn-ghost-od">Xem chi tiết</button>*@
                 </div>
             </div>
         </section>
