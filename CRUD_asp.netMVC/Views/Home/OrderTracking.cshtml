@@ -44,12 +44,37 @@
     </div>
 </div>
 <div class="order-detail-theme">
-    <div id="orderContainer">
-        @*lazy load san pham da thanh toan*@
-        @await Html.PartialAsync("_OrderPayPartial", Model.PaymentList, new ViewDataDictionary(ViewData)
-        {
-            { "OrderPayList", Model.OrderPayList }
-        })
+    <div class="order-tabs">
+        <ul class="tab-nav">
+            <li class="tab-item active" data-tab="pending">Chờ thanh toán</li>
+            <li class="tab-item" data-tab="shipping">Đang vận chuyển</li>
+            <li class="tab-item" data-tab="success">Giao thành công</li>
+            <li class="tab-item" data-tab="failed">Giao thất bại</li>
+        </ul>
+
+        <div class="tab-content">
+                
+            <div class="tab-panel active" data-tab="pending">
+                <div id="orderContainer-pending">
+                    @await Html.PartialAsync("_OrderPayPartial", Model.PaymentList, new ViewDataDictionary(ViewData)
+                    {
+                        { "OrderPayList", Model.OrderPayList }
+                    })
+                </div>
+            </div>
+
+            <div class="tab-panel" data-tab="shipping">
+                <div id="orderContainer-shipping"></div>
+            </div>
+
+            <div class="tab-panel" data-tab="success">
+                <div id="orderContainer-success"></div>
+            </div>
+
+            <div class="tab-panel" data-tab="failed">
+                <div id="orderContainer-failed"></div>
+            </div>
+        </div>
     </div>
 
     <div id="loading">

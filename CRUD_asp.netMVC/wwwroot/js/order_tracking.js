@@ -1,4 +1,37 @@
-﻿// Xu ly logic lazy load san pham da mua //
+﻿function scrollTabToCenter(tabItem) {
+    const container = tabItem.parent(); // .tab-nav
+    const containerWidth = container.width();
+    const tabWidth = tabItem.outerWidth();
+    const tabOffsetLeft = tabItem.position().left;
+    const scrollLeft = tabOffsetLeft + tabWidth / 2 - containerWidth / 2;
+
+    // scroll mượt
+    container.animate({ scrollLeft: scrollLeft + container.scrollLeft() }, 300);
+}
+
+// Khi click vào tab
+$(".tab-item").on("click", function () {
+    const tab = $(this).data("tab");
+
+    // set active tab
+    $(this).addClass("active").siblings().removeClass("active");
+    $(".tab-panel").removeClass("active");
+    $('.tab-panel[data-tab="' + tab + '"]').addClass("active");
+
+    // scroll tab vào giữa
+    scrollTabToCenter($(this));
+});
+
+// Scroll tab đầu tiên vào giữa khi load
+$(document).ready(function () {
+    const activeTab = $(".tab-item.active");
+    if (activeTab.length) {
+        scrollTabToCenter(activeTab);
+    }
+});
+
+
+// Xu ly logic lazy load san pham da mua //
 let offset = 0;
 let limit = 5;
 let isLoading = false;

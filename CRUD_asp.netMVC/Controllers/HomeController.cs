@@ -1,5 +1,8 @@
-﻿using CRUD_asp.netMVC.Data;
+﻿using Azure.Core;
+using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.DTO.Generic;
 using CRUD_asp.netMVC.DTO.Home;
+using CRUD_asp.netMVC.Extensions;
 using CRUD_asp.netMVC.Extensions.RenderViewGeneral;
 using CRUD_asp.netMVC.Hubs;
 using CRUD_asp.netMVC.Models.Auth;
@@ -30,6 +33,7 @@ public class HomeController : Controller
     private readonly IHubContext<LoadViewHub> _hub;
     private readonly IWebHostEnvironment _environment;
     private readonly IDisplayProfileUserService _profile;
+    private readonly IDisplayOrderTrackingService _tracking;
 
     public HomeController
         (
@@ -39,8 +43,8 @@ public class HomeController : Controller
             IMemoryCache cache,
             IHubContext<LoadViewHub> hub,
             IWebHostEnvironment environment,
-            IDisplayProfileUserService profile
-        )
+            IDisplayProfileUserService profile,
+            IDisplayOrderTrackingService tracking)
     {
         _logger = logger;
         _dbContext = _context;
@@ -49,6 +53,7 @@ public class HomeController : Controller
         _hub = hub;
         _environment = environment;
         _profile = profile;
+        _tracking = tracking;
     }
 
     [HttpGet()] // Hien thi so du thanh toan    
@@ -84,35 +89,19 @@ public class HomeController : Controller
         return PartialView("_OrderPayPartial", PaymentList);
     }
 
+
     [HttpGet] // Hien thi trang theo doi don hang da dat    
     public async Task<IActionResult> OrderTracking()
     {
         try
         {
-            var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
-            if (userID == 0) return NotFound();
+            var model = await MethodGeneralAsync();
+            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
 
-            var orderDetailList = await _dbContext.OrderDetail.AsNoTracking()
-                                                                .Include(p => p.Product).ThenInclude(p => p.Cate)
-                                                                .ToListAsync();
+            if (userId == 0) return BadRequest();
 
-            var paymentOrderList = await _dbContext.Payment.AsNoTracking()
-                                                            .Where(p => p.Order.UserID == userID)
-                                                            .Include(p => p.Order).ThenInclude(p => p.Address)
-                                                            .Include(p => p.Order).ThenInclude(p => p.Users)
-                                                            .OrderByDescending(p => p.ID)
-                                                            .Take(2)
-                                                            .ToListAsync();
-
-            foreach (var item in paymentOrderList)
-            {
-                orderDetailList.Where(p => p.OrderID == item.OrderID).ToList();
-            }
-
-            var viewModel = await MethodGeneralAsync();
-            viewModel.OrderPayList = orderDetailList;
-            viewModel.PaymentList = paymentOrderList;
-
+            var viewModel = await _tracking.DisplayOrderPaidItemsAsync(model, userId);
+                
             return View(viewModel);
         }
         catch (Exception ex)
@@ -122,33 +111,6 @@ public class HomeController : Controller
         }
     }
 
-    // Kiem tra chuoi co dau
-    public bool HasDiacritics(string text)
-    {
-        string removeDiacritics = RemoveDiacritics(text) ?? string.Empty;
-        return text.Equals(removeDiacritics) ? true : false;
-    }
-
-    // Thay doi name co cac ki tu co dau thanh khong dau
-    public string RemoveDiacritics(string text)
-    {
-        if (string.IsNullOrEmpty(text))
-            return text;
-
-        var stringNormal = text.Normalize(NormalizationForm.FormD);
-        StringBuilder builder = new StringBuilder();
-
-        foreach (char c in stringNormal)
-        {
-            var unicodeCate = CharUnicodeInfo.GetUnicodeCategory(c);
-            if (unicodeCate != UnicodeCategory.NonSpacingMark)
-            {
-                builder.Append(c);
-            }
-        }
-
-        return builder.ToString().Normalize(NormalizationForm.FormC).Replace(" ", "");
-    }
 
     [HttpPost, ValidateAntiForgeryToken] // Cap nhat du lieu ho so
     public async Task<IActionResult> UpdateProfile(UserProfileDTO userDTO)
@@ -156,7 +118,7 @@ public class HomeController : Controller
         try
         {
             var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
-
+                
             var user = await _dbContext.Users.FirstOrDefaultAsync(p => p.Id == userID);
             if (user == null)
             {
@@ -173,7 +135,7 @@ public class HomeController : Controller
                 });
             }
 
-            if (!HasDiacritics(userDTO.UserName.Trim()))
+            if (!GeneralExtentions.HasDiacritics(userDTO.UserName.Trim()))
             {
                 return Json(new
                 {

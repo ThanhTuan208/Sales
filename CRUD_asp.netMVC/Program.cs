@@ -115,6 +115,9 @@ namespace CRUD_asp.netMVC
             builder.Services.AddScoped<QrCodeService>();
             builder.Services.AddScoped<ISmsPaymentVerificationService, SmsPaymentVerificationService>();
 
+            // Dnag ky service order tracking user
+            builder.Services.AddScoped<IDisplayOrderTrackingService, DisplayOrderTrackingService>();
+
             // Dang ky tao don GHN
             builder.Services.AddScoped<GhnService>();
             builder.Services.AddHttpClient<IGhnService, GhnService>();

@@ -1,5 +1,7 @@
-﻿using CRUD_asp.netMVC.Data;
+﻿using CRUD_asp.netMVC.Common;
+using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Admin;
+using CRUD_asp.netMVC.DTO.Generic;
 using CRUD_asp.netMVC.DTO.Payments;
 using CRUD_asp.netMVC.Extensions.Admins;
 using CRUD_asp.netMVC.Extensions.Payments;
@@ -9,8 +11,10 @@ using CRUD_asp.netMVC.Migrations;
 using CRUD_asp.netMVC.ViewModels.Home;
 using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Org.BouncyCastle.Asn1.IsisMtt.X509;
 using Org.BouncyCastle.Tls.Crypto.Impl.BC;
+using Org.BouncyCastle.Utilities.Zlib;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 
@@ -179,16 +183,6 @@ namespace CRUD_asp.netMVC.Service.Home
                                                             .Sum(p => p.PaidAmount ?? 0M) ;
 
             surplusMoney.ExcessMoneyNow = _dbContext.UserWallets.FirstOrDefault(p => p.UserId == model.Users.Id)?.Balance ?? 0M;
-        }
-
-        private string GetOrderIdByMoneyFlowLogEntity(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return string.Empty;
-
-            var match = Regex.Match(text, @"đơn\s+(.+)$");
-
-            return match.Success ? match.Groups[1].Value : string.Empty;
         }
     }
 }

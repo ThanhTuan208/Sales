@@ -160,6 +160,72 @@ body {
 
 /*css loading sp lazy load*/
 
+/* css tabs order tracking*/
+/* Tabs container */
+.order-tabs {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+    /* Tab nav */
+    .order-tabs .tab-nav {
+        display: flex;
+        gap: 12px;
+        text-align:center;
+        justify-content:center;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch; /* mượt trên iOS */
+        scroll-behavior: smooth; /* mượt khi scroll */
+        flex-wrap: nowrap;
+/*        padding-bottom: 4px;*/
+        list-style:none;
+/*        border-bottom: 1px solid black;*/
+    }
+
+        .order-tabs .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .order-tabs .tab-nav::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.2);
+            border-radius: 3px;
+        }
+
+    /* Tab item */
+    .order-tabs .tab-item {
+        flex: 0 0 auto;
+        padding: 10px 56px;
+        cursor: pointer;
+        border-radius: 8px 8px 0 0;
+        font-weight: 600;
+        white-space: nowrap; /* tránh xuống dòng */
+        transition: all 0.2s ease;
+        border-bottom: 1px solid transparent;
+    }
+
+        .order-tabs .tab-item.active {
+            border-bottom: 2px solid var(--od-primary);
+            background: var(--od-primary-light);
+            color: var(--od-primary-dark);
+            border-bottom: 2px solid var(--od-primary);
+        }
+
+    .order-tabs .tab-content {
+        width: 100%;
+    }
+
+    .order-tabs .tab-panel {
+        display: none;
+        width: 100%;
+    }
+
+        .order-tabs .tab-panel.active {
+            display: block;
+        }
+
+
+/* css tabs order tracking*/
+
 /* giao dien san pham da mua*/
 .order-detail-theme {
     --od-font: "Inter", system-ui, Arial;
@@ -223,11 +289,18 @@ header .meta {
 .order-card {
     background: var(--od-surface);
     border-radius: var(--od-radius);
-    padding: 16px;
+    padding: 3rem;
     box-shadow: var(--od-shadow);
     border: 1px solid rgba(245,166,35,0.12);
     overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+    .order-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 28px rgba(214,135,15,0.12);
+    }
+
 
 .order-top {
     display: flex;
@@ -447,33 +520,39 @@ header .meta {
 }
 
 /* Extra small phones */
-@media (max-width: 420px) {
+/* ===== < 700px ===== */
+@media (max-width: 700px) {
     .order-detail-theme {
-        padding: 14px;
+        padding: 20px;
+    }
+
+    .container {
+        gap: 10px;
+        padding: 0 12px;
     }
 
     header h1 {
-        font-size: 16px;
+        font-size: 18px;
     }
 
     header .meta {
         font-size: 12px;
     }
 
+    /* Product */
     .product {
-        grid-template-columns: 56px 1fr;
+        grid-template-columns: 64px 1fr;
         gap: 10px;
         padding: 10px;
     }
 
         .product img {
-            width: 56px;
-            height: 56px;
-            border-radius: 8px;
+            width: 64px;
+            height: 64px;
         }
 
     .prod-info h3 {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .prod-info .meta {
@@ -481,43 +560,146 @@ header .meta {
         gap: 8px;
     }
 
+    .prod-qty,
+    .prod-price {
+        grid-column: 1/-1;
+        text-align: left;
+        margin-top: 6px;
+    }
+
+    /* Footer */
+    .order-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
     .actions {
         gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
     }
 
         .actions .btn-actions {
-            font-size: 14px;
-            padding: 10px;
-            min-width: unset;
+            flex: 1 1 auto;
+            min-width: 120px;
+            padding: 12px;
+            border-radius: 10px;
         }
 
-    .totals .amount {
+    /* Tabs */
+    .order-tabs .tab-nav {
+        flex-direction: row; /* Giữ trên 1 hàng */
+        flex-wrap: nowrap; /* Không xuống dòng */
+        overflow-x: auto; /* Cho phép scroll ngang nếu quá nhiều */
+        -webkit-overflow-scrolling: touch; /* mượt trên mobile */
+        justify-content: flex-start; /* canh tab từ trái */
+    }
+
+    .order-tabs .tab-item {
+        flex: 0 0 auto; /* không co giãn xuống dòng */
+        padding: 10px 16px;
+        white-space: nowrap; /* tránh xuống dòng text */
+    }
+
+    /* Status */
+    .status {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+}
+
+/* ===== < 420px ===== */
+@media (max-width: 420px) {
+    .order-detail-theme {
+        padding: 14px;
+    }
+
+    .container {
+        padding: 0 10px;
+        gap: 8px;
+    }
+
+    header h1 {
         font-size: 16px;
     }
 
-    /* stack actions vertically when very narrow */
-    .order-footer .actions {
-        flex-direction: column-reverse;
+    header .meta {
+        font-size: 11px;
+    }
+
+    /* Product */
+    .product {
+        grid-template-columns: 56px 1fr;
+        gap: 8px;
+        padding: 8px;
+    }
+
+        .product img {
+            width: 56px;
+            height: 56px;
+            border-radius: 0.5rem;
+        }
+
+    .prod-info h3 {
+        font-size: 13px;
+    }
+
+    .prod-info .meta {
+        font-size: 11px;
+        gap: 6px;
+    }
+
+    .prod-qty,
+    .prod-price {
+        margin-top: 4px;
+    }
+
+    /* Footer */
+    .order-footer {
+        flex-direction: column;
         align-items: stretch;
-        width: 100%;
+        gap: 8px;
     }
 
-    .actions .btn-actions {
+    .actions {
+        flex-direction: column-reverse;
         width: 100%;
+        gap: 6px;
     }
 
-    /* Điều chỉnh kích thước .status trên mobile nhỏ */
+        .actions .btn-actions {
+            width: 100%;
+            font-size: 13px;
+            padding: 8px;
+        }
+
+    .totals .amount {
+        font-size: 15px;
+    }
+
+    /* Status */
     .status {
-        padding: 6px 10px;
-        font-size: 12px;
+        font-size: 11px;
+        padding: 5px 8px;
+    }
+
+    .order-tabs .tab-nav {
+        flex-direction: row; /* vẫn 1 hàng */
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .order-tabs .tab-item {
+        flex: 0 0 auto;
+        font-size: 13px;
+        padding: 8px 12px;
+        white-space: nowrap;
     }
 }
 
-/* Utility: ensure long product titles wrap nicely */
-.prod-info h3 {
-    word-break: break-word;
-    hyphens: auto;
-}
+
 /*san pham da mua*/
 
 

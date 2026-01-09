@@ -8,6 +8,6 @@ namespace CRUD_asp.netMVC.Service.Home
     {
         Task<string> HandleProfileDisplayAsync(string options);
         Task<IBaseProfileViewModel> DisplayViewModel(string? option);
-        Task<T> BuildBaseViewModelAsync<T>() where T : class, IBaseProfileViewModel, new(); 
+        Task<T> BuildBaseViewModelAsync<T>() where T : class, IBaseProfileViewModel, new();
     }
 }
