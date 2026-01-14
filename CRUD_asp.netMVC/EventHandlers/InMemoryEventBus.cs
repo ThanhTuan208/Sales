@@ -7,12 +7,11 @@ namespace CRUD_asp.netMVC.EventHandlers
     public class InMemoryEventBus : IEventBus
     {
         private readonly IServiceProvider _provide;
-
         public InMemoryEventBus(IServiceProvider provide) => _provide = provide;
 
-        public async Task PaymentVerificationAsync<TEvent>(TEvent @event) => await GeneralMethod(@event);
-
         public async Task PublishAsync<TEvent>(TEvent @event) => await GeneralMethod(@event);
+        public async Task RequestGHNAsync<TEvent>(TEvent @event) => await GeneralMethod(@event);
+        public async Task PaymentVerificationAsync<TEvent>(TEvent @event) => await GeneralMethod(@event);
 
         public async Task GeneralMethod<TEvent>(TEvent @event)
         {

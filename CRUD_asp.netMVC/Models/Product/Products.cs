@@ -54,7 +54,7 @@ namespace CRUD_asp.netMVC.Models.Product
         public int? CateID { get; set; }
         public Category? Cate { get; set; }
 
-        public int? Weight { get; set; }
+        public double Weight { get; set; } // moi sua 15/01 2:21 AM, chua chay migration cap nhat
 
         public List<AddToCart>? Carts { get; set; }
         public List<Reviews>? Reviews { get; set; }

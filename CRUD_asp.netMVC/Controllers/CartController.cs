@@ -1,8 +1,8 @@
 ﻿using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.Extensions.Payments;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
-using CRUD_asp.netMVC.Service.Payment;
 using CRUD_asp.netMVC.ViewModels.Cart;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;

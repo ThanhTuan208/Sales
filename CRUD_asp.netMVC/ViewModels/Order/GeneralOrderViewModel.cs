@@ -5,7 +5,7 @@ namespace CRUD_asp.netMVC.ViewModels.Order
 {
     public class GeneralOrderViewModel
     {
-        public List<Products>? Product { get; set; }
-        public Orders? Order { get; set; }
+        public List<Products> Product { get; set; } = null!;
+        public Orders Order { get; set; } = null!;
     }
 }

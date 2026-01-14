@@ -1,4 +1,4 @@
-﻿namespace CRUD_asp.netMVC.Service.Payment
+﻿namespace CRUD_asp.netMVC.Extensions.Payments
 {
     public class QrCodeService
     {
@@ -11,6 +11,5 @@
                          $"?amount={amount}&addInfo={Uri.EscapeDataString(description)}&accountName={Uri.EscapeDataString(accountName)}";
             return url;
         }
-
     }
 }

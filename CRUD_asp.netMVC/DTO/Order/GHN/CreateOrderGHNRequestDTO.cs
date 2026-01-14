@@ -4,8 +4,35 @@ using System.Text.Json.Serialization;
 
 namespace CRUD_asp.netMVC.DTO.Order.GHN
 {
-    public class CreateOrderGHNRequest // thong tin giao hang
+    public class CreateOrderGHNRequestDTO // thong tin giao hang
     {
+        public CreateOrderGHNRequestDTO() { }
+        public CreateOrderGHNRequestDTO(string toName, string toPhone, string toAddress, int toDistrictID, string toWardCode, int serviceID, int serviceTypeID, int? weight, int codAmount, int paymentTypeID, string note, string requiredNote, int shopId, string content, int configFeeID, int exstraCodeID, List<ProductItem> items, string fromName, string fromPhone, string fromAddressUser, int fromDistrictId, string fromWardCode)
+        {
+            ToName = toName;
+            ToPhone = toPhone;
+            ToAddress = toAddress;
+            ToDistrictID = toDistrictID;
+            ToWardCode = toWardCode;
+            ServiceID = serviceID;
+            ServiceTypeID = serviceTypeID;
+            Weight = weight;
+            CodAmount = codAmount;
+            PaymentTypeID = paymentTypeID;
+            Note = note;
+            RequiredNote = requiredNote;
+            ShopId = shopId;
+            Content = content;
+            ConfigFeeID = configFeeID;
+            ExstraCodeID = exstraCodeID;
+            Items = items;
+            FromName = fromName;
+            FromPhone = fromPhone;
+            FromAddressUser = fromAddressUser;
+            FromDistrictId = fromDistrictId;
+            FromWardCode = fromWardCode;
+        }
+
         [JsonPropertyName("to_name")]
         public string ToName { get; set; }
 
@@ -19,7 +46,7 @@ namespace CRUD_asp.netMVC.DTO.Order.GHN
         public int ToDistrictID { get; set; }
 
         [JsonPropertyName("to_ward_code")]
-        public string ToWardCode { get; set; }
+        public int ToWardCode { get; set; }
 
         [JsonPropertyName("service_id")]
         public int ServiceID { get; set; }
@@ -28,7 +55,7 @@ namespace CRUD_asp.netMVC.DTO.Order.GHN
         public int ServiceTypeID { get; set; }
 
         [JsonPropertyName("weight")]
-        public int? Weight { get; set; }
+        public double Weight { get; set; }
 
         [JsonPropertyName("cod_amount")]
         public int CodAmount { get; set; }
@@ -71,6 +98,5 @@ namespace CRUD_asp.netMVC.DTO.Order.GHN
 
         [JsonPropertyName("from_ward_code")]
         public string FromWardCode { get; set; }
-
     }
 }

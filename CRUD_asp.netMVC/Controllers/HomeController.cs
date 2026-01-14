@@ -95,13 +95,13 @@ public class HomeController : Controller
     {
         try
         {
+            var userId = GetUserId();
             var model = await MethodGeneralAsync();
-            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
 
             if (userId == 0) return BadRequest();
 
             var viewModel = await _tracking.DisplayOrderPaidItemsAsync(model, userId);
-                
+
             return View(viewModel);
         }
         catch (Exception ex)
@@ -118,7 +118,7 @@ public class HomeController : Controller
         try
         {
             var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
-                
+
             var user = await _dbContext.Users.FirstOrDefaultAsync(p => p.Id == userID);
             if (user == null)
             {
@@ -537,4 +537,5 @@ public class HomeController : Controller
         return ViewModel;
     }
 
+    private int GetUserId() => int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
 }

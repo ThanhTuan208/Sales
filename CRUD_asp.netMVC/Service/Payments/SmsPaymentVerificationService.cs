@@ -3,14 +3,19 @@ using CRUD_asp.netMVC.Common;
 using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Generic;
 using CRUD_asp.netMVC.DTO.Order;
+using CRUD_asp.netMVC.DTO.Order.GHN;
 using CRUD_asp.netMVC.DTO.Payments;
 using CRUD_asp.netMVC.EventHandlers;
+using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Payments;
+using CRUD_asp.netMVC.ViewModels.Order;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto.Fpe;
 using StackExchange.Redis;
 using System.ComponentModel.Design.Serialization;
 using System.Diagnostics.Eventing.Reader;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using PaymentModel = CRUD_asp.netMVC.Models.Payments.Payment;
 
@@ -33,7 +38,7 @@ namespace CRUD_asp.netMVC.Service.Payments
             {
                 if (string.IsNullOrEmpty(message))
                 {
-                    return Result<Unit>.Fail("Tin nhắn không được null hoặc rỗng!");
+                    return Result<Unit>.Fail("Tin nhắn không được null hoặc rỗng!", 400);
                 }
 
                 var transactionCode = Regex.Match(message, @"ORD([^-]+)");
@@ -41,7 +46,7 @@ namespace CRUD_asp.netMVC.Service.Payments
 
                 if (!transactionCode.Success)
                 {
-                    return Result<Unit>.Fail("Mã đơn hàng được gửi đến không hợp lệ (giữ mã giao dịch ORD...)!");
+                    return Result<Unit>.Fail("Mã đơn hàng được gửi đến không hợp lệ (giữ mã giao dịch ORD...)!", 400);
                 }
 
                 var transactionId = transactionCode.Groups[1].Value;
@@ -51,7 +56,7 @@ namespace CRUD_asp.netMVC.Service.Payments
                 {
                     if (amountRecive == 0)
                     {
-                        return Result<Unit>.Fail("Thành toán đơn hàng thất bại!");
+                        return Result<Unit>.Fail("Thành toán đơn hàng thất bại!", 400);
                     }
                 }
 
@@ -75,21 +80,21 @@ namespace CRUD_asp.netMVC.Service.Payments
 
                 if (order == null)
                 {
-                    return Result<Unit>.Fail("Không tìm thấy đơn hàng!");
+                    return Result<Unit>.Fail("Không tìm thấy đơn hàng!", 404);
                 }
 
                 if (order.Status == "Paid")
                 {
-                    return Result<Unit>.OK("Đơn hàng đã được thanh toán trước đó!");
+                    return Result<Unit>.OK("Đơn hàng đã được thanh toán trước đó!", 200);
                 }
 
                 await _event.PaymentVerificationAsync(new PaymentVerificationEvent(orderDTO, amountRecive));
 
-                return Result<Unit>.OK("Gửi yêu cầu hỏi người dùng thành công.");
+                return Result<Unit>.OK("Gửi yêu cầu hỏi người dùng thành công.", 200);
             }
             catch (Exception ex)
             {
-                return Result<Unit>.Fail(ex.Message);
+                return Result<Unit>.Fail(ex.Message, 500);
             }
         }
 
@@ -304,14 +309,71 @@ namespace CRUD_asp.netMVC.Service.Payments
                 }
                 else await _event.PublishAsync(new OrderPaidEvent(orderId: order.ID, userId: order.UserID.ToString(), transactionId: order.TransactionId, false));
 
-                return Result<Unit>.OK("Thanh toán thành công.");
+                return Result<Unit>.OK("Thanh toán thành công.", 201);
             }
             catch (Exception ex)
             {
                 await transactions.RollbackAsync();
-                return Result<Unit>.Fail(ex.Message);
+                return Result<Unit>.Fail(ex.Message, 500);
             }
         }
+
+        public async Task<Result<GeneralOrderViewModel>> ResponsePayStatusAsync(string orderId, string transactionCode, int userId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(orderId) || string.IsNullOrEmpty(transactionCode))
+                {
+                    return Result<GeneralOrderViewModel>.Fail("Dữ liệu không hợp lệ!", 400, null);
+                }
+
+                var order = await _dbContext.Orders
+                    .Include(p => p.OrderDetail).ThenInclude(p => p.Product)
+                    .FirstOrDefaultAsync(p => p.ID == orderId && p.TransactionId == transactionCode && p.Status == "Paid") ?? ;
+
+                if (order == null)
+                {
+                    return Result<GeneralOrderViewModel>.Fail("Đơn hàng không tồn tại!", 404, null);
+                }
+
+                if (userId > 0)
+                {
+                    var Address = await _dbContext.Addresses.FirstOrDefaultAsync(p => p.UserID == userId && p.IsDefault);
+
+                    order.AddressID = Address.ID;
+                    order.ShipRecipientName = Address.RecipientName;
+                    order.ShipPhoneNumber = Address.PhoneNumber;
+                    order.ShipStreet = Address.Street;
+                    order.ShipProvince = Address.Province;
+                    order.ShipWard = Address.Ward;
+
+                    _dbContext.Orders.Update(order);
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                var cateID = await _dbContext.OrderDetail.Where(p => p.OrderID == order.ID).Select(p => p.Product.CateID).FirstOrDefaultAsync();
+
+                var product = await _dbContext.Products.Where(p => p.CateID == cateID).ToListAsync();
+
+                Random rand = new Random();
+                var shuffledProduct = product.OrderBy(p => rand.Next()).Take(4).ToList();
+
+
+                GeneralOrderViewModel viewModel = new GeneralOrderViewModel()
+                {
+                    Product = shuffledProduct,
+                    Order = order
+                };
+
+                await _event.RequestGHNAsync(viewModel.Order);
+                return Result<GeneralOrderViewModel>.OK("trạng thái thanh toán thành công", 201, viewModel);
+            }
+            catch
+            {
+                return Result<GeneralOrderViewModel>.Fail("Lỗi hệ thống khi trả về trạng thái thanh toán!", 500);
+            }
+        }
+
         private async Task<bool> CheckExcessPaymentAsync(decimal? receivePay, decimal? orderAmount, int userId)
         {
             // tien ck = tien don hang
@@ -328,5 +390,7 @@ namespace CRUD_asp.netMVC.Service.Payments
             }
             return false;
         }
+
+
     }
 }

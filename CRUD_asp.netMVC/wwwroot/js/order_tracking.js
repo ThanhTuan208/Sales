@@ -1,4 +1,18 @@
-﻿function scrollTabToCenter(tabItem) {
+﻿$.ajax({
+    url: "api/Payment/PaymentSuccess",
+    type: "POST",
+
+    success: function (data) {
+     
+    },
+    error: function () {
+     
+    },
+    complete: function () {
+     
+    },
+});
+function scrollTabToCenter(tabItem) {
     const container = tabItem.parent(); // .tab-nav
     const containerWidth = container.width();
     const tabWidth = tabItem.outerWidth();

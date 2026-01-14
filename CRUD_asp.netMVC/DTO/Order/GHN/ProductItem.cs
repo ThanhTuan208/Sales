@@ -26,6 +26,6 @@ namespace CRUD_asp.netMVC.DTO.Order.GHN
         public int Height { get; set; }
 
         [JsonPropertyName("weight")]
-        public int? Weight { get; set; }
+        public double Weight { get; set; }
     }
 }
