@@ -63,6 +63,7 @@ namespace CRUD_asp.netMVC.Controllers
                         PostalCode = null,
                         IsDefault = addressDTO.IsDefault,
                         IsDelete = false,
+                        GovernmentCode = addressDTO.GovermnentCode
                         //PostalCode = addressDTO.PostalCode ?? string.Empty,
                     };
 

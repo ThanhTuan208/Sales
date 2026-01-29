@@ -8,6 +8,6 @@ namespace CRUD_asp.netMVC.Service.GHN
     public interface IGhnService
     {
         Task<OrderStatusGHNResponse> GetOrderStatusAsync(string orderCode);
-        Task<Result<string>> CreateOrderGHNRequestAsync(Orders order);
+        Task<Result<string>> CreateOrderGHNRequestAsync(string orderId, int userId);
     }
 }

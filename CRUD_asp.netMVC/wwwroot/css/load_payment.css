@@ -48,6 +48,50 @@ body {
         border-radius: 10px;
     }
 
+/* ===== STATUS ICON ===== */
+.status-icon {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    color: #fff;
+}
+
+/* SUCCESS */
+.success-state .status-icon {
+    background: linear-gradient(135deg, #34c759, #28a745);
+}
+
+.success-state h1 {
+    color: #15803d;
+}
+
+/* ERROR */
+.error-state .status-icon {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+
+.error-state h1 {
+    color: #b91c1c;
+}
+
+.error-state .order-details {
+    background: #fff5f5;
+    border: 1px solid #fecaca;
+}
+
+/* BUTTON OUTLINE */
+.btn-outline {
+    background: transparent;
+    border: 2px solid #ef4444;
+    color: #ef4444;
+}
+
 .success-icon {
     width: 96px;
     height: 96px;

@@ -25,7 +25,7 @@ namespace CRUD_asp.netMVC.Models.Payments
         public decimal Amount { get; set; }
 
         [Column(TypeName = "decimal(18,2)")] 
-        public decimal? PaidAmount { get; set; }
+        public decimal PaidAmount { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal? BalanceSnapshot { get; set; }

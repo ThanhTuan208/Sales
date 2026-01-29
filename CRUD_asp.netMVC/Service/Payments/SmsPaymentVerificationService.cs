@@ -146,7 +146,7 @@ namespace CRUD_asp.netMVC.Service.Payments
                             OrderId = order.ID,
                             UserId = order.UserID,
                             OrderAmount = order.Amount,
-                            PaidAmount = evt.AmountReceive ?? 0,
+                            PaidAmount = evt.AmountReceive,
                             MissingAmount = order.Amount - evt.AmountReceive ?? 0,
                             Status = "PartiallyPaid",
                             CreatedAt = DateTime.UtcNow
@@ -164,7 +164,7 @@ namespace CRUD_asp.netMVC.Service.Payments
                                 UserId = order.UserID,
                                 OrderId = order.ID,
                                 OriginalAmount = order.Amount,
-                                PaidAmount = evt.AmountReceive ?? 0,
+                                PaidAmount = evt.AmountReceive,
                                 ExcessAmount = evt.AmountReceive - order.Amount ?? 0,
                                 Status = "Available",
                                 CreatedAt = DateTime.UtcNow
@@ -329,7 +329,7 @@ namespace CRUD_asp.netMVC.Service.Payments
 
                 var order = await _dbContext.Orders
                     .Include(p => p.OrderDetail).ThenInclude(p => p.Product)
-                    .FirstOrDefaultAsync(p => p.ID == orderId && p.TransactionId == transactionCode && p.Status == "Paid") ?? ;
+                    .FirstOrDefaultAsync(p => p.ID == orderId && p.TransactionId == transactionCode && p.Status == "Paid") ?? null;
 
                 if (order == null)
                 {
@@ -359,13 +359,12 @@ namespace CRUD_asp.netMVC.Service.Payments
                 var shuffledProduct = product.OrderBy(p => rand.Next()).Take(4).ToList();
 
 
-                GeneralOrderViewModel viewModel = new GeneralOrderViewModel()
+                GeneralOrderViewModel viewModel = new ()
                 {
                     Product = shuffledProduct,
                     Order = order
                 };
 
-                await _event.RequestGHNAsync(viewModel.Order);
                 return Result<GeneralOrderViewModel>.OK("trạng thái thanh toán thành công", 201, viewModel);
             }
             catch

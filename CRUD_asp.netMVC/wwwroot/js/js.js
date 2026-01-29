@@ -46,7 +46,6 @@ $(document).ready(function () {
         });
     });
 
-
     // Mở Modal
     $(document).off('click', '.view-all-link').on('click', '.view-all-link', function (e) {
         e.preventDefault();
@@ -75,11 +74,6 @@ $(document).ready(function () {
     $(document).on('click', '.modal-box', function (e) {
         e.stopPropagation();
     });
-
-    //// Click overlay → đóng modal
-    //$(document).on('click', '.modal-overlay', function () {
-    //    closeModal($(this));
-    //});
 
     // Hàm đóng modal
     function closeModal($modalOverlay) {

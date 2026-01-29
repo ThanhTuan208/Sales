@@ -4,11 +4,12 @@
     {
         public int ID { get; set; }
         //public int UserID { get; set; }
-        public string RecipientName { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Street { get; set; }
-        public string Province { get; set; }
-        public string Ward { get; set; }
+        public string RecipientName { get; set; } = null!;
+        public string PhoneNumber { get; set; } = null!;
+        public string Street { get; set; } = null!;
+        public string Province { get; set; } = null!;
+        public string Ward { get; set; } = null!;
+        public string GovermnentCode { get; set; } = null!;
         //public string PostalCode { get; set; }
         public bool IsDefault { get; set; } = false;
         public bool IsDelete { get; set; } = false;

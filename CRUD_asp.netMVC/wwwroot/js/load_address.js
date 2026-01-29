@@ -1,7 +1,92 @@
 ﻿import { updateQtyAfterCheck, GetArrIDChecked, LoadView } from './js.js';
 import { startCountdown } from './globalGeneralFunc.js';
+
 $(document).ready(function () {
     LoadView();
+
+    $(function () {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/requestGHN")
+            .withAutomaticReconnect([0, 2000, 5000, 10000])
+            .build();
+
+        // Hàm đăng ký handler - gọi lại mỗi khi connect/reconnect thành công
+        function registerPaymentHandler() {
+            connection.on("RequestGHN", (orderId) => {
+                console.log("Nhận tín hiệu thanh toán thành công:", orderId);
+                $.ajax({
+                    url: "/Payment/RequestGHN",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(orderId),
+                    headers: {
+                        "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+                    },
+
+                    success: function (res) {
+                        console.log(res)
+                    },
+                    error: function (err) {
+                        console.error(err)
+                    }
+                });
+
+            })
+        };
+
+        // Hàm khởi động connection
+        function startConnection() {
+            connection.start()
+                .then(() => {
+                    console.log("SignalR connected successfully");
+                    registerPaymentHandler(); // Đăng ký lại handler
+                })
+                .catch(err => {
+                    console.error("SignalR connection failed:", err);
+                    setTimeout(startConnection, 5000);
+                });
+        }
+
+        // Xử lý khi connection bị đóng
+        connection.onclose(() => {
+            console.warn("SignalR connection closed. Reconnecting...");
+        });
+
+        // Xử lý khi reconnect thành công (rất quan trọng!)
+        connection.onreconnected(() => {
+            console.log("SignalR reconnected successfully!");
+            registerPaymentHandler(); // Đăng ký lại handler sau reconnect
+        });
+
+        // Bắt đầu kết nối
+        startConnection();
+    });
+
+    //// call controller requestGHN
+    //createSignalRConnection({
+    //    url: "/requestGHN",     
+    //    eventName: "RequestGHN",
+    //    handler: (orderId) => {
+    //        console.log("GHN status:", orderId);
+
+    //        $.ajax({
+    //            url: "/Payment/RequestGHN",
+    //            type: "POST",
+    //            contentType: "application/json",
+    //            data: JSON.stringify(orderId),
+    //            headers: {
+    //                "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+    //            },
+
+    //            success: function (res) {
+    //                console.log(res)
+    //            },
+    //            error: function (err) {
+    //                console.error(err)
+    //            }
+    //        });
+    //    }
+    //});
 
     // Xu ly su kien thong bao user dung vi thanh toan san pham
     const $btnPay = $('#btnPay');
@@ -33,8 +118,6 @@ $(document).ready(function () {
             order: orderData
         };
 
-        //console.log(evt);
-        //console.log("Json: " + JSON.stringify(evt));
         $.ajax({
             url: `/Payment/PaymentConfirmWallet`,
             type: 'POST',
@@ -507,6 +590,10 @@ $(document).ready(function () {
             }
         }
 
+       
+        const province = addressData.find(p => p.Code === provinceCode);
+        const governmentCode = getWardCodeFromProvince(province, wardName);
+
         let formData = new FormData();
         if (id) formData.append('ID', id);
         formData.append('RecipientName', recipientName);
@@ -514,6 +601,7 @@ $(document).ready(function () {
         formData.append('Street', street);
         formData.append('Province', provinceName);
         formData.append('Ward', wardName);
+        formData.append('GovernmentCode', governmentCode);
         formData.append('IsDefault', isDefault);
         formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
 
@@ -584,6 +672,18 @@ $(document).ready(function () {
             }
         });
     });
+
+    function getWardCodeFromProvince(province, wardName) {
+        const normalize = s => s?.normalize("NFC").trim().toLowerCase();
+
+        const ward = province.Wards?.find(w =>
+            normalize(w.Name) === normalize(wardName)
+        );
+
+        return ward?.Code ?? "";
+    }
+
+
 
     // Xóa viền đỏ khi người dùng chỉnh sửa hoặc chọn giá trị mới //
     $(document).on('change input', '#province, #ward, .form-control', function () {
@@ -663,42 +763,14 @@ $(document).ready(function () {
         });
     });
 
-    // Quay laai trang danh sach dia chi
     $(document).off('click', '.returnAddressList').on('click', '.returnAddressList', function () {
 
-        $(".address-form").fadeOut(300);  // an form dia chi
+        $(".address-form").fadeOut(300);
 
         GeneralAjaxResponse(true, false);
     });
 
 });
-
-function GeneralAjaxResponse(isAddress, updateAddress) {
-
-    let ids = [];
-    let ArrChecked = GetArrIDChecked(ids);
-    if (!ArrChecked) {
-        return;
-    }
-
-    $.ajax({
-        url: "/Cart",
-        type: "GET",
-        data: {
-            arrID: ids,
-            IsAddress: isAddress,
-            UpdateAddress: updateAddress
-        },
-        traditional: true, // bind mảng
-        success: function (response) {
-            $(".modal-left").html(response); // render vào modal
-            updateQtyAfterCheck();
-        },
-        error: function () {
-            alert("Lỗi không hiển thị !");
-        }
-    });
-}
 
 let addressData = [];
 // Load du lieu json dia chi VietNam
@@ -749,7 +821,6 @@ function LoadDataAddress(provinceName, wardName, callback) {
                 const provinceCode = addressData.find(p => p.Name === provinceName);
                 if (provinceCode) {
                     provinceSelect.setValue(provinceCode.Code);
-                    //console.log("Tỉnh được chọn:", provinceSelect.getItem(provinceCode.Code)?.textContent || provinceName);
 
                     // Cập nhật danh sách phường/xã
                     updateWardOptions(provinceCode.Code);
@@ -759,7 +830,6 @@ function LoadDataAddress(provinceName, wardName, callback) {
                         const wardCode = provinceCode.Wards.find(w => w.Name === wardName)?.Code;
                         if (wardCode) {
                             wardSelect.setValue(wardCode);
-                            //console.log("Phường/xã được chọn:", wardSelect.getItem(wardCode)?.textContent || wardName);
                         } else {
                             console.log("Không tìm thấy phường/xã:", wardName);
                         }
@@ -822,17 +892,15 @@ function LoadDataAddress(provinceName, wardName, callback) {
         const $order = $("#orderDetails");
 
         function showProductsUnderModal() {
-            // add class to slide modal up
             $modal.addClass("at-top");
 
             setTimeout(() => {
                 const modalHeight = $modal.outerHeight(true); // include margin/padding
                 $extra.css("margin-top", modalHeight + 20 + "px");
 
-                // reveal extra content with slideDown-like animation
                 $extra.attr("aria-hidden", "false").hide().slideDown(450);
                 $("html,body").animate({ scrollTop: 0 }, 450);
-            }, 250); // 250ms after class add (tunable)
+            }, 250);
         }
 
         setTimeout(showProductsUnderModal, 1500);
@@ -842,7 +910,6 @@ function LoadDataAddress(provinceName, wardName, callback) {
             if (!$modal.hasClass("at-top")) showProductsUnderModal();
         });
 
-        // Recompute margin-top on window resize if products visible
         $(window).on("resize", function () {
             if ($modal.hasClass("at-top") && $extra.is(":visible")) {
                 const modalHeight = $modal.outerHeight(true);
@@ -850,24 +917,50 @@ function LoadDataAddress(provinceName, wardName, callback) {
             }
         });
 
-        $modal.on(
-            "transitionend webkitTransitionEnd oTransitionEnd",
-            function (e) {
-                if ($modal.hasClass("at-top")) {
-                    // optionally hide the order details box to keep the header compact:
-                    // $order.slideUp(220);
-                    // or keep visible — comment/uncomment above
-                }
-            }
-        );
-
-        // Button demo (you'd replace with real links)
         $("#btnHome").on("click", function (e) {
             e.preventDefault();
-            // navigate home
-            // location.href = '/';
             alert("Redirect to homepage (demo)");
         });
     });
 }
 
+function createSignalRConnection({
+    url,
+    eventName,
+    handler,
+    reconnectDelays = [0, 2000, 5000, 10000]
+}) {
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl(url)
+        .withAutomaticReconnect(reconnectDelays)
+        .build();
+
+    function registerHandler() {
+        connection.off(eventName); // RẤT QUAN TRỌNG – tránh double handler
+        connection.on(eventName, handler);
+    }
+
+    async function start() {
+        try {
+            registerHandler();
+            await connection.start();
+            console.log(`SignalR connected: ${url}`);
+        } catch (err) {
+            console.error("SignalR start failed:", err);
+            setTimeout(start, 5000);
+        }
+    }
+
+    connection.onreconnected(() => {
+        console.log("SignalR reconnected");
+        registerHandler();
+    });
+
+    connection.onclose(() => {
+        console.warn("SignalR connection closed");
+    });
+
+    start();
+
+    return connection; // để gọi invoke nếu cần
+}

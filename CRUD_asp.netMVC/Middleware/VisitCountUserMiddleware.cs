@@ -63,7 +63,7 @@ namespace CRUD_asp.netMVC.Middleware
                     SameSite = SameSiteMode.Lax, //Cookie không gửi trong request cross-site trừ khi user click link từ site khác,
                                                  //Giúp giảm rủi ro CSRF.
                 });
-
+                    
                 // Set TTL(Time To Live) cho uv
                 await db.KeyExpireAsync(totalKey, TimeSpan.FromDays(2));
 

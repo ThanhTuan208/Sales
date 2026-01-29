@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CRUD_asp.netMVC.Models.Payments
 {
-    /* Status properties
+    /* Success properties
          Pending: Chưa xác nhận giao dịch
          Available: Có tiền dư, có thể hoàn
          RefundRequested: User yêu cầu hoàn

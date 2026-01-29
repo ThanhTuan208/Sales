@@ -36,6 +36,9 @@ namespace CRUD_asp.netMVC.Models.Auth
         [StringLength(50)]
         public string? PostalCode { get; set; }  // Ma buu chinh
 
+        [StringLength(10)]
+        public string GovernmentCode { get; set; } = null!;
+
         public bool IsDefault { get; set; }
 
         public bool IsDelete { get; set; }

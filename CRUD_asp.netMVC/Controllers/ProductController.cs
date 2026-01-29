@@ -86,8 +86,6 @@ namespace CRUD_asp.netMVC.Controllers
                 }
 
                 var productCount = await products.CountAsync();
-                //var path = HttpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries); //StringSplitOptions.RemoveEmptyEntries: bo qua chuoi rong
-                //var actionNameUrl = path.Length >= 2 ? path[1] : string.Empty;
 
                 ViewData["cateID"] = cateID;
                 ViewData["brandID"] = brandID;
@@ -126,8 +124,6 @@ namespace CRUD_asp.netMVC.Controllers
 
             var productCount = await products.CountAsync();
             ViewBag.ProductCount = productCount;
-
-            //var pagProduct = await PaginatedList<Products>.CreatePagAsync(products, productPage, 16);
 
             // Pagination truyen tham so cho product, brand, category, cart
             var ViewModel = await CreatePaginationGeneral(products, productPage, 12).ConfigureAwait(false);

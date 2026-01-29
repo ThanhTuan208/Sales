@@ -1,6 +1,8 @@
 using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.DTO.Order.GHN;
 using CRUD_asp.netMVC.DTO.Payments;
 using CRUD_asp.netMVC.EventHandlers;
+using CRUD_asp.netMVC.EventHandlers.GHN;
 using CRUD_asp.netMVC.EventHandlers.Payments;
 using CRUD_asp.netMVC.Extensions.Payments;
 using CRUD_asp.netMVC.Filters;
@@ -19,6 +21,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using System.Net.Http.Headers;
 
 namespace CRUD_asp.netMVC
 {
@@ -119,13 +122,20 @@ namespace CRUD_asp.netMVC
             builder.Services.AddScoped<IDisplayOrderTrackingService, DisplayOrderTrackingService>();
 
             // Dang ky tao don GHN
-            builder.Services.AddScoped<GhnService>();
-            builder.Services.AddHttpClient<IGhnService, GhnService>();
+            builder.Services.AddHttpClient<IGhnService, GhnService>(client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration["GHN:BaseURL"]);
+                client.DefaultRequestHeaders.Add("Token", builder.Configuration["GHN:Token"]);
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json")
+                );
+            });
+
 
             builder.Services.AddScoped<IEventBus, InMemoryEventBus>();
             builder.Services.AddScoped<IEventHandler<OrderPaidEvent>, NotifyPaymentHandler>();
             builder.Services.AddScoped<IEventHandler<OrderPaidEvent>, OrderPaidDashboardHandler>();
-
+            builder.Services.AddScoped<IEventHandler<CallAPIRequestGHNEvent>, CallAPIRequestGHN>();
             builder.Services.AddScoped<IEventHandler<PaymentVerificationEvent>, PaymentVerificationHandler>();
 
             // Dang ky service DisplayProfileUserService
@@ -220,6 +230,8 @@ namespace CRUD_asp.netMVC
             app.MapHub<SurplusMoneyHub>("/SurplusMoney");
 
             app.MapHub<QuestionResHub>("/questionRes");
+
+            app.MapHub<RequestGHNHub>("/requestGHN");
 
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {

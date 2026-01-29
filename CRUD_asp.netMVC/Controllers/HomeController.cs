@@ -89,7 +89,6 @@ public class HomeController : Controller
         return PartialView("_OrderPayPartial", PaymentList);
     }
 
-
     [HttpGet] // Hien thi trang theo doi don hang da dat    
     public async Task<IActionResult> OrderTracking()
     {

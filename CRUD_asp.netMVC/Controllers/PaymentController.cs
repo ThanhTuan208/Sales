@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using StackExchange.Redis;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace CRUD_asp.netMVC.Controllers
@@ -31,24 +32,16 @@ namespace CRUD_asp.netMVC.Controllers
 
         public PaymentController
             (
-                    GhnService ghn,
+                    IGhnService ghn,
                     AppDBContext dbContext,
-                    IConnectionMultiplexer reids,
                     ISmsPaymentVerificationService smsPaymentVerificationService,
-                    IHubContext<PaymentHub> hub,
                     ILogger<PaymentController> logger
             )
         {
             _ghn = ghn;
-            _dbContext = dbContext;
-            //_qrCodeService = qrCodeService;
-            _smsPaymentVerificationService = smsPaymentVerificationService;
             _logger = logger;
-
-            //_token = config["GHN:Token"] ?? "";
-            //_httpClient = httpClient;
-            //_httpClient.DefaultRequestHeaders.Add("Token", _token);
-            //_httpClient.DefaultRequestHeaders.Add("_dbContext-Type", "application/json"); 
+            _dbContext = dbContext;
+            _smsPaymentVerificationService = smsPaymentVerificationService;
         }
 
         [HttpGet("InfoPayment")]
@@ -118,16 +111,25 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpGet("~/Payment/PaymentSuccess")] // Goi trang thanh toan thanh cong
-        public async Task<IActionResult> PaymentSuccess([FromQuery] string orderId, [FromQuery] string transactionCode)
+        public async Task<IActionResult> PaymentStatus([FromQuery] string orderId, [FromQuery] string transactionCode)
         {
             try
             {
                 var userId = GetUserId();
                 var result = await _smsPaymentVerificationService.ResponsePayStatusAsync(orderId, transactionCode, userId);
 
-                if (result.Data == null) return BadRequest();
+                if (result.Success)
+                {
+                    var resGHN = await _ghn.CreateOrderGHNRequestAsync(orderId, userId);
 
-                return result.Data != null ? View(result.Data) : BadRequest();
+                    if (resGHN != null)
+                    {
+                        return View(result.Data);
+                    }
+                }
+
+                result.Data.Success = false;
+                return View(result.Data);
             }
             catch (Exception ex)
             {
@@ -137,14 +139,15 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpPost("~/Payment/RequestGHN")] // Gui yeu cau tao don Giao Hang Nhanh khi thanh toan thanh cong (khong tinh don thieu tien)
-        public async Task<IActionResult> RequestGHN([FromBody] Orders order)
+        public async Task<IActionResult> RequestGHN([FromBody] string orderId)
         {
-            if (order == null)
+            if (string.IsNullOrEmpty(orderId))
             {
                 return BadRequest(new { success = false, message = "dữ liệu đơn hàng không tồn tại" });
             }
 
-            var result = await _ghn.CreateOrderGHNRequestAsync(order);
+            int userId = GetUserId();
+            var result = await _ghn.CreateOrderGHNRequestAsync(orderId, userId);
 
             return StatusCode(result.StatusCode, new
             {
@@ -157,4 +160,3 @@ namespace CRUD_asp.netMVC.Controllers
         private int GetUserId() => int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
     }
 }
-

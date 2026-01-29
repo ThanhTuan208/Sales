@@ -32,7 +32,7 @@ namespace CRUD_asp.netMVC.EventHandlers.Payments
             string transactionCode = order.TransactionId;
             string paymentMethod = order.PaymentMethod;
 
-            decimal amountReceive = evt.AmountReceive ?? 0;
+            decimal amountReceive = evt.AmountReceive;
             decimal orderAmount = order.Amount ?? 0;
             decimal? missingAmount = order.Amount - evt.AmountReceive;
 

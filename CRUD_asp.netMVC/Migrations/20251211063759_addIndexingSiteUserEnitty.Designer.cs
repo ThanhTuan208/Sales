@@ -477,7 +477,7 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("Success")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
