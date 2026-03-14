@@ -1,4 +1,5 @@
-﻿using CRUD_asp.netMVC.Models.Auth;
+﻿using CRUD_asp.netMVC.Models.Addresses;
+using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Payments;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;

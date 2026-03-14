@@ -1,4 +1,5 @@
-﻿using CRUD_asp.netMVC.Models.Cart;
+﻿using CRUD_asp.netMVC.Models.Addresses;
+using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Product;
 using Microsoft.AspNetCore.Identity;

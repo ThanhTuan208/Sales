@@ -1,10 +1,11 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Extensions.Payments;
-using CRUD_asp.netMVC.Models.Auth;
+using CRUD_asp.netMVC.Models.Addresses;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.ViewModels.Cart;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -13,6 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace CRUD_asp.netMVC.Controllers
 {
+    [Authorize(Roles = "Customer")]
     public class CartController : Controller
     {
         private readonly AppDBContext _dbContext;

@@ -1,7 +1,8 @@
 ﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Address;
-using CRUD_asp.netMVC.Models.Auth;
+using CRUD_asp.netMVC.Models.Addresses;
 using EFCoreSecondLevelCacheInterceptor;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CRUD_asp.netMVC.Controllers
 {
+    [Authorize(Roles = "Customer")]
     public class AddressController : Controller
     {
         private readonly AppDBContext _dbContext;

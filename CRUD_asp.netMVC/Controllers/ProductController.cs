@@ -4,6 +4,7 @@ using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.ViewModels.Home;
 using CRUD_asp.netMVC.ViewModels.Product;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Immutable;
@@ -13,6 +14,7 @@ using System.Text;
 
 namespace CRUD_asp.netMVC.Controllers
 {
+    [Authorize(Roles = "Customer")]
     public class ProductController : Controller
     {
         private readonly AppDBContext _dbContext;

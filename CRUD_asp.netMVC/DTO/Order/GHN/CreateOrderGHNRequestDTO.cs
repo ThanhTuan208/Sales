@@ -17,9 +17,13 @@ namespace CRUD_asp.netMVC.DTO.Order.GHN
 
         [JsonPropertyName("to_ward_name")]
         public string ToWardName { get; set; } = null!;
+        [JsonPropertyName("to_ward_code")]
+        public string ToWardCode { get; set; } = null!;
 
         [JsonPropertyName("to_district_name")]
         public string ToDistrictName { get; set; } = null!;
+        [JsonPropertyName("to_district_id")]
+        public string ToDistrictID{ get; set; } = null!;
         [JsonPropertyName("to_province_name")]
         public string ToProvinceName { get; set; } = null!;
 
@@ -73,11 +77,15 @@ namespace CRUD_asp.netMVC.DTO.Order.GHN
 
         [JsonPropertyName("from_district_name")]
         public string FromDistrictName { get; set; } = null!;
+        [JsonPropertyName("from_district_id")]
+        public int FromDistrictID { get; set; }
         [JsonPropertyName("from_province_name")]
         public string FromProvinceName { get; set; } = null!;
 
         [JsonPropertyName("from_ward_name")]
         public string FromWardName { get; set; } = null!;
+        [JsonPropertyName("from_ward_code")]
+        public string FromWardCode { get; set; } = null!;
 
         [JsonPropertyName("pick_station_id")]
         public string PickStationId { get; set; } = null!;

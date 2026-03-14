@@ -8,6 +8,7 @@ using CRUD_asp.netMVC.Hubs;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Service.Home;
 using CRUD_asp.netMVC.ViewModels.Home;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -24,6 +25,7 @@ using IEmailSender = CRUD_asp.netMVC.Service.EmailSender.IEmailSender;
 
 namespace CRUD_asp.netMVC.Controllers;
 
+[Authorize(Roles = "Customer")]
 public class HomeController : Controller
 {
     private readonly IMemoryCache _cache;

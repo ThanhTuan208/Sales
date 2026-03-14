@@ -1,7 +1,8 @@
-﻿using CRUD_asp.netMVC.Models.Order;
+﻿using CRUD_asp.netMVC.Models.Auth;
+using CRUD_asp.netMVC.Models.Order;
 using System.ComponentModel.DataAnnotations;
 
-namespace CRUD_asp.netMVC.Models.Auth
+namespace CRUD_asp.netMVC.Models.Addresses
 {
     public class Address
     {

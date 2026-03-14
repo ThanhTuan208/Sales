@@ -1,4 +1,5 @@
 ﻿using CRUD_asp.netMVC.Data.Seed;
+using CRUD_asp.netMVC.Models.Addresses;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
@@ -67,6 +68,9 @@ namespace CRUD_asp.netMVC.Data
         //public DbSet<Roles>? Roles { get; set; }
         //public DbSet<Staff> Staff { get; set; }
 
+        public DbSet<Ward> WardGHN { get; set; }
+        public DbSet<District> DistrictGHN { get; set; }
+        public DbSet<Province> ProvinceGHN { get; set; }
         public DbSet<UserWallet> UserWallets { get; set; }
         public DbSet<ExcessPayment> ExcessPayments { get; set; }
         public DbSet<UnderpaidOrder> UnderpaidOrders { get; set; }
