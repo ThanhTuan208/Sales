@@ -25,8 +25,8 @@ namespace CRUD_asp.netMVC.Controllers
             _cache = cache;
         }
 
-        [HttpPost, ValidateAntiForgeryToken] // Them dia chi moi
-        public async Task<IActionResult> AddAddress(AddressDTO addressDTO)
+        [HttpPost] // Them dia chi moi
+        public async Task<IActionResult> AddAddress([FromForm] AddressDTO addressDTO)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace CRUD_asp.netMVC.Controllers
                         PostalCode = null,
                         IsDefault = addressDTO.IsDefault,
                         IsDelete = false,
-                        GovernmentCode = addressDTO.GovermnentCode
+                        GovernmentCode = addressDTO.GovernmentCode
                         //PostalCode = addressDTO.PostalCode ?? string.Empty,
                     };
 

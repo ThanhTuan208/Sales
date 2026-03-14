@@ -291,38 +291,19 @@ $(document).ready(function () {
                 const overlay = $("#overlayStatus");
                 const spinner = overlay.find(".spinner");
 
-                let successIcon, successText, failureIcon, failureText;
-                if (isSuccess) {
+                let successIcon, successText;
 
-                    successIcon = overlay.find(".success-icon");
-                    successText = overlay.find(".success-text");
-                    overlay.show();
-                    spinner.show();
-                    successIcon.hide();
-                    successText.hide();
-                }
-                else {
-
-                    failureIcon = overlay.find(".failure-icon");
-                    failureText = overlay.find(".failure-text");
-                    overlay.show();
-                    spinner.show();
-                    failureIcon.hide();
-                    failureText.hide();
-                }
+                successIcon = overlay.find(".success-icon");
+                successText = overlay.find(".success-text");
+                overlay.show();
+                spinner.show();
+                successIcon.hide();
+                successText.hide();
 
                 setTimeout(() => {
                     spinner.fadeOut(300, () => {
-                        if (isSuccess) {
-
-                            successIcon.fadeIn(300);
-                            successText.fadeIn(300);
-                        }
-                        else {
-
-                            failureIcon.fadeIn(300);
-                            failureText.fadeIn(300);
-                        }
+                        successIcon.fadeIn(300);
+                        successText.fadeIn(300);
                     });
 
                     setTimeout(() => {
@@ -332,7 +313,7 @@ $(document).ready(function () {
 
                         if (isSuccess) {
 
-                            window.location.href = `/Payment/PaymentSuccess?orderID=${encodeURIComponent(orderId)}&transactionCode=${encodeURIComponent(transactionCode)}`;
+                            window.location.href = `/Payment/PaymentStatus?orderID=${encodeURIComponent(orderId)}&transactionCode=${encodeURIComponent(transactionCode)}`;
                         }
                         else window.location.href = `/Home/Ordertracking`;
                         //else alert("Failure");
@@ -590,7 +571,6 @@ $(document).ready(function () {
             }
         }
 
-       
         const province = addressData.find(p => p.Code === provinceCode);
         const governmentCode = getWardCodeFromProvince(province, wardName);
 
@@ -924,43 +904,29 @@ function LoadDataAddress(provinceName, wardName, callback) {
     });
 }
 
-function createSignalRConnection({
-    url,
-    eventName,
-    handler,
-    reconnectDelays = [0, 2000, 5000, 10000]
-}) {
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl(url)
-        .withAutomaticReconnect(reconnectDelays)
-        .build();
+function GeneralAjaxResponse(isAddress, updateAddress) {
 
-    function registerHandler() {
-        connection.off(eventName); // RẤT QUAN TRỌNG – tránh double handler
-        connection.on(eventName, handler);
+    let ids = [];
+    let ArrChecked = GetArrIDChecked(ids);
+    if (!ArrChecked) {
+        return;
     }
 
-    async function start() {
-        try {
-            registerHandler();
-            await connection.start();
-            console.log(`SignalR connected: ${url}`);
-        } catch (err) {
-            console.error("SignalR start failed:", err);
-            setTimeout(start, 5000);
+    $.ajax({
+        url: "/Cart",
+        type: "GET",
+        data: {
+            arrID: ids,
+            IsAddress: isAddress,
+            UpdateAddress: updateAddress
+        },
+        traditional: true, // bind mảng
+        success: function (response) {
+            $(".modal-left").html(response); // render vào modal
+            updateQtyAfterCheck();
+        },
+        error: function () {
+            alert("Lỗi không hiển thị !");
         }
-    }
-
-    connection.onreconnected(() => {
-        console.log("SignalR reconnected");
-        registerHandler();
     });
-
-    connection.onclose(() => {
-        console.warn("SignalR connection closed");
-    });
-
-    start();
-
-    return connection; // để gọi invoke nếu cần
 }

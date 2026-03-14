@@ -98,10 +98,10 @@ namespace CRUD_asp.netMVC.Controllers
                 var result = await _smsPaymentVerificationService.UserConfirmWalletAsync(evt);
                 if (!result.Success)
                 {
-                    return BadRequest(new { success = false, message = result.Message });
+                    return BadRequest(new { success = false, message = "Thanh toán thất bại." });
                 }
 
-                return Ok(new { success = true, message = "Thanh toán thành công." });
+                return Ok(new { success = true, message = result.Message });
             }
             catch (Exception ex)
             {
@@ -110,7 +110,7 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-        [HttpGet("~/Payment/PaymentSuccess")] // Goi trang thanh toan thanh cong
+        [HttpGet("~/Payment/PaymentStatus")] // Goi trang thanh toan thanh cong
         public async Task<IActionResult> PaymentStatus([FromQuery] string orderId, [FromQuery] string transactionCode)
         {
             try

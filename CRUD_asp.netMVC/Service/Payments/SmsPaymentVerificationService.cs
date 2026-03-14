@@ -1,9 +1,7 @@
-﻿using AspNetCoreGeneratedDocument;
-using CRUD_asp.netMVC.Common;
+﻿using CRUD_asp.netMVC.Common;
 using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Generic;
 using CRUD_asp.netMVC.DTO.Order;
-using CRUD_asp.netMVC.DTO.Order.GHN;
 using CRUD_asp.netMVC.DTO.Payments;
 using CRUD_asp.netMVC.EventHandlers;
 using CRUD_asp.netMVC.Models.Auth;
@@ -11,11 +9,6 @@ using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Payments;
 using CRUD_asp.netMVC.ViewModels.Order;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Crypto.Fpe;
-using StackExchange.Redis;
-using System.ComponentModel.Design.Serialization;
-using System.Diagnostics.Eventing.Reader;
-using System.Security.Claims;
 using System.Text.RegularExpressions;
 using PaymentModel = CRUD_asp.netMVC.Models.Payments.Payment;
 

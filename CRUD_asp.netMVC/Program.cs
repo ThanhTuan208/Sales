@@ -50,13 +50,11 @@ namespace CRUD_asp.netMVC
             var redisConnectionString = LoadConnectString(builder, "Redis");
 
             var options = ConfigurationOptions.Parse(redisConnectionString);
-            options.User = "default"; // BẮT BUỘC
-            options.Password = "c6zIyl2kiVTRSZbkW5eUGwNsHeRxs2Sc"; // BẮT BUỘC
-            options.AbortOnConnectFail = false;
-            options.ConnectTimeout = 10000;
+
             options.SyncTimeout = 10000;
-            options.Ssl = false;
-            options.CertificateValidation += (sender, cert, chain, errors) => true;
+            options.ConnectTimeout = 10000;
+
+            options.SslProtocols = System.Security.Authentication.SslProtocols.Tls12 | System.Security.Authentication.SslProtocols.Tls13;
 
             var multiplexer = await ConnectionMultiplexer.ConnectAsync(options);
 
@@ -223,6 +221,7 @@ namespace CRUD_asp.netMVC
             app.MapHub<PaymentHub>("/paymentHub");
 
             app.MapHub<LoadViewHub>("/lazyLoad");
+
             app.MapHub<LoadViewHub>("/changeEmailProfile");
 
             app.MapHub<DashboardHub>("/DashboardHub");
@@ -276,9 +275,9 @@ namespace CRUD_asp.netMVC
         }
 
         // Tao chuoi lay ket noi DB
-        public static string? LoadConnectString(WebApplicationBuilder bulder, string name)
+        public static string LoadConnectString(WebApplicationBuilder bulder, string key)
         {
-            return bulder.Configuration.GetConnectionString(name);
+            return bulder.Configuration.GetConnectionString(key) ?? string.Empty;
         }
     }
 }
