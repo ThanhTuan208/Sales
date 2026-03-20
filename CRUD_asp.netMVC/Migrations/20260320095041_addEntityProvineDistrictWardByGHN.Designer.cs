@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUD_asp.netMVC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20260314155635_addEntityWardDistrictProvince")]
-    partial class addEntityWardDistrictProvince
+    [Migration("20260320095041_addEntityProvineDistrictWardByGHN")]
+    partial class addEntityProvineDistrictWardByGHN
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -91,17 +91,15 @@ namespace CRUD_asp.netMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("DistrictID")
+                        .HasColumnType("int");
+
                     b.Property<string>("DistrictName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("GHNDistrictID")
-                        .HasColumnType("int");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("ProvinceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProvinceMappingId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -119,7 +117,7 @@ namespace CRUD_asp.netMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("GHNProvinceID")
+                    b.Property<int>("ProvinceID")
                         .HasColumnType("int");
 
                     b.Property<string>("ProvinceName")
@@ -142,13 +140,15 @@ namespace CRUD_asp.netMVC.Migrations
                     b.Property<int>("DistrictId")
                         .HasColumnType("int");
 
-                    b.Property<string>("GHNWardCode")
+                    b.Property<string>("WardCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("WardName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 

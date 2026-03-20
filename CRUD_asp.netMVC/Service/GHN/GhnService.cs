@@ -211,7 +211,7 @@ namespace CRUD_asp.netMVC.Service.GHN
         private string? GetWardJsonData(string governmentCode)
         {
             List<DistrictGHN> districts = LoadDistrictsFromJson();
-            return districts.SelectMany(p => p.Wards).FirstOrDefault(p => p.Code == governmentCode)?.FullName;
+            return districts.SelectMany(p => p.Wards).FirstOrDefault(p => p.WardCode == governmentCode)?.WardName;
         }
 
         // Lay json data tinh thanh sau sap nhap

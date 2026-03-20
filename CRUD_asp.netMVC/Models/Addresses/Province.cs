@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string ProvinceName { get; set; } = null!;
-        public int GHNProvinceID { get; set; }
+        public int ProvinceID { get; set; }
         public List<District> Districts { get; set; } = null!;
     }
 }

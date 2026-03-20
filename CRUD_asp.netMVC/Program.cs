@@ -1,4 +1,5 @@
 using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.Data.Seed;
 using CRUD_asp.netMVC.DTO.Order.GHN;
 using CRUD_asp.netMVC.DTO.Payments;
 using CRUD_asp.netMVC.EventHandlers;
@@ -20,6 +21,8 @@ using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 using System.Net.Http.Headers;
 
@@ -119,16 +122,30 @@ namespace CRUD_asp.netMVC
             // Dnag ky service order tracking user
             builder.Services.AddScoped<IDisplayOrderTrackingService, DisplayOrderTrackingService>();
 
+            var baseUrl = builder.Configuration["GHN:BaseURL"];
+            var tokenGHN = builder.Configuration["GHN:Token"];
+            if (string.IsNullOrEmpty(baseUrl) || string.IsNullOrEmpty(tokenGHN))
+            {
+                throw new InvalidOperationException("baseURL or Token of GHN is not configured");
+            }
+
             // Dang ky tao don GHN
             builder.Services.AddHttpClient<IGhnService, GhnService>(client =>
             {
-                client.BaseAddress = new Uri(builder.Configuration["GHN:BaseURL"]);
-                client.DefaultRequestHeaders.Add("Token", builder.Configuration["GHN:Token"]);
+                client.BaseAddress = new Uri(baseUrl);
+                client.DefaultRequestHeaders.Add("Token", tokenGHN);
                 client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/json")
                 );
             });
 
+            builder.Services.AddHttpClient("GHN", client =>
+            {
+                client.BaseAddress = new Uri(baseUrl);
+                client.DefaultRequestHeaders.Add("Token", tokenGHN);
+            });
+
+            builder.Services.AddScoped<DbInitializer>();
 
             builder.Services.AddScoped<IEventBus, InMemoryEventBus>();
             builder.Services.AddScoped<IEventHandler<OrderPaidEvent>, NotifyPaymentHandler>();
@@ -138,6 +155,7 @@ namespace CRUD_asp.netMVC
 
             // Dang ky service DisplayProfileUserService
             builder.Services.AddScoped<IDisplayProfileUserService, DisplayProfileUserService>();
+
 
             // Dang ky Session
             builder.Services.AddSession(options =>
@@ -181,13 +199,23 @@ namespace CRUD_asp.netMVC
 
             var app = builder.Build();
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                var dbContext = services.GetRequiredService<AppDBContext>();
+                var seeder = services.GetRequiredService<DbInitializer>();
+
+                await seeder.SeedAddressesAsync(dbContext);
+            }
+
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 
-            // 1. Ở môi trường Production thì bắt buộc dùng HTTPS
+            /// 1. Ở môi trường Production thì bắt buộc dùng HTTPS
             app.UseHttpsRedirection();
             // → Tự động redirect http → https (bắt buộc để cookie Secure hoạt động)
 
@@ -212,7 +240,7 @@ namespace CRUD_asp.netMVC
 
             app.MapControllers();
 
-            // → Phải đứng sau UseAuthentication
+            // Phải đứng sau UseAuthentication
             app.MapRazorPages();
 
             // Dung cho cap nhat va dem so luong nguoi truy cap

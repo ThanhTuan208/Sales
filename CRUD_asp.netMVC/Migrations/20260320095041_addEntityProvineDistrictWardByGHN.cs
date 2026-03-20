@@ -5,14 +5,11 @@
 namespace CRUD_asp.netMVC.Migrations
 {
     /// <inheritdoc />
-    public partial class addEntityWardDistrictProvince : Migration
+    public partial class addEntityProvineDistrictWardByGHN : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            
-
-        
             migrationBuilder.CreateTable(
                 name: "ProvinceGHN",
                 columns: table => new
@@ -20,7 +17,7 @@ namespace CRUD_asp.netMVC.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProvinceName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GHNProvinceID = table.Column<int>(type: "int", nullable: false)
+                    ProvinceID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -33,9 +30,8 @@ namespace CRUD_asp.netMVC.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DistrictName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GHNDistrictID = table.Column<int>(type: "int", nullable: false),
-                    ProvinceMappingId = table.Column<int>(type: "int", nullable: false),
+                    DistrictName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    DistrictID = table.Column<int>(type: "int", nullable: false),
                     ProvinceId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -55,9 +51,9 @@ namespace CRUD_asp.netMVC.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    WardName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GHNWardCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DistrictId = table.Column<int>(type: "int", nullable: false)
+                    WardCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    DistrictId = table.Column<int>(type: "int", nullable: false),
+                    WardName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,8 +88,6 @@ namespace CRUD_asp.netMVC.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProvinceGHN");
-
-            
         }
     }
 }
