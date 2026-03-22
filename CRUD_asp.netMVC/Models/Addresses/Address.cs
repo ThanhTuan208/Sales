@@ -11,28 +11,28 @@ namespace CRUD_asp.netMVC.Models.Addresses
 
         [Required]
         public int UserID { get; set; }
-        public Users User { get; set; }
+        public Users User { get; set; } = null!;
 
         [StringLength(100)]
         [Required(ErrorMessage = "Tên người nhận không được để trống")]
-        public string RecipientName { get; set; }
+        public string RecipientName { get; set; } = null!;
 
         [Phone]
         [StringLength(15)]
         [Required(ErrorMessage = "Số điện thoại không được để trống")]
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = null!;
 
         [Required(ErrorMessage = "Địa chỉ chi tiết không được để trống")]
         [StringLength(255)]
-        public string Street { get; set; }
+        public string Street { get; set; } = null!;
 
         [Required]
         [StringLength(100)]
-        public string Province { get; set; }
+        public string Province { get; set; } = null!;
 
         [Required]
         [StringLength(100)]
-        public string Ward { get; set; }
+        public string Ward { get; set; } = null!;
 
         [StringLength(50)]
         public string? PostalCode { get; set; }  // Ma buu chinh

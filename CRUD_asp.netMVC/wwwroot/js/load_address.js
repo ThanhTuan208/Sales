@@ -597,6 +597,7 @@ $(document).ready(function () {
             data: formData,
             processData: false,
             contentType: false,
+
             success: function (response) {
                 if (response.success) {
                     if (response.status === 'unique' || response.isDefault) {

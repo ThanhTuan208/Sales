@@ -1,10 +1,4 @@
-﻿using CRUD_asp.netMVC.Data;
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.FileSystemGlobbing.Internal.PatternContexts;
-using Org.BouncyCastle.Pqc.Crypto.Lms;
-using StackExchange.Redis;
-using System.IO;
-using System.Reflection.Metadata.Ecma335;
+﻿using StackExchange.Redis;
 using System.Security.Claims;
 
 namespace CRUD_asp.netMVC.Middleware
@@ -14,6 +8,7 @@ namespace CRUD_asp.netMVC.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly IConnectionMultiplexer _redis;
+        private readonly ILogger<VisitCountUserMiddleware> _logger;
 
         private const string COOKIE_NAME_PREFIX = "uv_"; // cookie user visitors
         private const string TOTAL_KEY_PREFIX = "uv:total:"; // total visits
@@ -21,10 +16,11 @@ namespace CRUD_asp.netMVC.Middleware
 
         private const string ChannelName = "site:updates";
 
-        public VisitCountUserMiddleware(RequestDelegate next, IConnectionMultiplexer redis)
+        public VisitCountUserMiddleware(RequestDelegate next, IConnectionMultiplexer redis, ILogger<VisitCountUserMiddleware> logger)
         {
             _next = next;
             _redis = redis;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -33,10 +29,9 @@ namespace CRUD_asp.netMVC.Middleware
             try
             {
                 var db = _redis.GetDatabase();
-
                 var subscriber = _redis.GetSubscriber();
-
                 var path = context.Request.Path.Value?.ToLower();
+
                 if (!string.IsNullOrEmpty(path) && IsPath(path))
                 {
                     await _next(context);
@@ -92,7 +87,7 @@ namespace CRUD_asp.netMVC.Middleware
             }
             catch(Exception ex)
             {
-                Console.WriteLine("Error Middle VisitUser: " + ex.Message);
+                _logger.LogError(ex, "Error Middle VisitUser");
             }
 
             await _next(context);

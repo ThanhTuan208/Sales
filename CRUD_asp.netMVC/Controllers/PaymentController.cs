@@ -81,7 +81,6 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
-
         [HttpPost("~/Payment/PaymentConfirmWallet"), IgnoreAntiforgeryToken]
         public async Task<IActionResult> PaymentConfirmWalletAsync([FromBody] PaymentVerificationEvent evt)
         {
@@ -125,6 +124,7 @@ namespace CRUD_asp.netMVC.Controllers
 
                     if (resGHN != null)
                     {
+                        result.Data.Success = true;
                         return View(result.Data);
                     }
                 }

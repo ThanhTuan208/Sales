@@ -14,6 +14,9 @@ namespace CRUD_asp.netMVC.Models.Addresses
 
         [StringLength(50)]
         public string WardName { get; set; } = null!;
+
+        [StringLength(10)]
+        public string GovernmentCode { get; set; } = null!;
         public District District { get; set; } = null!;
     }
 }

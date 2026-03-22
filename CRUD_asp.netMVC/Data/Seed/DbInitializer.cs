@@ -1,49 +1,32 @@
-﻿using AspNetCoreGeneratedDocument;
-using Azure;
-using CRUD_asp.netMVC.Controllers;
-using CRUD_asp.netMVC.DTO.Order.GHN;
-using CRUD_asp.netMVC.Migrations;
+﻿using CRUD_asp.netMVC.DTO.Order.GHN;
 using CRUD_asp.netMVC.Models.Addresses;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Identity.Client;
-using Org.BouncyCastle.Asn1.TeleTrust;
-using System;
-using System.Net.Http;
+using EFCore.BulkExtensions;
+using CRUD_asp.netMVC.Service.Scopes;
+using CRUD_asp.netMVC.Service.GHN;
 
 namespace CRUD_asp.netMVC.Data.Seed
 {
     public class DbInitializer
     {
+        private readonly AppDBContext _dbContext;
+        private readonly IScopedExecutor _scoped;
+        private readonly IGenenricDataGHN _seedGHN;
         private readonly ILogger<DbInitializer> _logger;
-        private readonly HttpClient _httpClient;
-        private readonly IServiceProvider _serviceProvider;
-
-        public DbInitializer(IHttpClientFactory factory, IServiceProvider serviceProvider, ILogger<DbInitializer> logger)
+            
+        public DbInitializer(ILogger<DbInitializer> logger, IGenenricDataGHN seedGHN, AppDBContext dbContext, IScopedExecutor scoped)
         {
             _logger = logger;
-            _httpClient = factory.CreateClient("GHN");
-            _serviceProvider = serviceProvider;
+            _seedGHN = seedGHN;
+            _dbContext = dbContext;
+            _scoped = scoped;
         }
 
-        public async Task SeedAddressesAsync(AppDBContext _dbContext)
+        public async Task SeedAddressesAsync()
         {
-            using var transactions = await _dbContext.Database.BeginTransactionAsync();
-
-            try
-            {
-                await SeedProvinceAsync(_dbContext);
-                await SeedDistrictAsync(_dbContext);
-
-                await transactions.CommitAsync();
-            }
-            catch (Exception ex)
-            {
-                await transactions.RollbackAsync();
-                _logger.LogError(ex, "Error transaction database");
-            }
+            await SeedProvinceAsync(_dbContext);
+            await SeedDistrictAsync(_dbContext);
         }
         private async Task SeedWardAsync(AppDBContext _dbContext, int districtId)
         {
@@ -53,12 +36,13 @@ namespace CRUD_asp.netMVC.Data.Seed
 
                 if (!wards.Any()) return;
 
-                var districtDict = await GetDictionaryAsync<District, int, int>(
+                var districtDict = await _seedGHN.GetDictionaryAsync<District, int, int>(
                     _dbContext,
                     p => p.DistrictID,
                     p => p.Id);
 
-                var wardCodes = await _dbContext.WardGHN.Where(p => p.DistrictId == districtDict[districtId])
+                var wardCodes = await _dbContext.WardGHN.AsNoTracking()
+                                                        .Where(p => p.DistrictId == districtDict[districtId])
                                                         .Select(p => p.WardCode)
                                                         .ToHashSetAsync();
 
@@ -66,8 +50,13 @@ namespace CRUD_asp.netMVC.Data.Seed
 
                 if (!newWardsByDistricts.Any()) return;
 
-                await _dbContext.WardGHN.AddRangeAsync(newWardsByDistricts);
-                await _dbContext.SaveChangesAsync();
+                await _dbContext.BulkInsertAsync(newWardsByDistricts, new BulkConfig
+                {
+                    BatchSize = 5000,
+                    BulkCopyTimeout = 0,
+                    TrackingEntities = false,
+                    PreserveInsertOrder = false
+                });
             }
             catch (Exception ex)
             {
@@ -83,30 +72,46 @@ namespace CRUD_asp.netMVC.Data.Seed
 
                 if (!districts.Any()) return;
 
-                var setHashdistrictIds = await _dbContext.DistrictGHN.Select(p => p.DistrictID).ToHashSetAsync();
+                var setHashdistrictIds = await _dbContext.DistrictGHN.AsNoTracking()
+                                                                    .Select(p => p.DistrictID)
+                                                                    .ToHashSetAsync();
 
                 var newDistricts = districts.Where(p => !setHashdistrictIds.Contains(p.DistrictID)).ToList();
 
-                if (newDistricts.Any())
-                {
-                    await _dbContext.DistrictGHN.AddRangeAsync(newDistricts);
-                    await _dbContext.SaveChangesAsync();
-                }
+                if (!newDistricts.Any()) return;
 
+                await _dbContext.BulkInsertAsync(newDistricts, new BulkConfig
+                {
+                    BatchSize = 5000,
+                    BulkCopyTimeout = 0,
+                    TrackingEntities = false,
+                    PreserveInsertOrder = false
+                });
+
+                int batchSize = 20;
                 var semaphore = new SemaphoreSlim(5);
                 var districtIdsNeedSeed = await _dbContext.DistrictGHN
                     .Where(d => !_dbContext.WardGHN.Any(w => w.DistrictId == d.Id))
                     .Select(d => d.DistrictID)
                     .ToListAsync();
 
-                var tasks = districtIdsNeedSeed.Select(async districtId =>
+                var batches = districtIdsNeedSeed
+                    .Select((id, index) => new { id, index })
+                    .GroupBy(x => x.index / batchSize)
+                    .Select(g => g.Select(x => x.id).ToList())
+                    .ToList();
+
+                var tasks = batches.Select(async batch =>
                 {
                     await semaphore.WaitAsync();
                     try
                     {
-                        await ExecuteWithScopeAsync(async db =>
+                        await _scoped.ExecuteWithScopeAsync(async db =>
                         {
-                            await SeedWardAsync(db, districtId);
+                            foreach (var districtId in batch)
+                            {
+                                await SeedWardAsync(db, districtId);
+                            }
                         });
                     }
                     finally
@@ -137,8 +142,14 @@ namespace CRUD_asp.netMVC.Data.Seed
 
                 if (!newProvinces.Any()) return;
 
-                await _dbContext.ProvinceGHN.AddRangeAsync(newProvinces);
-                await _dbContext.SaveChangesAsync();
+                await _dbContext.BulkInsertAsync(newProvinces, new BulkConfig
+                {
+                    BatchSize = 5000,
+                    BulkCopyTimeout = 0,
+                    TrackingEntities = false,
+                    PreserveInsertOrder = false
+                });
+
             }
             catch (Exception ex)
             {
@@ -148,15 +159,14 @@ namespace CRUD_asp.netMVC.Data.Seed
 
         private async Task<List<Ward>> GetWardListByApiGHN(string api)
         {
-            return await ExecuteWithScopeAsync(async db =>
+            return await _scoped.ExecuteWithScopeAsync(async db =>
             {
-                var districtDict = await GetDictionaryAsync<District, int, int>(
+                var districtDict = await _seedGHN.GetDictionaryAsync<District, int, int>(
                     db,
                     p => p.DistrictID,
-                    p => p.Id,
-                    true);
+                    p => p.Id);
 
-                var wards = await GetListByApiGHN<WardGHN, Ward>(api, (dto) =>
+                var wards = await _seedGHN.GetListByApiGHNAsync<WardGHN, Ward>(api, (dto) =>
                 {
                     if (!districtDict.ContainsKey(dto.DistrictId))
                         return default!;
@@ -165,6 +175,7 @@ namespace CRUD_asp.netMVC.Data.Seed
                     {
                         WardName = dto.WardName,
                         WardCode = dto.WardCode,
+                        GovernmentCode = dto.GovernmentCode,
                         DistrictId = districtDict[dto.DistrictId]
                     };
                 });
@@ -175,78 +186,37 @@ namespace CRUD_asp.netMVC.Data.Seed
 
         private async Task<List<District>> GetDistrictListByApiGHN(string api)
         {
-            return await ExecuteWithScopeAsync(async db =>
-             {
-                 var provinceDict = await GetDictionaryAsync<Province, int, int>(
-                     db,
-                     p => p.ProvinceID,
-                     p => p.Id);
+            return await _scoped.ExecuteWithScopeAsync(async db =>
+            {
+                var provinceDict = await _seedGHN.GetDictionaryAsync<Province, int, int>(
+                    db,
+                    p => p.ProvinceID,
+                    p => p.Id);
 
-                 var districts = await GetListByApiGHN<DistrictGHN, District>(api, (dto) =>
-                 {
-                     if (!provinceDict.ContainsKey(dto.ProvinceID))
-                         return null!;
+                var districts = await _seedGHN.GetListByApiGHNAsync<DistrictGHN, District>(api, (dto) =>
+                {
+                    if (!provinceDict.ContainsKey(dto.ProvinceID))
+                        return null!;
 
-                     return new District()
-                     {
-                         DistrictName = dto.DistrictName,
-                         DistrictID = dto.DistrictID,
-                         ProvinceId = provinceDict[dto.ProvinceID],
-                     };
-                 });
+                    return new District()
+                    {
+                        DistrictName = dto.DistrictName,
+                        DistrictID = dto.DistrictID,
+                        ProvinceId = provinceDict[dto.ProvinceID],
+                    };
+                });
 
-                 return districts.Where(x => x != null).ToList();
-             });
+                return districts.Where(x => x != null).ToList();
+            });
         }
 
         private async Task<List<Province>> GetProvinceListByApiGHN(string api)
         {
-            return await GetListByApiGHN<ProvinceGHN, Province>(api, (dto) => new Province()
+            return await _seedGHN.GetListByApiGHNAsync<ProvinceGHN, Province>(api, (dto) => new Province()
             {
                 ProvinceName = dto.ProvinceName,
                 ProvinceID = dto.ProvinceID,
             });
-        }
-
-        // Create scope appDbContext
-        private async Task ExecuteWithScopeAsync(Func<AppDBContext, Task> action)
-        {
-            using var scope = _serviceProvider.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<AppDBContext>();
-
-            await action(db);
-        }
-        private async Task<T> ExecuteWithScopeAsync<T>(Func<AppDBContext, Task<T>> action)
-        {
-            using var scope = _serviceProvider.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<AppDBContext>();
-
-            return await action(db);
-        }
-
-        // Convert para of type dictionary
-        // neu su dung 1 key 1 value Dictionary<TKey, TValue>
-        private async Task<Dictionary<TKey, TValue>> GetDictionaryAsync<TEntity, TKey, TValue>
-            (AppDBContext db, Func<TEntity, TKey> keySelector, Func<TEntity, TValue> valueSelector, bool allowMultipleValues = false)
-            where TEntity : class where TKey : notnull
-        {
-            return await db.Set<TEntity>()
-                        .AsNoTracking()
-                        .ToDictionaryAsync(keySelector, valueSelector);
-        }
-
-        // Generic method
-        private async Task<List<TEntity>> GetListByApiGHN<TDto, TEntity>(string api, Func<TDto, TEntity> mapFunc)
-        {
-            var res = await _httpClient.GetAsync(api);
-            res.EnsureSuccessStatusCode();
-
-            var result = await res.Content.ReadFromJsonAsync<GHNApiResponse<List<TDto>>>();
-
-            if (result == null || result.Data == null || !result.Data.Any())
-                return new List<TEntity>();
-
-            return result.Data.Select(dto => mapFunc(dto)).ToList();
         }
     }
 }

@@ -2,65 +2,36 @@
 using CRUD_asp.netMVC.DTO.Generic;
 using CRUD_asp.netMVC.DTO.Order.GHN;
 using CRUD_asp.netMVC.Models.Addresses;
-using CRUD_asp.netMVC.Models.Order;
-using Microsoft.AspNetCore.Components.Forms.Mapping;
+using CRUD_asp.netMVC.Service.GHN.Api;
+using CRUD_asp.netMVC.Service.GHN.Fil;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using System.Security.Claims;
-using System.Text.Json;
-using System.Threading.Tasks;
 using UsersAuth = CRUD_asp.netMVC.Models.Auth.Users;
 
 namespace CRUD_asp.netMVC.Service.GHN
 {
     public class GhnService : IGhnService
     {
-        //private readonly string _token;
-        //private readonly string _baseURL;
-
-        private readonly HttpClient _httpClient;
+        private readonly ICallAPI _api;
+        private readonly IFilterData _filter;
         private readonly AppDBContext _dbContext;
+        private readonly ILogger<GhnService> _logger;
         private readonly UserManager<UsersAuth> _userManager;
-        private readonly IWebHostEnvironment _env;
 
-        public GhnService(HttpClient httpClient, AppDBContext dbContext, UserManager<UsersAuth> userManager, IWebHostEnvironment env)
+        public GhnService(ICallAPI api, IFilterData filter, AppDBContext dbContext, ILogger<GhnService> logger, UserManager<UsersAuth> userManager)
         {
-            _userManager = userManager;
+            _api = api;
+            _filter = filter;
             _dbContext = dbContext;
-            _httpClient = httpClient;
-            _env = env;
+            _logger = logger;
+            _userManager = userManager;
         }
-
-        //public async Task SyncProvinceAsync()
-        //{
-        //    var response = await _httpClient.GetAsync("master-data/province");
-        //    response.EnsureSuccessStatusCode();
-
-        //    var resProvince = await response.Content
-        //        .ReadFromJsonAsync<GHNApiResponse<List<ProvinceGHN>>>();
-
-        //    if (resProvince?.Data == null) return;
-
-        //    foreach (var p in resProvince.Data)
-        //    {
-        //        if (!_dbContext.Provinces.Any(x => x.GHNProvinceID == p.ProvinceID))
-        //        {
-        //            _dbContext.Provinces.Add(new Province
-        //            {
-        //                ProvinceName = p.ProvinceName,
-        //                GHNProvinceID = p.ProvinceID
-        //            });
-        //        }
-        //    }
-
-        //    await _dbContext.SaveChangesAsync();
-        //}
 
         public async Task<Result<string>> CreateOrderGHNRequestAsync(string orderId, int userId)
         {
             try
             {
+                int shopId = 197537;
                 Address? userAddress = null;
                 Address? adminAddress = null;
 
@@ -77,31 +48,34 @@ namespace CRUD_asp.netMVC.Service.GHN
                 adminAddress = await address.FirstOrDefaultAsync(p => p.UserID == admin.Id && p.IsDefault);
                 userAddress = await address.FirstOrDefaultAsync(p => p.UserID == userId && p.IsDefault);
 
-                if (adminAddress == null)
+                if (adminAddress == null || userAddress == null)
                 {
-                    return Result<string>.Fail("Chủ cửa hàng chưa có địa chỉ!", 400, null);
+                    return Result<string>.Fail("Chủ cửa hàng hoặc người dùng chưa có địa chỉ!", 400, null);
                 }
 
-                if (userAddress == null)
+                var districtNameAdmin = _filter.GetDistrictNameByDistrictGHN(adminAddress.GovernmentCode);
+                var districtNameUser = _filter.GetDistrictNameByDistrictGHN(userAddress.GovernmentCode);
+
+                if (districtNameAdmin == null || districtNameUser == null)
                 {
-                    return Result<string>.Fail("Người dùng chưa có địa chỉ!", 400, null);
+                    return Result<string>.Fail("Không tim thấy tên huyện của người dùng!", 400, null);
                 }
 
-                var getWardNameUser = GetWardJsonData(userAddress.GovernmentCode);
-                var getWardNameAdmin = GetWardJsonData(adminAddress.GovernmentCode);
+                var districtIdAdmin = _filter.GetDistrictIdByDistrictGHN(adminAddress.GovernmentCode);
+                var districtIdUser = _filter.GetDistrictIdByDistrictGHN(userAddress.GovernmentCode);
 
-                if (string.IsNullOrEmpty(getWardNameAdmin) || string.IsNullOrEmpty(getWardNameUser))
+                if (districtIdAdmin == null || districtIdUser == null)
                 {
-                    return Result<string>.Fail("Địa chỉ phường không tồn tại!", 500, null);
+                    return Result<string>.Fail("Không tim thấy huyện của người dùng!", 400, null);
                 }
 
-                var getDistrictByProvinceId = new List<DistrictGHN>();
-                var getProvinces = await GetProvinceGHNApiAsync(userAddress.Province);
-                if (getProvinces != null)
+                var wardCodeAdmin = _filter.GetWardGHNByGovernmentPara(adminAddress.GovernmentCode);
+                var wardCodeUser = _filter.GetWardGHNByGovernmentPara(userAddress.GovernmentCode);
+
+                if (string.IsNullOrEmpty(wardCodeUser.WardCode) || string.IsNullOrEmpty(wardCodeAdmin.WardCode))
                 {
-                    getDistrictByProvinceId = await GetDistrictNameByProvinceAsync(getProvinces.ProvinceID);
+                    return Result<string>.Fail("Không tim thấy xã/phường của người dùng!", 400, null);
                 }
-                else return Result<string>.Fail("Không tìm thấy huyện của người dùng!", 400, null);
 
                 var order = await _dbContext.Orders
                     .Include(p => p.Address)
@@ -116,49 +90,65 @@ namespace CRUD_asp.netMVC.Service.GHN
                 }
 
                 var weight = order.OrderDetail.Sum(p => p.Product.Weight);
+                if (weight > 50000) // gram
+                {   
+                    return Result<string>.Fail("Đơn hàng vượt quá 50kg!", 400, null);
+                }
+
+                var service = await _api.GetServiceGHNAsync(shopId, weight, districtIdAdmin, districtIdUser);
+                var serviceData = service.Data;
+
+                if (serviceData == null)
+                {
+                    return Result<string>.Fail("Lỗi dịch vụ GHN!", 500, null);
+                }
 
                 var ghnRequest = new CreateOrderGHNRequestDTO
                 {
-                    PaymentTypeID = order.Amount > 1000000m ? 1 : 2, // 1: nguoi ban tra phi van chuyen, 2: nguoi nhan tra phi
-                    ShopId = 2510403, // ma shop
-                    RequiredNote = "KHONGCHOXEMHANG",
+                    ShopId = shopId,
+                    RequiredNote = "CHOXEMHANGKHONGTHU",
+                    PaymentTypeID = order.Amount > 1000000m ? 1 : 2,
+                    // 1: nguoi ban tra phi van chuyen, 2: nguoi nhan tra phi
 
                     //FromName = "Nguyễn Thành Tuấn", // cmt lay ten mac dinh tren he thong
+                    FromName = "LiFashion",
                     FromPhone = admin.PhoneNumber ?? string.Empty,
                     FromAddressUser = $"{adminAddress.Street}\n{adminAddress.Ward}\n{adminAddress.Province}",
-                    FromWardName = getWardNameAdmin,
+                    FromWardName = adminAddress.Ward,
                     FromProvinceName = adminAddress.Province,
-                    //FromDistrictName = ,
+                    FromWardCode = wardCodeAdmin.WardCode,
+                    FromDistrictName = districtNameAdmin,
+                    FromDistrictID = districtIdAdmin,
 
                     ToName = $"{order.Users?.LastName} {order.Users?.FirstName}",
                     ToPhone = order.Users?.PhoneNumber ?? string.Empty,
                     ToAddress = $"{order.Address?.Street}, {order.Address?.Ward}, {order.Address?.Province}",
-                    ToWardName = getWardNameUser,
+                    ToWardName = userAddress.Ward,
                     ToProvinceName = userAddress.Province,
-                    //ToDistrictName = "2152",
+                    ToWardCode = wardCodeUser.WardCode,
+                    ToDistrictName = districtNameUser,
+                    ToDistrictID = districtIdUser,
 
-                    Weight = weight > 50000 ? null : weight, // Can nang tong cac san pham trong don hang
                     CodAmount = 0, // chua xu ly tien thu ho
                     CodFailedAmount = 0,
-                    ServiceID = 53320, // Mã dịch vụ giao hàng
-                    ServiceTypeID = 1, // 1: Giao hang tieu chuan, 2: giao hang nhanh
-                    ConfigFeeID = 1,
-                    ExstraCodeID = 0,
+                    Weight = weight > 50000 ? 0 : weight, // Can nang tong cac san pham trong don hang
+                    ServiceID = serviceData.Id, // Mã dịch vụ giao hàng
+                    ServiceTypeID = serviceData.TypeId, // 1: Giao hang tieu chuan, 2: giao hang nhanh
 
                     Items = order.OrderDetail.Select(p => new ProductItem
                     {
-                        Name = p.Product.Name,
+                        Name = p.Product.Name ?? string.Empty,
                         Code = p.Product.ID.ToString(),
                         Quantity = p.Quantity,
-                        Price = (int)p.Product.NewPrice,
+                        Price = Convert.ToInt32(p.Product.NewPrice),
                         Length = 50,
-                        Width = 200,
-                        Height = 210,
-                        Weight = p.Product.Weight ?? 0
+                        Width = 10,
+                        Height = 10,
+                        Weight = Math.Clamp(p.Product.Weight ?? 100, 1, 5000)
                     }).ToList(),
                 };
 
-                var createShippingOrder = await CreateShippingOrderAsync(order.ID, ghnRequest);
+                var createShippingOrder = await _api.CreateShippingOrderAsync(order.ID, ghnRequest);
 
                 if (createShippingOrder == null)
                 {
@@ -169,107 +159,9 @@ namespace CRUD_asp.netMVC.Service.GHN
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Lỗi hệ thống khi tạo đơn hàng GHN");
                 return Result<string>.Fail("Lỗi hệ thống khi tạo đơn GHN", 500, ex.Message);
             }
-        }
-
-        // Tao don hang cho GHN sau khi thanh toan thanh cong (thuc hien control Cart)
-        private async Task<string?> CreateShippingOrderAsync(string orderID, CreateOrderGHNRequestDTO GHNRequest)
-        {
-            try
-            {
-                //GHNRequest.ToDistrictID = 0;
-                var json = JsonSerializer.Serialize(GHNRequest);
-                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync($"v2/shipping-order/create", content);
-
-                var body = await response.Content.ReadAsStringAsync();
-                //Console.WriteLine(body);
-
-                response.EnsureSuccessStatusCode();
-
-                var result = await response.Content.ReadFromJsonAsync<CreateOrderGHNResponse>();
-                var orderCode = result?.data.OrderCode ?? throw new Exception("Failed to create order with GHN");
-
-                var order = await _dbContext.Orders.FindAsync(orderID);
-                if (order != null)
-                {
-                    order.TrackingNumber = orderCode;
-                    order.Status = OrderStatus.Confirmed.ToString();
-                    order.StatusTime = DateTime.Now;
-
-                    await _dbContext.SaveChangesAsync();
-                }
-
-                return orderCode;
-            }
-
-            catch { return null; }
-        }
-
-        // Lay phuong,xa tu data json
-        private string? GetWardJsonData(string governmentCode)
-        {
-            List<DistrictGHN> districts = LoadDistrictsFromJson();
-            return districts.SelectMany(p => p.Wards).FirstOrDefault(p => p.WardCode == governmentCode)?.WardName;
-        }
-
-        // Lay json data tinh thanh sau sap nhap
-        private List<DistrictGHN> LoadDistrictsFromJson()
-        {
-            var path = Path.Combine(_env.WebRootPath, "full_json_generated_data_vn_units.json");
-
-            var json = File.ReadAllText(path);
-
-            return JsonSerializer.Deserialize<List<DistrictGHN>>(json) ?? new List<DistrictGHN>();
-        }
-
-        // Lay Tinh tu api GHN
-        private async Task<ProvinceGHN?> GetProvinceGHNApiAsync(string provinceName)
-        {
-            var response = await _httpClient.GetAsync($"master-data/province");
-            response.EnsureSuccessStatusCode();
-
-            var resProvince = await response.Content.ReadFromJsonAsync<GHNApiResponse<List<ProvinceGHN>>>();
-            if (resProvince == null || resProvince.Code != 200)
-            {
-                return null;
-            }
-
-            return resProvince.Data.FirstOrDefault(p => p.ProvinceName.Contains(provinceName, StringComparison.OrdinalIgnoreCase) ||
-                (p.NameExtension != null && p.NameExtension.Any(x => x.Contains(provinceName, StringComparison.OrdinalIgnoreCase))));
-        }
-
-        // Lay Huyen tu api GHN
-        //private async Task<DistrictGHN?> GetDistrictNameByProvinceAsync(int provinceId)
-        //{
-        //    var response = await _httpClient.GetAsync($"master-data/district?province_id={provinceId}");
-        //    response.EnsureSuccessStatusCode();
-
-        //    var resDistrict = await response.Content.ReadFromJsonAsync<GHNApiResponse<List<DistrictGHN>>>();
-        //    if (resDistrict == null || resDistrict.Code != 200)
-        //    {
-        //        return null;
-        //    }
-
-        //    //return resDistrict.Data.FirstOrDefault(p => p.ProvinceID == provinceId)?.DistrictName;
-        //    return resDistrict.Data ?? null;
-        //}
-
-
-        private async Task<List<DistrictGHN>?> GetDistrictNameByProvinceAsync(int provinceId)
-        {
-            var response = await _httpClient.GetAsync($"master-data/district?province_id={provinceId}");
-            response.EnsureSuccessStatusCode();
-
-            var resDistrict = await response.Content.ReadFromJsonAsync<GHNApiResponse<List<DistrictGHN>>>();
-            if (resDistrict == null || resDistrict.Code != 200)
-            {
-                return null;
-            }
-
-            //return resDistrict.Data.FirstOrDefault(p => p.ProvinceID == provinceId)?.DistrictName;
-            return resDistrict.Data ?? null;
         }
     }
 }

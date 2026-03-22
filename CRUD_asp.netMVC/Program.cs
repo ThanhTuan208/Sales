@@ -12,8 +12,13 @@ using CRUD_asp.netMVC.Middleware;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Service.EmailSender;
 using CRUD_asp.netMVC.Service.GHN;
+using CRUD_asp.netMVC.Service.GHN.Api;
+using CRUD_asp.netMVC.Service.GHN.Common;
+using CRUD_asp.netMVC.Service.GHN.Fil;
 using CRUD_asp.netMVC.Service.Home;
+using CRUD_asp.netMVC.Service.HttpClientPolicies;
 using CRUD_asp.netMVC.Service.Payments;
+using CRUD_asp.netMVC.Service.Scopes;
 using CRUD_asp.netMVC.Service.Users;
 using Hangfire;
 using Hangfire.Redis.StackExchange;
@@ -23,7 +28,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Polly;
+using Polly.Extensions.Http;
 using StackExchange.Redis;
+using System.Net.Http;
 using System.Net.Http.Headers;
 
 namespace CRUD_asp.netMVC
@@ -112,8 +120,20 @@ namespace CRUD_asp.netMVC
             // Dang ky OrderCleanup backgroud service 
             builder.Services.AddScoped<OrderCleanupService>();
 
+            // Dang ky service create lìfecycle scoped AppDbContext
+            builder.Services.AddScoped<IScopedExecutor, ScopedExecutor>();
+
             // Dang ky service dem va cap nhat so luong nguoi truy cap
             builder.Services.AddScoped<ISiteUserVisitService, SiteUserVisitService>();
+
+            // Dang ky service Seed data GHN
+            builder.Services.AddScoped<IGenenricDataGHN, GenericDataGHN>();
+
+            // Dang ky service call API GHN
+            builder.Services.AddScoped<ICallAPI, CallAPI>();
+
+            // Dang ky service filter GHN
+            builder.Services.AddScoped<IFilterData, FilterData>();
 
             // Dang ky service QrCode
             builder.Services.AddScoped<QrCodeService>();
@@ -122,6 +142,7 @@ namespace CRUD_asp.netMVC
             // Dnag ky service order tracking user
             builder.Services.AddScoped<IDisplayOrderTrackingService, DisplayOrderTrackingService>();
 
+            // Check setting baseurl, token ghn
             var baseUrl = builder.Configuration["GHN:BaseURL"];
             var tokenGHN = builder.Configuration["GHN:Token"];
             if (string.IsNullOrEmpty(baseUrl) || string.IsNullOrEmpty(tokenGHN))
@@ -130,20 +151,27 @@ namespace CRUD_asp.netMVC
             }
 
             // Dang ky tao don GHN
-            builder.Services.AddHttpClient<IGhnService, GhnService>(client =>
-            {
-                client.BaseAddress = new Uri(baseUrl);
-                client.DefaultRequestHeaders.Add("Token", tokenGHN);
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json")
-                );
-            });
+            //builder.Services.AddHttpClient<IGhnService, GhnService>(client =>
+            //{
+            //    client.BaseAddress = new Uri(baseUrl);
+            //    client.DefaultRequestHeaders.Add("Token", tokenGHN);
+            //    client.Timeout = TimeSpan.FromSeconds(10);
+            //    client.DefaultRequestHeaders.Accept.Add(
+            //        new MediaTypeWithQualityHeaderValue("application/json")
+            //    );
+
+            //}).AddPolicyHandler(GhnRetryPolicy.GetRetryPolicy());
+
+            // Dnag ky service GHN
+            builder.Services.AddScoped<IGhnService, GhnService>();
 
             builder.Services.AddHttpClient("GHN", client =>
             {
                 client.BaseAddress = new Uri(baseUrl);
                 client.DefaultRequestHeaders.Add("Token", tokenGHN);
-            });
+                client.Timeout = TimeSpan.FromSeconds(10);
+
+            }).AddPolicyHandler(GhnRetryPolicy.GetRetryPolicy());
 
             builder.Services.AddScoped<DbInitializer>();
 
@@ -203,10 +231,9 @@ namespace CRUD_asp.netMVC
             {
                 var services = scope.ServiceProvider;
 
-                var dbContext = services.GetRequiredService<AppDBContext>();
                 var seeder = services.GetRequiredService<DbInitializer>();
 
-                await seeder.SeedAddressesAsync(dbContext);
+                await seeder.SeedAddressesAsync();
             }
 
             if (!app.Environment.IsDevelopment())

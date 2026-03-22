@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUD_asp.netMVC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20260320095041_addEntityProvineDistrictWardByGHN")]
-    partial class addEntityProvineDistrictWardByGHN
+    [Migration("20260321135212_addPropWardGHNEntity")]
+    partial class addPropWardGHNEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -139,6 +139,11 @@ namespace CRUD_asp.netMVC.Migrations
 
                     b.Property<int>("DistrictId")
                         .HasColumnType("int");
+
+                    b.Property<string>("GovernmentCode")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("WardCode")
                         .IsRequired()

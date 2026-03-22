@@ -4,6 +4,7 @@
     {
         public string WardCode { get; set; } = null!;
         public string WardName { get; set; } = null!;
+        public string GovernmentCode { get; set; } = null!;
         public int DistrictId { get; set; }
     }
 }

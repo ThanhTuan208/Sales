@@ -489,6 +489,11 @@ textarea {
         color: #2c3e50;
     }
 
+.buy.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
 @keyframes slideDown {
     from {
         opacity: 0;
@@ -523,3 +528,4 @@ textarea {
         width: 100%;
     }
 }
+

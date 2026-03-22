@@ -23,7 +23,7 @@ namespace CRUD_asp.netMVC.DTO.Order.GHN
         [JsonPropertyName("to_district_name")]
         public string ToDistrictName { get; set; } = null!;
         [JsonPropertyName("to_district_id")]
-        public string ToDistrictID{ get; set; } = null!;
+        public int? ToDistrictID { get; set; }
         [JsonPropertyName("to_province_name")]
         public string ToProvinceName { get; set; } = null!;
 
@@ -57,11 +57,11 @@ namespace CRUD_asp.netMVC.DTO.Order.GHN
         [JsonPropertyName("content")]
         public string Content { get; set; } = "Hàng hóa thông thường";
 
-        //[JsonPropertyName("config_fee_id")]
+        [JsonPropertyName("config_fee_id")]
         public int ConfigFeeID { get; set; }
 
-        //[JsonPropertyName("extra_cost_id")]
-        public int ExstraCodeID { get; set; }
+        [JsonPropertyName("extra_cost_id")]
+        public int ExtraCostID { get; set; }
 
         [JsonPropertyName("items")]
         public List<ProductItem> Items { get; set; } = null!;
@@ -78,7 +78,7 @@ namespace CRUD_asp.netMVC.DTO.Order.GHN
         [JsonPropertyName("from_district_name")]
         public string FromDistrictName { get; set; } = null!;
         [JsonPropertyName("from_district_id")]
-        public int FromDistrictID { get; set; }
+        public int? FromDistrictID { get; set; }
         [JsonPropertyName("from_province_name")]
         public string FromProvinceName { get; set; } = null!;
 

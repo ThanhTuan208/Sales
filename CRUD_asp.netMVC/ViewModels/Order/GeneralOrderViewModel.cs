@@ -7,6 +7,6 @@ namespace CRUD_asp.netMVC.ViewModels.Order
     {
         public List<Products> Product { get; set; } = null!;
         public Orders Order { get; set; } = null!;
-        public bool Success { get; set; }
+        public bool Success { get; set; } = false;
     }
 }

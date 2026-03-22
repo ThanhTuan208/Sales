@@ -629,15 +629,20 @@ $(document).ready(function () {
         });
     });
 
-    // js.js
     // Xu ly button checkout
     $(document).off('click', '.buy.bn54').on('click', '.buy.bn54', function (e) {
         e.preventDefault(); // ngan button type submit
+
+        const $btn = $(this);
+        if ($btn.prop("disable")) return;  // chặn click lần 2
+
+        $btn.prop("disabled", true).addClass("loading");  // disable ngay khi click
 
         let ids = [];
         const IsGetArr = GetArrIDChecked(ids);
 
         if (!IsGetArr.success || ids === null) {
+            $btn.prop("disabled", false).removeClass("loading"); // enable lại nếu fail
             return;
         }
 
@@ -660,7 +665,8 @@ $(document).ready(function () {
                 updateQtyAfterCheck();
             },
             error: function (response) {
-                alert("Lỗi load sản phẩm lên modal: " + response.message || "khong xac dinh");
+                console.error("Lỗi load sản phẩm lên modal: " + response.message || "khong xac dinh");
+                $btn.prop("disabled", false).removeClass("loading");
             }
         });
     });
@@ -685,9 +691,11 @@ $(document).ready(function () {
                 $(".modal").removeClass("active").fadeOut(200);
                 $(".modal-overlay").fadeOut(200);
 
+                $('.buy.bn54').prop("disabled", false).removeClass("loading");
             },
             error: function (response) {
                 alert("Lỗi đóng modal cart: " + response.message || "khong xac dinh");
+                $('.buy.bn54').prop("disabled", false).removeClass("loading");
             }
         });
     });
