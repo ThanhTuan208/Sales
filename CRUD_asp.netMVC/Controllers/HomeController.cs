@@ -1,6 +1,4 @@
-﻿using Azure.Core;
-using CRUD_asp.netMVC.Data;
-using CRUD_asp.netMVC.DTO.Generic;
+﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Home;
 using CRUD_asp.netMVC.Extensions;
 using CRUD_asp.netMVC.Extensions.RenderViewGeneral;
@@ -14,18 +12,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Org.BouncyCastle.Crypto.Signers;
-using System.Diagnostics;
-using System.Globalization;
 using System.Security.Claims;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using IEmailSender = CRUD_asp.netMVC.Service.EmailSender.IEmailSender;
 
 namespace CRUD_asp.netMVC.Controllers;
 
-[Authorize(Roles = "Customer")]
+[Authorize(Policy = "CustomerOrGuest")]
 public class HomeController : Controller
 {
     private readonly IMemoryCache _cache;
@@ -388,7 +382,7 @@ public class HomeController : Controller
         }
     }
 
-    [HttpGet] // Hien thi giao dien trang chu
+    [Route("Home"), HttpGet] // Hien thi giao dien trang chu
     public async Task<IActionResult> Index()
     {
         try

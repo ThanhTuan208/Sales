@@ -2,7 +2,7 @@
 @using System.Globalization
 @model HomeViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Hồ sơ của tôi";
     Layout = "_HomeLayout";
     var User = Model.Users;
     var IsMale = Model.Users.Gender == "Nam" ? "checked" : "";
@@ -15,14 +15,10 @@
         <aside class="sidebar">
             <nav>
                 <ul>
-                    <li><a href="#">Thông Báo</a></li>
-                    <li><a href="#">Tài Khoản</a></li>
+                    <li><a class="feature-dev-profile" href="#">Thông Báo</a></li>
                     <li><a id="profile" href="#">Hồ Sơ</a></li>
                     <li><a id="surplus" href="#">Số Dư</a></li>
-                    <li><a href="#">Địa Chỉ</a></li>
-                    <li><a href="#">Đổi Mật Khẩu</a></li>
-                    <li><a href="#">Nhật Ký</a></li>
-                    <li><a href="#">Kho Voucher</a></li>
+                    <li><a class="feature-dev-profile" href="#">Kho Voucher</a></li>
                 </ul>
             </nav>
         </aside>

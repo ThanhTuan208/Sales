@@ -14,7 +14,7 @@ using System.Text;
 
 namespace CRUD_asp.netMVC.Controllers
 {
-    [Authorize(Roles = "Customer")]
+    [Authorize(Policy = "CustomerOrGuest")]
     public class ProductController : Controller
     {
         private readonly AppDBContext _dbContext;
@@ -115,7 +115,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // Hien thi danh sach phan trang san pham va phan trang thuong hieu
-        [Route("Product"), Route("Product/Index"), HttpGet]
+        [Route("Product"), HttpGet]
         public async Task<IActionResult> Index(int productPage = 1)
         {
             IQueryable<Products> products = _dbContext.Products.AsNoTracking()
@@ -143,17 +143,17 @@ namespace CRUD_asp.netMVC.Controllers
         {
             var brands = await _dbContext.Brand.AsNoTracking().FirstOrDefaultAsync(p => p.ID == brandID);
 
-            ViewData["brandID"] = brandID;
-            ViewData["image"] = brands.PicturePath;
-
             if (brands == null)
             {
                 return RedirectToAction(nameof(Index));
             }
 
+            ViewData["brandID"] = brandID;
+            ViewData["image"] = brands.PicturePath;
+
             IQueryable<Products> getPagProductByBrand = _dbContext.Products.AsNoTracking()
                                                                             .Include(p => p.Brands)
-                                                                            .Where(p => p.Brands == brands);
+                                                                            .Where(p => p.BrandID == brands.ID);
 
             var productCount = await getPagProductByBrand.CountAsync();
             ViewBag.ProductCount = productCount;
@@ -435,9 +435,7 @@ namespace CRUD_asp.netMVC.Controllers
             var productCount = await products.CountAsync();
             ViewBag.ProductCount = productCount;
             ViewBag.NameAction = "Sales";
-            //var pagProduct = await PaginatedList<Products>.CreatePagAsync(products, productPage, 16);
 
-            // Pagination truyen tham so cho product, brand, category, cart
             var ViewModel = await CreatePaginationGeneral(products, productPage, 12);
 
             return View("ProductSaleProducts", ViewModel);

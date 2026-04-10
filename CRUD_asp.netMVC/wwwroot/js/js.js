@@ -28,8 +28,12 @@ $(document).ready(function () {
     });
 
 
-    // Toggle menu
+    $(document).on('click', '.feature-dev-profile', function (e) {
+        e.preventDefault();
+        alert('🚧 Tính năng đang trong quá trình phát triển, bạn có thể xem trước tính năng Hồ sơ, Số dư');
+    });
 
+    // Toggle menu
     $(function () {
 
         $('.js-nav-toggle').on('click', function (e) {
@@ -1065,7 +1069,7 @@ $(document).ready(function () {
                             window.location.href = "/Admin/DashBoard";
                         }
                         else {
-                            window.location.href = "/Home/Index";
+                            window.location.href = "/Home";
                         }
                     }
                 }
@@ -1149,7 +1153,8 @@ $(document).ready(function () {
     });
 
     // page product detail de them san pham vao gio hang
-    $('.btn-option').on('click', function () {
+    $(document).off('click', '.btn-option').on('click', '.btn-option', function () {
+
         let btn = $(this);
         const itemID = $('.productID').data('id');
 
@@ -1165,7 +1170,7 @@ $(document).ready(function () {
 
         let optionMethod = btn.data('method');
 
-        if (optionMethod == 'cart') {
+        if (optionMethod === 'cart') {
 
             $.ajax({
                 url: '/Cart/AddToCart',
@@ -1215,9 +1220,6 @@ $(document).ready(function () {
                     alert('Sản phẩm thêm vào bị lỗi !!!');
                 }
             });
-        }
-        else {
-            // xu li khi mua truc tiep
         }
     });
 

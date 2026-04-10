@@ -2,7 +2,7 @@
 @using System.Globalization
 @model HomeViewModel
 @{
-    ViewData["Title"] = "Trang Chủ";
+    ViewData["Title"] = "Giới thiệu";
     var countCart = ViewData["cart"] as int?;
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
@@ -54,48 +54,20 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 col-sm-4 animate-box" data-animate-effect="fadeIn">
+                <div class="col-md-12 col-sm-12 animate-box" data-animate-effect="fadeIn">
                     <div class="fh5co-staff">
-                        <img src="images/person1.jpg" alt="Nguyễn Thị Lan">
-                        <h3>Nguyễn Thị Lan</h3>
-                        <strong class="role">Giám Đốc Điều Hành</strong>
-                        <p>Lan có hơn 10 năm kinh nghiệm trong ngành thương mại điện tử, dẫn dắt công ty đạt được vị thế hàng đầu trong lĩnh vực thời trang trực tuyến.</p>
+                        <img src="@Url.Content("~/images/avatar/managerHandsome.jpg")" alt="Nguyễn Thành Tuấn">
+                        <h3>Nguyễn Thành Tuấn</h3>
+                        <strong class="role">Giám Đốc</strong>
+                        <p>Ông Tuấn là người đứng sau các chiến dịch thời trang độc đáo, hợp tác với các nhà thiết kế để mang đến những xu hướng mới nhất cho khách hàng.</p>
                         <ul class="fh5co-social-icons">
-                            <li><a href="#"><i class="icon-facebook"></i></a></li>
+                            <li><a href="https://web.facebook.com/thanh.tuan.736009"><i class="icon-facebook"></i></a></li>
                             <li><a href="#"><i class="icon-twitter"></i></a></li>
                             <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                            <li><a href="#"><i class="icon-instagram"></i></a></li>
+                            <li><a href="https://www.instagram.com/thanhtuan20805"><i class="icon-instagram"></i></a></li>
                         </ul>
                     </div>
-                </div>
-                <div class="col-md-4 col-sm-4 animate-box" data-animate-effect="fadeIn">
-                    <div class="fh5co-staff">
-                        <img src="images/person2.jpg" alt="Trần Minh Tuấn">
-                        <h3>Trần Minh Tuấn</h3>
-                        <strong class="role">Giám Đốc Sáng Tạo</strong>
-                        <p>Tuấn là người đứng sau các chiến dịch thời trang độc đáo, hợp tác với các nhà thiết kế để mang đến những xu hướng mới nhất cho khách hàng.</p>
-                        <ul class="fh5co-social-icons">
-                            <li><a href="#"><i class="icon-facebook"></i></a></li>
-                            <li><a href="#"><i class="icon-twitter"></i></a></li>
-                            <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                            <li><a href="#"><i class="icon-instagram"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-4 animate-box" data-animate-effect="fadeIn">
-                    <div class="fh5co-staff">
-                        <img src="images/person3.jpg" alt="Phạm Ngọc Mai">
-                        <h3>Phạm Ngọc Mai</h3>
-                        <strong class="role">Trưởng Phòng Marketing</strong>
-                        <p>Mai phụ trách các chiến lược tiếp thị số, đảm bảo các sản phẩm thời trang của chúng tôi luôn nổi bật và tiếp cận đúng đối tượng khách hàng.</p>
-                        <ul class="fh5co-social-icons">
-                            <li><a href="#"><i class="icon-facebook"></i></a></li>
-                            <li><a href="#"><i class="icon-twitter"></i></a></li>
-                            <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                            <li><a href="#"><i class="icon-instagram"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
+                </div
             </div>
         </div>
     </div>

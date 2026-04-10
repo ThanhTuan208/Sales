@@ -143,6 +143,78 @@ namespace CRUD_asp.netMVC.Data.Seed
             });
         }
 
+        public static void SeedUsers(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Users>().HasData(
+                new Users
+                {
+                    Id = 8,
+                    FirstName = "Nguyễn",
+                    LastName = "Tuấn",
+                    ProfileImage = "images/avatar/2bc6c1a6-74ab-43e3-9c14-7b900fc59112.jpg",
+                    StartDate = new DateTime(2025, 7, 25, 12, 6, 38),
+                    DateOfBirth = new DateTime(1, 1, 30),
+                    Gender = "Nam",
+                    RoleId = 2,
+                    UserName = "userdtrai",
+                    NormalizedUserName = "USERDTRAI",
+                    Email = "user_demo@gmail.com",
+                    NormalizedEmail = "USER_DEMO@GMAIL.COM",
+                    EmailConfirmed = true,
+                    PasswordHash = "AQAAAAIAAYagAAAAEIGrep56jZMETG3pvlfvY8ZuqfD8kcKSnkL2LdTVXMmuouD38WnwdkAp5z3lqzIqCg==",
+                    SecurityStamp = "T6GUP2BYL5M7Y63HDKWNDRF2TRBJ3VHW",
+                    ConcurrencyStamp = "87fa214c-77b7-49b6-969d-b05cd4b8a85a",
+                    PhoneNumber = "0358986824",
+                    PhoneNumberConfirmed = true,
+                    TwoFactorEnabled = false,
+                    LockoutEnabled = true,
+                    AccessFailedCount = 0,
+                    LockoutEnd = new DateTime(2025, 7, 25)
+                },
+                new Users
+                {
+                    Id = 10,
+                    FirstName = "Nguyễn",
+                    LastName = "Tuấn",
+                    ProfileImage = "images/avatar/2bc6c1a6-74ab-43e3-9c14-7b900fc59112.jpg",
+                    StartDate = new DateTime(2025, 11, 26, 19, 44, 21),
+                    DateOfBirth = new DateTime(2005, 8, 20),
+                    Gender = "Nam",
+                    RoleId = 1,
+                    UserName = "admindtrai",
+                    NormalizedUserName = "ADMINDTRAI",
+                    Email = "admin_demo@gmail.com",
+                    NormalizedEmail = "ADMIN_DEMO@GMAIL.COM",
+                    EmailConfirmed = true,
+                    PasswordHash = "AQAAAAIAAYagAAAAEET3xX8a043bIf6s88V8JHayJR91oPDtwcbSwBu4DNGtnr4err11wI/IwyJSUI/l0Q==",
+                    SecurityStamp = "4SKEY4LFJ5YFEM5REPISLB4YBHVSTUR3",
+                    ConcurrencyStamp = "6eef443c-bba9-4122-a821-920e06361f5a",
+                    PhoneNumber = "0358986823",
+                    PhoneNumberConfirmed = true,
+                    TwoFactorEnabled = false,
+                    LockoutEnabled = true,
+                    AccessFailedCount = 0,
+                    LockoutEnd = new DateTime(2025, 11, 26)
+                }
+            );
+        }
+
+        public static void SeedUserRoles(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<IdentityUserRole<int>>().HasData(
+                new IdentityUserRole<int>
+                {
+                    UserId = 10, // admin
+                    RoleId = 1   // Admin
+                },
+                new IdentityUserRole<int>
+                {
+                    UserId = 8,  // user
+                    RoleId = 2   // Customer
+                }
+            );
+        }
+
         // Them du lieu cho color, size, quantity cua san pham
         public static void SeedProductQty(this ModelBuilder modelBuilder)
         {
@@ -485,7 +557,8 @@ namespace CRUD_asp.netMVC.Data.Seed
             modelBuilder.Entity<Roles>().HasData(
 
                  new Roles { Id = 1, Name = "Admin", NormalizedName = "ADMIN" },
-                 new Roles { Id = 2, Name = "Customer", NormalizedName = "CUSTOMER" }
+                 new Roles { Id = 2, Name = "Customer", NormalizedName = "CUSTOMER" },
+                 new Roles { Id = 3, Name = "Guest", NormalizedName = "GUEST" }
             );
         }
 

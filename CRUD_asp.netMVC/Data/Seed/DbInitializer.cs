@@ -1,10 +1,10 @@
 ﻿using CRUD_asp.netMVC.DTO.Order.GHN;
 using CRUD_asp.netMVC.Models.Addresses;
+using CRUD_asp.netMVC.Service.GHN;
+using CRUD_asp.netMVC.Service.Scopes;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using EFCore.BulkExtensions;
-using CRUD_asp.netMVC.Service.Scopes;
-using CRUD_asp.netMVC.Service.GHN;
 
 namespace CRUD_asp.netMVC.Data.Seed
 {

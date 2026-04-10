@@ -2,11 +2,9 @@
 using CRUD_asp.netMVC.DTO.Auth;
 using CRUD_asp.netMVC.Models.Auth;
 using Hangfire;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Caching.Memory;
 using System.Globalization;
 using System.Text;

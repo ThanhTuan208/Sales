@@ -18,11 +18,20 @@
 //});
 
 // Truyen du lieu san pham, ktra dkien them hoac sua
+
+$(document).on('click', '.feature-dev', function (e) {
+    e.preventDefault();
+    alert('🚧 Tính năng đang trong quá trình phát triển');
+});
+
 $(document).off('click', '#btnAdminProduct').on('click', '#btnAdminProduct', function (e) {
 
     e.preventDefault();
 
     const btn = $(this);
+
+    if (btn.prop('disabled')) return;
+    btn.prop('disabled', true).text('Đang xử lý...');
 
     const id = $('#id').val();
     const name = $('#name').val();
@@ -84,9 +93,6 @@ $(document).off('click', '#btnAdminProduct').on('click', '#btnAdminProduct', fun
         contentType: false,
 
         success: function (response) {
-
-            if (btn.prop('disabled')) return;
-            btn.prop('disabled', true).text('Đang xử lý...');
 
             if (response.success) {
                 //setTimeout(() => {

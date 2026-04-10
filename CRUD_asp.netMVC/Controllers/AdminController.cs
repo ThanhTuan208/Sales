@@ -48,7 +48,7 @@ namespace CRUD_asp.netMVC.Controllers
         {
             var db = _redis.GetDatabase();
 
-            var users = _dbContext.Users;   
+            var users = _dbContext.Users;
             var payments = _dbContext.Payment;
             var siteUsers = _dbContext.SiteUser;
 
@@ -77,7 +77,7 @@ namespace CRUD_asp.netMVC.Controllers
             ViewData["User"] = await UserAdmin();
             return View(viewModel);
         }
-         
+
         [HttpGet]
         public async Task<IActionResult> ProductList(int page = 1)
         {
@@ -663,10 +663,7 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> DeleteProduct(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var products = await _dbContext.Products
                 .Include(p => p.Brands)
@@ -696,7 +693,7 @@ namespace CRUD_asp.netMVC.Controllers
             }
 
             await _dbContext.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("ProductList", "Admin");
         }
 
         private bool ProductsExists(int id)

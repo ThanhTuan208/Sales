@@ -4,9 +4,10 @@
     var productID = ViewData["id"] as int?;
     var action = productID > 0 ? "LoginByProductID" : "Login";
     var Product = productID > 0 ? productID.ToString() : string.Empty;
-
+    ViewData["Title"] = "Đăng nhập";
     Layout = "_AuthLayout";
 }
+
 <input type="hidden" class="productID" data-id="@productID" />
 <form method="post" asp-controller="Auth" asp-action="@action" asp-route-productID="@Product" class="form1">
 

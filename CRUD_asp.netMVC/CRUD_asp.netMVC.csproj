@@ -8,6 +8,7 @@
 		<UserSecretsId>c3153b37-ecec-42f8-89ee-0163a574cad6</UserSecretsId>
 		<StartupObject>CRUD_asp.netMVC.Program</StartupObject>
 		<_EnableBrowserRefresh>false</_EnableBrowserRefresh>
+		<HotReloadAutoRestart>true</HotReloadAutoRestart>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -27,7 +28,7 @@
 		<!-- Email -->
 		<PackageReference Include="MailKit" Version="4.12.1" />
 
-		<!-- Identity + EF Core (đúng version .NET 8) -->
+		<!-- Identity + EF Core (đúng version .NET 9) -->
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="9.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />

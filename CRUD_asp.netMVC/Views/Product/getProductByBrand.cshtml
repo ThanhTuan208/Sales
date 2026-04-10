@@ -7,10 +7,10 @@
     var cateID = ViewData["cateID"];
     var brandID = ViewData["brandID"];
     var brandImage = ViewData["image"];
-    var index = (int)brandID;
+    int index = brandID as int? ?? 0;
 
     var brandName = Model.Brands[index - 1].Name;
-    ViewData["Title"] = "Product Page";
+    ViewData["Title"] = "Sản phẩm";
     Layout = "_HomeLayout";
 }
 
@@ -43,12 +43,11 @@
                 <div class="col-md-2 text-center animate-box">
                     <div class="product">
                         <div class="desc">
-                            <a asp-action="getProductByCate_Brand" asp-controller="Product" asp-route-brandID="@brandID" asp-route-cateID="@item.ID" asp-route-productPage="1">
-                                @* duong dan tuyet doi khi truy cap https://localhost:7276/Product -> https://localhost:7276/Product/ *@
+                            <a asp-controller="Product" asp-action="getProductByCate_Brand" asp-route-brandID="@brandID" asp-route-cateID="@item.ID" asp-route-productPage="1">
                                 <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow cate-image"
                                      alt="Categories">
                             </a>
-                            <h3><a asp-route-cateID="@item.ID" asp-route-productPage="1" class="btn">@item.Name</a></h3>
+                            <h3><a asp-controller="Product" asp-action="getProductByCate_Brand" asp-route-brandID="@brandID" asp-route-cateID="@item.ID" asp-route-productPage="1" class="btn">@item.Name</a></h3>
                         </div>
                     </div>
                 </div>

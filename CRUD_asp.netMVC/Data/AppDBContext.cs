@@ -5,10 +5,8 @@ using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
 using CRUD_asp.netMVC.Models.Payments;
 using CRUD_asp.netMVC.Models.Product;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CRUD_asp.netMVC.Data
 {
@@ -25,7 +23,9 @@ namespace CRUD_asp.netMVC.Data
 
             // khong rang buoc
             modelBuilder.SeedFeatured();
+            modelBuilder.SeedUsers();
             modelBuilder.SeedRoels();
+            modelBuilder.SeedUserRoles();
             modelBuilder.SeedGenders();
             modelBuilder.SeedMaterial();
             modelBuilder.SeedStyle();

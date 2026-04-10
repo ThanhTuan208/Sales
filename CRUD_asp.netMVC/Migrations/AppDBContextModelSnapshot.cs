@@ -298,6 +298,12 @@ namespace CRUD_asp.netMVC.Migrations
                             Id = 2,
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Guest",
+                            NormalizedName = "GUEST"
                         });
                 });
 
@@ -447,6 +453,60 @@ namespace CRUD_asp.netMVC.Migrations
                         .HasDatabaseName("IX_Users_UserByDay");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 8,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "87fa214c-77b7-49b6-969d-b05cd4b8a85a",
+                            DateOfBirth = new DateTime(1, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "user_demo@gmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "Nguyễn",
+                            Gender = "Nam",
+                            LastName = "Tuấn",
+                            LockoutEnabled = true,
+                            LockoutEnd = new DateTimeOffset(new DateTime(2025, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
+                            NormalizedEmail = "USER_DEMO@GMAIL.COM",
+                            NormalizedUserName = "USERDTRAI",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIGrep56jZMETG3pvlfvY8ZuqfD8kcKSnkL2LdTVXMmuouD38WnwdkAp5z3lqzIqCg==",
+                            PhoneNumber = "0358986824",
+                            PhoneNumberConfirmed = true,
+                            ProfileImage = "images/avatar/2bc6c1a6-74ab-43e3-9c14-7b900fc59112.jpg",
+                            RoleId = 2,
+                            SecurityStamp = "T6GUP2BYL5M7Y63HDKWNDRF2TRBJ3VHW",
+                            StartDate = new DateTime(2025, 7, 25, 12, 6, 38, 0, DateTimeKind.Unspecified),
+                            StartDay = new DateOnly(1, 1, 1),
+                            TwoFactorEnabled = false,
+                            UserName = "userdtrai"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "6eef443c-bba9-4122-a821-920e06361f5a",
+                            DateOfBirth = new DateTime(2005, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin_demo@gmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "Nguyễn",
+                            Gender = "Nam",
+                            LastName = "Tuấn",
+                            LockoutEnabled = true,
+                            LockoutEnd = new DateTimeOffset(new DateTime(2025, 11, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
+                            NormalizedEmail = "ADMIN_DEMO@GMAIL.COM",
+                            NormalizedUserName = "ADMINDTRAI",
+                            PasswordHash = "AQAAAAIAAYagAAAAEET3xX8a043bIf6s88V8JHayJR91oPDtwcbSwBu4DNGtnr4err11wI/IwyJSUI/l0Q==",
+                            PhoneNumber = "0358986823",
+                            PhoneNumberConfirmed = true,
+                            ProfileImage = "images/avatar/2bc6c1a6-74ab-43e3-9c14-7b900fc59112.jpg",
+                            RoleId = 1,
+                            SecurityStamp = "4SKEY4LFJ5YFEM5REPISLB4YBHVSTUR3",
+                            StartDate = new DateTime(2025, 11, 26, 19, 44, 21, 0, DateTimeKind.Unspecified),
+                            StartDay = new DateOnly(1, 1, 1),
+                            TwoFactorEnabled = false,
+                            UserName = "admindtrai"
+                        });
                 });
 
             modelBuilder.Entity("CRUD_asp.netMVC.Models.Cart.AddToCart", b =>
@@ -15708,6 +15768,18 @@ namespace CRUD_asp.netMVC.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 10,
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            UserId = 8,
+                            RoleId = 2
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>

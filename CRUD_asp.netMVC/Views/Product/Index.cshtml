@@ -7,7 +7,7 @@
     var ActionNameByUrl = ViewBag.ActionNameUrl;
     string NameAction = ViewBag.NameAction;
 
-    ViewData["Title"] = "Product Page";
+    ViewData["Title"] = "Sản phẩm";
     Layout = "_HomeLayout";
 }
 
@@ -33,13 +33,12 @@
                 <div class="col-md-2 text-center ">
                     <div class="product">
                         <div class="desc">
-                            <a asp-action="getProductByCate" asp-controller="Product" asp-route-cateID="@item.ID" asp-route-productPage="1" >
-                                @* duong dan tuyet doi khi truy cap https://localhost:7276/Product -> https://localhost:7276/Product/ *@
+                            <a asp-controller="Product" asp-action="getProductByCate" asp-route-cateID="@item.ID" asp-route-productPage="1">
                                 <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow cate-image"
                                      alt="Categories">
                             </a>
                             
-                            <h3><a asp-route-cateID="@item.ID" asp-route-productPage="1" class="btn">@item.Name</a></h3>
+                            <h3><a asp-controller="Product" asp-action="getProductByCate" asp-route-cateID="@item.ID" asp-route-productPage="1" class="btn">@item.Name</a></h3>
                         </div>
                     </div>
                 </div>
@@ -140,9 +139,9 @@
 
                                 <img src="@Url.Content($"~/{@item.PicturePath}")" class="img-fluid shadow"
                                      style="width: 100%; max-width: 230px; height: 100px; object-fit: cover; display: block; margin: auto;
-                                                                                        filter: contrast(110%) brightness(105%);
-                                                                                        border-radius: 15px;
-                                                                                        box-shadow: 0 4px 12px rgba(0,0,0,0.2);"
+                                filter: contrast(110%) brightness(105%);
+                                border-radius: 15px;
+                                box-shadow: 0 4px 12px rgba(0,0,0,0.2);"
                                      alt="Brand">
 
                             </a>

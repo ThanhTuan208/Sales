@@ -5,11 +5,11 @@
     var ActionNameByUrl = ViewBag.ActionNameUrl;
     var productCount = ViewBag.ProductCount ?? 0;
     var cateID = ViewData["cateID"];
-    var index = (int)cateID;
+    var index = cateID as int? ?? 0;
     var cateName = Model.Categories[index - 1].Name;
     string NameAction = ViewBag.NameAction;
 
-    ViewData["Title"] = "Product Page";
+    ViewData["Title"] = "Sản phẩm";
     Layout = "_HomeLayout";
 }
 

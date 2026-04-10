@@ -1,25 +1,11 @@
-﻿using AspNetCoreGeneratedDocument;
-using CRUD_asp.netMVC.Common;
-using CRUD_asp.netMVC.Data;
-using CRUD_asp.netMVC.DTO.Generic;
-using CRUD_asp.netMVC.DTO.Order.GHN;
+﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Payment;
 using CRUD_asp.netMVC.DTO.Payments;
-using CRUD_asp.netMVC.Hubs;
-using CRUD_asp.netMVC.Models.Order;
-using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.Service.GHN;
 using CRUD_asp.netMVC.Service.Payments;
-using CRUD_asp.netMVC.ViewModels.Order;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
-using StackExchange.Redis;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace CRUD_asp.netMVC.Controllers
 {

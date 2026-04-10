@@ -4,11 +4,11 @@
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CRUD_asp.netMVC</title>
+    <title>@ViewData["Title"] - LiFashion</title>
     <link rel="stylesheet" href="~/css/styleMe.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CRUD_asp.netMVC.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/assets/vendors/feather/feather.css" asp-append-version="true" />
@@ -19,17 +19,15 @@
     <link rel="stylesheet" href="~/assets/vendors/typicons/typicons.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/assets/vendors/simple-line-icons/css/simple-line-icons.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/assets/vendors/css/vendor.bundle.base.css" asp-append-version="true" />
-
     <link rel="stylesheet" href="~/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" asp-append-version="true" />
-
+    
     <!-- Plugin css for this page -->
     <link rel="stylesheet" href="~/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/assets/js/select.dataTables.min.css" asp-append-version="true" />
-
+    
     <!-- Main CSS -->
     <link rel="stylesheet" href="~/assets/css/style.css" asp-append-version="true" />
-
     <link rel="shortcut icon" href="~/images/icon/logoWeb.png" asp-append-version="true" />
 </head>
 <body class="with-welcome-text">
@@ -48,198 +46,97 @@
                     <a class="navbar-brand brand-logo" asp-action="Dashboard">
                         <img src="~/images/icon/lifashion-romove-bg.png" alt="LiFashion" style="width:400px; height: 150px" />
                     </a>
-                    @* <a class="navbar-brand brand-logo-mini" href="index.html">
-                        <img src="~/images/icon/admin.png" alt="logo" />
-                    </a> *@ 
                 </div>
             </div>
+
             <div class="navbar-menu-wrapper d-flex align-items-top">
                 <ul class="navbar-nav">
                     <li class="nav-item fw-semibold d-none d-lg-block ms-0">
                         <h1 class="welcome-text">
                             Ngày tốt lành, <span class="text-black fw-bold">@users.UserName</span>
                         </h1>
-                        <h3 class="welcome-sub-text">Chào mừng bạn trở lại, chúc bạn làm việc thật năng suất</h3>
+                        <h3 class="welcome-sub-text">Chào mừng bạn trở lại, chúc bạn làm việc thật năng suất!</h3>
                     </li>
                 </ul>
+
                 <ul class="navbar-nav ms-auto">
+                    <!-- Category Dropdown -->
                     <li class="nav-item dropdown d-none d-lg-block">
                         <a class="nav-link dropdown-bordered dropdown-toggle dropdown-toggle-split"
-                           id="messageDropdown"
-                           href="#"
-                           data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            Select Category
+                               id="messageDropdown"
+                               href="#"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                            Chọn danh mục
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
                              aria-labelledby="messageDropdown">
                             <a class="dropdown-item py-3">
-                                <p class="mb-0 fw-medium float-start">Select category</p>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis fw-medium text-dark">
-                                        Bootstrap Bundle
-                                    </p>
-                                    <p class="fw-light small-text mb-0">
-                                        This is a Bundle featuring 16 unique dashboards
-                                    </p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis fw-medium text-dark">
-                                        Angular Bundle
-                                    </p>
-                                    <p class="fw-light small-text mb-0">
-                                        Everything you’ll ever need for your Angular projects
-                                    </p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis fw-medium text-dark">
-                                        VUE Bundle
-                                    </p>
-                                    <p class="fw-light small-text mb-0">
-                                        Bundle of 6 Premium Vue Admin Dashboard
-                                    </p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis fw-medium text-dark">
-                                        React Bundle
-                                    </p>
-                                    <p class="fw-light small-text mb-0">
-                                        Bundle of 8 Premium React Admin Dashboard
-                                    </p>
-                                </div>
+                                <p class="mb-0 fw-medium float-start">Chọn danh mục</p>
                             </a>
                         </div>
                     </li>
+
+                    <!-- Datepicker -->
                     <li class="nav-item d-none d-lg-block">
-                        <div id="datepicker-popup"
-                             class="input-group date datepicker navbar-date-picker">
+                        <div id="datepicker-popup" class="input-group date datepicker navbar-date-picker">
                             <span class="input-group-addon input-group-prepend border-right">
                                 <span class="icon-calendar input-group-text calendar-icon"></span>
                             </span>
                             <input type="text" class="form-control" />
                         </div>
                     </li>
+
+                    <!-- Search -->
                     <li class="nav-item">
                         <form class="search-form" action="#">
                             <i class="icon-search"></i>
-                            <input type="search"
-                                   class="form-control"
-                                   placeholder="Tìm kiếm"
-                                   title="Tìm kiếm" />
+                            <input type="search" class="form-control" placeholder="Tìm kiếm..." title="Tìm kiếm" />
                         </form>
                     </li>
+
+                    <!-- Notification -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link count-indicator"
-                           id="notificationDropdown"
-                           href="#"
-                           data-bs-toggle="dropdown">
+                        <a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
                             <i class="icon-bell"></i>
                             <span class="count"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
                              aria-labelledby="notificationDropdown">
                             <a class="dropdown-item py-3 border-bottom">
-                                <p class="mb-0 fw-medium float-start">
-                                    You have 4 new notifications
-                                </p>
-                                <span class="badge badge-pill badge-primary float-end">View all</span>
+                                <p class="mb-0 fw-medium float-start">Bạn có 4 thông báo mới</p>
+                                <span class="badge badge-pill badge-primary float-end">Xem tất cả</span>
                             </a>
-                            <a class="dropdown-item preview-item py-3">
-                                <div class="preview-thumbnail">
-                                    <i class="mdi mdi-alert m-auto text-primary"></i>
-                                </div>
-                                <div class="preview-item-content">
-                                    <h6 class="preview-subject fw-normal text-dark mb-1">
-                                        Application Error
-                                    </h6>
-                                    <p class="fw-light small-text mb-0">Just now</p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item py-3">
-                                <div class="preview-thumbnail">
-                                    <i class="mdi mdi-lock-outline m-auto text-primary"></i>
-                                </div>
-                                <div class="preview-item-content">
-                                    <h6 class="preview-subject fw-normal text-dark mb-1">
-                                        Settings
-                                    </h6>
-                                    <p class="fw-light small-text mb-0">Private message</p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item py-3">
-                                <div class="preview-thumbnail">
-                                    <i class="mdi mdi-airballoon m-auto text-primary"></i>
-                                </div>
-                                <div class="preview-item-content">
-                                    <h6 class="preview-subject fw-normal text-dark mb-1">
-                                        New user registration
-                                    </h6>
-                                    <p class="fw-light small-text mb-0">2 days ago</p>
-                                </div>
-                            </a>
+                            <!-- Các thông báo mẫu có thể giữ hoặc dịch thêm -->
                         </div>
                     </li>
+
+                    <!-- Mail -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link count-indicator"
-                           id="countDropdown"
-                           href="#"
-                           data-bs-toggle="dropdown"
-                           aria-expanded="false">
+                        <a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown">
                             <i class="icon-mail icon-lg"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
                              aria-labelledby="countDropdown">
                             <a class="dropdown-item py-3">
-                                <p class="mb-0 fw-medium float-start">
-                                    Bạn có 7 mail chưa đọc
-                                </p>
+                                <p class="mb-0 fw-medium float-start">Bạn có 7 email chưa đọc</p>
                                 <span class="badge badge-pill badge-primary float-end">Xem tất cả</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="assets/images/faces/face10.jpg"
-                                         alt="image"
-                                         class="img-sm profile-pic" />
-                                </div>
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis fw-medium text-dark">
-                                        Marian Garner
-                                    </p>
-                                    <p class="fw-light small-text mb-0">
-                                        The meeting is cancelled
-                                    </p>
-                                </div>
                             </a>
                         </div>
                     </li>
+
+                    <!-- User Profile -->
                     <li class="nav-item dropdown d-none d-lg-block user-dropdown">
-                        <a class="nav-link"
-                           id="UserDropdown"
-                           href="#"
-                           data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            <img class="img-xs rounded-circle"
-                                 src="~/@users.ProfileImage"
-                                 alt="Profile image" />
+                        <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="img-xs rounded-circle" src="~/@users.ProfileImage" alt="Profile image" />
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
-                             aria-labelledby="UserDropdown">
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                             <div class="dropdown-header text-center">
                                 <img class="img-md rounded-circle"
                                      src="~/@users.ProfileImage"
                                      alt="Profile image"
                                      style="width: 51px; height:50px" />
-                                <p class="mb-1 mt-3 fw-semibold">@($"{users.FirstName}\n{users.LastName}")</p>
+                                <p class="mb-1 mt-3 fw-semibold">@($"{users.FirstName} {users.LastName}")</p>
                                 <p class="fw-light text-muted mb-0">@users.Email</p>
                             </div>
                             <a class="dropdown-item">
@@ -257,7 +154,7 @@
                             </a>
                             <a class="dropdown-item">
                                 <i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i>
-                                Câu hỏi và trả lời
+                                Câu hỏi & Trả lời
                             </a>
                             <form id="logoutForm" asp-controller="Auth" asp-action="Logout" method="post" style="display: none;"></form>
                             <a class="dropdown-item" href="javascript:void(0);" onclick="document.getElementById('logoutForm').submit();">
@@ -266,6 +163,7 @@
                         </div>
                     </li>
                 </ul>
+
                 <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
                         type="button"
                         data-bs-toggle="offcanvas">
@@ -273,9 +171,10 @@
                 </button>
             </div>
         </nav>
+
         <!-- partial -->
         <div class="container-fluid page-body-wrapper">
-            <!-- partial:partials/_sidebar.html -->
+            <!-- Sidebar -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
                     <li class="nav-item">
@@ -284,218 +183,145 @@
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
+
                     <li class="nav-item nav-category">Quản lý tác vụ</li>
+
+                    <!-- Quản lý sản phẩm -->
                     <li class="nav-item">
-                        <a class="nav-link"
-                           data-bs-toggle="collapse"
-                           href="#products"
-                           aria-expanded="false"
-                           aria-controls="products">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#products" aria-expanded="false" aria-controls="products">
                             <i class="menu-icon mdi mdi-floor-plan"></i>
                             <span class="menu-title">Quản lý sản phẩm</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="products">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="ProductList">Danh sách sản phẩm</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="CreateProduct">Thêm sản phẩm</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="BrandList">Danh sách thương hiệu</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="CreateBrand">Thêm thương hiệu</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="pages/ui-features/typography.html">Danh mục sản phẩm</a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="ProductList">Danh sách sản phẩm</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="CreateProduct">Thêm sản phẩm</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="BrandList">Danh sách thương hiệu</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="CreateBrand">Thêm thương hiệu</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Danh mục sản phẩm</a></li>
                             </ul>
                         </div>
                     </li>
+
+                    <!-- Quản lý đơn hàng -->
                     <li class="nav-item">
-                        <a class="nav-link"
-                           data-bs-toggle="collapse"
-                           href="#orders"
-                           aria-expanded="false"
-                           aria-controls="orders">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#orders" aria-expanded="false" aria-controls="orders">
                             <i class="menu-icon mdi mdi-card-text-outline"></i>
                             <span class="menu-title">Quản lý đơn hàng</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="orders">
-                            <ul class="nav flex-column sub-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Tất cả đơn hàng</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Đơn hàng đang xử lý</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Đơn hàng đang giao</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Đơn hàng đã hoàn thành</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Đơn hàng hủy</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Thành toán</a>
-                                </li>
+                            <ul class="nav flex-column sub-menu" disable>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Tất cả đơn hàng</a></li>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Đơn hàng đang xử lý</a></li>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Đơn hàng đang giao</a></li>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Đơn hàng đã hoàn thành</a></li>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Đơn hàng đã hủy</a></li>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Thanh toán</a></li>
                             </ul>
                         </div>
                     </li>
+
+                    <!-- Quản lý khách hàng -->
                     <li class="nav-item">
-                        <a class="nav-link"
-                           data-bs-toggle="collapse"
-                           href="#users"
-                           aria-expanded="false"
-                           aria-controls="users">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#users" aria-expanded="false" aria-controls="users">
                             <i class="menu-icon mdi mdi-table"></i>
                             <span class="menu-title">Quản lý khách hàng</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="users">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Danh sách tài khoản</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Lịch sử mua hàng</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Phương thức thanh toán</a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Danh sách tài khoản</a></li>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Lịch sử mua hàng</a></li>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Phương thức thanh toán</a></li>
                             </ul>
                         </div>
                     </li>
+
+                    <!-- Quản lý đánh giá -->
                     <li class="nav-item">
-                        <a class="nav-link"
-                           data-bs-toggle="collapse"
-                           href="#reviews"
-                           aria-expanded="false"
-                           aria-controls="reviews">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#reviews" aria-expanded="false" aria-controls="reviews">
                             <i class="menu-icon mdi mdi-layers-outline"></i>
                             <span class="menu-title">Quản lý đánh giá</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="reviews">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Đánh gíá sản phẩm</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Feedback của khách hàng</a>
-                                </li>
-                                <li class="nav-item">
-                                    @* ẩn đánh giá xấu, ... *@
-                                    <a class="nav-link" asp-action="">Quản lý đánh giá</a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Đánh giá sản phẩm</a></li>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Phản hồi của khách hàng</a></li>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Quản lý đánh giá</a></li>
                             </ul>
                         </div>
                     </li>
+
+                    <!-- Quản lý khuyến mãi -->
                     <li class="nav-item">
-                        <a class="nav-link"
-                           data-bs-toggle="collapse"
-                           href="#promotions"
-                           aria-expanded="false"
-                           aria-controls="promotions">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#promotions" aria-expanded="false" aria-controls="promotions">
                             <i class="menu-icon mdi mdi-account-circle-outline"></i>
                             <span class="menu-title">Quản lý khuyến mãi</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="promotions">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Mã giảm giá</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Flash sale</a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Mã giảm giá</a></li>
+                                <li class="nav-item"><a class="nav-link feature-dev" href="#">Flash sale</a></li>
                             </ul>
                         </div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           data-bs-toggle="collapse"
-                           href="#cms"
-                           aria-expanded="false"
-                           aria-controls="cms">
+
+                    <!-- Quản lý nội dung -->
+                    @* <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#cms" aria-expanded="false" aria-controls="cms">
                             <i class="menu-icon mdi mdi-account-circle-outline"></i>
                             <span class="menu-title">Quản lý nội dung</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="cms">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Blog</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Banner quảng cáo</a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Banner quảng cáo</a></li>
                             </ul>
                         </div>
-                    </li>
+                    </li> *@
+
+                    @* <!-- Quản trị hệ thống -->
                     <li class="nav-item">
-                        <a class="nav-link"
-                           data-bs-toggle="collapse"
-                           href="#system"
-                           aria-expanded="false"
-                           aria-controls="system">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#system" aria-expanded="false" aria-controls="system">
                             <i class="menu-icon mdi mdi-account-circle-outline"></i>
                             <span class="menu-title">Quản trị hệ thống</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="system">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Phân quyền</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Quản lý nhân viên</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Cấu hình website</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Nhật ký hoạt động</a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link" href="#">Phân quyền</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Quản lý nhân viên</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Cấu hình website</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Nhật ký hoạt động</a></li>
                             </ul>
                         </div>
                     </li>
+
+                    <!-- Báo cáo -->
                     <li class="nav-item">
-                        <a class="nav-link"
-                           data-bs-toggle="collapse"
-                           href="#report"
-                           aria-expanded="false"
-                           aria-controls="report">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#report" aria-expanded="false" aria-controls="report">
                             <i class="menu-icon mdi mdi-account-circle-outline"></i>
                             <span class="menu-title">Quản lý báo cáo</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="report">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Doanh thu theo tháng/năm</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Báo cá    o bán hàng</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Báo cáo khách hàng</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-action="">Báo cáo sản phẩm bán chạy</a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link" href="#">Doanh thu theo tháng/năm</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Báo cáo bán hàng</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Báo cáo khách hàng</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Sản phẩm bán chạy</a></li>
                             </ul>
                         </div>
-                    </li>
+                    </li> *@
                 </ul>
             </nav>
-            <!-- partial -->
+
+            <!-- Main Content -->
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
@@ -510,37 +336,23 @@
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="~/js/jquery-3.7.1.js" asp-append-version="true"></script>
-
-    @* <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script> *@
     <script src="~/js/tom-select.complete.min.js" asp-append-version="true"></script>
     <script src="~/js/signalr.min.js" asp-append-version="true"></script>
-
-
     <script type="module" src="~/js/js.js" asp-append-version="true"></script>
     <script type="module" src="~/js/admin.js" asp-append-version="true"></script>
-
     <script src="~/assets/vendors/js/vendor.bundle.base.js" asp-append-version="true"></script>
     <script src="~/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js" asp-append-version="true"></script>
-
-    <!-- Plugin js for this page -->
     <script src="~/assets/vendors/chart.js/chart.umd.js" asp-append-version="true"></script>
-    @*<script src="~/assets/vendors/progressbar.js/progressbar.min.js" asp-append-version="true"></script>*@
-
-    <!-- Core Template js -->
     <script src="~/assets/js/off-canvas.js" asp-append-version="true"></script>
     <script src="~/assets/js/template.js" asp-append-version="true"></script>
     <script src="~/assets/js/settings.js" asp-append-version="true"></script>
     <script src="~/assets/js/hoverable-collapse.js" asp-append-version="true"></script>
     <script src="~/assets/js/todolist.js" asp-append-version="true"></script>
-
-    <!-- Custom js for this page -->
     <script src="~/assets/js/jquery.cookie.js" asp-append-version="true"></script>
     <script src="~/assets/js/dashboard.js" asp-append-version="true"></script>
-
     <script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
-
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

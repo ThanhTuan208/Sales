@@ -3,208 +3,207 @@
 @model GeneralProduct_ListCateBrand
 
 @{
+    ViewData["Title"] = "Chi tiết sản phẩm";
     var countCart = ViewData["cart"] as int? ?? 0;
-    ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
-
 }
 
 <link rel="stylesheet" href="~/css/productDetail.css" asp-append-version="true">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/css/lightslider.min.css" asp-append-version="true" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fancyapps/ui/dist/fancybox.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/css/lightslider.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fancyapps/ui/dist/fancybox.css" asp-append-version="true" />
 
-<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(@Url.Content("~/images/banner/banner2.jpg"));">
-    <div class="overlay"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 text-center">
-                <div class="display-t">
-                    <div class="display-tc animate-box" data-animate-effect="fadeIn">
+    <header id="fh5co-header" class="fh5co-cover fh5co-cover-sm" role="banner" style="background-image:url(@Url.Content("~/images/banner/banner2.jpg"));">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-center">
+                    <div class="display-t">
+                        <div class="display-tc animate-box" data-animate-effect="fadeIn">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 
-@Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
 
-<div id="fh5co-product">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-5">
-                <div class="vrmedia-gallery">
-                    <ul class="ecommerce-gallery">
-                        @if (Model.Product.ProductImages != null && Model.Product.ProductImages.Count > 0)
-                        {
-                            foreach (var img in Model.Product.ProductImages)
+    <div id="fh5co-product">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="vrmedia-gallery">
+                        <ul class="ecommerce-gallery">
+                            @if (Model.Product.ProductImages != null && Model.Product.ProductImages.Count > 0)
                             {
-                                var imgPath = Url.Content($"~/images/products/{img.PathNameImage}");
-                                <li data-fancybox="gallery"
-                                    data-src="@imgPath"
-                                    data-thumb="@imgPath">
-                                    <img src="@imgPath" alt="@Model.Product.Name" />
+                                foreach (var img in Model.Product.ProductImages)
+                                {
+                                    var imgPath = Url.Content($"~/images/products/{img.PathNameImage}");
+                                    <li data-fancybox="gallery"
+                                        data-src="@imgPath"
+                                        data-thumb="@imgPath">
+                                        <img src="@imgPath" alt="@Model.Product.Name" />
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                <li>
+                                    <img src="@Url.Content("~/images/image/not-found-image.jpg")" alt="No image available" />
                                 </li>
                             }
-                        }
-                        else
-                        {
-                            <li>
-                                <img src="@Url.Content("~/images/image/not-found-image.jpg")" alt="No image available" />
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Thông tin sản phẩm -->
-            <div class="col-md-7">
-                <div class="product-content" style="font-size: 3rem; margin-top: 10px">
-                    <h2 class="product-title text-center mb-5 fw-bold" style="font-size: 4rem">@Model.Product.Name</h2>
-                    <div class="product-general d-flex justify-content-between align-items-center fs-3 my-3">
-                        <div class="product-rating">
-                            <i class="icon-star2"></i>
-                            <i class="icon-star2"></i>
-                            <i class="icon-star2"></i>
-                            <i class="icon-star2"></i>
-                            <i class="icon-star2"></i>
-                            <span>4.7(21)</span>
-                        </div>|
-                        <div class="review">
-                            <strong>Đánh giá</strong>: 100
-                        </div>|
-                        <div class="sold">
-                            <strong>Đã bán</strong>: @Model.Sold sp
-                        </div>|
-                        <div class="qtyDetail" data-qty-detail="@(Model.Product?.Quantity ?? 0)">
-                            <strong>Số lượng</strong>: @(Model.Product?.Quantity ?? 0)
-                        </div>
+                        </ul>
                     </div>
+                </div>
 
-
-                    <div class="pro-detail fs-4">
-
-                        <div class="row align-items-center">
-                            <div class="col-md-3 fw-bold">
-                                <p class="fs-3 mb-0 me-2">Giá: </p>
-                            </div>
-                            <div class="col-md-9 d-flex">
-                                <div class="product-price d-inline-flex fs-1">
-
-                                    <p> <span class="price-new mb-0 me-5">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.NewPrice)</span></p>
-
-                                    @if (Model.Product.OldPrice != 0)
-                                    {
-                                        <sub><del><span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.OldPrice)</span></del></sub>
-                                    }
-                                </div>
+                <!-- Thông tin sản phẩm -->
+                <div class="col-md-7">
+                    <div class="product-content" style="font-size: 3rem; margin-top: 10px">
+                        <h2 class="product-title text-center mb-5 fw-bold" style="font-size: 4rem">@Model.Product.Name</h2>
+                        <div class="product-general d-flex justify-content-between align-items-center fs-3 my-3">
+                            <div class="product-rating">
+                                <i class="icon-star2"></i>
+                                <i class="icon-star2"></i>
+                                <i class="icon-star2"></i>
+                                <i class="icon-star2"></i>
+                                <i class="icon-star2"></i>
+                                <span>4.7(21)</span>
+                            </div>|
+                            <div class="review">
+                                <strong>Đánh giá</strong>: 100
+                            </div>|
+                            <div class="sold">
+                                <strong>Đã bán</strong>: @Model.Sold sp
+                            </div>|
+                            <div class="qtyDetail" data-qty-detail="@(Model.Product?.Quantity ?? 0)">
+                                <strong>Số lượng</strong>: @(Model.Product?.Quantity ?? 0)
                             </div>
                         </div>
 
-                        <div class="addCart">
 
-                            <!-- Mau sac -->
-                            <div class="row align-items-center mb-4">
+                        <div class="pro-detail fs-4">
+
+                            <div class="row align-items-center">
                                 <div class="col-md-3 fw-bold">
-                                    <p class="fs-3 mb-0 me-2">Màu sắc: </p>
+                                    <p class="fs-3 mb-0 me-2">Giá: </p>
                                 </div>
-                                <div class="col-md-9 d-flex gap-2 flex-wrap">
-                                    <input type="hidden" id="selectColor" name="color" class="color" />
+                                <div class="col-md-9 d-flex">
+                                    <div class="product-price d-inline-flex fs-1">
 
-                                    @foreach (var item in Model.Product.ProductQty.Select(p => p.Color.Name).Distinct().ToList())
-                                    {
-                                        <div class="border p-2 px-3 color-option" data-color="@item">@item</div>
-                                    }
-                                </div>
-                            </div>
+                                        <p> <span class="price-new mb-0 me-5">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.NewPrice)</span></p>
 
-                            <!-- Kich thuoc -->
-                            <div class="row align-items-center mb-5">
-                                <div class="col-md-3 fw-bold">
-                                    <p class="fs-3 mb-0 me-2">Kích thước: </p>
-                                </div>
-                                <div class="col-md-9 d-flex gap-2 flex-wrap">
-                                    <input type="hidden" id="selectSize" name="size" class="size" />
-
-                                    @foreach (var item in Model.Product.ProductQty.Select(p => p.Size.Name).Distinct())
-                                    {
-                                        <div class="border p-2 px-3 size-option" data-size="@item">@item</div>
-                                    }
-                                </div>
-                            </div>
-
-                            <!-- So luong -->
-                            <div class="row align-items-center mb-4">
-                                <div class="col-md-3 fw-bold">
-                                    <p class="fs-3 mb-0 me-3">số lượng: </p>
-                                </div>
-                                <div class="col-auto d-flex">
-                                    <a class="btn btn-outline-secondary qty-btn" data-qty="-" id="decrease">-</a>
-                                    <input type="text" id="quantity" class="qtyInput form-control mx-2 text-center" value="1" style="width: 70px; height: 40px" readonly>
-                                    <a class="btn btn-outline-secondary qty-btn" data-qty="+" id="increase">+</a>
-                                </div>
-                                @if (Model.Product.Quantity == 0)
-                                {
-                                    <div class="col text-center">
-                                        <p class="fs-3 mb-0 text-danger me-4" style="font: bold;"><strong>Sản phẩm đã hết !</strong> </p>
+                                        @if (Model.Product.OldPrice != 0)
+                                        {
+                                            <sub><del><span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.OldPrice)</span></del></sub>
+                                        }
                                     </div>
-                                }
-                            </div>
-
-
-                            <div class="row">
-                                <div class="col-md-6 offset-md-3 mt-5">
-                                    <p class="d-flex justify-content-center me-4">
-                                        <input type="hidden" class="countCart" value="@countCart" />
-                                        <input type="hidden" class="productID" name="productID" data-id="@Model.Product.ID" value="@Model.Product.ID" />
-
-                                        <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5"
-                                                @(Model.Product.Quantity == 0 ? "disabled" : "") data-method="cart">
-                                            Thêm giỏ hàng
-                                        </button>
-                                        <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5"
-                                                @(Model.Product.Quantity == 0 ? "disabled" : "") data-method="buy">
-                                            Mua liền
-                                        </button>
-
-                                    </p>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="alertInfo"></div>
+                            <div class="addCart">
+
+                                <!-- Mau sac -->
+                                <div class="row align-items-center mb-4">
+                                    <div class="col-md-3 fw-bold">
+                                        <p class="fs-3 mb-0 me-2">Màu sắc: </p>
+                                    </div>
+                                    <div class="col-md-9 d-flex gap-2 flex-wrap">
+                                        <input type="hidden" id="selectColor" name="color" class="color" />
+
+                                        @foreach (var item in Model.Product.ProductQty.Select(p => p.Color.Name).Distinct().ToList())
+                                        {
+                                            <div class="border p-2 px-3 color-option" data-color="@item">@item</div>
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- Kich thuoc -->
+                                <div class="row align-items-center mb-5">
+                                    <div class="col-md-3 fw-bold">
+                                        <p class="fs-3 mb-0 me-2">Kích thước: </p>
+                                    </div>
+                                    <div class="col-md-9 d-flex gap-2 flex-wrap">
+                                        <input type="hidden" id="selectSize" name="size" class="size" />
+
+                                        @foreach (var item in Model.Product.ProductQty.Select(p => p.Size.Name).Distinct())
+                                        {
+                                            <div class="border p-2 px-3 size-option" data-size="@item">@item</div>
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- So luong -->
+                                <div class="row align-items-center mb-4">
+                                    <div class="col-md-3 fw-bold">
+                                        <p class="fs-3 mb-0 me-3">số lượng: </p>
+                                    </div>
+                                    <div class="col-auto d-flex">
+                                        <a class="btn btn-outline-secondary qty-btn" data-qty="-" id="decrease">-</a>
+                                        <input type="text" id="quantity" class="qtyInput form-control mx-2 text-center" value="1" style="width: 70px; height: 40px" readonly>
+                                        <a class="btn btn-outline-secondary qty-btn" data-qty="+" id="increase">+</a>
+                                    </div>
+                                    @if (Model.Product.Quantity == 0)
+                                    {
+                                        <div class="col text-center">
+                                            <p class="fs-3 mb-0 text-danger me-4" style="font: bold;"><strong>Sản phẩm đã hết !</strong> </p>
+                                        </div>
+                                    }
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-6 offset-md-3 mt-5">
+                                        <p class="d-flex justify-content-center me-4">
+                                            <input type="hidden" class="countCart" value="@countCart" />
+                                            <input type="hidden" class="productID" name="productID" data-id="@Model.Product.ID" value="@Model.Product.ID" />
+
+                                            <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5"
+                                                @(Model.Product.Quantity == 0 ? "disabled" : "") data-method="cart">
+                                                Thêm giỏ hàng
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5"
+                                                @(Model.Product.Quantity == 0 ? "disabled" : "") data-method="buy">
+                                                Mua liền
+                                            </button>
+
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alertInfo"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        @* updated *@
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="fh5co-tabs animate-box">
-                    <ul class="fh5co-tab-nav">
-                        <li class="active"><a href="#" data-tab="1"><span class="icon visible-xs"><i class="icon-file"></i></span><span class="hidden-xs">Chi tiết sản phẩm</span></a></li>
-                        <li><a href="#" data-tab="2"><span class="icon visible-xs"><i class="icon-bar-graph"></i></span><span class="hidden-xs">Mô tả</span></a></li>
-                        <li><a href="#" data-tab="3"><span class="icon visible-xs"><i class="icon-star"></i></span><span class="hidden-xs">Nhận xét &amp; đánh giá</span></a></li>
-                    </ul>
+            @* updated *@
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="fh5co-tabs animate-box">
+                        <ul class="fh5co-tab-nav">
+                            <li class="active"><a href="#" data-tab="1"><span class="icon visible-xs"><i class="icon-file"></i></span><span class="hidden-xs">Chi tiết sản phẩm</span></a></li>
+                            <li><a href="#" data-tab="2"><span class="icon visible-xs"><i class="icon-bar-graph"></i></span><span class="hidden-xs">Mô tả</span></a></li>
+                            <li><a href="#" data-tab="3"><span class="icon visible-xs"><i class="icon-star"></i></span><span class="hidden-xs">Nhận xét &amp; đánh giá</span></a></li>
+                        </ul>
 
-                    <div class="fh5co-tab-content-wrap">
-                        <div class="fh5co-tab-content tab-content active" data-tab-content="1">
-                            <div class="col-md-10 col-md-offset-1">
-                                <span class="price">SRP: @string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.NewPrice)</span>
-                                <h2>@Model.Product.Name</h2>
+                        <div class="fh5co-tab-content-wrap">
+                            <div class="fh5co-tab-content tab-content active" data-tab-content="1">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <span class="price">SRP: @string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.NewPrice)</span>
+                                    <h2>@Model.Product.Name</h2>
 
-                                <ul>
+                                    <ul>
 
-                                    <li><p>Giới tính: @Model.Product?.Gender?.Name</p></li>
-                                    <li><p>Thương hiệu: @Model.Product?.Brands?.Name</p></li>
-                                    <li><p>Danh mục: @Model.Product?.Cate?.Name</p></li>
-                                    <li>Kích cỡ: @string.Join(", ", Model.Product.ProductQty.Select(s => s.Size.Name).Distinct())</li>
-                                    <li>Phong cách: @string.Join(", ", Model.Product.ProductTags.Select(p => p.Tag.Name))</li>
-                                    <li>Chất liệu: @string.Join(", ", Model.Product.ProductMaterial.Select(p => p.Material.Name))</li>
-                                    <li>Màu sắc: @string.Join(", ", Model.Product.ProductQty.Select(s => s.Color.Name).Distinct())</li>
-                                </ul>
+                                        <li><p>Giới tính: @Model.Product?.Gender?.Name</p></li>
+                                        <li><p>Thương hiệu: @Model.Product?.Brands?.Name</p></li>
+                                        <li><p>Danh mục: @Model.Product?.Cate?.Name</p></li>
+                                        <li>Kích cỡ: @string.Join(", ", Model.Product.ProductQty.Select(s => s.Size.Name).Distinct())</li>
+                                        <li>Phong cách: @string.Join(", ", Model.Product.ProductTags.Select(p => p.Tag.Name))</li>
+                                        <li>Chất liệu: @string.Join(", ", Model.Product.ProductMaterial.Select(p => p.Material.Name))</li>
+                                        <li>Màu sắc: @string.Join(", ", Model.Product.ProductQty.Select(s => s.Color.Name).Distinct())</li>
+                                    </ul>
 
-                                @* <div class="row">
+                                    @* <div class="row">
                                     <div class="col-md-6">
                                         <h2 class="uppercase">Keep it simple</h2>
                                         <p>Ullam dolorum iure dolore dicta fuga ipsa velit veritatis</p>
@@ -215,64 +214,64 @@
                                     </div>
                                 </div> *@
 
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="fh5co-tab-content tab-content" data-tab-content="2">
-                            <div class="col-md-10 col-md-offset-1">
-                                <h3>Mô tả sản phẩm</h3>
-                                <ul>
-                                    <li><p>Mổ tả sản phẩm: @Model.Product.Description</p></li>
-                                </ul>
+                            <div class="fh5co-tab-content tab-content" data-tab-content="2">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <h3>Mô tả sản phẩm</h3>
+                                    <ul>
+                                        <li><p>Mổ tả sản phẩm: @Model.Product.Description</p></li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="fh5co-tab-content tab-content" data-tab-content="3">
-                            <div class="col-md-10 col-md-offset-1">
-                                <h3>Happy Buyers</h3>
-                                <div class="feed">
-                                    <div>
-                                        <blockquote>
-                                            <p>Paragraph placeat quis fugiat provident veritatis quia iure a debitis adipisci dignissimos consectetur magni quas eius nobis reprehenderit soluta eligendi quo reiciendis fugit? Veritatis tenetur odio delectus quibusdam officiis est.</p>
-                                        </blockquote>
-                                        <h3>&mdash; Louie Knight</h3>
-                                        <span class="rate">
-                                            <i class="icon-star2"></i>
-                                            <i class="icon-star2"></i>
-                                            <i class="icon-star2"></i>
-                                            <i class="icon-star2"></i>
-                                            <i class="icon-star2"></i>
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <blockquote>
-                                            <p>Paragraph placeat quis fugiat provident veritatis quia iure a debitis adipisci dignissimos consectetur magni quas eius nobis reprehenderit soluta eligendi quo reiciendis fugit? Veritatis tenetur odio delectus quibusdam officiis est.</p>
-                                        </blockquote>
-                                        <h3>&mdash; Joefrey Gwapo</h3>
-                                        <span class="rate">
-                                            <i class="icon-star2"></i>
-                                            <i class="icon-star2"></i>
-                                            <i class="icon-star2"></i>
-                                            <i class="icon-star2"></i>
-                                            <i class="icon-star2"></i>
-                                        </span>
+                            <div class="fh5co-tab-content tab-content" data-tab-content="3">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <h3>Đánh giá sản phẩm</h3>
+                                    <div class="feed">
+                                        <div>
+                                            <blockquote>
+                                                <p>Sản phẩm đạt chất lượng, áo đẹp, ngươi cũng vậy</p>
+                                            </blockquote>
+                                            <h3>&mdash; Đặng Thanh Tùng</h3>
+                                            <span class="rate">
+                                                <i class="icon-star2"></i>
+                                                <i class="icon-star2"></i>
+                                                <i class="icon-star2"></i>
+                                                <i class="icon-star2"></i>
+                                                <i class="icon-star2"></i>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <blockquote>
+                                                <p>You're so handsome. I mean ..., this shirt quite pretty nice too</p>
+                                            </blockquote>
+                                            <h3>&mdash; Người ẩn danh tên N</h3>
+                                            <span class="rate">
+                                                <i class="icon-star2"></i>
+                                                <i class="icon-star2"></i>
+                                                <i class="icon-star2"></i>
+                                                <i class="icon-star2"></i>
+                                                <i class="icon-star2"></i>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
+            <div class="row">
             
                 <div class="container">
                     <div class="row mt-5">
                         <div class="d-flex justify-content-between">
                             <h1 style="font-weight: 600;text-shadow: 2px 3px 8px">Sản phẩm liên quan</h1>
-                        <a asp-controller="Product" asp-action="getProductByCate" asp-route-cateID="@Model.Product.CateID" asp-route-productPage="1" class="fs-2"><p>Xem thêm</p></a>
+                            <a asp-controller="Product" asp-action="getProductByCate" asp-route-cateID="@Model.Product.CateID" asp-route-productPage="1" class="fs-2"><p>Xem thêm</p></a>
                         </div>
                         @foreach (var item in Model.Products)
                         {
@@ -295,33 +294,33 @@
                     </div>
                 </div>
             
+            </div>
         </div>
     </div>
-</div>
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/js/lightslider.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@@fancyapps/ui/dist/fancybox.umd.js"></script>
+    @section Scripts {
+        <script src="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/js/lightslider.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@@fancyapps/ui/dist/fancybox.umd.js"></script>
 
-    <script>
-        $(document).ready(function () {
-                $('.ecommerce-gallery').lightSlider({
-              gallery: true,
-              item: 1,
-              thumbItem: 5,
-              slideMargin: 5,
-              speed: 400,
-              loop: false,
-              controls: true,
-              keyPress: true,
-              enableDrag: true,
+        <script>
+            $(document).ready(function () {
+            $('.ecommerce-gallery').lightSlider({
+            gallery: true,
+            item: 1,
+            thumbItem: 5,
+            slideMargin: 5,
+            speed: 400,
+            loop: false,
+            controls: true,
+            keyPress: true,
+            enableDrag: true,
             });
-        });
-        Fancybox.bind("[data-fancybox='gallery']", {
-          Hash: false, // tắt lưu lịch sử
-          Thumbs: {
+            });
+            Fancybox.bind("[data-fancybox='gallery']", {
+            Hash: false, // tắt lưu lịch sử
+            Thumbs: {
             autoStart: true,
-          },
-        });
+            },
+            });
 
-    </script>
-}
+        </script>
+    }

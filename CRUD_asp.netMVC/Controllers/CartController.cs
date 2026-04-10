@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace CRUD_asp.netMVC.Controllers
 {
-    [Authorize(Roles = "Customer")]
+    [Authorize(Policy = "CustomerOrGuest")]
     public class CartController : Controller
     {
         private readonly AppDBContext _dbContext;

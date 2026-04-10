@@ -31,6 +31,12 @@ body {
     text-decoration: underline;
 }
 
+.brand-li {
+    background: linear-gradient(45deg, #BF953F, #FCF6BA, #B38728);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+}
 
 /*button loc san pham gia cao thap*/
 /* Container nút sắp xếp */
@@ -2443,19 +2449,27 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 
     .fh5co-cover .overlay {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100%;
+        width: 100%;
         z-index: 0;
         position: absolute;
-        bottom: 0;
         top: 0;
         left: 0;
         right: 0;
-        background: rgba(0, 0, 0, 0.2);
+        bottom: 0;
     }
 
-    .fh5co-cover > .fh5co-container {
-        position: relative;
-        z-index: 10;
-    }
+.aboutMe {
+    background-image: url('/images/banner/About-us-banner.jpg');
+}
+
+.fh5co-cover > .fh5co-container {
+    position: relative;
+    z-index: 10;
+}
 
 @media screen and (max-width: 768px) {
     .fh5co-cover {
@@ -2536,8 +2550,10 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 
     .fh5co-staff img {
-        width: 170px;
+        width: 200px;
+        height:200px;
         margin-bottom: 20px;
+        padding: 20px;
         -webkit-border-radius: 50%;
         -moz-border-radius: 50%;
         -ms-border-radius: 50%;

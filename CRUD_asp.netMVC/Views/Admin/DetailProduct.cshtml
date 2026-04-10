@@ -3,7 +3,7 @@
 @model Products
 
 @{
-    ViewData["Title"] = "DetailProduct";
+    ViewData["Title"] = "Chi tiết sản phẩm";
 
     var productColor = Model.ProductQty.Select(p => p.Color.Name).Distinct().ToList() ?? new List<string>();
     var productSize = Model.ProductQty.Select(p => p.Size.Name).Distinct().ToList() ?? new List<string>();

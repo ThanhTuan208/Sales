@@ -1,6 +1,5 @@
 using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.Data.Seed;
-using CRUD_asp.netMVC.DTO.Order.GHN;
 using CRUD_asp.netMVC.DTO.Payments;
 using CRUD_asp.netMVC.EventHandlers;
 using CRUD_asp.netMVC.EventHandlers.GHN;
@@ -26,13 +25,7 @@ using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using Polly;
-using Polly.Extensions.Http;
 using StackExchange.Redis;
-using System.Net.Http;
-using System.Net.Http.Headers;
 
 namespace CRUD_asp.netMVC
 {
@@ -221,8 +214,22 @@ namespace CRUD_asp.netMVC
 
             builder.Services.AddStackExchangeRedisCache(options =>
             {
-                //options.Configuration = builder.Configuration.GetConnectionString("Redis");
                 options.Configuration = LoadConnectString(builder, "Redis");
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CustomerOrGuest", policy =>
+                {
+                    policy.RequireAssertion(context =>
+                    {
+                        // Cho phép nếu:
+                        // 1. Chưa đăng nhập (Guest)   HOẶC
+                        // 2. Đã đăng nhập và có role "Customer"
+                        return !context.User.Identity?.IsAuthenticated == true ||
+                               context.User.IsInRole("Customer");
+                    });
+                });
             });
 
             var app = builder.Build();
@@ -238,6 +245,8 @@ namespace CRUD_asp.netMVC
 
             if (!app.Environment.IsDevelopment())
             {
+                app.UseHsts();
+                app.UseHttpsRedirection();
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
