@@ -3,11 +3,16 @@
 @model GeneralProduct_ListCateBrand
 
 @{
+    var finalPrice = Model.Product.OldPrice != 0
+                             ? Model.Product.OldPrice
+                             : Model.Product.NewPrice;
+
     ViewData["Title"] = "Chi tiết sản phẩm";
     var countCart = ViewData["cart"] as int? ?? 0;
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
 
+@Html.AntiForgeryToken()
 <link rel="stylesheet" href="~/css/productDetail.css" asp-append-version="true">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/css/lightslider.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fancyapps/ui/dist/fancybox.css" asp-append-version="true" />
@@ -25,8 +30,6 @@
             </div>
         </div>
     </header>
-
-    @Html.AntiForgeryToken()
 
     <div id="fh5co-product">
         <div class="container">
@@ -90,11 +93,11 @@
                                 <div class="col-md-9 d-flex">
                                     <div class="product-price d-inline-flex fs-1">
 
-                                        <p> <span class="price-new mb-0 me-5">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.NewPrice)</span></p>
+                                        <p> <span class="price mb-0 me-5" data-method="price" data-price="@finalPrice">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.NewPrice)</span></p>
 
                                         @if (Model.Product.OldPrice != 0)
                                         {
-                                            <sub><del><span class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.OldPrice)</span></del></sub>
+                                            <sub><del><span class="price" data-method="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.OldPrice)</span></del></sub>
                                         }
                                     </div>
                                 </div>
@@ -161,7 +164,8 @@
                                                 @(Model.Product.Quantity == 0 ? "disabled" : "") data-method="cart">
                                                 Thêm giỏ hàng
                                             </button>
-                                            <button type="button" class="btn btn-primary btn-outline btn-option btn-lg me-5"
+
+                                            <button type="button" class="btn btn-primary btn-outline btn-option buyNowBtn btn-lg me-5"
                                                 @(Model.Product.Quantity == 0 ? "disabled" : "") data-method="buy">
                                                 Mua liền
                                             </button>

@@ -1,7 +1,9 @@
-﻿@using CRUD_asp.netMVC.ViewModels.Cart;
+﻿@using CRUD_asp.netMVC.DTO.Cart
+@using CRUD_asp.netMVC.ViewModels.Cart;
 @using System.Globalization
 @model CartViewModel
 @{
+    var valBuy = Model.ValidBuyNow;
     var address = Model.AddressUser.FirstOrDefault(p => p.IsDefault);
 }
 
@@ -30,7 +32,23 @@
             <input type="hidden" id="orderid" value="@Model.QrPayment.OrderId" />
         }
 
-        @if (!Model.CartItemByIDs.Any())
+        @if (valBuy.Product != null)
+        {
+            <input type="hidden" id="isBuyNow" value="true" />
+            <tr class="product-valBuy" data-id="@valBuy.ProductId" data-price="@(valBuy.Product?.NewPrice ?? 0)">
+                <td>
+                    <img src="@Url.Content($"~/images/products/{(valBuy.Product?.ProductImages.FirstOrDefault()?.PathNameImage)}")"
+                         alt="@(valBuy.Product?.Name ?? "N/A")"
+                         class="product-img" />
+                </td>
+                <td>@(valBuy.Product?.Name ?? "N/A")</td>
+                <td>@valBuy.Color</td>
+                <td>@valBuy.Size</td>
+                <td class="quantity">@valBuy.Quantity</td>
+                <td class="total-price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", (valBuy.Product?.NewPrice ?? 0) * valBuy.Quantity)</td>
+            </tr>
+        }
+        else if (!Model.CartItemByIDs.Any())
         {
             <tr>
                 <td class="text-center" colspan="6">Chưa có sản phẩm nào được chọn.</td>
@@ -61,14 +79,26 @@
     {
         <p class="font-weight-bold">Số lượng: <span id="total-quantity">@Model.CartItemByIDs.Sum(item => item.Quantity)</span></p>
         <p class="font-weight-bold">Tổng giá: <span class="price-complete">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", 0)</span></p>
-        if(address != null)
-        {   
+        if (address != null)
+        {
             <p class="font-weight-bold">Địa chỉ: <span class="address">@(address.Street + ", " + address.Ward + ", " + address.Province ?? "Hãy cập nhật địa chỉ của bạn. ")  </span></p>
         }
         else
         {
-            
-        <p class="font-weight-bold">Địa chỉ: <span class="address">Hãy cập nhật địa chỉ của bạn trước khi thanh toán. </span></p>
+            <p class="font-weight-bold">Địa chỉ: <span class="address">Hãy cập nhật địa chỉ của bạn trước khi thanh toán. </span></p>
+        }
+    }
+    else if (valBuy.Product != null)
+    {
+        <p class="font-weight-bold">Số lượng: <span id="total-quantity">@valBuy.Quantity</span></p>
+        <p class="font-weight-bold">Tổng giá: <span class="price-final">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", valBuy.Price)</span></p>
+        if (address != null)
+        {
+            <p class="font-weight-bold">Địa chỉ: <span class="address">@(address.Street + ", " + address.Ward + ", " + address.Province ?? "Hãy cập nhật địa chỉ của bạn. ")  </span></p>
+        }
+        else
+        {
+            <p class="font-weight-bold">Địa chỉ: <span class="address">Hãy cập nhật địa chỉ của bạn trước khi thanh toán. </span></p>
         }
     }
     else

@@ -10,6 +10,7 @@ export function startCountdown(seconds) {
 
     clearInterval(timerInterval);
     timerInterval = setInterval(function () {
+
         remaining--;
 
         var minutes = Math.floor(remaining / 60);

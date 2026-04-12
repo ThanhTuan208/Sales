@@ -1,13 +1,21 @@
-﻿using CRUD_asp.netMVC.Data;
+﻿using AspNetCoreGeneratedDocument;
+using CRUD_asp.netMVC.Data;
+using CRUD_asp.netMVC.DTO.Cart;
 using CRUD_asp.netMVC.Extensions.Payments;
+using CRUD_asp.netMVC.Extensions.RenderViewGeneral;
 using CRUD_asp.netMVC.Models.Addresses;
 using CRUD_asp.netMVC.Models.Cart;
 using CRUD_asp.netMVC.Models.Order;
+using CRUD_asp.netMVC.Models.Product;
 using CRUD_asp.netMVC.ViewModels.Cart;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MimeKit.Text;
+using MimeKit.Tnef;
+using NetTopologySuite.Geometries.Prepared;
+using Org.BouncyCastle.Bcpg;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -27,7 +35,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpGet] // Cap nhat cart isDelete = false
-        public async Task<IActionResult> UdpateIsDeleteCart(string[]? arrID)
+        public async Task<IActionResult> UdpateIsDeleteCart(string[]? arrID, bool IsBuyNow = false)
         {
             try
             {
@@ -52,7 +60,7 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CheckAddressData(string[]? arrID)
+        public async Task<IActionResult> CheckAddressData(string[]? arrID, bool IsBuyNow = false)
         {
             try
             {
@@ -79,17 +87,25 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         // Su dung method chung cho Index (get, post)
-        public async Task<CartViewModel> GeneralIndex(string[]? arrID)
+        public async Task<CartViewModel> GeneralIndex(
+            string[]? arrID,
+            int? productId = null,
+            string? color = null,
+            string? size = null,
+            int qty = 1,
+            double? price = null)
         {
             try
             {
                 var cartItems = new List<AddToCart>();
                 var cartItemByIDs = new List<AddToCart>();
                 var addressUser = new List<Address>();
+                var validBuyNow = new CartValidationResult();
 
                 var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
                 if (userID > 0)
                 {
+
                     cartItems = await _dbContext.Carts
                         .AsNoTracking()
                         .Include(c => c.Product)
@@ -102,9 +118,22 @@ namespace CRUD_asp.netMVC.Controllers
                         .ToListAsync();
 
                     var arrIDSet = arrID?.Select(int.Parse).ToHashSet() ?? new HashSet<int>();
-                    cartItemByIDs = cartItems.Where(p => arrIDSet.Contains(p.ID)).ToList();
 
-                    addressUser = await _dbContext.Addresses.Where(p => p.UserID == userID).ToListAsync();
+                    cartItemByIDs = cartItems.Where(p => arrIDSet.Contains(p.ID)).ToList() ?? [];
+
+                    addressUser = await _dbContext.Addresses.Where(p => p.UserID == userID).ToListAsync() ?? [];
+
+                    validBuyNow = new()
+                    {
+                        ProductId = productId,
+                        Size = size,
+                        Color = color,
+                        Quantity = qty,
+                        Price = price,
+                        Product = await _dbContext.Products.AsNoTracking()
+                                                            .Include(p => p.ProductImages)
+                                                            .FirstOrDefaultAsync(p => p.ID == productId)
+                    };
                 }
                 else
                 {
@@ -131,7 +160,8 @@ namespace CRUD_asp.netMVC.Controllers
                 {
                     CartItems = cartItems,
                     AddressUser = addressUser,
-                    CartItemByIDs = cartItemByIDs ?? new List<AddToCart>(),
+                    CartItemByIDs = cartItemByIDs,
+                    ValidBuyNow = validBuyNow,
                     TotalPrice = cartItems.Sum(p => p.Product != null ? p.Product.NewPrice * p.Quantity : 0)
                 };
 
@@ -144,33 +174,34 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpGet, Route("Cart")] // Hien thi gio hang
-        public async Task<IActionResult> Index(string[]? arrID, bool IsAddress = false, bool UpdateAddress = false)
+        public async Task<IActionResult> Index(
+            string[]? arrID,
+            int? productId,
+            string color,
+            string size,
+            int qty,
+            double price,
+            bool IsBuyNow = false,
+            bool IsAddress = false,
+            bool UpdateAddress = false)
         {
             try
             {
-                var viewModel = await GeneralIndex(arrID);
+                var viewModel = await GeneralIndex(arrID, productId, color, size, qty, price);
 
-                if (viewModel.CartItemByIDs.Count > 0)
+                if (viewModel.CartItemByIDs.Count > 0 || IsBuyNow)
                 {
                     if (IsAddress)
                     {
                         if (UpdateAddress)
                         {
                             return PartialView("_EditAddressPartial", viewModel);
-
                         }
                         else return PartialView("_ListAddressPartial", viewModel);
                     }
-                    else
-                    {
-                        // Tra ve partial form modal
-                        return PartialView("_ModalPaymentPartial", viewModel);
-                    }
+                    else return PartialView("_ModalPaymentPartial", viewModel);
                 }
-                else
-                {
-                    return View(viewModel);
-                }
+                else return View(viewModel);
             }
             catch (Exception)
             {
@@ -179,22 +210,59 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpGet] // Hien thi QR Modal gio hang
-        public async Task<IActionResult> ShowQrModalCart(string[]? arrID, bool resetQR, string PaymentMethod)
+        public async Task<IActionResult> ShowQrModalCart(
+            string[]? arrID,
+            int? productId,
+            string color,
+            string size,
+            int qty,
+            double price,
+            bool resetQR,
+            bool IsBuyNow = false,
+            string PaymentMethod = "transfer")
         {
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var viewModel = await GeneralIndex(arrID);
+                var selectList = new List<AddToCart>();
+                var partial = await GeneralIndex(arrID, productId, color, size, qty, price);
 
-                if (PaymentMethod == null) return PartialView("_ModalPaymentPartialLeft", viewModel);
+                if (PaymentMethod == null) return PartialView("_ModalPaymentPartialLeft", partial);
+                var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
 
-                if (viewModel.CartItemByIDs.Count > 0)
+                if (partial.CartItemByIDs.Count > 0 || productId.HasValue || IsBuyNow)
                 {
                     var convertArrIDToInt = arrID.Select(int.Parse).ToHashSet();
+                    if (!productId.HasValue)
+                    {
+                        selectList = partial.CartItemByIDs.Where(p => convertArrIDToInt.Contains(p.ID)).ToList();
+                    }
+                    else
+                    {
+                        Products? product = await _dbContext.Products.FirstOrDefaultAsync(p => p.ID == productId);
+                        if (product == null)
+                        {
+                            await transaction.RollbackAsync();
+                            return Json(new { success = false, message = "Sản phẩm không tồn tại" });
+                        }
 
-                    var selectList = viewModel.CartItemByIDs.Where(p => convertArrIDToInt.Contains(p.ID)).ToList();
+                        selectList = new()
+                        {
+                            new AddToCart()
+                            {
+                                UserID = userID,
+                                ProductID = productId.Value,
+                                SelectColor = color,
+                                SelectSize = size,
+                                Quantity = qty,
+                                created_at = DateTime.UtcNow,
+                                Product = product
+
+                            }
+                        };
+                    }
                     var totalList = (decimal?)selectList.Sum(p => p.Product != null ? p.Product.NewPrice * p.Quantity : 0);
 
-                    var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
                     if (userID > 0)
                     {
                         var address = await _dbContext.Addresses.FirstOrDefaultAsync(p => p.UserID == userID && p.IsDefault);
@@ -214,7 +282,7 @@ namespace CRUD_asp.netMVC.Controllers
                             TransactionId = Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper()
                         };
 
-                        selectList.ForEach(async p =>
+                        foreach (var p in selectList)
                         {
                             var orderDetail = new OrderDetail()
                             {
@@ -225,10 +293,13 @@ namespace CRUD_asp.netMVC.Controllers
                             };
 
                             await _dbContext.OrderDetail.AddAsync(orderDetail);
-                        });
+                        }
 
-                        await _dbContext.Carts.Where(p => p.UserID == userID && convertArrIDToInt.Contains(p.ID))
-                                              .ExecuteUpdateAsync(s => s.SetProperty(sp => sp.IsDelete, true));
+                        if (!productId.HasValue)
+                        {
+                            await _dbContext.Carts.Where(p => p.UserID == userID && convertArrIDToInt.Contains(p.ID))
+                                                  .ExecuteUpdateAsync(s => s.SetProperty(sp => sp.IsDelete, true));
+                        }
 
                         await _dbContext.Orders.AddAsync(order);
                         await _dbContext.SaveChangesAsync();
@@ -250,56 +321,67 @@ namespace CRUD_asp.netMVC.Controllers
                             BankAccount = bankAcc,
                         };
 
-                        viewModel.QrPayment = qrPaymentModel;
+                        partial.QrPayment = qrPaymentModel;
 
                         if (resetQR)
                         {
-                            return PartialView("_ModalPaymentPartialRight", viewModel);
-                        }
-                        else
-                        {
-                            return PartialView("_ModalPaymentPartial", viewModel);
+                            return PartialView("_ModalPaymentPartialRight", partial);
                         }
                     }
+                }
 
-                    return PartialView("_ModalPaymentPartial", viewModel);
-                }
-                else
+                await transaction.CommitAsync();
+
+                if (productId.HasValue)
                 {
-                    return PartialView("_ModalPaymentPartial", viewModel);
+                    var html = await this.RenderViewAsync("_ModalPaymentPartial", partial, true);
+
+                    return Json(new
+                    {
+                        html = html,
+                        success = true
+                    });
                 }
+                else if (IsBuyNow)
+                {
+                    return PartialView("_ModalPaymentPartialRight", partial);
+                }
+                else return PartialView("_ModalPaymentPartial", partial);
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 return Json(new { success = false, message = ex.Message });
             }
         }
 
+        [HttpGet] // Mua san pham ngay trong san pham chi tiet
+        public async Task<IActionResult> BuyNow(int productID, string color, string size, int qty, double price)
+        {
+            var validation = await CheckDataBeforeAddOrBuy(productID, qty, color, size);
 
-        [HttpPost, ValidateAntiForgeryToken] // Them san pham vao gio hang
+            if (validation != null) return validation;
+            else
+            {
+                return RedirectToAction("", "Cart", new
+                {
+                    productId = productID,
+                    color = color,
+                    size = size,
+                    qty = qty,
+                    price = price,
+                });
+            }
+        }
+
+        [HttpPost] // Them san pham vao gio hang
         public async Task<IActionResult> AddToCart(int productID, int qty, string color, string size)
         {
             try
             {
-                var productExists = await _dbContext.Products.FindAsync(productID);
+                var validation = await CheckDataBeforeAddOrBuy(productID, qty, color, size);
 
-                if (productExists == null)
-                {
-                    return Json(new { success = false, message = "Sản phẩm không tồn tại" });
-                }
-
-                if (color == null && size == null)
-                {
-                    return Json(new { success = false, authenticated = 1, message = "Vui lòng chọn phân loại sản phẩm", productID = productID });
-                }
-                else if (color == null)
-                {
-                    return Json(new { success = false, authenticated = 1, message = "Bạn cần chọn màu của sản phẩm", productID = productID });
-                }
-                else if (size == null)
-                {
-                    return Json(new { success = false, authenticated = 1, message = "Bạn cần chọn kích thước của sản phẩm", productID = productID });
-                }
+                if (validation != null) return validation;
                 else
                 {
                     var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
@@ -358,6 +440,25 @@ namespace CRUD_asp.netMVC.Controllers
             }
         }
 
+        private async Task<IActionResult?> CheckDataBeforeAddOrBuy(int productID, int qty, string color, string size)
+        {
+            var productExists = await _dbContext.Products.FindAsync(productID);
+
+            if (productExists == null)
+                return Json(new { success = false, message = "Sản phẩm không tồn tại" });
+
+            if (string.IsNullOrEmpty(color) && string.IsNullOrEmpty(size))
+                return Json(new { success = false, authenticated = 1, message = "Vui lòng chọn phân loại sản phẩm", productID = productID });
+
+            if (string.IsNullOrEmpty(color))
+                return Json(new { success = false, authenticated = 1, message = "Bạn cần chọn màu của sản phẩm", productID = productID });
+
+            if (string.IsNullOrEmpty(size))
+                return Json(new { success = false, authenticated = 1, message = "Bạn cần chọn kích thước của sản phẩm", productID = productID });
+
+            return null;
+        }
+
         [HttpPost] // Cap nhat so luong gio hang
         public async Task<IActionResult> UpdateToCart(int id, int qty, string opera, string accept)
         {
@@ -387,15 +488,9 @@ namespace CRUD_asp.netMVC.Controllers
                             {
                                 cartItem.Quantity = qty > 0 ? qty : cartItem.Quantity - 1;
                             }
-                            else
-                            {
-                                return Json(new { success = false, message = "Số lượng không thể nhỏ hơn 1" });
-                            }
+                            else return Json(new { success = false, message = "Số lượng không thể nhỏ hơn 1" });
                         }
-                        else
-                        {
-                            return Json(new { success = false, message = "Thao tác không hợp lệ" });
-                        }
+                        else return Json(new { success = false, message = "Thao tác không hợp lệ" });
 
                         _dbContext.Carts.Update(cartItem);
                         await _dbContext.SaveChangesAsync();
@@ -460,5 +555,7 @@ namespace CRUD_asp.netMVC.Controllers
                 return Json(new { success = false, message = "Vui lòng đăng nhập để cập nhật giỏ hàng" });
             }
         }
+
+
     }
 }

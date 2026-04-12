@@ -240,8 +240,7 @@ namespace CRUD_asp.netMVC.Controllers
                     var IsAddressExistsOrder = await _dbContext.Orders.FirstOrDefaultAsync(p => p.UserID == userID && p.AddressID == addressId);
                     if (IsAddressExistsOrder != null)
                     {
-                        IsAddressExistsOrder.AddressID = 0;
-
+                        IsAddressExistsOrder.AddressID = null;
                         _dbContext.Orders.Update(IsAddressExistsOrder);
                     }
 

@@ -1,0 +1,204 @@
+﻿@using CRUD_asp.netMVC.ViewModels.Cart;
+@using System.Globalization
+@model CartViewModel
+@{
+    var IsAddress = ViewBag.IsAddress;
+    ViewData["Title"] = "Giỏ hàng";
+    Layout = "";
+}
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mb-5">
+                <div class="col-md-12 text-center mb-4">
+                    <h1 style="font-weight: 600; text-shadow: 2px 3px 10px; font-size: 3rem">GIỎ HÀNG</h1>
+                </div>
+                <div class="table-wrap table-responsive">
+                    <table class="table" style="width: 100%">
+                        <thead class="thead-primary" style="text-align:center">
+                            <tr>
+                                <th>Check</th>
+                                <th>&nbsp;</th>
+                                <th>Sản phẩm</th>
+                                <th colspan="1">Loại màu</th>
+                                <th>kích thước</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                @* <th>Tổng giá</th> *@
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                if (Model.CartItems.Count == 0)
+                                {
+                                    <tr>
+                                        <td class="text-center" colspan="12">
+                                            <a asp-controller="Product" asp-action="Index">Hãy thêm sản phẩm của bạn.</a>
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    foreach (var item in Model.CartItems)
+                                    {
+                                        <tr class="itemCart" role="alert" style="opacity: @(item.Product.Quantity == 0 ? "0.5" : "1")">
+                                            @*    <td name="id" value="@item.ID">@item.ID</td> *@
+                                            <td>
+                                                <label class="checkbox-wrap checkbox-primary">
+                                                    <input type="checkbox" class="checkbox" value="@item.ID" @(item.Product.Quantity == 0 ? "disabled" : "") />
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </td>
+
+                                            <td>
+                                                <a asp-controller="Product" asp-action="ProductDetail" asp-route-id="@item.ProductID" class="icon">
+                                                    <div class="img"
+                                                         style="background-image: url(@Url.Content($"~/images/products/{item.Product.ProductImages.FirstOrDefault()?.PathNameImage}"))">
+                                                    </div>
+                                                </a>
+                                            </td>
+
+                                            <td>
+                                                <div class="name" style="text-align: center; ">
+                                                    <p class="">@item.Product.Name</p>
+                                                    @if (item.Product.Quantity == 0)
+                                                    {
+                                                        <p class="text-danger">Sản phẩm đã hết hàng</p>
+                                                    }
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <div class="color" style="text-align: center">
+                                                    <span>@item.SelectColor</span>
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <div class="size" style="text-align: center">
+                                                    <span>@item.SelectSize</span>
+                                                </div>
+                                            </td>
+
+                                            <td class="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Product.NewPrice)</td>
+
+                                            @* xu li qua ajax (js.js) *@
+                                            <td class="quantity">
+                                                <div class="quantity-container" data-id="@item.ID">
+                                                    <button type="button" class="quantity-btn decrease" data-id="@item.ID" data-opera="-">-</button>
+                                                    <input type="text" name="qty" class="quantity-input" value="@item.Quantity" min="1" max="10" readonly>
+                                                    <button type="button" class="quantity-btn increase" data-id="@item.ID" data-opera="+">+</button>
+                                                </div>
+                                            </td>
+
+                                            @* <td class="priceTotal">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", TempData["totalPrice"])</td> *@
+
+                                            <td class="deleteCartItem" style="vertical-align:middle; text-align:center">
+
+                                                <button type="submit"
+                                                        class="close"
+                                                        aria-label="Close"
+                                                        data-id="@item.ID"
+                                                        style="opacity:  @(item.Product.Quantity == 0 ? "1" : "1")">
+                                                    <span aria-hidden="true">
+                                                        <i class="fa fa-close" style="font-size: 3rem;"></i>
+                                                    </span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td class="text-center" colspan="12">
+                                            <a asp-controller="Product" asp-action="Index">Thêm sản phẩm.</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-2-strong mb-5 mb-lg-0" style="border-radius: 16px">
+                    <div class="card-body p-4">
+                        <h3 class="mb-4 text-center shadow font-weight-bold">Thanh toán</h3>
+
+                        <!-- Payment Methods -->
+                        <div class="mb-4">
+                            <h5>Phương thức thanh toán</h5>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input PaymentMethod" type="radio" name="payment" value="qr" data-method="qr" id="qr" />
+                                <label class="form-check-label" for="qr">
+                                    <i class="fa-lg me-2">
+                                        <img src="~/images/icon/qr.png" alt="" style="width: 40px; height: 40px" />
+                                    </i>Quét mã QR
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input PaymentMethod" type="radio" name="payment" value="cash" data-method="cash" id="cash" disabled />
+                                <label class="form-check-label" for="cash">
+
+                                    <i class=" fa-lg me-2">
+                                        <img src="~/images/icon/cod.png" alt="" style="width: 40px; height: 40px" />
+                                    </i>Thanh toán khi nhận hàng
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="payment">
+                            <div class="d-flex justify-content-between fw-semibold mb-2">
+                                <span class="font-weight-bold">Tạm tính: </span>
+                                <span class="price-provisional">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", 0)</span>
+                            </div>
+                            <div class="d-flex justify-content-between fw-semibold mb-2">
+                                <span class="font-weight-bold">Phí vận chuyển: </span>
+                                <span class="price-ship">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", 0)</span>
+                            </div>
+                            <div class="d-flex justify-content-between fw-semibold mb-2">
+                                <span class="font-weight-bold">Số lượng sản phẩm: </span>
+                                <span class="countItem">x 0</span>
+                            </div>
+                            <hr class="my-4" />
+                            @* <div class="d-flex justify-content-between fw-semibold mb-4">
+                                <span>Tổng cộng (bao gồm thuế): </span>
+                                <span class="price-totalVAT">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", 0)</span>
+                            </div> *@
+
+                            <button type="button" class="buy bn54 btn-block btn-lg">
+                                <div class="d-flex justify-content-between">
+                                    <span class="btnPrice bn54span">Thanh toán:</span>
+                                    <span class="price-complete bn54span">0 ₫</span>
+                                </div>
+                            </button>
+
+                            @if (Model.ValidBuyNow.ProductId.HasValue)
+                            {
+                                <div id="buyNowData"
+                                     data-product-id="@Model.ValidBuyNow.ProductId"
+                                     data-color="@(Model.ValidBuyNow.Color ?? "")"
+                                     data-size="@(Model.ValidBuyNow.Size ?? "")"
+                                     data-qty="@Model.ValidBuyNow.Quantity"
+                                     data-price="@Model.ValidBuyNow.Price"
+                                     style="display: none;">
+                                </div>
+                            }
+
+                            <div class="modal-overlay" style="display: none">
+                                <div class="modal"
+                                     role="dialog"
+                                     aria-modal="true"
+                                     aria-labelledby="modalTitle">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

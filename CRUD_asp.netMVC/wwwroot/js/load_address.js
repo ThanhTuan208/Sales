@@ -252,9 +252,9 @@ $(document).ready(function () {
 
         let ids = [];
         let ArrChecked = GetArrIDChecked(ids);
-        if (!ArrChecked) {
-            return;
-        }
+        let IsBuyNow = $('#isBuyNow').val() === 'true';
+
+        if (!ArrChecked) return;
 
         $.ajax({
             url: "/Cart",
@@ -263,6 +263,7 @@ $(document).ready(function () {
                 arrID: ids,
                 IsAddress: true,
                 UpdateAddress: false,
+                IsBuyNow: IsBuyNow
             },
             traditional: true,
 
@@ -401,6 +402,7 @@ $(document).ready(function () {
 
         const id = $('#id').val();
         const qr = $('.qrCodeString').val();
+        let IsBuyNow = $('#isBuyNow').val() === 'true';
 
         if (!id || id === "undefined") {
             return;
@@ -429,7 +431,10 @@ $(document).ready(function () {
                     $.ajax({
                         url: "/Cart/CheckAddressData",
                         type: "GET",
-                        data: { arrID: ids },
+                        data: {
+                            arrID: ids,
+                            IsBuyNow: IsBuyNow
+                        },
                         traditional: true,
 
                         success: function (response) {
@@ -498,6 +503,7 @@ $(document).ready(function () {
         // Chuyen tu select address -> add address
         const isAddress = true;
         const updateAddress = true;
+        let IsBuyNow = $('#isBuyNow').val() === 'true';
 
         $.ajax({
             url: "/Cart",
@@ -505,7 +511,8 @@ $(document).ready(function () {
             data: {
                 arrID: ids,
                 IsAddress: isAddress,
-                UpdateAddress: updateAddress
+                UpdateAddress: updateAddress,
+                IsBuyNow: IsBuyNow
             },
             traditional: true, // bind mảng
 
@@ -547,7 +554,6 @@ $(document).ready(function () {
     $(document).on('click', '.updateAddress', function () {
 
         $('.form-control, .ts-wrapper').removeClass('error');
-        //$('.error-message').remove();
 
         const id = $('#id').val();
         const recipientName = $('#recipientname').val();
@@ -556,6 +562,8 @@ $(document).ready(function () {
         const provinceCode = $('#province').val(); // Lay ma
         const wardCode = $('#ward').val();
         const isDefault = $('#isdefault').is(':checked');
+
+        let IsBuyNow = $('#isBuyNow').val() === 'true';
 
         // Chuyen ma thanh ten tu mang addressData
         let provinceName = "";
@@ -613,7 +621,8 @@ $(document).ready(function () {
                             data: {
                                 arrID: ids,
                                 resetQR: true,
-                                PaymentMethod: ArrChecked.paymentMethod
+                                PaymentMethod: ArrChecked.paymentMethod,
+                                IsBuyNow: IsBuyNow
                             },
                             traditional: true,
                             success: function (response) {
@@ -628,7 +637,7 @@ $(document).ready(function () {
                         });
                     }
                     // Dieu huong quay ve list address sau khi them thanh cong
-                    GeneralAjaxResponse(true, false);
+                    GeneralAjaxResponse(true, false, IsBuyNow);
 
                 } else {
                     if (response.errors) {
@@ -638,12 +647,7 @@ $(document).ready(function () {
                                 ? $(`#${field.toLowerCase()}-ts-control`).closest('.ts-wrapper') // Kiem tra thuoc tinh trong Devtool Element HTML
                                 : $(`#${field.toLowerCase()}`);
 
-                            //Gan loi de hien thi vien do loi
                             $field.addClass('error');
-
-                            //messages.forEach(message => {
-                            //    $field.after(`<span class="error-message">${message}</span>`);
-                            //});
                         });
                     }
                 }
@@ -694,6 +698,7 @@ $(document).ready(function () {
 
         const isAddress = true;
         const updateAddress = true;
+        let IsBuyNow = $('#isBuyNow').val() === 'true';
 
         $.ajax({
             url: "/Cart",
@@ -701,7 +706,8 @@ $(document).ready(function () {
             data: {
                 arrID: ids,
                 IsAddress: isAddress,
-                UpdateAddress: updateAddress
+                UpdateAddress: updateAddress,
+                IsBuyNow: IsBuyNow
             },
             traditional: true,
 
@@ -724,14 +730,17 @@ $(document).ready(function () {
 
         let ids = [];
         let ArrChecked = GetArrIDChecked(ids);
-        if (!ArrChecked) {
-            return;
-        }
+        let IsBuyNow = $('#isBuyNow').val() === 'true';
+
+        if (!ArrChecked) return;
 
         $.ajax({
             url: "/Cart/ShowQrModalCart",
             type: "GET",
-            data: { arrID: ids },
+            data: {
+                arrID: ids,
+                IsBuyNow: IsBuyNow
+            },
             traditional: true,
             success: function (response) {
                 $(".modal-left").html(response);
@@ -747,8 +756,9 @@ $(document).ready(function () {
     $(document).off('click', '.returnAddressList').on('click', '.returnAddressList', function () {
 
         $(".address-form").fadeOut(300);
+        let IsBuyNow = $('#isBuyNow').val() === 'true';
 
-        GeneralAjaxResponse(true, false);
+        GeneralAjaxResponse(true, false, IsBuyNow);
     });
 
 });
@@ -905,7 +915,7 @@ function LoadDataAddress(provinceName, wardName, callback) {
     });
 }
 
-function GeneralAjaxResponse(isAddress, updateAddress) {
+function GeneralAjaxResponse(isAddress, updateAddress, IsBuyNow) {
 
     let ids = [];
     let ArrChecked = GetArrIDChecked(ids);
@@ -919,7 +929,8 @@ function GeneralAjaxResponse(isAddress, updateAddress) {
         data: {
             arrID: ids,
             IsAddress: isAddress,
-            UpdateAddress: updateAddress
+            UpdateAddress: updateAddress,
+            IsBuyNow: IsBuyNow
         },
         traditional: true, // bind mảng
         success: function (response) {

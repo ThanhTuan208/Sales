@@ -25,15 +25,14 @@
                     <td data-label="Chọn">
                         <div class="checkbox-wrap">
                             <input class="select-default" type="checkbox" name="defaultAddress">
-                            <span class="default-label" style="display: @(item.IsDefault ? "inline" : "none" )">Mặc định</span>
-                        </div> 
+                            <span class="default-label" style="display: @(item.IsDefault ? "inline" : "none")">Mặc định</span>
+                        </div>
                     </td>
 
                     <input type="hidden" value="@item.ID" class="id" />
                     <input type="hidden" value="@item.Province" class="province" />
                     <input type="hidden" value="@item.Ward" class="ward" />
                     <input type="hidden" value="@item.Street" class="street" />
-                    
 
                     <td class="recipientname" data-label="Tên người nhận">@item.RecipientName</td>
                     <td class="phonenumber" data-label="Số điện thoại">@item.PhoneNumber</td>
@@ -51,4 +50,5 @@
     </div>
 </div>
 
+<input type="hidden" id="isBuyNow" value="true" />
 <script type="module" src="~/js/load_address.js" asp-append-version="true"></script>

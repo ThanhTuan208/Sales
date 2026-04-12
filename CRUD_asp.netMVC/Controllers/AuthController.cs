@@ -6,13 +6,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using MimeKit.Tnef;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using IEmailSender = CRUD_asp.netMVC.Service.EmailSender.IEmailSender;
 using Login = CRUD_asp.netMVC.DTO.Auth.Login;
 using Register = CRUD_asp.netMVC.DTO.Auth.Register;
-using IEmailSender = CRUD_asp.netMVC.Service.EmailSender.IEmailSender;
 
 namespace CRUD_asp.netMVC.Controllers
 {
@@ -233,7 +235,7 @@ namespace CRUD_asp.netMVC.Controllers
                         message = "Tên của bạn đã bị trùng, bạn cần đổi tên khác. ",
                         errors = new { UserName = new[] { "Tên của bạn đã bị trùng, bạn cần đổi tên khác. " } }
                     });
-                } 
+                }
 
                 var user = new Users
                 {
@@ -549,39 +551,49 @@ namespace CRUD_asp.netMVC.Controllers
             return View(nameof(Login));
         }
 
-        [HttpPost, ValidateAntiForgeryToken] // Xac thuc form dang nhap xong thi quay lai product detail de them san pham vao gio hang 
+        [HttpPost] // Xac thuc form dang nhap xong thi quay lai product detail de them san pham vao gio hang 
         public async Task<IActionResult> LoginByProductID(Login login, int id)
         {
-            if (!ModelState.IsValid) return View(login);
+            if (!ModelState.IsValid || id < 1) return Json(ErrorResponse());
 
             ViewData["id"] = id;
 
-            var user = await _userManager.FindByEmailAsync(login.Email.Trim());
-            if (user == null || !await _userManager.CheckPasswordAsync(user, login.Password))
+            var email = login.Email?.Trim() ?? string.Empty;
+            var password = login.Password?.Trim() ?? string.Empty;
+
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
             {
-                ModelState.AddModelError("InfoGeneral", "Email hoặc mật khẩu không đúng !!!");
-                return Json(new
-                {
-                    success = false,
-                    message = "Email hoặc mật khẩu không đúng !!!",
-                    errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList()
-                    // tra ve loi moi khi submit neu co loi
-                });
+                ModelState.AddModelError("Email", "Email không tồn tại");
+                return Json(ErrorResponse());
             }
 
-            var account = await _signInManager.PasswordSignInAsync(user, login.Password, login.RememberMe, lockoutOnFailure: false);
-            if (account.Succeeded)
+            var passwordValid = await _userManager.CheckPasswordAsync(user, password);
+
+            if (!passwordValid)
             {
-                return Json(new { success = true, authenticated = 1, message = $"đăng nhập thành công, điều hướng tới sản phẩm ID: {id}", productID = id });
-                //return RedirectToAction("ProductDetail", "Product", new { id = id });
+                ModelState.AddModelError("Password", "Mật khẩu không đúng");
+                return Json(ErrorResponse());
             }
 
-            ModelState.AddModelError(string.Empty, "Đã xảy ra lỗi trong quá trình đăng nhập !!!");
-            return View("Login", login);
+            var account = await _signInManager.PasswordSignInAsync(user, password, login.RememberMe, lockoutOnFailure: false);
+            if (!account.Succeeded)
+            {
+                ModelState.AddModelError("InfoGeneral", "Đã xảy ra lỗi trong quá trình đăng nhập!");
+                return Json(ErrorResponse());
+            }
+
+            return Json(new
+            {
+                productID = id,
+                success = true,
+                authenticated = 1,
+                message = $"đăng nhập thành công, điều hướng tới sản phẩm ID: {id}",
+            });
         }
 
-        // Form dang xuat tai khoan        
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost] // Form dang xuat tai khoan        
         public async Task<IActionResult> Logout()
         {
             var jsonCart = HttpContext.Session.GetString("Cart");
@@ -596,7 +608,19 @@ namespace CRUD_asp.netMVC.Controllers
             return RedirectToAction("Login", "Auth");
         }
 
-
-
+        private object ErrorResponse()
+        {
+            return new
+            {
+                success = false,
+                message = "Email hoặc mật khẩu không đúng !!!",
+                errors = ModelState
+                            .Where(x => x.Value.Errors.Count > 0)
+                            .ToDictionary(
+                                kvp => kvp.Key,
+                                kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                            )
+            };
+        }
     }
 }

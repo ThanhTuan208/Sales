@@ -30,7 +30,7 @@ namespace CRUD_asp.netMVC.Data
             modelBuilder.SeedMaterial();
             modelBuilder.SeedStyle();
             modelBuilder.SeedSeason();
-            modelBuilder.SeedColor();
+            modelBuilder.SeedColor(); 
             modelBuilder.SeedSize();
             modelBuilder.SeedTag();
 
