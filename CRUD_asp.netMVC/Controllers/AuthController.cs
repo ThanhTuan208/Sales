@@ -183,7 +183,7 @@ namespace CRUD_asp.netMVC.Controllers
         /// <param name="register"></param>
         /// <param name="emailSender"></param>
         /// <returns></returns>
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> Register(Register register, [FromServices] IEmailSender emailSender) // Tao emailSender de gui mail xac thuc
         {
             try

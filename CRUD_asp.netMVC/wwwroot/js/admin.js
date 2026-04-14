@@ -1,23 +1,4 @@
-﻿//$(function () { // Cap nhat real-time cho Dashboard View (DAU,UV)
-//    const connection = new signalR.HubConnectionBuilder()
-//        .withUrl("/DashboardHub", {
-//            withCredentials: true
-//        })
-//        .withAutomaticReconnect()
-//        .build();
-
-//    connection.start().catch(err => alert(err));
-
-//    connection.on("ReceiveCurrentStatus", (data) => {
-
-//        let s = data.TotalVisits.toLocaleString();
-//        $('#uv').text(data.TotalVisits.toLocaleString());
-//        let f = $('#dau').text(data.DailyActiveUsers.toLocaleString());
-//        alert("In ra dum tao", s);
-//    })
-//});
-
-// Truyen du lieu san pham, ktra dkien them hoac sua
+﻿// Truyen du lieu san pham, ktra dkien them hoac sua
 
 $(document).on('click', '.feature-dev', function (e) {
     e.preventDefault();
@@ -504,8 +485,3 @@ function CheckCountQty() {
 
     if (type == 'none') return false;
 }
-
-$(window).on('pageshow', function () {
-
-
-});

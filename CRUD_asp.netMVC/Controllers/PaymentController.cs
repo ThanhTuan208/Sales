@@ -31,17 +31,6 @@ namespace CRUD_asp.netMVC.Controllers
             _smsPaymentVerificationService = smsPaymentVerificationService;
         }
 
-        [HttpGet("InfoPayment")]
-        public async Task<IActionResult> InfoPayment()
-        {
-            var s = await _dbContext.Payment.ToListAsync();
-            if (s.Any())
-            {
-                return Ok(s);
-            }
-            return BadRequest();
-        }
-
         [HttpPost("SmsReceive"), IgnoreAntiforgeryToken]// Nhan sms tu dien thoai
         public async Task<IActionResult> SmsReceive([FromBody] SmsMessage sms)
         {

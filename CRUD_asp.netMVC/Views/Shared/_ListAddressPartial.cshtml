@@ -50,5 +50,15 @@
     </div>
 </div>
 
+@if (Model.ValidBuyNow.Product != null)
+{
+    <div id="buyNowData"
+         data-product-id="@Model.ValidBuyNow.ProductId"
+         data-color="@(Model.ValidBuyNow.Color ?? "")"
+         data-size="@(Model.ValidBuyNow.Size ?? "")"
+         data-qty="@Model.ValidBuyNow.Quantity"
+         style="display: none;">
+    </div>
+}
 <input type="hidden" id="isBuyNow" value="true" />
 <script type="module" src="~/js/load_address.js" asp-append-version="true"></script>

@@ -34,7 +34,6 @@
 
         @if (valBuy.Product != null)
         {
-            <input type="hidden" id="isBuyNow" value="true" />
             <tr class="product-valBuy" data-id="@valBuy.ProductId" data-price="@(valBuy.Product?.NewPrice ?? 0)">
                 <td>
                     <img src="@Url.Content($"~/images/products/{(valBuy.Product?.ProductImages.FirstOrDefault()?.PathNameImage)}")"
@@ -108,3 +107,16 @@
         <p>Địa chỉ: <span id="address">Thêm địa chỉ của bạn !</span></p>
     }
 </div>
+
+@if (valBuy.Product != null)
+{
+    <div id="buyNowData"
+         data-product-id="@Model.ValidBuyNow.ProductId"
+         data-color="@(Model.ValidBuyNow.Color ?? "")"
+         data-size="@(Model.ValidBuyNow.Size ?? "")"
+         data-qty="@Model.ValidBuyNow.Quantity"
+         style="display: none;">
+    </div>
+            
+    <input type="hidden" id="isBuyNow" value="true" />
+}

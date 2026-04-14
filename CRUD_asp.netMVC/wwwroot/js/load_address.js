@@ -1,5 +1,4 @@
-﻿import { updateQtyAfterCheck, GetArrIDChecked, LoadView } from './js.js';
-import { startCountdown } from './globalGeneralFunc.js';
+﻿import { updateQtyAfterCheck, GetArrIDChecked, startCountdown, LoadView } from './globalGeneralFunc.js';
 
 $(document).ready(function () {
     LoadView();
@@ -214,16 +213,27 @@ $(document).ready(function () {
         startConnection();
     });
 
-
-    // chay timer ban dau
-    //startCountdown(expireSeconds);
     // Tao lai QR
     $(document).off('click', '#resetQR').on('click', '#resetQR', function () {
 
         let ids = [];
         let ArrChecked = GetArrIDChecked(ids);
-        if (!ArrChecked) {
-            return;
+        let IsBuyNow = $('#isBuyNow').val() === 'true';
+
+        if (!ArrChecked) return;
+
+        const dataElement = document.getElementById('buyNowData');
+
+        let buyNowData = {};
+        if (!IsBuyNow && !dataElement) { }
+        else if (!dataElement) return;
+        else {
+            buyNowData = {
+                productId: parseInt(dataElement.dataset.productId),
+                color: dataElement.dataset.color || '',
+                size: dataElement.dataset.size || '',
+                qty: parseInt(dataElement.dataset.qty) || 1,
+            };
         }
 
         $.ajax({
@@ -231,12 +241,16 @@ $(document).ready(function () {
             type: "GET",
             data: {
                 arrID: ids,
-                ResetQR: false,
-                PaymentMethod: ArrChecked.paymentMethod
+                ResetQR: true,
+                PaymentMethod: ArrChecked.paymentMethod,
+                productId: buyNowData.productId,
+                color: buyNowData.color,
+                size: buyNowData.size,
+                qty: buyNowData.qty
             },
             traditional: true,
             success: function (response) {
-                $(".modal").html(response);
+                $(".modal-right").html(response);
                 updateQtyAfterCheck();
             },
             error: function () {
@@ -249,7 +263,7 @@ $(document).ready(function () {
     });
 
     $(document).off('click', '#locationQR').on('click', '#locationQR', function () {
-
+        
         let ids = [];
         let ArrChecked = GetArrIDChecked(ids);
         let IsBuyNow = $('#isBuyNow').val() === 'true';
@@ -404,9 +418,8 @@ $(document).ready(function () {
         const qr = $('.qrCodeString').val();
         let IsBuyNow = $('#isBuyNow').val() === 'true';
 
-        if (!id || id === "undefined") {
+        if (!id || id === "undefined")
             return;
-        }
 
         let formData = new FormData();
         formData.append("addressId", id);
@@ -424,9 +437,7 @@ $(document).ready(function () {
 
                     let ids = [];
                     let ArrChecked = GetArrIDChecked(ids);
-                    if (!ArrChecked) {
-                        return;
-                    }
+                    if (!ArrChecked) return;
 
                     $.ajax({
                         url: "/Cart/CheckAddressData",
@@ -442,8 +453,6 @@ $(document).ready(function () {
                             if (!response.success) {
                                 $(".modal-right").html(response);
                                 $('#reCodeQR').attr('src', qr);
-
-                                //clearInterval(timerInterval);
                                 $("#timer").text("Cần thêm địa chỉ mặc định mới.");
                             }
                         },
@@ -453,7 +462,7 @@ $(document).ready(function () {
                         }
                     })
 
-                    GeneralAjaxResponse(true, false);
+                    GeneralAjaxResponse(true, false, IsBuyNow);
                 }
                 else {
                     if (response.addressData === 'undefined') {
@@ -731,6 +740,21 @@ $(document).ready(function () {
         let ids = [];
         let ArrChecked = GetArrIDChecked(ids);
         let IsBuyNow = $('#isBuyNow').val() === 'true';
+        let closeAddress = true;
+
+        const dataElement = document.getElementById('buyNowData');
+
+        let buyNowData = {};
+        if (IsBuyNow && !dataElement) { }
+        else if (!dataElement) return;
+        else {
+            buyNowData = {
+                productId: parseInt(dataElement.dataset.productId),
+                color: dataElement.dataset.color || '',
+                size: dataElement.dataset.size || '',
+                qty: parseInt(dataElement.dataset.qty) || 1,
+            };
+        }
 
         if (!ArrChecked) return;
 
@@ -739,7 +763,12 @@ $(document).ready(function () {
             type: "GET",
             data: {
                 arrID: ids,
-                IsBuyNow: IsBuyNow
+                IsBuyNow: IsBuyNow,
+                closeAddress: closeAddress,
+                productId: buyNowData.productId,
+                color: buyNowData.color,
+                size: buyNowData.size,
+                qty: buyNowData.qty
             },
             traditional: true,
             success: function (response) {

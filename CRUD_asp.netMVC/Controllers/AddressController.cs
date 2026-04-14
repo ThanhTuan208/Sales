@@ -253,7 +253,6 @@ namespace CRUD_asp.netMVC.Controllers
 
                 var UniqueAddressbyUser = _dbContext.Addresses.Where(p => p.UserID == userID);
                 var UniqueAddressbyUserIsNull = UniqueAddressbyUser.FirstOrDefault(p => p.IsDefault);
-                //updateQR = UniqueAddressbyUser.ToList().Count > 1 && UniqueAddressbyUserIsNull != null;
 
                 if (!_cache.TryGetValue("countRequest", out int count))
                 {

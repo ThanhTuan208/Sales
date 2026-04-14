@@ -6,6 +6,7 @@ using CRUD_asp.netMVC.Hubs;
 using CRUD_asp.netMVC.Models.Auth;
 using CRUD_asp.netMVC.Service.Home;
 using CRUD_asp.netMVC.ViewModels.Home;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -474,18 +475,20 @@ public class HomeController : Controller
 
             #region Tối ưu code bằng hangfire (Gửi email nhanh hơn với queue (FIFO))
             // Gui Email den dia chi ho tro
-            await emailSender.SendEmailAsync(
-                email: "dieuhuong707@gmail.com",
-                subject: subject,
-                message: htmlBody
-            );
+            BackgroundJob.Enqueue(() =>
+                emailSender.SendEmailAsync(
+                    email: "nguyenthanhtuankrp1@gmail.com",
+                    subject: subject,
+                    message: htmlBody
+            ));
 
             // Gui Email xac nhan nguoi dung
-            await emailSender.SendEmailAsync(
-                email: mail.Email,
-                subject: "Xác nhận yêu cầu hỗ trợ - E-commerce",
-                message: htmlBodyUser
-            );
+            BackgroundJob.Enqueue(() =>
+                emailSender.SendEmailAsync(
+                    email: mail.Email,
+                    subject: "Xác nhận yêu cầu hỗ trợ - E-commerce",
+                    message: htmlBodyUser
+            ));
             #endregion 
 
             return Json(new { success = true, message = "Yêu cầu của bạn đã được gửi thành công! Vui lòng kiểm tra Email để xem xác nhận." });

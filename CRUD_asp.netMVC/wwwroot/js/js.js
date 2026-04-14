@@ -1,4 +1,4 @@
-﻿import { startCountdown } from './globalGeneralFunc.js';
+﻿import { updateQtyAfterCheck, GetArrIDChecked, LoadView, startCountdown, initBuyNowQrModal } from './globalGeneralFunc.js';
 
 $(document).ready(function () {
     $('.owl-clients').owlCarousel({
@@ -26,9 +26,39 @@ $(document).ready(function () {
             }
         }
     });
+    let buyNowLogicExecuted = false;
 
-    // Goi QR Payment khi click BuyNow action trang ProductDetail
-    initBuyNowQrModal();
+    const handleBuyNow = () => {
+        if (buyNowLogicExecuted) return;
+        buyNowLogicExecuted = true;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get("token");
+        const isBuyNow = urlParams.get("IsBuyNow");
+
+        if (token && isBuyNow === "True") {
+            if (sessionStorage.getItem("buyNowHandled_" + token)) {
+                window.history.replaceState({}, document.title, "/Cart");
+                return;
+            }
+
+            sessionStorage.setItem("buyNowHandled_" + token, "1");
+            initBuyNowQrModal();
+        }
+    };
+
+    LoadView();
+
+    // Chạy ngay khi script load
+    handleBuyNow();
+
+    // Xử lý khi Back/Forward (bfcache)
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            buyNowLogicExecuted = false;   // reset flag để có thể chạy lại nếu cần
+            handleBuyNow();
+        }
+    });
 
     $(document).on('click', '.feature-dev-profile', function (e) {
         e.preventDefault();
@@ -620,13 +650,31 @@ $(document).ready(function () {
 
         let IsBuyNow = $('#isBuyNow').val() === 'true';
 
+        const dataElement = document.getElementById('buyNowData');
+
+        let buyNowData = {};
+        if (IsBuyNow === false && !dataElement) { }
+        else if (!dataElement) return;
+        else {
+            buyNowData = {
+                productId: parseInt(dataElement.dataset.productId),
+                color: dataElement.dataset.color || '',
+                size: dataElement.dataset.size || '',
+                qty: parseInt(dataElement.dataset.qty) || 1,
+            };
+        }
+
         $.ajax({
             url: "/Cart",
             type: "GET",
             data: {
                 arrID: ids,
                 IsAddress: isAddress,
-                IsBuyNow: IsBuyNow
+                IsBuyNow: IsBuyNow,
+                productId: buyNowData.productId,
+                color: buyNowData.color,
+                size: buyNowData.size,
+                qty: buyNowData.qty
             },
             traditional: true, // bind mảng
             success: function (response) {
@@ -697,7 +745,7 @@ $(document).ready(function () {
             url: "/Cart/UdpateIsDeleteCart",
             type: "GET",
             data: {
-                arrID: ids, 
+                arrID: ids,
                 IsBuyNow: IsBuyNow
             },
             traditional: true,
@@ -1009,8 +1057,7 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.success) {
 
-                    console.log("Thông báo Email: " + response.message);
-
+                    //console.log("Thông báo Email: " + response.message);
                     $('.text-danger').text('');
 
                     Object.keys(response.errors).forEach(function (field) {
@@ -1023,9 +1070,9 @@ $(document).ready(function () {
                     });
                 }
                 else {
-                    console.log("Thông báo lỗi: " + response.message);
-
+                    //console.log("Thông báo lỗi: " + response.message);
                     $('.text-danger').text('');
+
                     if (response.errors !== null || response.errors !== "undefined")
                         Object.keys(response.errors).forEach(function (field) {
                             const messages = response.errors[field];
@@ -1137,18 +1184,15 @@ $(document).ready(function () {
         });
     });
 
-    /*Tăng giảm số lượng (Chi ap dung duoc 1 tang giam so luong)*/
     $('#increase').on('click', function () {
 
         let qtyDetail = parseInt($('.qtyDetail').attr('data-qty-detail'));
         let qty = parseInt($('#quantity').val());
-        if (qtyDetail === 0) {
+        if (qtyDetail === 0)
             return;
-        }
 
-        if (qty >= qtyDetail) {
+        if (qty >= qtyDetail)
             return;
-        }
 
         if (qty < 10) {
             $('#quantity').val(qty + 1);
@@ -1162,13 +1206,10 @@ $(document).ready(function () {
 
     // Xu ly mua ngay ProductDetail page
     $(document).off('click', '.buyNowBtn').on('click', '.buyNowBtn', function (e) {
-        e.preventDefault(); 
+        e.preventDefault();
 
         let btn = $(this);
         const productID = $('.productID').data('id');
-        const price = parseInt($('.price[data-method="price"]').data('price')) || 0;
-
-        console.log(price);
 
         let qty = parseInt($('#quantity').val()) || 1;
 
@@ -1199,7 +1240,7 @@ $(document).ready(function () {
 
         // ✔ hợp lệ thì redirect thủ công
         window.location.href =
-            `/Cart/BuyNow?productID=${productID}&color=${colorBtn}&size=${sizeBtn}&qty=${qty}&price=${price}`;
+            `/Cart/BuyNow?productID=${productID}&color=${colorBtn}&size=${sizeBtn}&qty=${qty}`;
     });
 
     function showError(msg) {
@@ -1218,7 +1259,7 @@ $(document).ready(function () {
     }
 
     // page product detail de them san pham vao gio hang
-$(document).off('click', '.btn-option').on('click', '.btn-option', function () {
+    $(document).off('click', '.btn-option').on('click', '.btn-option', function () {
 
         let btn = $(this);
         const itemID = $('.productID').data('id');
@@ -1385,25 +1426,6 @@ $('.size-option').on('click', function () {
     $('#selectSize').val(size);
 });
 
-// lay mang id san pham da chon trong gio hang
-export function GetArrIDChecked(ids) {
-
-    const productChecked = $('.checkbox:checked');
-    const paymentMethodChecked = $('input[name="payment"]:checked').data('method');
-
-    if (paymentMethodChecked === "qr" && productChecked.length > 0) {
-
-        $('.checkbox:checked').each(function () {
-
-            ids.push($(this).val());
-        });
-
-    }
-    else return { success: false, paymentMethod: null };
-
-    return { success: true, paymentMethod: "transfer" };
-}
-
 // Xoa IsDelete sau khi load, back, return trang Cart
 $(window).on("pageshow", function () {
 
@@ -1423,96 +1445,6 @@ function callUpdateCart() {
         },
         error: function (response) {
             alert("Lỗi Load cart: " + (response.message || "không xác định"));
-        }
-    });
-}
-
-LoadView();
-export function LoadView() {
-    // Su dung pageshow de load lai trang (ke ca khi go back va return view)
-    $(window).on('pageshow', function () {
-
-        $('.checkbox:checked').each(function () {
-            $(this).addClass('active');
-        });
-
-        updateQtyAfterCheck();
-    });
-}
-
-// cap nhat so luong va gia san pham sau khi check va tang giam so luong cho gia sp
-export function updateQtyAfterCheck() {
-
-    let total = 0;
-    let qty = 0;
-    let price = 0;
-    let ship = 0;
-    let totalVAT = 0;
-    let countItem = 0;
-
-    $('.checkbox.active').each(function () {
-        qty = parseInt($(this).closest('tr').find('.quantity-input').val());
-        price = parseFloat($(this).closest('tr').find('.price').text().replace(/[^0-9]+/g, ''));
-        total += price * qty;
-        countItem++;
-    });
-
-    if ($('.checkbox').hasClass('active')) {
-
-        ship = 30000;
-    }
-
-    let vat = 0;
-    if (total > 1000000) {
-        ship = 0;
-    }
-    totalVAT += total + ship + vat;
-
-    $('.countItem').text(`x ` + countItem);
-    $('.price-provisional').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total));
-    $('.price-ship').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(ship));
-    $('.price-totalVAT').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total) + `* 0.5%`);
-    $('.price-complete').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalVAT));
-}
-
-function initBuyNowQrModal() {
-    const dataElement = document.getElementById('buyNowData');
-
-    if (!dataElement) {
-        return;
-    }
-
-    const buyNowData = {
-        productId: parseInt(dataElement.dataset.productId),
-        color: dataElement.dataset.color || '',
-        size: dataElement.dataset.size || '',
-        qty: parseInt(dataElement.dataset.qty) || 1,
-        price: parseFloat(dataElement.dataset.price) || 0,
-    };
-
-    $.ajax({
-        url: '/Cart/ShowQrModalCart',
-        type: 'GET',
-        data: {
-            productId: buyNowData.productId,
-            color: buyNowData.color,
-            size: buyNowData.size,
-            qty: buyNowData.qty,
-            price: buyNowData.price,
-        },
-        success: function (response) {
-            if (response && (response.success || response.html)) {
-                $(".modal").html(response.html || response);
-
-                $(".modal-overlay").fadeIn(300);
-                $(".modal").addClass("active").fadeIn(300);
-
-                if (typeof startCountdown === "function") startCountdown(300);
-                if (typeof updateQtyAfterCheck === "function") updateQtyAfterCheck();
-            }
-        },
-        error: function () {
-            console.error("Lỗi hiển thị modal QR cho Buy Now");
         }
     });
 }

@@ -3,10 +3,6 @@
 @model GeneralProduct_ListCateBrand
 
 @{
-    var finalPrice = Model.Product.OldPrice != 0
-                             ? Model.Product.OldPrice
-                             : Model.Product.NewPrice;
-
     ViewData["Title"] = "Chi tiết sản phẩm";
     var countCart = ViewData["cart"] as int? ?? 0;
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
@@ -93,7 +89,7 @@
                                 <div class="col-md-9 d-flex">
                                     <div class="product-price d-inline-flex fs-1">
 
-                                        <p> <span class="price mb-0 me-5" data-method="price" data-price="@finalPrice">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.NewPrice)</span></p>
+                                        <p> <span class="price mb-0 me-5" data-method="price">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Product.NewPrice)</span></p>
 
                                         @if (Model.Product.OldPrice != 0)
                                         {

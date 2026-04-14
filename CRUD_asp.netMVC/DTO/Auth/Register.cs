@@ -33,7 +33,7 @@ namespace CRUD_asp.netMVC.DTO.Auth
         [DataType(DataType.Password)]
         [StringLength(20, MinimumLength = 8, ErrorMessage = "Mật khẩu phải từ {1} đến {2} ký tự")]
         [RegularExpression(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[~!@#$%^&*()_+=?])[A-Za-z0-9~!@#$%^&*()_+=?]{8,20}$",
-            ErrorMessage = "Mật khẩu phải từ 8-20 ký tự, bao gồm ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (~!@#$%^&*()_+=?).")]
+            ErrorMessage = " bao gồm ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (~!@#$%^&*()_+=?).")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Nhập lại mật khẩu của bạn"), Compare("Password", ErrorMessage = "Mật khẩu không giống nhau !!!")]

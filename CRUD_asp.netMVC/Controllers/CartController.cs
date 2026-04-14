@@ -1,6 +1,6 @@
-﻿using AspNetCoreGeneratedDocument;
-using CRUD_asp.netMVC.Data;
+﻿using CRUD_asp.netMVC.Data;
 using CRUD_asp.netMVC.DTO.Cart;
+using CRUD_asp.netMVC.Extensions.Carts;
 using CRUD_asp.netMVC.Extensions.Payments;
 using CRUD_asp.netMVC.Extensions.RenderViewGeneral;
 using CRUD_asp.netMVC.Models.Addresses;
@@ -12,10 +12,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MimeKit.Text;
-using MimeKit.Tnef;
-using NetTopologySuite.Geometries.Prepared;
-using Org.BouncyCastle.Bcpg;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -27,11 +23,13 @@ namespace CRUD_asp.netMVC.Controllers
     {
         private readonly AppDBContext _dbContext;
         private readonly QrCodeService _qrCode;
+        private readonly BuyNowTokenExtensions _buyNowToken;
 
-        public CartController(AppDBContext _context, QrCodeService qrCode)
+        public CartController(AppDBContext _context, QrCodeService qrCode, BuyNowTokenExtensions buyNowToken)
         {
             _dbContext = _context;
             _qrCode = qrCode;
+            _buyNowToken = buyNowToken;
         }
 
         [HttpGet] // Cap nhat cart isDelete = false
@@ -92,20 +90,18 @@ namespace CRUD_asp.netMVC.Controllers
             int? productId = null,
             string? color = null,
             string? size = null,
-            int qty = 1,
-            double? price = null)
+            int qty = 1)
         {
             try
             {
                 var cartItems = new List<AddToCart>();
                 var cartItemByIDs = new List<AddToCart>();
                 var addressUser = new List<Address>();
-                var validBuyNow = new CartValidationResult();
+                var validBuyNow = new BuyNowData();
 
                 var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
                 if (userID > 0)
                 {
-
                     cartItems = await _dbContext.Carts
                         .AsNoTracking()
                         .Include(c => c.Product)
@@ -121,19 +117,24 @@ namespace CRUD_asp.netMVC.Controllers
 
                     cartItemByIDs = cartItems.Where(p => arrIDSet.Contains(p.ID)).ToList() ?? [];
 
-                    addressUser = await _dbContext.Addresses.Where(p => p.UserID == userID).ToListAsync() ?? [];
+                    addressUser = await _dbContext.Addresses.AsNoTracking().Where(p => p.UserID == userID).ToListAsync() ?? [];
 
-                    validBuyNow = new()
-                    {
-                        ProductId = productId,
-                        Size = size,
-                        Color = color,
-                        Quantity = qty,
-                        Price = price,
-                        Product = await _dbContext.Products.AsNoTracking()
+                    var product = await _dbContext.Products.AsNoTracking()
                                                             .Include(p => p.ProductImages)
-                                                            .FirstOrDefaultAsync(p => p.ID == productId)
-                    };
+                                                            .FirstOrDefaultAsync(p => p.ID == productId);
+
+                    if (product != null)
+                    {
+                        validBuyNow = new()
+                        {
+                            ProductId = productId,
+                            Size = size,
+                            Color = color,
+                            Quantity = qty,
+                            Price = product.NewPrice,
+                            Product = product
+                        };
+                    }
                 }
                 else
                 {
@@ -176,20 +177,35 @@ namespace CRUD_asp.netMVC.Controllers
         [HttpGet, Route("Cart")] // Hien thi gio hang
         public async Task<IActionResult> Index(
             string[]? arrID,
-            int? productId,
-            string color,
-            string size,
-            int qty,
-            double price,
+            //int? productId,
+            //string color,
+            //string size,
+            //int qty,
+            string? token,
             bool IsBuyNow = false,
             bool IsAddress = false,
             bool UpdateAddress = false)
         {
             try
             {
-                var viewModel = await GeneralIndex(arrID, productId, color, size, qty, price);
+                BuyNowData data = null!;
+                CartViewModel viewModel = null!;
 
-                if (viewModel.CartItemByIDs.Count > 0 || IsBuyNow)
+                if (!string.IsNullOrEmpty(token) && IsBuyNow)
+                {
+                    data = _buyNowToken.ValidateToken(token);
+
+                    if (data == null)
+                        return BadRequest();
+                }
+
+                if (data == null)
+                {
+                    viewModel = await GeneralIndex(arrID);
+                }
+                else viewModel = await GeneralIndex(arrID, data.ProductId, data.Color, data.Size, data.Quantity);
+
+                if (viewModel.CartItemByIDs.Count > 0 || IsBuyNow && string.IsNullOrEmpty(token))
                 {
                     if (IsAddress)
                     {
@@ -216,16 +232,17 @@ namespace CRUD_asp.netMVC.Controllers
             string color,
             string size,
             int qty,
-            double price,
             bool resetQR,
+            bool closeAddress,
             bool IsBuyNow = false,
             string PaymentMethod = "transfer")
         {
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
             try
             {
                 var selectList = new List<AddToCart>();
-                var partial = await GeneralIndex(arrID, productId, color, size, qty, price);
+                var partial = await GeneralIndex(arrID, productId, color, size, qty);
 
                 if (PaymentMethod == null) return PartialView("_ModalPaymentPartialLeft", partial);
                 var userID = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0;
@@ -332,7 +349,7 @@ namespace CRUD_asp.netMVC.Controllers
 
                 await transaction.CommitAsync();
 
-                if (productId.HasValue)
+                if (productId.HasValue && !closeAddress)
                 {
                     var html = await this.RenderViewAsync("_ModalPaymentPartial", partial, true);
 
@@ -344,7 +361,11 @@ namespace CRUD_asp.netMVC.Controllers
                 }
                 else if (IsBuyNow)
                 {
-                    return PartialView("_ModalPaymentPartialRight", partial);
+                    if (closeAddress)
+                    {
+                        return PartialView("_ModalPaymentPartialLeft", partial);
+                    }
+                    else return PartialView("_ModalPaymentPartialRight", partial);
                 }
                 else return PartialView("_ModalPaymentPartial", partial);
             }
@@ -356,20 +377,23 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpGet] // Mua san pham ngay trong san pham chi tiet
-        public async Task<IActionResult> BuyNow(int productID, string color, string size, int qty, double price)
+        public async Task<IActionResult> BuyNow(int productID, string color, string size, int qty)
         {
             var validation = await CheckDataBeforeAddOrBuy(productID, qty, color, size);
 
             if (validation != null) return validation;
             else
             {
+                var token = _buyNowToken.GenerateToken(productID, color, size, qty);
+
                 return RedirectToAction("", "Cart", new
                 {
-                    productId = productID,
-                    color = color,
-                    size = size,
-                    qty = qty,
-                    price = price,
+                    //productId = productID,
+                    //color = color,
+                    //size = size,
+                    //qty = qty,
+                    token = token,
+                    IsBuyNow = true
                 });
             }
         }
@@ -460,11 +484,11 @@ namespace CRUD_asp.netMVC.Controllers
         }
 
         [HttpPost] // Cap nhat so luong gio hang
-        public async Task<IActionResult> UpdateToCart(int id, int qty, string opera, string accept)
+        public async Task<IActionResult> UpdateToCart(int id, int qty, string opera)
         {
             try
             {
-                var productExists = await _dbContext.Carts.FindAsync(id);
+                var productExists = await _dbContext.Carts.Include(p => p.Product).FirstOrDefaultAsync(p => p.ID == id);
                 if (productExists == null)
                 {
                     return Json(new { success = false, message = "Sản phẩm trong giỏ hàng không tồn tại" });
@@ -480,7 +504,12 @@ namespace CRUD_asp.netMVC.Controllers
                     {
                         if (opera == "+")
                         {
-                            cartItem.Quantity = qty > 0 ? qty : cartItem.Quantity + 1;
+                            var isQtyProduct = productExists.Product.Quantity >= qty;
+                            if (isQtyProduct)
+                            {
+                                cartItem.Quantity = qty > 0 ? qty : cartItem.Quantity + 1;
+                            }
+                            else return Json(new { success = false, message = "Số lượng sản phẩm không còn đủ hàng để thêm đơn!" });
                         }
                         else if (opera == "-")
                         {

@@ -16,11 +16,11 @@ namespace CRUD_asp.netMVC.Service.EmailSender
         {
             _smptServer = configuration["Smtp:Server"];
             _smptPort = int.Parse(configuration["Smtp:Port"]);
-            _smptUser = configuration["Smtp:Users"];
+            _smptUser = configuration["Smtp:User"];
             _smptPass = configuration["Smtp:Pass"];
         }
 
-        /// <summary>
+        /// <summary>w
         /// Phuong thuc gui email
         /// </summary>
         /// <param name="email"></param>

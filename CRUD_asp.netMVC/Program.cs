@@ -4,6 +4,7 @@ using CRUD_asp.netMVC.DTO.Payments;
 using CRUD_asp.netMVC.EventHandlers;
 using CRUD_asp.netMVC.EventHandlers.GHN;
 using CRUD_asp.netMVC.EventHandlers.Payments;
+using CRUD_asp.netMVC.Extensions.Carts;
 using CRUD_asp.netMVC.Extensions.Payments;
 using CRUD_asp.netMVC.Filters;
 using CRUD_asp.netMVC.Hubs;
@@ -85,7 +86,7 @@ namespace CRUD_asp.netMVC
             builder.Services.AddHangfireServer(options =>
             {
                 options.ServerName = "RedisServer-SiteVisit";
-                options.Queues = new[] { "sitevisit" };
+                options.Queues = new[] { "default", "sitevisit" };
             });
 
             // Hangfire cho SQL Server
@@ -107,8 +108,11 @@ namespace CRUD_asp.netMVC
             builder.Services.AddHangfireServer(options =>
             {
                 options.ServerName = "SqlServer-OrderCleanup";
-                options.Queues = new[] { "ordercleanup" };
+                options.Queues = new[] { "default", "ordercleanup" };
             });
+
+            // Dang ky BuyNowTokenExtensions tao token check url BuyNow handle ProductDetail Page
+            builder.Services.AddScoped<BuyNowTokenExtensions>();
 
             // Dang ky OrderCleanup backgroud service 
             builder.Services.AddScoped<OrderCleanupService>();
@@ -142,18 +146,6 @@ namespace CRUD_asp.netMVC
             {
                 throw new InvalidOperationException("baseURL or Token of GHN is not configured");
             }
-
-            // Dang ky tao don GHN
-            //builder.Services.AddHttpClient<IGhnService, GhnService>(client =>
-            //{
-            //    client.BaseAddress = new Uri(baseUrl);
-            //    client.DefaultRequestHeaders.Add("Token", tokenGHN);
-            //    client.Timeout = TimeSpan.FromSeconds(10);
-            //    client.DefaultRequestHeaders.Accept.Add(
-            //        new MediaTypeWithQualityHeaderValue("application/json")
-            //    );
-
-            //}).AddPolicyHandler(GhnRetryPolicy.GetRetryPolicy());
 
             // Dnag ky service GHN
             builder.Services.AddScoped<IGhnService, GhnService>();
